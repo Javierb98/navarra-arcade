@@ -1,0 +1,11 @@
+{
+  "_note": "Who made the arcade, shown in the bottom-right corner (public, unlike sponsors.local.json).",
+  "label": {
+    "es": "Hecho por",
+    "eu": "Egilea",
+    "en": "Made by"
+  },
+  "name": "Evocultiva",
+  "logo": "assets/credits/evocultiva.jpg",
+  "url": "https://evocultiva.org"
+}

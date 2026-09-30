@@ -16,7 +16,7 @@ html, body { margin: 0; height: 100%; overflow: hidden; cursor: default; backgro
 
 #stage { position: absolute; width: 480px; height: 270px; transform-origin: 0 0; font: bold 10px/1.3 var(--font); color: var(--text); overflow: hidden; }
 #bg { position: absolute; inset: 0; image-rendering: pixelated; }
-#menu { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 6px 10px 4px; gap: 5px; transition: opacity 0.4s; }
+#menu { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 5px 10px 5px; gap: 4px; transition: opacity 0.4s; }
 #menu.leaving { opacity: 0.25; }
 
 /* ---- header: title and language picker ---- */
@@ -37,7 +37,7 @@ h1 {
 .lang.on { color: #111; background: var(--rope); border-color: var(--rope); }
 
 /* ---- featured game ---- */
-.feature { height: 150px; position: relative; }
+.feature { flex: none; height: 142px; position: relative; }
 .feature-inner { position: absolute; inset: 0; display: flex; gap: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px; }
 /* Gold corner details, like the fittings on an old chest. */
 .feature-inner::before, .card::before {
@@ -79,7 +79,7 @@ h1 {
 .cards { display: flex; gap: 6px; justify-content: center; transition: opacity 0.25s; }
 .cards.dim { opacity: 0.55; }
 .card { position: relative; overflow: hidden; flex: 0 1 108px; min-width: 0; background: var(--panel); border: 1.5px solid var(--line); border-radius: 5px; padding: 3px; text-align: center; cursor: pointer; transition: transform 0.2s ease-out, border-color 0.2s; }
-.card .thumb { height: 31px; border-radius: 3px; background-size: cover; background-position: center; image-rendering: pixelated; }
+.card .thumb { height: 26px; border-radius: 3px; background-size: cover; background-position: center; image-rendering: pixelated; }
 .card .thumb.blank { background: repeating-linear-gradient(45deg, #3a3342 0 4px, #2f2937 4px 8px); color: var(--muted); font-size: 10px; display: flex; align-items: center; justify-content: center; }
 .card.soon .thumb { filter: grayscale(0.5) brightness(0.8); }
 .card .name { display: block; margin-top: 2px; font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -96,14 +96,14 @@ footer { margin-top: auto; display: flex; align-items: center; gap: 8px; }
 .hints { flex: 1; text-align: center; }
 
 /* ---- sponsors ---- */
-.sponsor-plate { flex: 0 0 104px; display: flex; flex-direction: column; align-items: flex-start; }
-.sponsor-label { font-size: 6.5px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
+.sponsor-plate { flex: 0 0 136px; display: flex; flex-direction: column; align-items: flex-start; }
+.sponsor-label { font-size: 7.5px; margin-bottom: 1px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
 .sponsor-slot { animation: fadeIn 0.6s ease-out; }
-.sponsor { display: inline-flex; align-items: center; justify-content: center; height: 18px; min-width: 90px; padding: 0 6px; border-radius: 3px; background: rgba(251, 246, 234, 0.92); color: #1d2233; }
-.sponsor img { max-height: 14px; max-width: 92px; }
-.sponsor-name { font-size: 8.5px; white-space: nowrap; }
+.sponsor { display: inline-flex; align-items: center; justify-content: center; height: 24px; min-width: 128px; padding: 0 8px; border-radius: 3px; background: rgba(251, 246, 234, 0.92); color: #1d2233; }
+.sponsor img { max-height: 19px; max-width: 116px; }
+.sponsor-name { font-size: 10px; white-space: nowrap; }
 .sponsor.placeholder { background: rgba(255, 255, 255, 0.06); color: var(--rope); border: 1px dashed rgba(241, 226, 166, 0.6); }
-.sponsor.big { flex-direction: column; height: 46px; min-width: 120px; gap: 2px; }
+.sponsor.big { flex-direction: column; height: 46px; min-width: 132px; gap: 2px; }
 .sponsor.big img { max-height: 24px; max-width: 120px; }
 .sponsor.big .sponsor-name { font-size: 11px; }
 .sponsor-tag { font-size: 7px; font-weight: normal; opacity: 0.85; }
@@ -136,3 +136,7 @@ footer p { margin: 0; }
 .sponsor.dark { background: #0f3d2e; color: #fff; }
 .sponsor.big.tall { height: 72px; }
 .sponsor.big.tall img { max-height: 54px; }
+
+/* The maker's credit, bottom right. */
+.credit { flex: 0 0 96px; display: flex; flex-direction: column; align-items: flex-end; }
+.credit img { height: 13px; border-radius: 2px; background: #fff; padding: 2px 4px; box-sizing: content-box; }
