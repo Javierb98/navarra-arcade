@@ -155,13 +155,13 @@
       "thumb": "assets/previews/pelota.jpg",
       "preview": "assets/previews/pelota.webm",
       "poster": "assets/previews/pelota.jpg",
-      "players": "1-2",
-      "minutes": "8-10",
-      "pace": "long",
+      "players": "2",
+      "minutes": "3-5",
+      "pace": "quick",
       "bestFor": {
-        "es": "Un torneo contra tres rivales, o un duelo rápido entre dos",
-        "eu": "Hiru aurkariren aurkako txapelketa, edo biren arteko norgehiagoka azkarra",
-        "en": "A tournament against three rivals, or a quick duel for two"
+        "es": "Un duelo rápido entre dos: ideal para retarse por turnos",
+        "eu": "Biren arteko norgehiagoka azkarra: txandaka elkarri erronka egiteko aproposa",
+        "en": "A quick duel for two: perfect for taking turns to challenge each other"
       },
       "title": {
         "es": "¡Pelotari!",
@@ -169,9 +169,9 @@
         "en": "Pelotari!"
       },
       "blurb": {
-        "es": "Pelota a mano en el frontón del pueblo: gana el torneo de las fiestas y llévate la txapela.",
-        "eu": "Esku pilota herriko frontoian: irabazi jaietako txapelketa eta eraman txapela.",
-        "en": "Hand pelota at the village frontón: win the fiesta tournament and take home the txapela."
+        "es": "Pelota a mano en el frontón del pueblo, en fiestas: rojo contra azul, a 7 tantos.",
+        "eu": "Esku pilota herriko frontoian, jaietan: gorria urdinaren aurka, 7 tantora.",
+        "en": "Hand pelota at the village frontón during the fiestas: red against blue, first to 7."
       },
       "lesson": {
         "es": "Las reglas y las palabras de la pelota a mano (frontis, chapa, dejada, tanto) y por qué hay un frontón en casi cada pueblo.",

@@ -25,7 +25,7 @@
   "title.press": "Press [START]",
   "title.players": "1 or 2 players · red against blue",
   "menu.players": "Players",
-  "menu.players.1": "1 player: the fiesta tournament",
+  "menu.players.1": "1 player: tournament against the computer",
   "menu.players.2": "2 players, red against blue",
   "menu.difficulty": "Difficulty",
   "menu.difficulty.easy": "Easy",
@@ -129,5 +129,6 @@
   "gl.txapela.text": "The Basque beret. In Basque sports, the champion is crowned with a txapela.",
   "fact.txapela": "In Basque sports, the winner of a championship is crowned with a txapela instead of given a cup.",
   "help.hit": "[A] drive · [B] dejada",
-  "help.aim": "To aim, hold {l} txoko, {r} wide or {d} lob as you hit"
+  "help.aim": "To aim, hold {l} txoko, {r} wide or {d} lob as you hit",
+  "menu.duo.note": "Red against blue, first to 7. A quick match of a few minutes."
 }
