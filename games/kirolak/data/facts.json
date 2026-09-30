@@ -1,0 +1,47 @@
+{
+  "_note": "Every fact stays review_status draft until a qualified reviewer checks it and adds a source. A null source means nobody has cited one yet; do not invent one.",
+  "facts": [
+    {
+      "id": "kirolak.origin",
+      "text_key": "fact.origin",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "kirolak.bets",
+      "text_key": "fact.bets",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "kirolak.aizkolari",
+      "text_key": "fact.aizkolari",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "kirolak.stones",
+      "text_key": "fact.stones",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "kirolak.sokatira",
+      "text_key": "fact.sokatira",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "kirolak.txapela",
+      "text_key": "fact.txapela",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "kirolak.plaza",
+      "text_key": "fact.plaza",
+      "source": null,
+      "review_status": "draft"
+    }
+  ]
+}
