@@ -1,0 +1,263 @@
+{
+  "_note": "Coordinates are pixels on the 480x270 map. Roncal (player 1) is the left half, Barétous (player 2) the right; the border runs down x = 240 and the San Martín stone sits on the pass at the top. `owner` is 0 for Roncal, 1 for Barétous, -1 for shared. Gates are [x1, x2] along the top fence of a pen.",
+  "w": 480,
+  "h": 270,
+  "border": 240,
+  "cell": 16,
+  "stone": {
+    "x": 240,
+    "y": 30
+  },
+  "valleys": [
+    {
+      "id": "roncal",
+      "pen": {
+        "x": 12,
+        "y": 212,
+        "w": 92,
+        "h": 50,
+        "gate": [
+          44,
+          76
+        ]
+      },
+      "house": {
+        "x": 112,
+        "y": 228,
+        "w": 28,
+        "h": 20
+      },
+      "hut": {
+        "x": 18,
+        "y": 46,
+        "w": 24,
+        "h": 16
+      },
+      "shelter": {
+        "x": 38,
+        "y": 80,
+        "r": 22
+      },
+      "start": {
+        "x": 60,
+        "y": 200
+      }
+    },
+    {
+      "id": "baretous",
+      "pen": {
+        "x": 376,
+        "y": 212,
+        "w": 92,
+        "h": 50,
+        "gate": [
+          404,
+          436
+        ]
+      },
+      "house": {
+        "x": 340,
+        "y": 228,
+        "w": 28,
+        "h": 20
+      },
+      "hut": {
+        "x": 438,
+        "y": 46,
+        "w": 24,
+        "h": 16
+      },
+      "shelter": {
+        "x": 442,
+        "y": 80,
+        "r": 22
+      },
+      "start": {
+        "x": 420,
+        "y": 200
+      }
+    }
+  ],
+  "pastures": [
+    {
+      "id": "roncal_high",
+      "owner": 0,
+      "x": 120,
+      "y": 86,
+      "rx": 50,
+      "ry": 30,
+      "high": true,
+      "start": 0.9
+    },
+    {
+      "id": "roncal_low",
+      "owner": 0,
+      "x": 110,
+      "y": 178,
+      "rx": 52,
+      "ry": 26,
+      "high": false,
+      "start": 0.9
+    },
+    {
+      "id": "shared_high",
+      "owner": -1,
+      "x": 240,
+      "y": 118,
+      "rx": 62,
+      "ry": 28,
+      "high": true,
+      "start": 0.9
+    },
+    {
+      "id": "baretous_high",
+      "owner": 1,
+      "x": 360,
+      "y": 86,
+      "rx": 50,
+      "ry": 30,
+      "high": true,
+      "start": 0.9
+    },
+    {
+      "id": "baretous_low",
+      "owner": 1,
+      "x": 370,
+      "y": 178,
+      "rx": 52,
+      "ry": 26,
+      "high": false,
+      "start": 0.9
+    }
+  ],
+  "springs": [
+    {
+      "id": "roncal",
+      "x": 66,
+      "y": 138,
+      "cap": 3,
+      "regen": 0.02,
+      "troughs": [
+        {
+          "x": 80,
+          "y": 146,
+          "side": 0
+        }
+      ]
+    },
+    {
+      "id": "shared",
+      "x": 240,
+      "y": 170,
+      "cap": 4,
+      "regen": 0.035,
+      "troughs": [
+        {
+          "x": 224,
+          "y": 180,
+          "side": 0
+        },
+        {
+          "x": 256,
+          "y": 180,
+          "side": 1
+        }
+      ]
+    },
+    {
+      "id": "baretous",
+      "x": 414,
+      "y": 138,
+      "cap": 3,
+      "regen": 0.02,
+      "troughs": [
+        {
+          "x": 400,
+          "y": 146,
+          "side": 1
+        }
+      ]
+    }
+  ],
+  "sharedShelter": {
+    "x": 218,
+    "y": 50,
+    "w": 44,
+    "h": 28
+  },
+  "fires": [
+    {
+      "x": 172,
+      "y": 58
+    },
+    {
+      "x": 240,
+      "y": 150
+    },
+    {
+      "x": 308,
+      "y": 58
+    }
+  ],
+  "rocks": [
+    {
+      "x": 196,
+      "y": 206,
+      "r": 6
+    },
+    {
+      "x": 284,
+      "y": 206,
+      "r": 6
+    },
+    {
+      "x": 186,
+      "y": 70,
+      "r": 4
+    },
+    {
+      "x": 294,
+      "y": 70,
+      "r": 4
+    },
+    {
+      "x": 160,
+      "y": 232,
+      "r": 7
+    },
+    {
+      "x": 320,
+      "y": 232,
+      "r": 7
+    },
+    {
+      "x": 240,
+      "y": 232,
+      "r": 8
+    },
+    {
+      "x": 30,
+      "y": 150,
+      "r": 5
+    },
+    {
+      "x": 450,
+      "y": 150,
+      "r": 5
+    }
+  ],
+  "forests": [
+    {
+      "x1": 0,
+      "x2": 206,
+      "y1": 12,
+      "y2": 36
+    },
+    {
+      "x1": 274,
+      "x2": 480,
+      "y1": 12,
+      "y2": 36
+    }
+  ]
+}

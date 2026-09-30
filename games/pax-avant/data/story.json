@@ -1,0 +1,11 @@
+{
+  "intro": [
+    { "scene": "pastures", "text": "intro.1" },
+    { "scene": "dispute", "text": "intro.2" },
+    { "scene": "treaty", "text": "intro.3" }
+  ],
+  "outro": [
+    { "scene": "ceremony3", "text": "outro.1" },
+    { "scene": "pastures", "text": "outro.2" }
+  ]
+}

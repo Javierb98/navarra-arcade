@@ -1,0 +1,50 @@
+{
+  "es": {
+    "title": "Arcade de Navarra",
+    "choose": "Elige un juego",
+    "players": "{n} jugadores",
+    "soon": "Próximamente",
+    "hint": "← → elegir juego · [A] jugar · ↑ idioma",
+    "exitHint": "Dentro del juego, mantén [START] para volver aquí",
+    "loading": "Cargando…",
+    "offline": "Este juego no está en marcha",
+    "player1": "1 jugador",
+    "learn": "Lo que aprenderás",
+    "when": "Cuándo",
+    "where": "Dónde",
+    "lang": "Idioma",
+    "hintLang": "← → elegir idioma · [A] o ↓ volver a los juegos"
+  },
+  "eu": {
+    "title": "Nafarroako Arcadea",
+    "choose": "Aukeratu joko bat",
+    "players": "{n} jokalari",
+    "soon": "Laster",
+    "hint": "← → jokoa aukeratu · [A] jolastu · ↑ hizkuntza",
+    "exitHint": "Jokoan, eutsi [START] hona itzultzeko",
+    "loading": "Kargatzen…",
+    "offline": "Joko hau ez dago martxan",
+    "player1": "Jokalari 1",
+    "learn": "Zer ikasiko duzu",
+    "when": "Noiz",
+    "where": "Non",
+    "lang": "Hizkuntza",
+    "hintLang": "← → hizkuntza aukeratu · [A] edo ↓ jokoetara itzuli"
+  },
+  "en": {
+    "title": "Navarra Arcade",
+    "choose": "Choose a game",
+    "players": "{n} players",
+    "soon": "Coming soon",
+    "hint": "← → choose a game · [A] play · ↑ language",
+    "exitHint": "In a game, hold [START] to come back here",
+    "loading": "Loading…",
+    "offline": "This game isn't running",
+    "player1": "1 player",
+    "learn": "What you'll learn",
+    "when": "When",
+    "where": "Where",
+    "lang": "Language",
+    "hintLang": "← → choose a language · [A] or ↓ back to the games"
+  }
+}

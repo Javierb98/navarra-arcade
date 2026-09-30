@@ -1,0 +1,118 @@
+{
+  "id": "roncesvalles",
+  "year": 778,
+  "title": { "en": "Roncesvalles", "es": "Roncesvalles" },
+  "date": { "en": "15 August 778", "es": "15 de agosto de 778" },
+  "place": { "en": "A pass in the western Pyrenees", "es": "Un paso del Pirineo occidental" },
+
+  "briefing": {
+    "en": [
+      "Summer, 778. Charles, king of the Franks, is marching home from a fruitless expedition to Zaragoza. On the way out he has pulled down the walls of Pamplona.",
+      "His army crosses the Pyrenees in one long column. The rearguard and the baggage train come last, strung out along a road that has room for two abreast and no more.",
+      "You lead the Vascones of these mountains. Wait unseen on the heights, let the tail of the column into the narrows, then fall on it before it can form. Take the baggage. By nightfall you will be gone."
+    ],
+    "es": [
+      "Verano de 778. Carlos, rey de los francos, vuelve a casa de una expedición inútil a Zaragoza. Al pasar ha derribado las murallas de Pamplona.",
+      "Su ejército cruza el Pirineo en una sola columna larga. La retaguardia y el bagaje van al final, estirados por un camino donde caben dos de frente y ni uno más.",
+      "Tú mandas a los vascones de estos montes. Espera sin ser visto en las alturas, deja que la cola de la columna se meta en la garganta y cae sobre ella antes de que pueda formar. Quédate el bagaje. Al caer la noche ya no estaréis allí."
+    ]
+  },
+
+  "cutscene": {
+    "steps": [
+      { "labels": [["zaragoza", "Zaragoza"]], "route": ["zaragoza"], "to": 0 },
+      { "labels": [["zaragoza", "Zaragoza"], ["pamplona", "Pamplona"]], "route": ["zaragoza", "pamplona", "roncesvalles"], "to": 0.62 },
+      { "labels": [["zaragoza", "Zaragoza"], ["pamplona", "Pamplona"], ["roncesvalles", "Roncesvalles"]], "route": ["zaragoza", "pamplona", "roncesvalles"], "to": 1 }
+    ],
+    "column": { "faction": "franks", "side": "enemy", "types": ["fra_horsemen", "fra_spearmen", "fra_baggage", "fra_spearmen", "fra_commander", "fra_spearmen"] }
+  },
+
+  "objective": {
+    "type": "convoy",
+    "side": "enemy",
+    "exit": [[23, 2], [23, 3]],
+    "seize": 2,
+    "text": {
+      "en": "Seize two of the three baggage wagons before nightfall, or break the rearguard. If two wagons get through the pass, or night comes first, the Franks have won.",
+      "es": "Captura dos de los tres carros del bagaje antes de que anochezca, o rompe la retaguardia. Si dos carros cruzan el paso, o llega antes la noche, habrán ganado los francos."
+    }
+  },
+
+  "results": {
+    "nightfall": {
+      "lost": { "en": "Night falls before you could take the baggage. The column limps on.", "es": "Anochece antes de que tomes el bagaje. La columna sigue su camino, maltrecha." }
+    }
+  },
+
+  "historicalNote": {
+    "en": "Einhard, Charlemagne's biographer, admits the disaster. As the army crossed the Pyrenees, Basques (Wascones) waiting in ambush on the heights fell on the baggage and on the rearguard protecting it, drove them down into the valley below and killed them to the last man. Light arms and the lie of the land favoured the attackers; they plundered the baggage and scattered under cover of nightfall, and the Franks could not pursue them. Einhard names three of the dead: Eggihard, the royal seneschal; Anselm, count of the palace; and Hruodland (Roland), prefect of the Breton March. Eggihard's epitaph gives the date as 15 August.",
+    "es": "Eginardo, biógrafo de Carlomagno, reconoce el desastre. Mientras el ejército cruzaba el Pirineo, los vascones (Wascones), emboscados en las alturas, cayeron sobre el bagaje y la retaguardia que lo protegía, los empujaron al valle y los mataron hasta el último hombre. Las armas ligeras y la disposición del terreno favorecieron a los atacantes, que saquearon el bagaje y se dispersaron al amparo de la noche sin que los francos pudieran perseguirlos. Eginardo nombra a tres de los muertos: Eggihardo, senescal real; Anselmo, conde de palacio; y Hruodlando (Roldán), prefecto de la Marca de Bretaña. El epitafio de Eggihardo da la fecha: 15 de agosto."
+  },
+
+  "legendNote": {
+    "en": "Where legend takes over. The Song of Roland, written about three centuries later, turns the Basques into Saracens, makes Roland Charlemagne's nephew and stages a heroic last stand with a horn blown too late. That is poetry, not chronicle. Even the place is uncertain: tradition puts it near Roncesvalles and the Ibañeta pass, but Einhard only says 'in the Pyrenees'. The official Royal Frankish Annals kept silent about the defeat; only the revised version, written after Charlemagne's death, admits it.",
+    "es": "Donde empieza la leyenda. El Cantar de Roldán, escrito unos tres siglos después, convierte a los vascones en sarracenos, hace a Roldán sobrino de Carlomagno y monta una última resistencia heroica con un olifante que suena demasiado tarde. Eso es poesía, no crónica. Ni siquiera el lugar es seguro: la tradición lo sitúa cerca de Roncesvalles y el puerto de Ibañeta, pero Eginardo solo dice «en el Pirineo». Los Anales reales francos oficiales callaron la derrota; solo la versión revisada, escrita tras la muerte de Carlomagno, la reconoce."
+  },
+
+  "sources": [
+    { "en": "Einhard, Vita Karoli Magni, ch. 9", "es": "Eginardo, Vita Karoli Magni, cap. 9" },
+    { "en": "Annales regni Francorum, revised version ('Annales qui dicuntur Einhardi'), s.a. 778", "es": "Annales regni Francorum, versión revisada («Annales qui dicuntur Einhardi»), año 778" },
+    { "en": "Epitaph of Eggihard (Poetae Latini aevi Carolini I, MGH)", "es": "Epitafio de Eggihardo (Poetae Latini aevi Carolini I, MGH)" },
+    { "en": "La Chanson de Roland, Oxford manuscript (Digby 23), c. 1100 — for the legend only", "es": "La Chanson de Roland, manuscrito de Oxford (Digby 23), h. 1100 — solo para la leyenda" },
+    { "en": "Pilgrim's Guide (Codex Calixtinus, book V), 12th century — for Basque javelins", "es": "Guía del Peregrino (Códice Calixtino, libro V), siglo XII — para los venablos vascos" }
+  ],
+
+  "turnLimit": 12,
+
+  "map": {
+    "_legend": ". road   s slope   f wooded slope   S crag   F high wood",
+    "rows": [
+      "SSSSSSFFSSSFFSSSFFSSFFSS",
+      "sff.....sfsffssffsfsffsS",
+      "........................",
+      "........................",
+      "sss.....fsffsfssffsffssS",
+      "SSFFSSSSFFSSSFFSSSFFSSSS"
+    ]
+  },
+
+  "sides": {
+    "player": {
+      "faction": "vascones",
+      "budget": 600,
+      "maxUnits": 10,
+      "leader": { "type": "vas_chief", "name": { "en": "Mountain chieftain", "es": "Jefe de la montaña" } },
+      "ambush": true,
+      "rocks": 3,
+      "facing": -1,
+      "retreat": ["top", "bottom"],
+      "aggression": 0.8,
+      "deploy": [
+        { "x0": 11, "x1": 23, "y0": 0, "y1": 5, "minHeight": 1 },
+        { "x0": 21, "x1": 23, "y0": 2, "y1": 3 }
+      ],
+      "deployHints": { "focusX": 16, "block": [[22, 2], [22, 3]] },
+      "suggested": { "vas_warriors": 5, "vas_skirmishers": 1, "vas_horse": 1 }
+    },
+    "enemy": {
+      "faction": "franks",
+      "ambush": false,
+      "rocks": 0,
+      "facing": 1,
+      "retreat": ["left"],
+      "aggression": 0.55,
+      "units": [
+        { "type": "fra_horsemen",  "x": 7, "y": 2 },
+        { "type": "fra_spearmen",  "x": 7, "y": 3 },
+        { "type": "fra_baggage",   "x": 6, "y": 2 },
+        { "type": "fra_baggage",   "x": 6, "y": 3 },
+        { "type": "fra_spearmen",  "x": 5, "y": 2 },
+        { "type": "fra_spearmen",  "x": 5, "y": 3 },
+        { "type": "fra_baggage",   "x": 4, "y": 2 },
+        { "type": "fra_commander", "x": 4, "y": 3, "name": { "en": "Roland (Hruodland)", "es": "Roldán (Hruodlando)" } },
+        { "type": "fra_horsemen",  "x": 3, "y": 2 },
+        { "type": "fra_spearmen",  "x": 3, "y": 3 }
+      ]
+    }
+  }
+}

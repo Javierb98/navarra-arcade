@@ -1,0 +1,108 @@
+{
+  "id": "simancas",
+  "year": 939,
+  "title": { "en": "Simancas", "es": "Simancas" },
+  "date": { "en": "Summer 939", "es": "Verano de 939" },
+  "place": { "en": "Simancas, on the Pisuerga near the Duero", "es": "Simancas, junto al Pisuerga cerca del Duero" },
+
+  "briefing": {
+    "en": [
+      "Summer, 939. Abd al-Rahman III, who took the title of caliph ten years ago, leads a great army north against Ramiro II of León. His court calls it the campaign of omnipotence.",
+      "Ramiro has gathered his Leonese, the Castilians of Count Fernán González, and troops from Pamplona sent by Queen Toda. On 19 July the sun went dark at midday. Both armies took it as an omen.",
+      "You are Ramiro II. Meet the caliph's army where it must cross the river to reach you, hold the bridges, and break it before nightfall."
+    ],
+    "es": [
+      "Verano de 939. Abd al-Rahman III, que tomó el título de califa hace diez años, lleva un gran ejército al norte contra Ramiro II de León. Su corte la llama la campaña del poder supremo.",
+      "Ramiro ha reunido a sus leoneses, a los castellanos del conde Fernán González y tropas de Pamplona enviadas por la reina Toda. El 19 de julio el sol se oscureció a mediodía. Los dos ejércitos lo tomaron por un presagio.",
+      "Tú eres Ramiro II. Recibe al ejército del califa donde tiene que cruzar el río para llegar a ti, defiende los puentes y rómpelo antes de que anochezca."
+    ]
+  },
+
+  "cutscene": {
+    "steps": [
+      { "labels": [["cordoba", "Córdoba"]], "route": ["cordoba"], "to": 0 },
+      { "labels": [["cordoba", "Córdoba"], ["toledo", "Toledo"], ["leon", "León"]], "route": ["cordoba", "toledo", "simancas"], "to": 0.6 },
+      { "labels": [["leon", "León"], ["pamplona", "Pamplona"], ["simancas", "Simancas"]], "route": ["cordoba", "toledo", "simancas"], "to": 1 }
+    ],
+    "column": { "faction": "cordoba", "side": "enemy", "types": ["cor_heavy", "cor_berbers", "cor_guard", "cor_leader", "cor_infantry", "cor_archers"] }
+  },
+
+  "omen": { "type": "eclipse", "min": 4, "max": 22, "floor": 30 },
+
+  "objective": {
+    "type": "field",
+    "text": {
+      "en": "Break the caliph's army, or hold the field in better shape than his at nightfall. The eclipse has shaken both armies: a leader's rally will steady the companies around him.",
+      "es": "Rompe el ejército del califa, o termina la jornada en mejor estado que él. El eclipse ha sacudido a los dos ejércitos: una arenga del caudillo calmará a las compañías que tenga cerca."
+    }
+  },
+
+  "historicalNote": {
+    "en": "In the summer of 939 the caliph Abd al-Rahman III led a great expedition north against Ramiro II of León; his chroniclers called it the campaign of omnipotence. Ramiro met him near Simancas, on the Pisuerga close to where it joins the Duero, with the Leonese, the Castilians of Count Fernán González, and troops from Pamplona sent by Queen Toda. Christian and Arabic writers both record the solar eclipse of 19 July 939, a few weeks before the battle. The fighting in early August went against the caliph, and as his army withdrew it was caught again in a ravine at Alhandega. Abd al-Rahman is said to have lost his own copy of the Qur'an and his coat of mail, and he never again led a campaign in person.",
+    "es": "En el verano de 939 el califa Abd al-Rahman III dirigió una gran expedición al norte contra Ramiro II de León; sus cronistas la llamaron la campaña del poder supremo. Ramiro le salió al paso cerca de Simancas, junto al Pisuerga no lejos de su confluencia con el Duero, con los leoneses, los castellanos del conde Fernán González y tropas de Pamplona enviadas por la reina Toda. Autores cristianos y árabes registran el eclipse de sol del 19 de julio de 939, unas semanas antes de la batalla. Los combates de principios de agosto le fueron adversos al califa, y en la retirada su ejército volvió a ser sorprendido en un barranco, en Alhandega. Se cuenta que Abd al-Rahman perdió su propio Corán y su cota de malla, y nunca volvió a dirigir una campaña en persona."
+  },
+
+  "legendNote": {
+    "en": "Where legend takes over. Castilian tradition later credited the victory to Saint Millán and Saint James appearing in the sky, and a document called the Votos de San Millán, supposedly granted by Fernán González in thanks, claimed dues from Castilian towns on that basis. It is a twelfth-century forgery. The chronicles' figures of a hundred thousand men and more should not be trusted either.",
+    "es": "Donde empieza la leyenda. La tradición castellana atribuyó después la victoria a san Millán y Santiago, aparecidos en el cielo, y un documento llamado los Votos de San Millán, supuestamente otorgado por Fernán González en agradecimiento, reclamaba por ello tributos a las villas castellanas. Es una falsificación del siglo XII. Tampoco hay que fiarse de las cifras de las crónicas, de cien mil hombres y más."
+  },
+
+  "sources": [
+    { "en": "Ibn Hayyan, al-Muqtabis V", "es": "Ibn Hayyan, al-Muqtabis V" },
+    { "en": "Chronicle of Sampiro", "es": "Crónica de Sampiro" },
+    { "en": "Annales Castellani Antiquiores", "es": "Anales castellanos primeros" },
+    { "en": "Hugh Kennedy, Muslim Spain and Portugal: A Political History of al-Andalus", "es": "Hugh Kennedy, Los musulmanes en la Península Ibérica: historia política de al-Andalus" }
+  ],
+
+  "turnLimit": 12,
+
+  "map": {
+    "_legend": ", open ground   r gentle rise   o olive grove   W river   = bridge",
+    "rows": [
+      "rrr,,,,o,,,,W,,,,,,o,,,,",
+      "rr,,,,,,,,,,=,,,,,,,,,,,",
+      ",,,,,,,o,,,,W,,,,,,,,,,,",
+      ",,,,,,,,,,,,W,,,,o,,,,,,",
+      ",,,,,,,,,,,,=,,,,,,,,,,,",
+      "rr,,,o,,,,,,W,,,,,,,,,,,"
+    ]
+  },
+
+  "sides": {
+    "player": {
+      "faction": "asturleonese",
+      "allies": ["vascones"],
+      "budget": 960,
+      "maxUnits": 11,
+      "leader": { "type": "ast_leader", "name": { "en": "Ramiro II", "es": "Ramiro II" } },
+      "ambush": false,
+      "rocks": 0,
+      "facing": 1,
+      "retreat": ["left"],
+      "aggression": 0.6,
+      "deploy": [{ "x0": 0, "x1": 8, "y0": 0, "y1": 5 }],
+      "deployHints": { "focusX": 9 },
+      "suggested": { "ast_mountaineers": 4, "ast_nobles": 3, "ast_slingers": 1, "vas_warriors": 1, "vas_skirmishers": 1 }
+    },
+    "enemy": {
+      "faction": "cordoba",
+      "ambush": false,
+      "rocks": 0,
+      "facing": -1,
+      "retreat": ["right"],
+      "aggression": 0.65,
+      "units": [
+        { "type": "cor_berbers", "x": 15, "y": 1 },
+        { "type": "cor_berbers", "x": 15, "y": 4 },
+        { "type": "cor_infantry", "x": 16, "y": 2 },
+        { "type": "cor_infantry", "x": 16, "y": 3 },
+        { "type": "cor_archers", "x": 17, "y": 1 },
+        { "type": "cor_archers", "x": 17, "y": 4 },
+        { "type": "cor_heavy", "x": 18, "y": 2 },
+        { "type": "cor_infantry", "x": 18, "y": 4 },
+        { "type": "cor_guard", "x": 19, "y": 2 },
+        { "type": "cor_leader", "x": 20, "y": 3, "name": { "en": "Abd al-Rahman III", "es": "Abd al-Rahman III" } }
+      ]
+    }
+  }
+}

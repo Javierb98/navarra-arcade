@@ -1,0 +1,26 @@
+{
+  "intro": [
+    {
+      "scene": "winter",
+      "text": "intro.1"
+    },
+    {
+      "scene": "build",
+      "text": "intro.2"
+    },
+    {
+      "scene": "thaw",
+      "text": "intro.3"
+    }
+  ],
+  "outro": [
+    {
+      "scene": "thaw",
+      "text": "outro.1"
+    },
+    {
+      "scene": "burgui",
+      "text": "outro.2"
+    }
+  ]
+}
