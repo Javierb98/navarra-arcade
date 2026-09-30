@@ -102,12 +102,12 @@
       "status": "ready",
       "thumb": "art:olite",
       "players": "1-2",
-      "minutes": "8–10",
+      "minutes": "10",
       "pace": "long",
       "bestFor": {
-        "es": "Para quien tenga tiempo: cada etapa es una partida completa",
-        "eu": "Denbora duenarentzat: etapa bakoitza partida oso bat da",
-        "en": "For someone with time: each stage is a complete game"
+        "es": "¡Para dos! Atados con una cuerda, solo llegáis arriba juntos",
+        "eu": "Birentzat! Soka batez lotuta, elkarrekin bakarrik iritsiko zarete goraino",
+        "en": "Made for two! Roped together, you only reach the top as a team"
       },
       "title": {
         "es": "Piedra por piedra",
@@ -115,14 +115,14 @@
         "en": "Stone by Stone"
       },
       "blurb": {
-        "es": "Levanta la villa de Olite y el palacio real de Carlos III el Noble.",
-        "eu": "Eraiki Erriberriko hiribildua eta Karlos III.a Noblearen errege-jauregia.",
-        "en": "Raise the town of Olite and the royal palace of Charles III the Noble."
+        "es": "Dos canteros atados con una cuerda escalan el palacio de Olite: murallas, jardines colgantes y torres.",
+        "eu": "Soka batez lotutako bi hargin Erriberriko jauregian gora doaz: harresiak, lorategi zintzilikatuak eta dorreak.",
+        "en": "Two stonemasons tied together climb the palace of Olite: walls, hanging gardens and towers."
       },
       "lesson": {
-        "es": "Cómo crecieron una villa medieval y su palacio real, y cuánta gente hacía falta para ello: campesinos, canteros, artesanos y comerciantes.",
-        "eu": "Nola hazi ziren Erdi Aroko hiribildu bat eta bere errege-jauregia, eta zenbat jende behar zen horretarako: nekazariak, hargin, artisau eta merkatariak.",
-        "en": "How a medieval town and its royal palace grew, and how many people it took: farmers, stonemasons, craftspeople and merchants."
+        "es": "Cómo era el palacio de Carlos III el Noble, por qué ardió en 1813 y cómo se ha ido restaurando piedra a piedra.",
+        "eu": "Nolakoa zen Karlos III.a Noblearen jauregia, zergatik erre zen 1813an eta nola zaharberritu den harriz harri.",
+        "en": "What Charles III the Noble's palace was like, why it burned in 1813, and how it has been restored stone by stone."
       },
       "era": {
         "es": "Carlos III el Noble, 1387–1425",
@@ -135,9 +135,9 @@
         "en": "Olite"
       },
       "controls": {
-        "es": "Joystick y botones",
-        "eu": "Joystick-a eta botoiak",
-        "en": "Stick and buttons"
+        "es": "Joystick, saltar, mazo y cuerda",
+        "eu": "Joystick-a, saltoa, mazoa eta soka",
+        "en": "Stick, jump, mallet and rope"
       }
     },
     {

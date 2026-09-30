@@ -1,57 +1,19 @@
 {
-  "hand": 5,
-  "warehouse": 3,
-  "shopSize": 3,
-  "maxFavour": 20,
-  "maxPop": 6,
-  "taxPerHappyBlocks": 4,
-  "unhappyFavour": [
-    [
-      1,
-      1
-    ],
-    [
-      5,
-      2
-    ],
-    [
-      10,
-      3
-    ]
-  ],
-  "allFedFavour": 1,
-  "fire": {
-    "spreadAfter": 2,
-    "burnsOut": 4
-  },
+  "_note": "Physics in pixels and seconds; tiles are 48 px. A jump rises about 160 px (3 floors of 48 need 144). Standing on a partner adds 44 px, enough for a 4-tile boost. Run npm test after changing anything.",
+  "tile": 48,
+  "view": { "w": 960, "h": 540 },
+  "camera": { "lead": 0.55 },
+  "climber": { "w": 28, "h": 44, "speed": 210, "accelGround": 2600, "accelAir": 1500, "gravity": 1800, "jumpSpeed": 760, "maxFall": 950, "coyote": 0.08, "buffer": 0.12, "shortHop": 2.2 },
+  "rope": { "max": 216, "min": 56, "reel": 240, "relax": 220 },
+  "hit": { "time": 0.25, "cooldown": 0.35, "reach": 38 },
+  "stork": { "every": 6, "speed": 150, "stun": 0.6, "knock": 280 },
+  "drop": { "every": 4.5, "warn": 0.8 },
+  "mover": { "speed": 60 },
+  "crumble": { "after": 0.55, "back": 4 },
+  "respawnSafe": 1.5,
   "difficulty": {
-    "easy": {
-      "hand": 6,
-      "turnLimit": false,
-      "startCoin": 5,
-      "startFavour": 5,
-      "fireMul": 0.5,
-      "growthEvery": 1,
-      "favourMul": 0.5
-    },
-    "normal": {
-      "hand": 5,
-      "turnLimit": true,
-      "startCoin": 0,
-      "startFavour": 0,
-      "fireMul": 1,
-      "growthEvery": 1,
-      "favourMul": 1
-    }
+    "easy": { "hearts": 9, "maxHearts": 12, "hazardMul": 0.5, "ropeMul": 1.1 },
+    "normal": { "hearts": 5, "maxHearts": 9, "hazardMul": 1, "ropeMul": 1 }
   },
-  "twoPlayer": {
-    "hand": 3
-  },
-  "score": {
-    "person": 5,
-    "favour": 10,
-    "coin": 1,
-    "turnLeft": 10,
-    "project": 50
-  }
+  "score": { "gold": 500, "orange": 100, "shoo": 200, "break": 10, "perSecond": 10, "heartLeft": 300 }
 }
