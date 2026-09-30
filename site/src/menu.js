@@ -94,7 +94,7 @@ function build() {
   );
   el.cardEls = games.map((g, i) => {
     const card = h('div', { class: `card ${g.status}`, onClick: () => (i === sel ? launch() : pick(i)) },
-      g.thumb ? h('div', { class: 'thumb', style: { backgroundImage: `url(${g.thumb})` } }) : h('div', { class: 'thumb blank' }),
+      g.poster || g.thumb ? h('div', { class: 'thumb', style: { backgroundImage: `url(${g.poster ?? g.thumb})` } }) : h('div', { class: 'thumb blank' }),
       h('span', { class: `pace ${g.pace}` }),
       h('span', { class: 'name' }));
     el.cards.append(card);
@@ -137,7 +137,9 @@ function render(dir = 0) {
   const players = g.players === '1' ? t('player1') : t('players', { n: g.players.replace('-', '–') });
   const panel = h('div', { class: `feature-inner ${dir > 0 ? 'from-right' : dir < 0 ? 'from-left' : 'fade'}` },
     h('div', { class: `preview ${g.status}` },
-      g.thumb ? h('div', { class: 'pan', style: { backgroundImage: `url(${g.thumb})` } }) : h('div', { class: 'pan blank' }, L(g.title)),
+      // Real gameplay when there's a clip; otherwise a slow pan over the picture.
+      g.preview ? h('video', { class: 'clip', src: g.preview, poster: g.poster ?? '', muted: true, autoplay: true, loop: true, playsinline: true, preload: 'auto' })
+        : g.thumb ? h('div', { class: 'pan', style: { backgroundImage: `url(${g.thumb})` } }) : h('div', { class: 'pan blank' }, L(g.title)),
       g.status === 'soon' ? h('span', { class: 'badge' }, t('soon')) : null),
     h('div', { class: 'info' },
       h('div', { class: 'title-row' }, h('h2', {}, L(g.title)), h('span', { class: `pace-tag ${g.pace}` }, `${t(g.pace)} · ${t('min', { n: g.minutes })}`)),
@@ -149,6 +151,8 @@ function render(dir = 0) {
         h('span', { class: 'chip' }, h('b', {}, t('when')), ' ', L(g.era), ' · ', h('b', {}, t('where')), ' ', L(g.place)),
         h('span', { class: 'chip' }, players, ' · ', L(g.controls)))));
   el.feature.replaceChildren(panel);
+  const clip = panel.querySelector('video');
+  if (clip) { clip.muted = true; clip.play().catch(() => {}); } // muted, so browsers let it autoplay
 
   renderSponsor();
   el.credit.replaceChildren(...(credits ? [h('span', { class: 'sponsor-label' }, S(credits.label)),
@@ -173,7 +177,7 @@ function renderSponsor() {
   if (!sponsors?.sponsors?.length) { el.sponsor.replaceChildren(); return; }
   const sp = sponsors.sponsors[sponsorAt % sponsors.sponsors.length];
   el.sponsor.replaceChildren(
-    h('span', { class: 'sponsor-label' }, S(sponsors.label), sponsorsAreTest ? h('span', { class: 'test-tag' }, 'TEST') : null),
+    h('span', { class: 'sponsor-label' }, S(sponsors.label)),
     h('div', { class: 'sponsor-slot' }, sponsorBadge(sp)));
 }
 
@@ -182,7 +186,7 @@ function renderThanks() {
   el.cardEls.forEach((c) => c.classList.remove('sel'));
   const list = sponsors.sponsors;
   el.feature.replaceChildren(h('div', { class: `feature-inner thanks from-right ${list.length === 1 ? 'solo' : ''}` },
-    h('h2', {}, S(sponsors.label), sponsorsAreTest ? h('span', { class: 'test-tag' }, 'TEST') : null),
+    h('h2', {}, S(sponsors.label)),
     h('div', { class: 'sponsor-grid' }, list.map((sp) => sponsorBadge(sp, true)))));
 }
 

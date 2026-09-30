@@ -46,7 +46,9 @@
         "es": "Joystick y botones",
         "eu": "Joystick-a eta botoiak",
         "en": "Stick and buttons"
-      }
+      },
+      "preview": "assets/previews/almadia.webm",
+      "poster": "assets/previews/almadia.jpg"
     },
     {
       "id": "pax-avant",
@@ -92,7 +94,9 @@
         "es": "Joystick y botones",
         "eu": "Joystick-a eta botoiak",
         "en": "Stick and buttons"
-      }
+      },
+      "preview": "assets/previews/pax-avant.webm",
+      "poster": "assets/previews/pax-avant.jpg"
     },
     {
       "id": "olite",
@@ -138,7 +142,9 @@
         "es": "Joystick, saltar, mazo y cuerda",
         "eu": "Joystick-a, saltoa, mazoa eta soka",
         "en": "Stick, jump, mallet and rope"
-      }
+      },
+      "preview": "assets/previews/olite.webm",
+      "poster": "assets/previews/olite.jpg"
     },
     {
       "id": "espadas",
@@ -185,7 +191,8 @@
         "es": "Se juega con ratón",
         "eu": "Saguarekin jolasten da",
         "en": "Played with a mouse"
-      }
+      },
+      "preview": "assets/previews/espadas.webm"
     }
   ]
 }
