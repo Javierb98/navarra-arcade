@@ -1,48 +1,57 @@
 {
-  "seasonNames": [
-    "spring",
-    "summer",
-    "autumn",
-    "winter"
+  "hand": 5,
+  "warehouse": 3,
+  "shopSize": 3,
+  "maxFavour": 20,
+  "maxPop": 6,
+  "taxPerHappyBlocks": 4,
+  "unhappyFavour": [
+    [
+      1,
+      1
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      10,
+      3
+    ]
   ],
-  "eatPerPerson": 0.5,
-  "winterEat": 1,
-  "hungerLeaves": 1,
-  "eventChance": 0.55,
+  "allFedFavour": 1,
+  "fire": {
+    "spreadAfter": 2,
+    "burnsOut": 4
+  },
   "difficulty": {
     "easy": {
-      "hand": 5,
-      "plays": 4,
-      "seasonLimit": false,
-      "eventGoodOnly": true,
-      "bonusStart": {
-        "food": 2,
-        "coin": 2
-      }
+      "hand": 6,
+      "turnLimit": false,
+      "startCoin": 5,
+      "startFavour": 5,
+      "fireMul": 0.5,
+      "growthEvery": 1,
+      "favourMul": 0.5
     },
     "normal": {
-      "hand": 4,
-      "plays": 3,
-      "seasonLimit": true,
-      "eventGoodOnly": false,
-      "bonusStart": {}
+      "hand": 5,
+      "turnLimit": true,
+      "startCoin": 0,
+      "startFavour": 0,
+      "fireMul": 1,
+      "growthEvery": 1,
+      "favourMul": 1
     }
   },
   "twoPlayer": {
-    "hand": 3,
-    "plays": 2
+    "hand": 3
   },
   "score": {
-    "goalItem": 100,
-    "seasonLeft": 40,
-    "person": 10,
-    "wine": 5,
-    "coin": 3,
-    "hungerPenalty": 30
-  },
-  "stars": {
-    "two": 3,
-    "three": 5
-  },
-  "swapsPerSeason": 1
+    "person": 5,
+    "favour": 10,
+    "coin": 1,
+    "turnLeft": 10,
+    "project": 50
+  }
 }

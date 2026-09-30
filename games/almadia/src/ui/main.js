@@ -35,12 +35,14 @@ const app = {
   },
 };
 
+// CSS zoom (not a transform), so text is laid out and drawn sharp at the real
+// screen size; whole-number steps keep the pixel art's pixels even.
 function fit() {
   const k = Math.min(innerWidth / W, innerHeight / H);
   const scale = k >= 1 ? Math.floor(k) : k;
-  stage.style.transform = `scale(${scale})`;
-  stage.style.left = `${Math.round((innerWidth - W * scale) / 2)}px`;
-  stage.style.top = `${Math.round((innerHeight - H * scale) / 2)}px`;
+  stage.style.zoom = scale;
+  stage.style.left = `${(innerWidth - W * scale) / 2 / scale}px`;
+  stage.style.top = `${(innerHeight - H * scale) / 2 / scale}px`;
 }
 addEventListener('resize', fit);
 

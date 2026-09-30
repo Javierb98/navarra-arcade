@@ -1,29 +1,32 @@
 {
-  "_note": "Each stage is a complete game. start: what the town has on day one. goal: buildings/people needed. seasons: the limit on Normal (Easy has none). Stage text lives in the locale files under stage.<id>.*",
+  "_note": "Each stage is a complete game in quick mode, and a chapter of the campaign. goal: the projects that complete it; people keep arriving every turn whatever happens, so feeding them is the pressure. turns: the limit in quick mode on Normal. growth: new people each turn. fireChance: chance of a fire each turn.",
   "stages": [
     {
       "id": "walledtown",
-      "start": {
-        "resources": {
-          "food": 5,
-          "wine": 0,
-          "stone": 2,
-          "timber": 2,
-          "coin": 4
-        },
-        "buildings": {
-          "house": 2,
-          "field": 1
-        },
-        "people": {}
-      },
       "goal": {
-        "house": 6,
-        "vineyard": 4,
-        "press": 1,
-        "wall": 1
+        "projects": [
+          "market",
+          "wall_n",
+          "wall_e",
+          "wall_s",
+          "gate"
+        ]
       },
-      "seasons": 12
+      "turns": 30,
+      "growth": 1,
+      "fireChance": 0.07,
+      "requestEvery": 6,
+      "start": {
+        "coin": 10,
+        "favour": 12,
+        "units": [
+          {
+            "id": "oven",
+            "x": 5,
+            "y": 2
+          }
+        ]
+      }
     }
   ]
 }
