@@ -36,3 +36,9 @@ export function addScore(course, difficulty, name, score) {
 }
 
 export const resetScores = () => write(SCORES, {});
+
+// The campaign's autosave: one game in progress, restored exactly.
+const CAMPAIGN = 'olite.campaign';
+export const loadCampaign = () => read(CAMPAIGN, null);
+export const saveCampaign = (state) => write(CAMPAIGN, state);
+export function clearCampaign() { try { localStorage.removeItem(CAMPAIGN); } catch { /* storage blocked */ } }

@@ -48,12 +48,15 @@ function rich(text) {
   return out;
 }
 
+// CSS zoom (not a transform) so the browser lays the menu out at full screen
+// size: text is drawn sharp at the real resolution instead of being drawn
+// small and stretched. The pixel-art backdrop canvas stays crisp on its own.
 function fit() {
   const k = Math.min(innerWidth / 480, innerHeight / 270);
-  const scale = k >= 1 ? Math.floor(k) : k;
-  stage.style.transform = `scale(${scale})`;
-  stage.style.left = `${Math.round((innerWidth - 480 * scale) / 2)}px`;
-  stage.style.top = `${Math.round((innerHeight - 270 * scale) / 2)}px`;
+  stage.style.zoom = k;
+  // With zoom, left/top are in zoomed units too.
+  stage.style.left = `${(innerWidth - 480 * k) / 2 / k}px`;
+  stage.style.top = `${(innerHeight - 270 * k) / 2 / k}px`;
 }
 addEventListener('resize', fit);
 
