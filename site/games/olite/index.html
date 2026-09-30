@@ -4,10 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Piedra por piedra</title>
+  <link rel="icon" href="data:,">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app"><p class="loading">…</p></div>
+  <div id="stage">
+    <canvas id="view" width="480" height="270"></canvas>
+    <div id="ui"></div>
+    <div id="overlay"></div>
+  </div>
   <script type="module" src="src/ui/main.js"></script>
 </body>
 </html>
