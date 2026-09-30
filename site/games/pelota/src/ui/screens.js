@@ -4,7 +4,7 @@
 
 import { h } from './dom.js';
 import { t, getLang, setLang, nextLang, LANGS } from './i18n.js';
-import { Match, shotFor } from '../core/pelota.js';
+import { Match } from '../core/pelota.js';
 import { drawCourt, backdrop, finish, portrait, drawTxapela } from './art.js';
 import { sfx } from './audio.js';
 import { settings, topScores, qualifies, addScore } from './store.js';
@@ -352,18 +352,8 @@ export function play(app) {
         }
         return;
       }
-      const inp = inputs();
-      m.step(inp, dt);
+      m.step(inputs(), dt);
       follow(m, view, dt);
-      // Show each person's aim when it's their turn to strike (or serve).
-      view.aims = m.p.map((pl) => {
-        if (pl.ai) return null;
-        const mine = (m.phase === 'rally' && m.turn === pl.i && m.ball.wall) || (m.phase === 'serve' && m.server === pl.i);
-        if (!mine) return null;
-        const held = S.players === 2 ? inp[pl.i] : inp[0];
-        const kind = m.phase === 'serve' ? 'drive' : shotFor('a', held);
-        return { p: pl.i, kind, label: m.phase === 'serve' ? t('shot.serve') : t(`shot.${kind}`) };
-      });
       handle();
       renderBoard(); renderStatus(); renderHelp();
     },
