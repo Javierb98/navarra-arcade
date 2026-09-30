@@ -51,54 +51,61 @@ class Event {
   }
 }
 
-// Aizkolaritza: cut through the log. A power ring refills after each stroke;
-// a stroke with the ring full is a clean, deep bite.
+// Aizkolaritza: standing on the log, the aizkolari cuts the front face to
+// the middle, turns round, and cuts the back face until the log parts. A
+// power ring refills after each stroke; a stroke with the ring full is a
+// clean bite, and a run of clean bites gets deeper (the rhythm is found).
 class Chop extends Event {
   constructor(day) {
     super(day, 'aizkolaritza');
-    this.p = [0, 1].map(() => ({ cut: 0, since: 1, last: null, stagger: 0, strokes: 0, perfect: 0, doneAt: null }));
+    this.p = [0, 1].map(() => ({ face: 0, faces: [0, 0], since: 1, last: null, stagger: 0, turning: 0, streak: 0, strokes: 0, perfect: 0, doneAt: null }));
   }
   power(st) { return clamp(st.since / this.R.windup, 0, 1); }
+  cut(st) { return (st.faces[0] + st.faces[1]) / 2; }
   update(inputs, dt) {
     const R = this.R;
     this.p.forEach((st, i) => {
       st.since += dt; st.stagger = Math.max(0, st.stagger - dt);
       if (st.doneAt != null) return;
+      if (st.turning > 0) { st.turning -= dt; if (st.turning <= 0) { st.face = 1; st.since = 0; st.last = null; this.emit('turned', { p: i }); } return; }
       const pr = press(inputs[i] ?? {}, st);
-      if (!pr) return;
-      if (st.stagger > 0) return;
+      if (!pr || st.stagger > 0) return;
       const pw = this.power(st);
       st.since = 0; st.strokes++;
       if (pr.repeat) {
-        st.cut += R.glance; st.stagger = R.stagger;
+        st.faces[st.face] += R.glance; st.stagger = R.stagger; st.streak = 0;
         this.emit('glance', { p: i });
       } else {
         const perfect = pw >= R.perfect;
-        const bite = perfect ? R.bite * R.perfectBonus : R.bite * pw * pw;
-        st.cut = Math.min(1, st.cut + bite);
+        st.streak = perfect ? st.streak + 1 : 0;
+        const flow = 1 + Math.min(R.streakMax, (st.streak - 1) * R.streak) * (perfect ? 1 : 0);
+        const bite = perfect ? R.bite * R.perfectBonus * flow : R.bite * pw * pw;
+        st.faces[st.face] = Math.min(1, st.faces[st.face] + bite);
         if (perfect) st.perfect++;
-        this.emit('stroke', { p: i, power: pw, perfect, cut: st.cut });
+        this.emit('stroke', { p: i, power: pw, perfect, streak: st.streak, cut: this.cut(st), face: st.face });
       }
-      if (st.cut >= 1) {
-        st.doneAt = this.t;
-        this.emit('through', { p: i, t: this.t });
-        if (this.p.every((q) => q.doneAt != null)) this.finish();
-        else if (this.p.every((q) => q.doneAt != null || q === st)) this.finish(i);
+      if (st.faces[st.face] >= 1) {
+        if (st.face === 0) { st.turning = R.turn; st.streak = 0; this.emit('turn', { p: i }); }
+        else { st.doneAt = this.t; this.emit('through', { p: i, t: this.t }); this.finish(i); }
       }
     });
   }
   leader() {
     const [a, b] = this.p;
     if (a.doneAt != null || b.doneAt != null) return a.doneAt == null ? 1 : b.doneAt == null ? 0 : a.doneAt <= b.doneAt ? 0 : 1;
-    return Math.abs(a.cut - b.cut) < 0.005 ? null : a.cut > b.cut ? 0 : 1;
+    const ca = this.cut(a), cb = this.cut(b);
+    return Math.abs(ca - cb) < 0.005 ? null : ca > cb ? 0 : 1;
   }
-  measure(i) { return this.p[i].cut; }
+  measure(i) { return this.cut(this.p[i]); }
 }
 
 // Harri-jasotzea: heave the stone up, then balance it on the shoulder until the judge counts it.
 class Lift extends Event {
   constructor(day) {
     super(day, 'harri');
+    // Today's stone: its shape changes how it lifts and how it balances.
+    this.stone = day.stone ?? 'cilindro';
+    this.S = this.R.stones[this.stone];
     this.p = [0, 1].map(() => ({ phase: 'raise', h: 0, bal: 0, v: 0, hold: 0, wait: 0, lifts: 0, last: null, drops: 0 }));
   }
   update(inputs, dt) {
@@ -108,7 +115,7 @@ class Lift extends Event {
       if (st.phase === 'raise') {
         st.h = Math.max(0, st.h - R.sag * dt * (0.3 + st.h));
         const pr = press(inp, st);
-        if (pr && !pr.repeat) st.h += R.push;
+        if (pr && !pr.repeat) st.h += R.push * this.S.push;
         if (pr && pr.repeat) this.emit('slip', { p: i });
         if (st.h >= 1) {
           st.h = 1; st.phase = 'shoulder'; st.bal = 0; st.hold = 0;
@@ -119,7 +126,7 @@ class Lift extends Event {
         // The stone wants to roll off: its lean speeds up, more so with each lift.
         // Lean the other way: left pulls a stone tipping right back to the middle.
         const push = (inp.right ? 1 : 0) - (inp.left ? 1 : 0);
-        st.v += (Math.sign(st.bal || st.v) * R.tip * (1 + st.lifts * R.harder) + (this.r.next() - 0.5) * R.wobble + push * R.correct) * dt;
+        st.v += (Math.sign(st.bal || st.v) * R.tip * this.S.tip * (1 + st.lifts * R.harder) + (this.r.next() - 0.5) * R.wobble * this.S.wobble + push * R.correct) * dt;
         st.v *= 1 - R.damp * dt;
         st.bal += st.v * dt;
         st.hold += dt;
@@ -150,8 +157,11 @@ class Lift extends Event {
 class Carry extends Event {
   constructor(day) {
     super(day, 'txingak');
-    this.p = [0, 1].map(() => ({ dist: 0, since: 1, last: null, bal: 0, v: 0, down: 0, steps: 0, drops: 0 }));
+    this.p = [0, 1].map(() => ({ dist: 0, since: 1, last: null, bal: 0, v: 0, down: 0, steps: 0, drops: 0, turning: 0, leg: 0 }));
   }
+  // Which way they're walking: out (+1) or back (-1), and how far along this length.
+  heading(st) { return st.leg % 2 ? -1 : 1; }
+  along(st) { return st.dist - st.leg * this.R.course; }
   update(inputs, dt) {
     const R = this.R;
     this.p.forEach((st, i) => {
@@ -170,9 +180,13 @@ class Carry extends Event {
           // Best at a steady pace; a rushed step is short and swings the weights.
           const q = clamp(1 - Math.abs(gap - R.pace) / R.pace, 0.1, 1);
           const rushed = gap < R.pace * 0.6;
-          st.dist += R.stride * q; st.steps++;
-          st.v += (this.r.next() - 0.5) * R.kick * (rushed ? 3 : 1);
-          this.emit('step', { p: i, q, dist: st.dist });
+          // Turning round at the end of the course: short, shuffling steps that swing the weights.
+          const turning = st.turning > 0;
+          st.dist += R.stride * q * (turning ? R.turnStride : 1); st.steps++;
+          st.v += (this.r.next() - 0.5) * R.kick * (rushed ? 3 : 1) * (turning ? R.turnKick : 1);
+          if (turning) st.turning--;
+          this.emit('step', { p: i, q, dist: st.dist, turning });
+          if (st.dist >= (st.leg + 1) * R.course) { st.leg++; st.turning = R.turnSteps; this.emit('turn', { p: i, leg: st.leg }); }
         }
       }
       if (Math.abs(st.bal) >= 1) {
@@ -188,24 +202,31 @@ class Carry extends Event {
   measure(i) { return this.p[i].dist; }
 }
 
-// Sokatira: the leader calls the beat; pulls on it move the rope, pulls off it slip.
+// Sokatira: the leader calls the beat; pulls on it move the rope, pulls off
+// it slip. Best of three pulls; the rope goes back to the middle between them.
 class Tug extends Event {
   constructor(day) {
     super(day, 'sokatira');
-    this.x = 0; this.v = 0; // metres; positive is toward blue
-    this.beat = 0; this.nextBeat = this.R.lead; this.interval = this.R.beat[0];
+    this.pulls = [0, 0]; this.round = 1;
     this.p = [0, 1].map(() => ({ pulledBeat: -1, good: 0, slips: 0, power: 0 }));
+    this.reset(0);
+  }
+  reset(pause) {
+    this.x = 0; this.v = 0; this.roundT = 0; this.pause = pause;
+    this.beat = 0; this.nextBeat = this.t + pause + this.R.lead; this.lastBeat = null; this.interval = this.R.beat[0];
+    for (const st of this.p ?? []) st.pulledBeat = -1;
   }
   update(inputs, dt) {
     const R = this.R;
-    // The beat quickens through the pull.
-    this.interval = R.beat[0] + (R.beat[1] - R.beat[0]) * clamp(this.t / this.time, 0, 1);
+    if (this.pause > 0) { this.pause -= dt; return; }
+    this.roundT += dt;
+    // The beat quickens through each pull.
+    this.interval = R.beat[0] + (R.beat[1] - R.beat[0]) * clamp(this.roundT / R.roundTime, 0, 1);
     if (this.t >= this.nextBeat) { this.beat++; this.lastBeat = this.nextBeat; this.nextBeat += this.interval; this.emit('beat', { n: this.beat }); }
     this.p.forEach((st, i) => {
       st.power = Math.max(0, st.power - dt * 3);
       const inp = inputs[i] ?? {};
       if (!inp.a && !inp.b) return;
-      // Which beat is this press nearest, and how close?
       const prev = this.lastBeat ?? -9, next = this.nextBeat;
       const [near, n] = this.t - prev < next - this.t ? [prev, this.beat] : [next, this.beat + 1];
       const off = Math.abs(this.t - near);
@@ -223,10 +244,16 @@ class Tug extends Event {
     });
     this.v *= 1 - R.friction * dt;
     this.x += this.v * dt;
-    if (Math.abs(this.x) >= R.win) this.finish(this.x > 0 ? 1 : 0);
+    const won = Math.abs(this.x) >= R.win ? (this.x > 0 ? 1 : 0) : this.roundT >= R.roundTime ? (Math.abs(this.x) < 0.05 ? null : this.x > 0 ? 1 : 0) : undefined;
+    if (won === undefined) return;
+    if (won != null) this.pulls[won]++;
+    this.emit('round', { winner: won, pulls: [...this.pulls], round: this.round });
+    if (Math.max(...this.pulls) >= 2 || this.round >= 3) { this.finish(this.pulls[0] === this.pulls[1] ? null : this.pulls[0] > this.pulls[1] ? 0 : 1); return; }
+    this.round++;
+    this.reset(R.between);
   }
-  leader() { return Math.abs(this.x) < 0.02 ? null : this.x > 0 ? 1 : 0; }
-  measure(i) { return i ? this.x : -this.x; }
+  leader() { return this.pulls[0] !== this.pulls[1] ? (this.pulls[0] > this.pulls[1] ? 0 : 1) : Math.abs(this.x) < 0.02 ? null : this.x > 0 ? 1 : 0; }
+  measure(i) { return this.pulls[i]; }
 }
 
 const MAKE = { aizkolaritza: Chop, harri: Lift, txingak: Carry, sokatira: Tug };
@@ -288,6 +315,7 @@ export class Day {
     this.points = [0, 0];
     this.results = [];
     this.event = null;
+    this.stone = this.r.pick(Object.keys(rules.harri.stones));
     this.over = false;
     this.winner = null;
   }

@@ -7,7 +7,7 @@
 // one), and the ffmpeg that Playwright installs (npx playwright install ffmpeg).
 //
 //   node tools/record-previews.mjs            # every game
-//   node tools/record-previews.mjs olite      # just one
+//   node tools/record-previews.mjs pelota     # just one
 
 import { spawn } from 'node:child_process';
 import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
@@ -67,15 +67,6 @@ const GAMES = {
       }
     },
   },
-  olite: {
-    async setup(page) {
-      await page.goto('http://localhost:8730/?debug&level=2'); await wait(page, 2500);
-      // Through the title, menu, story and workshop talk until the climb starts.
-      for (let k = 0; k < 30 && !(await page.evaluate(() => !!window.climb)); k++) { await tap(page, k < 2 ? 'Digit1' : 'KeyZ'); await wait(page, 450); }
-      await wait(page, 1000);
-    },
-    act: climbAutopilot,
-  },
   pelota: {
     async setup(page) {
       await page.goto('http://localhost:8750/?debug&light=sunset'); await wait(page, 2500);
@@ -110,59 +101,6 @@ const GAMES = {
     async act(page, secs) { await wait(page, secs * 1000); },
   },
 };
-
-// Piedra por piedra: a simple climber that finds the nearest way up for each
-// mason, and when a ledge is too high, boosts one up on the other and hauls
-// the second up the rope.
-async function climbAutopilot(page, secs) {
-  const KEYS = [{ left: 'ArrowLeft', right: 'ArrowRight', jump: 'KeyZ', tug: 'KeyC' }, { left: 'KeyA', right: 'KeyD', jump: 'KeyE', tug: 'KeyQ' }];
-  const down = new Set();
-  const set = async (key, on) => { if (on && !down.has(key)) { down.add(key); await page.keyboard.down(key); } else if (!on && down.has(key)) { down.delete(key); await page.keyboard.up(key); } };
-  const end = Date.now() + secs * 1000;
-  let jumpT = [0, 0];
-  while (Date.now() < end) {
-    const plan = await page.evaluate(() => {
-      const g = window.climb;
-      if (!g || g.finished) return null;
-      const T = g.T, passable = (ch) => '=cxm'.includes(ch);
-      // Scaffold boards count as ledges where they are right now.
-      const boards = new Map();
-      for (const m of g.movers) for (let c = Math.floor(m.x / T); c < Math.ceil((m.x + m.w) / T); c++) boards.set(`${c},${m.row}`, 'm');
-      const at = (c, r) => boards.get(`${c},${r}`) ?? g.tile(c, r);
-      const way = (b, reach) => {
-        const r = Math.round(b.y / T) - 1; // the row you stand in
-        let best = null;
-        for (let c = 1; c < g.w - 1; c++) {
-          let rr = r - 1;
-          while (rr >= 0 && at(c, rr) === ' ') rr--;
-          if (rr < 0 || !passable(at(c, rr)) || r - rr > reach) continue;
-          const d = Math.abs(c * T + T / 2 - b.x);
-          if (!best || d < best.d) best = { c, d, x: c * T + T / 2, up: r - rr };
-        }
-        return best;
-      };
-      return g.climbers.map((b) => ({ x: b.x, y: b.y, grounded: b.grounded, on: b.support?.type, hanging: b.hanging, alone: way(b, 3), boost: way(b, 4) }));
-    });
-    if (!plan) break;
-    const [a, b] = plan;
-    const high = !a.alone && a.boost && b && !b.alone;
-    for (const [i, p] of plan.entries()) {
-      const K = KEYS[i], other = plan[1 - i];
-      let target = p.alone?.x ?? p.boost?.x ?? p.x, jump = false, tug = false;
-      if (high && i === 1) target = a.boost.x; // the lower one stands under the ledge
-      if (high && i === 0) { target = a.boost.x; jump = Math.abs(b.x - a.boost.x) < 10 && (p.on === 'body' || Math.abs(p.x - b.x) < 14); }
-      else if (p.alone && Math.abs(p.x - target) < 8 && p.grounded) jump = true;
-      if (other && other.hanging && p.grounded && other.y > p.y) { tug = true; target = p.x; jump = false; }
-      if (p.hanging) { target = p.x; jump = false; }
-      await set(K.left, target < p.x - 6);
-      await set(K.right, target > p.x + 6);
-      await set(K.tug, tug);
-      if (jump && Date.now() > jumpT[i]) { jumpT[i] = Date.now() + 600; await page.keyboard.down(K.jump); setTimeout(() => page.keyboard.up(K.jump).catch(() => {}), 350); }
-    }
-    await wait(page, 60);
-  }
-  for (const k of down) await page.keyboard.up(k);
-}
 
 // ---- recording ------------------------------------------------------------------
 

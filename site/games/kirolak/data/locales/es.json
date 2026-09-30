@@ -39,7 +39,7 @@
   "menu.easy.note": "Un rival más tranquilo, para empezar.",
   "menu.normal.note": "Un rival de verdad. Ritmo, no fuerza bruta.",
   "menu.go": "¡A la plaza!",
-  "intro.1": "Es fiesta y la plaza huele a serrín. Hoy hay herri kirolak: deporte rural vasco.",
+  "intro.1": "Es fiesta y la plaza está llena de gente. Hoy hay herri kirolak: deporte rural vasco.",
   "intro.2": "Se cree que muchas pruebas nacieron del trabajo del caserío y del monte: cortar leña, mover piedras, cargar pesos.",
   "intro.3": "Rojo contra azul, cuatro pruebas. Aquí no gana el que más aprieta, sino el que lleva el ritmo.",
   "ev.aizkolaritza.name": "Aizkolaritza",
@@ -116,5 +116,5 @@
   "fact.stones": "Las piedras de harri-jasotzea pueden ser cilíndricas, cúbicas, rectangulares o esféricas.",
   "fact.sokatira": "En la sokatira, los equipos tiran al ritmo que marca su jefe, que es tan importante como la fuerza.",
   "fact.txapela": "En el deporte vasco, al ganador de un campeonato se le pone una txapela en vez de darle una copa.",
-  "fact.plaza": "Las pruebas suelen hacerse en la plaza del pueblo durante las fiestas, sobre un suelo cubierto de serrín."
+  "fact.plaza": "Las pruebas suelen hacerse en la plaza del pueblo durante las fiestas, con todo el pueblo mirando."
 }
