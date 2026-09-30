@@ -1,0 +1,26 @@
+{
+  "intro": [
+    {
+      "scene": "village",
+      "text": "intro.1"
+    },
+    {
+      "scene": "court",
+      "text": "intro.2"
+    },
+    {
+      "scene": "masons",
+      "text": "intro.3"
+    }
+  ],
+  "outro": [
+    {
+      "scene": "palace",
+      "text": "outro.1"
+    },
+    {
+      "scene": "palace",
+      "text": "outro.2"
+    }
+  ]
+}

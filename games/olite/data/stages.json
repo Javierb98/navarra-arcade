@@ -1,0 +1,29 @@
+{
+  "_note": "Each stage is a complete game. start: what the town has on day one. goal: buildings/people needed. seasons: the limit on Normal (Easy has none). Stage text lives in the locale files under stage.<id>.*",
+  "stages": [
+    {
+      "id": "walledtown",
+      "start": {
+        "resources": {
+          "food": 5,
+          "wine": 0,
+          "stone": 2,
+          "timber": 2,
+          "coin": 4
+        },
+        "buildings": {
+          "house": 2,
+          "field": 1
+        },
+        "people": {}
+      },
+      "goal": {
+        "house": 6,
+        "vineyard": 4,
+        "press": 1,
+        "wall": 1
+      },
+      "seasons": 12
+    }
+  ]
+}

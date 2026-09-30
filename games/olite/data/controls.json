@@ -1,0 +1,80 @@
+{
+  "_note": "Key names are KeyboardEvent.code values. Player 1: arrows to choose/inspect/discard a card; player 2: W/A/S/D. A plays, B ends the season, C passes a card to your partner (two players) or shows the whole town (one player). Change keys here, not in code.",
+  "keyboard": {
+    "p1": {
+      "left": [
+        "ArrowLeft"
+      ],
+      "right": [
+        "ArrowRight"
+      ],
+      "up": [
+        "ArrowUp"
+      ],
+      "down": [
+        "ArrowDown"
+      ],
+      "a": [
+        "ControlLeft",
+        "KeyZ"
+      ],
+      "b": [
+        "AltLeft",
+        "KeyX"
+      ],
+      "c": [
+        "Space",
+        "KeyC"
+      ],
+      "start": [
+        "Digit1",
+        "Enter"
+      ]
+    },
+    "p2": {
+      "left": [
+        "KeyA"
+      ],
+      "right": [
+        "KeyD"
+      ],
+      "up": [
+        "KeyW"
+      ],
+      "down": [
+        "KeyS"
+      ],
+      "a": [
+        "KeyE"
+      ],
+      "b": [
+        "KeyR"
+      ],
+      "c": [
+        "KeyQ"
+      ],
+      "start": [
+        "Digit2"
+      ]
+    },
+    "admin": [
+      "F2",
+      "Digit9"
+    ],
+    "exit": [
+      "Escape"
+    ]
+  },
+  "gamepad": {
+    "p1": 0,
+    "p2": 1,
+    "buttons": {
+      "a": 0,
+      "b": 1,
+      "c": 2,
+      "start": 9,
+      "admin": 8
+    },
+    "deadzone": 0.35
+  }
+}

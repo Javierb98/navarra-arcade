@@ -1,0 +1,99 @@
+{
+  "_note": "What each building or person does every season. produce: resources gained in the listed seasons. boost: extra output given to another building type. discount: resources taken off every build's cost. trade: sells resources automatically each season. pop: people who live there. Seasons: spring, summer, autumn, winter.",
+  "buildings": {
+    "house": {
+      "pop": 2,
+      "produce": {
+        "coin": 1
+      },
+      "seasons": [
+        "autumn"
+      ]
+    },
+    "field": {
+      "produce": {
+        "food": 3
+      },
+      "seasons": [
+        "spring",
+        "summer",
+        "autumn"
+      ]
+    },
+    "vineyard": {
+      "produce": {
+        "wine": 1
+      },
+      "seasons": [
+        "summer",
+        "autumn"
+      ]
+    },
+    "press": {
+      "boost": {
+        "vineyard": {
+          "wine": 1
+        }
+      }
+    },
+    "mill": {
+      "boost": {
+        "field": {
+          "food": 1
+        }
+      }
+    },
+    "market": {
+      "produce": {
+        "coin": 2
+      },
+      "seasons": [
+        "spring",
+        "summer",
+        "autumn",
+        "winter"
+      ]
+    },
+    "quarry": {
+      "produce": {
+        "stone": 1
+      },
+      "seasons": [
+        "spring",
+        "summer",
+        "autumn",
+        "winter"
+      ]
+    },
+    "wall": {}
+  },
+  "people": {
+    "mason": {
+      "produce": {
+        "stone": 1
+      },
+      "seasons": [
+        "spring",
+        "summer",
+        "autumn",
+        "winter"
+      ]
+    },
+    "carpenter": {
+      "discount": {
+        "timber": 1
+      }
+    },
+    "merchant": {
+      "trade": {
+        "give": {
+          "wine": 1
+        },
+        "get": {
+          "coin": 2
+        },
+        "times": 2
+      }
+    }
+  }
+}

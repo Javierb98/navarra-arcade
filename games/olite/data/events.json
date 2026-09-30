@@ -1,0 +1,93 @@
+{
+  "_note": "Events turn up at the start of some seasons. weight: how often. good: false events are rarer on Easy. seasons limits when one can happen. Effects: gain/lose resources now; yield multiplies a building's output this season (0 = nothing); workers changes this season's labour; eat changes food eaten; addCard puts a card in a hand.",
+  "events": [
+    {
+      "id": "goodharvest",
+      "weight": 3,
+      "good": true,
+      "seasons": [
+        "summer",
+        "autumn"
+      ],
+      "yieldMul": {
+        "field": 2
+      }
+    },
+    {
+      "id": "drought",
+      "weight": 2,
+      "good": false,
+      "seasons": [
+        "summer"
+      ],
+      "yieldMul": {
+        "field": 0,
+        "vineyard": 0
+      }
+    },
+    {
+      "id": "goodgrapes",
+      "weight": 2,
+      "good": true,
+      "seasons": [
+        "autumn"
+      ],
+      "yieldBonus": {
+        "vineyard": {
+          "wine": 1
+        }
+      }
+    },
+    {
+      "id": "fair",
+      "weight": 3,
+      "good": true,
+      "gain": {
+        "coin": 3
+      }
+    },
+    {
+      "id": "rain",
+      "weight": 2,
+      "good": false,
+      "seasons": [
+        "spring",
+        "autumn"
+      ],
+      "workers": -2
+    },
+    {
+      "id": "hardwinter",
+      "weight": 2,
+      "good": false,
+      "seasons": [
+        "winter"
+      ],
+      "eat": 2
+    },
+    {
+      "id": "travellingmasons",
+      "weight": 2,
+      "good": true,
+      "addCard": "mason"
+    },
+    {
+      "id": "storm",
+      "weight": 2,
+      "good": false,
+      "lose": {
+        "timber": 1,
+        "stone": 1
+      }
+    },
+    {
+      "id": "newfamily",
+      "weight": 2,
+      "good": true,
+      "gain": {
+        "food": 1
+      },
+      "addCard": "house"
+    }
+  ]
+}
