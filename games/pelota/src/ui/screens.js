@@ -5,7 +5,8 @@
 import { h } from './dom.js';
 import { t, getLang, setLang, nextLang, LANGS } from './i18n.js';
 import { Match } from '../core/pelota.js';
-import { drawCourt, backdrop, finish, portrait, drawTxapela } from './art.js';
+import { drawCourt, backdrop, finish, portrait } from './art.js';
+import { drawCrowning } from './ceremony.js';
 import { sfx } from './audio.js';
 import { settings, topScores, qualifies, addScore } from './store.js';
 import { langParam } from './arcade.js';
@@ -393,8 +394,9 @@ export function results(app, { m }) {
 // Winning the tournament: the txapela.
 export function txapela(app, { m }) {
   let t0 = 0;
-  const view = newView('night');
-  confetti(view, 140);
+  const fx = [];
+  const cols = ['#c0392b', '#f3ece0', '#2e7d4f', '#e8b840', '#2e6f9e'];
+  for (let k = 0; k < 160; k++) fx.push({ x: Math.random() * W, y: -Math.random() * 500, vx: (Math.random() - 0.5) * 30, vy: 50 + Math.random() * 70, rot: Math.random() * 6, spin: (Math.random() - 0.5) * 8, c: cols[k % 5] });
   app.ui.replaceChildren(h('div', { class: 'overlay txapela' }, h('div', { class: 'parchment txapela-card' },
     h('h2', {}, t('txapela.title')), h('p', {}, t('txapela.text')),
     h('p', { class: 'hint' }, rich(t('ui.next'))))));
@@ -402,28 +404,17 @@ export function txapela(app, { m }) {
   return {
     update(dt) {
       t0 += dt;
-      for (const p of view.fx) { p.life -= dt * 0.5; p.x += p.vx * dt; p.y += p.vy * dt; p.z = Math.max(0, p.z + p.vz * dt); }
-      if (t0 > 1.5 && (app.input.any('a') || app.input.any('start'))) { sfx.ok(); app.go('results', { m }); }
+      for (const p of fx) { p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.spin * dt; if (p.y > H) p.y -= H + 40; }
+      if (t0 > 2.5 && (app.input.any('a') || app.input.any('start'))) { sfx.ok(); app.go('results', { m }); }
     },
     draw(ctx) {
       backdrop(ctx, 'night', app.time, 1);
-      ctx.fillStyle = 'rgba(10,8,20,0.35)'; ctx.fillRect(0, 0, W, H);
-      const drop = Math.min(1, t0 / 1.4);
-      portrait(ctx, 'red', 480, 210, 1.5, app.time);
-      drawTxapela(ctx, 480, 210 - 40 * 1.5 - (1 - drop) * 160, 1.5 * 1.1);
-      drawFxLite(ctx, view.fx);
+      ctx.fillStyle = 'rgba(10,8,20,0.3)'; ctx.fillRect(0, 0, W, H);
+      drawCrowning(ctx, t0, { floor: 505, u: 118 });
+      for (const p of fx) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.fillStyle = p.c; ctx.fillRect(-3, -1.5, 6, 3); ctx.restore(); }
       finish(ctx);
     },
   };
-}
-
-function drawFxLite(ctx, fx) {
-  for (const p of fx) {
-    ctx.globalAlpha = Math.max(0, p.life / p.max);
-    ctx.fillStyle = p.colour;
-    ctx.fillRect(80 + p.x * 70, 540 - p.z * 60 - (p.max - p.life) * 60 % 540, 5, 3);
-  }
-  ctx.globalAlpha = 1;
 }
 
 const ALPHABET = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
