@@ -76,6 +76,16 @@ const GAMES = {
     },
     act: climbAutopilot,
   },
+  pelota: {
+    async setup(page) {
+      await page.goto('http://localhost:8750/?debug'); await wait(page, 2500);
+      for (let k = 0; k < 20 && !(await page.evaluate(() => !!window.match)); k++) { await tap(page, k < 2 ? 'Digit1' : 'KeyZ'); await wait(page, 450); }
+      // Let the computer play both sides, and skip ahead to a good rally.
+      await page.evaluate(() => { window.match.p[0].ai = true; window.match.to = 99; });
+      await wait(page, 6000);
+    },
+    async act(page, secs) { await wait(page, secs * 1000); },
+  },
   espadas: {
     async setup(page) {
       await page.goto('http://localhost:8740/'); await wait(page, 2000);

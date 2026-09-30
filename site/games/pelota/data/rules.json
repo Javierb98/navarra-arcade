@@ -1,0 +1,102 @@
+{
+  "_note": "Metres and seconds. The court is a little shorter and the ball a little slower than a real front\u00f3n, so children can follow it. Run npm test after changing anything: the rally tests check that shots come back in reach.",
+  "court": {
+    "w": 10,
+    "l": 30,
+    "chapa": 0.8,
+    "top": 9,
+    "serveY": 17,
+    "lines": [
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      28
+    ]
+  },
+  "ball": {
+    "g": 7.5,
+    "drag": 0.05,
+    "eFloor": 0.64,
+    "eWall": 0.74,
+    "eSide": 0.72,
+    "friction": 0.9,
+    "softWall": 0.72,
+    "r": 0.1
+  },
+  "player": {
+    "speed": 7.5,
+    "accel": 14,
+    "reach": 1.3,
+    "low": 0.08,
+    "high": 2.3,
+    "sweet": 0.95,
+    "swing": 0.3,
+    "buffer": 0.2
+  },
+  "shots": {
+    "drive": {
+      "speed": 26,
+      "z": [
+        2.2,
+        3.3
+      ],
+      "back": 1.0
+    },
+    "soft": {
+      "speed": 14,
+      "z": [
+        1.0,
+        1.35
+      ],
+      "back": 0.55
+    },
+    "serve": {
+      "speed": 21,
+      "z": [
+        2.3,
+        2.9
+      ],
+      "back": 0.9
+    }
+  },
+  "aim": {
+    "_note": "stick -1..1 picks where across the court the ball lands"
+  },
+  "match": {
+    "to": 10,
+    "pointPause": 2.4,
+    "serveWait": 6
+  },
+  "difficulty": {
+    "easy": {
+      "reach": 1.35,
+      "error": 0.35
+    },
+    "normal": {
+      "reach": 1,
+      "error": 0.8
+    }
+  },
+  "ai": {
+    "easy": {
+      "speed": 0.72,
+      "react": 0.35,
+      "error": 1.7,
+      "soft": 0.15
+    },
+    "normal": {
+      "speed": 0.92,
+      "react": 0.2,
+      "error": 1.05,
+      "soft": 0.3
+    }
+  },
+  "score": {
+    "point": 100,
+    "rally": 10,
+    "win": 500
+  }
+}

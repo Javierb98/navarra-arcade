@@ -84,7 +84,7 @@ h1 {
 .card .thumb { height: 26px; border-radius: 3px; background-size: cover; background-position: center; image-rendering: pixelated; }
 .card .thumb.blank { background: repeating-linear-gradient(45deg, #3a3342 0 4px, #2f2937 4px 8px); color: var(--muted); font-size: 10px; display: flex; align-items: center; justify-content: center; }
 .card.soon .thumb { filter: grayscale(0.5) brightness(0.8); }
-.card .name { display: block; margin-top: 2px; font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card .name { display: block; margin-top: 2px; font-size: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card.sel { border-color: var(--sel); transform: translateY(-3px); animation: glow 2.4s ease-in-out infinite; }
 @keyframes glow { 50% { box-shadow: 0 0 10px 1px rgba(230, 159, 0, 0.55); } }
 /* A slow band of light passing over the selected card. */
