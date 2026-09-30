@@ -163,7 +163,10 @@ export class Match {
     if (this.phase === 'walk') { this.walk(dt); return; }
     for (const pl of this.p) {
       const inp = pl.ai ? this.think(pl, dt) : (inputs[pl.i] ?? {});
-      this.move(pl, inp, dt);
+      // Once a hit is pressed, the pelotari lunges for the ball by themself
+      // and the stick only aims: aiming never walks you away from the ball.
+      if (pl.buffer && this.lunging(pl)) this.lunge(pl, dt);
+      else this.move(pl, inp, dt);
       if (inp.a || inp.b) pl.buffer = { button: inp.a ? 'a' : 'b', t: 0, stick: { x: inp.x ?? 0, y: inp.y ?? 0 } };
       if (pl.buffer) {
         if (inp.x != null) pl.buffer.stick = { x: inp.x, y: inp.y ?? 0 };
@@ -207,6 +210,21 @@ export class Match {
     this.fly(dt, true);
     // The server picks the ball up on the way.
     if (there === 2 || this.phaseT > W.max) this.setupServe(this.phaseT > W.max);
+  }
+
+  lunging(pl) {
+    const b = this.ball;
+    return this.phase === 'rally' && this.turn === pl.i && b.wall && b.bounces < 2
+      && Math.hypot(b.x - pl.x, b.y - pl.y) <= this.R.player.lunge * this.reachMul(pl);
+  }
+
+  lunge(pl, dt) {
+    const b = this.ball, dx = b.x - pl.x, dy = b.y + 0.35 - pl.y, d = Math.hypot(dx, dy);
+    const step = Math.min(d - 0.35, this.R.player.lungeSpeed * dt);
+    if (step <= 0) { pl.vx *= 0.8; pl.vy *= 0.8; return; }
+    pl.vx = (dx / d) * this.R.player.lungeSpeed; pl.vy = (dy / d) * this.R.player.lungeSpeed;
+    pl.x += (dx / d) * step; pl.y += (dy / d) * step;
+    pl.lungeT = 0.25;
   }
 
   move(pl, inp, dt) {
