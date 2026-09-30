@@ -39,3 +39,9 @@ test('menu strings exist in every language', () => {
   const keys = Object.keys(strings.es);
   for (const l of ['eu', 'en']) for (const k of keys) assert.ok(strings[l][k], `${l}: missing ${k}`);
 });
+
+test("the maker's credit points at a real logo", () => {
+  const credits = JSON.parse(readFileSync(new URL('data/credits.json', root), 'utf8'));
+  for (const l of ['es', 'eu', 'en']) assert.ok(credits.label[l], `credit label missing in ${l}`);
+  if (credits.logo) assert.ok(existsSync(new URL(credits.logo, root)), 'credit logo missing');
+});

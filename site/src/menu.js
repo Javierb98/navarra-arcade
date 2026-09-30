@@ -28,6 +28,7 @@ let idle = 0;
 let launching = false;
 let drawScenery = null;
 let sponsors = null;
+let credits = null;
 let sponsorAt = 0;
 let showcaseStep = 0;
 let sponsorClock = 0;
@@ -78,12 +79,13 @@ function build() {
     hint: h('p', { class: 'hint' }),
     exit: h('p', { class: 'hint small' }),
     sponsor: h('div', { class: 'sponsor-plate' }),
+    credit: h('div', { class: 'credit' }),
   };
   root.replaceChildren(
     h('header', {}, el.title, el.langs),
     el.feature,
     el.cards,
-    h('footer', {}, el.sponsor, h('div', { class: 'hints' }, el.hint, el.exit)),
+    h('footer', {}, el.sponsor, h('div', { class: 'hints' }, el.hint, el.exit), el.credit),
   );
   el.cardEls = games.map((g, i) => {
     const card = h('div', { class: `card ${g.status}`, onClick: () => (i === sel ? launch() : pick(i)) },
@@ -144,6 +146,8 @@ function render(dir = 0) {
   el.feature.replaceChildren(panel);
 
   renderSponsor();
+  el.credit.replaceChildren(...(credits ? [h('span', { class: 'sponsor-label' }, S(credits.label)),
+    credits.logo ? h('img', { src: credits.logo, alt: credits.name }) : h('span', { class: 'sponsor-name' }, credits.name)] : []));
   el.hint.replaceChildren(...rich(t(focus === 'lang' ? 'hintLang' : 'hint')));
   el.exit.replaceChildren(...rich(t('exitHint')));
 }
@@ -266,6 +270,7 @@ async function boot() {
     const get = (p) => fetch(p, { cache: 'no-store' }).then((r) => { if (!r.ok) throw new Error(p); return r.json(); });
     const [config, controls, table, sponsorList] = await Promise.all([get('games.json'), get('data/controls.json'), get('data/strings.json'), loadSponsors()]);
     sponsors = sponsorList;
+    credits = await fetch('data/credits.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
     games = config.games.filter((g) => g.status !== 'hidden');
     // "art:<name>" thumbnails are painted by the menu itself.
     for (const g of games) g.thumb = paintedThumb(g.thumb) ?? g.thumb;
