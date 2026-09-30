@@ -7,6 +7,7 @@
 // Coordinates are the logical 960x540 stage (main.js scales the context).
 
 import { makeRng } from '../core/rng.js';
+import { drawPart, carvedStone } from './parts.js';
 
 const W = 960, H = 540, SCALE = 2;
 
@@ -459,8 +460,46 @@ function backChunk(g0, k) {
         shield(g, x, y, 26);
       }
     }
-    // Shade: the wall is in the shadow of the ledges, darker than the stone you touch.
+    // Shade: the wall is in the shadow of the ledges, darker than the stone you touch,
+    // and darkest right under each floor.
     g.fillStyle = 'rgba(40,22,10,0.22)'; g.fillRect(0, 0, W, H);
+    for (const r of floors) {
+      const y = (r + 1) * T - y0;
+      if (y < -60 || y > H + 60) continue;
+      const ao = g.createLinearGradient(0, y, 0, y + 46);
+      ao.addColorStop(0, 'rgba(25,12,4,0.42)'); ao.addColorStop(1, 'rgba(25,12,4,0)');
+      g.fillStyle = ao; g.fillRect(0, y, W, 46);
+    }
+    return c;
+  });
+}
+
+// Out-of-focus pillars, ivy and banners close to the camera, drifting past
+// faster than the climb: the strongest cue of depth. Only at the edges.
+function foreground(g0) {
+  return cached(`fg.${g0.def.id}`, () => {
+    const th = THEMES[g0.def.theme];
+    const hgt = Math.round(g0.mapH * 1.35 + H);
+    const [c, g] = canvas(W, hgt, 1);
+    g.filter = 'blur(4px)';
+    const rng = makeRng(g0.def.id.length * 7);
+    const ink = mix(th.ink, '#120a04', 0.35);
+    for (let y = 200; y < hgt; y += 380 + rng.next() * 300) {
+      const left = rng.chance(0.5), x = left ? -20 + rng.next() * 30 : W - 70 - rng.next() * 30;
+      const kind = rng.next();
+      g.fillStyle = ink;
+      if (kind < 0.45) {
+        // A column with a capital.
+        g.fillRect(x + 10, y, 50, 300); g.fillRect(x, y - 14, 70, 18); g.fillRect(x + 4, y - 30, 62, 16);
+      } else if (kind < 0.75 || th.leaf) {
+        // Hanging ivy.
+        for (let j = 0; j < 40; j++) { g.beginPath(); g.ellipse(x + 30 + Math.sin(j * 0.5) * 16, y + j * 8, 11, 7, j, 0, Math.PI * 2); g.fill(); }
+      } else {
+        // A long banner.
+        g.fillStyle = mix(th.accent, '#120a04', 0.45);
+        g.beginPath(); g.moveTo(x + 10, y); g.lineTo(x + 60, y); g.lineTo(x + 60, y + 220); g.lineTo(x + 35, y + 190); g.lineTo(x + 10, y + 220); g.fill();
+      }
+    }
     return c;
   });
 }
@@ -486,6 +525,35 @@ function tileSprite(theme, kind, v, open) {
     const th = THEMES[theme];
     const [c, g] = canvas(48, 48);
     const stone = th.stone;
+    if (kind === 'X') {
+      // A cracked patch of wall: something behind it?
+      g.drawImage(tileSprite(theme, '#', v, open), 0, 0, 48, 48);
+      g.strokeStyle = 'rgba(40,20,8,0.75)'; g.lineWidth = 1.6;
+      g.beginPath(); g.moveTo(10, 4); g.lineTo(18, 16); g.lineTo(14, 26); g.lineTo(24, 36); g.lineTo(20, 46);
+      g.moveTo(18, 16); g.lineTo(32, 20); g.lineTo(38, 34); g.moveTo(24, 36); g.lineTo(36, 40); g.stroke();
+      g.strokeStyle = 'rgba(255,240,210,0.35)'; g.lineWidth = 0.8;
+      g.beginPath(); g.moveTo(11, 5); g.lineTo(19, 17); g.lineTo(33, 21); g.stroke();
+      return c;
+    }
+    if (kind === '_' || kind === '_p') {
+      g.drawImage(tileSprite(theme, '#', v, 't'), 0, 0, 48, 48);
+      const down = kind === '_p';
+      g.fillStyle = 'rgba(30,16,6,0.4)'; g.fillRect(5, down ? 3 : 1, 38, 6);
+      const br = g.createLinearGradient(0, 0, 0, 8);
+      br.addColorStop(0, down ? '#e2b04a' : '#d6a24a'); br.addColorStop(1, '#8a5a1e');
+      g.fillStyle = br; rrect(g, 6, down ? 2 : -2, 36, 6, 2); g.fill();
+      g.fillStyle = down ? 'rgba(255,230,140,0.9)' : 'rgba(255,240,200,0.5)'; g.fillRect(9, down ? 3 : -1, 30, 1.5);
+      return c;
+    }
+    if (kind === '|') {
+      // An iron grille set in the floor: a trapdoor.
+      g.fillStyle = '#2a1e16'; g.fillRect(0, 0, 48, 48);
+      g.fillStyle = '#6a4a2a'; g.fillRect(0, 0, 48, 6); g.fillRect(0, 42, 48, 6);
+      for (let x = 4; x < 48; x += 9) { const gr = g.createLinearGradient(x, 0, x + 5, 0); gr.addColorStop(0, '#8a8f98'); gr.addColorStop(1, '#3e424a'); g.fillStyle = gr; g.fillRect(x, 4, 5, 40); }
+      g.fillStyle = '#4e525a'; g.fillRect(0, 20, 48, 5);
+      for (let x = 6; x < 48; x += 9) { g.fillStyle = '#c9ccd2'; g.beginPath(); g.arc(x + 0.5, 22.5, 1.4, 0, Math.PI * 2); g.fill(); }
+      return c;
+    }
     if (kind === '#') {
       const base = g.createLinearGradient(0, 0, 48, 48);
       base.addColorStop(0, shade(stone, 0.12)); base.addColorStop(1, shade(stone, -0.12));
@@ -523,10 +591,15 @@ function tileSprite(theme, kind, v, open) {
       g.fillStyle = shade(col, -0.1);
       g.beginPath(); g.moveTo(16, 14); g.lineTo(32, 14); g.lineTo(29, 30); g.quadraticCurveTo(24, 34, 19, 30); g.closePath(); g.fill();
       g.fillStyle = 'rgba(255,240,210,0.25)'; g.fillRect(17, 15, 3, 13);
-      const slab = g.createLinearGradient(0, 0, 0, 15);
-      slab.addColorStop(0, shade(col, 0.35)); slab.addColorStop(0.3, shade(col, 0.1)); slab.addColorStop(1, shade(col, -0.2));
-      g.fillStyle = slab; g.fillRect(0, 0, 48, 15);
-      g.fillStyle = 'rgba(60,34,14,0.3)'; g.fillRect(0, 10, 48, 1);
+      const slab = g.createLinearGradient(0, 5, 0, 16);
+      slab.addColorStop(0, shade(col, 0.12)); slab.addColorStop(1, shade(col, -0.25));
+      g.fillStyle = slab; g.fillRect(0, 4, 48, 12);
+      // The sunlit top surface, seen from just above: gives the ledge depth.
+      const top = g.createLinearGradient(0, 0, 0, 5);
+      top.addColorStop(0, shade(col, 0.55)); top.addColorStop(1, shade(col, 0.3));
+      g.fillStyle = top; g.fillRect(0, 0, 48, 5);
+      g.fillStyle = 'rgba(60,34,14,0.35)'; g.fillRect(0, 5, 48, 1);
+      g.fillStyle = 'rgba(60,34,14,0.25)'; g.fillRect(0, 11, 48, 1);
       if (cracked) {
         g.strokeStyle = 'rgba(40,20,8,0.7)'; g.lineWidth = 1.2;
         g.beginPath(); g.moveTo(8 + v * 9, 0); g.lineTo(14 + v * 7, 7); g.lineTo(10 + v * 9, 15); g.stroke();
@@ -563,23 +636,54 @@ function tileSprite(theme, kind, v, open) {
   });
 }
 
+// Soft shadows the stonework casts on the wall behind it (the sun is up and to the left).
+function shadowSprite(kind) {
+  return cached(`shadow.${kind}`, () => {
+    const [c, g] = canvas(80, 80);
+    g.filter = 'blur(5px)';
+    g.fillStyle = 'rgba(25,12,4,0.55)';
+    if (kind === 'slab') g.fillRect(16, 16, 48, 18); else g.fillRect(16, 16, 48, 48);
+    return c;
+  });
+}
+
 function drawTiles(ctx, g0, t) {
   const T = g0.T, th = g0.def.theme;
   const r0 = Math.max(0, Math.floor(g0.camY / T) - 1), r1 = Math.min(g0.h - 1, Math.ceil((g0.camY + H) / T));
+  ctx.globalAlpha = 0.55;
+  for (let r = r0; r <= r1; r++) {
+    for (let c = 1; c < g0.w - 1; c++) {
+      const ch = g0.tile(c, r);
+      if (!'#=cxX_|B'.includes(ch) || ch === ' ') continue;
+      const slab = ch === '=' || ch === 'c';
+      ctx.drawImage(shadowSprite(slab ? 'slab' : 'block'), c * T - 16 + 9, r * T - g0.camY - 16 + 11, 80, 80);
+    }
+  }
+  ctx.globalAlpha = 1;
   for (let r = r0; r <= r1; r++) {
     for (let c = 0; c < g0.w; c++) {
       const ch = g0.tile(c, r);
-      if (!'#=cxB'.includes(ch) || ch === ' ') continue;
-      const open = ch === '#'
-        ? ['t', 'b', 'l', 'r'].filter((s, k) => !'#xB'.includes(g0.tile(c + [0, 0, -1, 1][k], r + [-1, 1, 0, 0][k]))).join('')
+      if (!'#=cxXB_|'.includes(ch) || ch === ' ') continue;
+      const open = ch === '#' || ch === 'X'
+        ? ['t', 'b', 'l', 'r'].filter((s, k) => !'#xXB_|'.includes(g0.tile(c + [0, 0, -1, 1][k], r + [-1, 1, 0, 0][k]))).join('')
         : '';
+      let kind = ch;
+      if (ch === '_') kind = g0.plates.find((p) => p.c === c && p.r === r && (p.pressed || p.latched)) ? '_p' : '_';
       let x = c * T, y = r * T - g0.camY;
       if (ch === 'c') {
         const cr = g0.crumbles.get(`${c},${r}`);
         if (cr && cr.t > 0) x += Math.sin(t * 60 + c) * 1.5 * (cr.t / 0.55);
       }
-      ctx.drawImage(tileSprite(th, ch, (c * 7 + r * 3) % 3, open), x, y - (ch === '=' || ch === 'c' ? 0 : 0), T, T);
+      ctx.drawImage(tileSprite(th, kind, (c * 7 + r * 3) % 3, open), x, y, T, T);
     }
+  }
+  // Open trapdoors: just the frame, grille swung away.
+  for (const gt of g0.gates) {
+    if (!gt.open) continue;
+    const x = gt.c * T, y = gt.r * T - g0.camY;
+    if (y < -T || y > H) continue;
+    ctx.fillStyle = '#4a3420'; ctx.fillRect(x, y, T, 5); ctx.fillRect(x, y + T - 5, T, 5);
+    ctx.fillStyle = 'rgba(20,10,4,0.35)'; ctx.fillRect(x, y + 5, T, T - 10);
   }
   // Crumbled ledges: a few pebbles left hanging in the gap.
   for (const [key, cr] of g0.crumbles) {
@@ -780,6 +884,27 @@ export function drawLevel(ctx, g0, t, view) {
   sun.addColorStop(0, 'rgba(255,226,170,0.16)'); sun.addColorStop(0.6, 'rgba(255,226,170,0)'); sun.addColorStop(1, 'rgba(30,16,40,0.12)');
   ctx.fillStyle = sun; ctx.fillRect(0, 0, W, H);
 
+  // Shafts of sunlight through the arches, drifting slowly.
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  for (let k = 0; k < 3; k++) {
+    const x = ((k * 360 + t * 6) % (W + 400)) - 200;
+    const sh = ctx.createLinearGradient(x, 0, x + 260, H);
+    sh.addColorStop(0, 'rgba(255,226,170,0)'); sh.addColorStop(0.5, 'rgba(255,226,170,0.07)'); sh.addColorStop(1, 'rgba(255,226,170,0)');
+    ctx.fillStyle = sh;
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 120, 0); ctx.lineTo(x + 380, H); ctx.lineTo(x + 260, H); ctx.fill();
+  }
+  ctx.restore();
+  // The missing parts of the palace, glowing on the wall until they're restored.
+  for (const sl of g0.slots) {
+    const y = (sl.r + 1) * T - cam;
+    if (y < -60 || y > H + 160 || !sl.part) continue;
+    drawPart(ctx, sl.part, sl.x, y, sl.filled ? 'done' : 'ghost', t, 1);
+  }
+  // The climbers' shadows on the wall.
+  for (const b of g0.climbers) {
+    ctx.fillStyle = 'rgba(20,10,4,0.16)';
+    ctx.beginPath(); ctx.ellipse(b.x + 9, b.y - cam - 18, 12, 24, 0.1, 0, Math.PI * 2); ctx.fill();
+  }
   for (const m of g0.movers) scaffold(ctx, m, cam);
   drawTiles(ctx, g0, t);
   // Loose roof tiles, wobbling before they drop.
@@ -788,8 +913,7 @@ export function drawLevel(ctx, g0, t, view) {
   for (const it of g0.items) {
     if (it.taken || it.y - cam < -40 || it.y - cam > H + 40) continue;
     const y = it.y - cam;
-    if (it.type === 'g') goldStone(ctx, it.x, y, t);
-    else if (it.type === 'o') orange(ctx, it.x, y, t);
+    if (it.type === 'o') orange(ctx, it.x, y, t);
     else heart(ctx, it.x, y + Math.sin(t * 3) * 2, 1.3);
   }
   banner(ctx, g0.flag.x, g0.flag.y - cam, t);
@@ -799,7 +923,15 @@ export function drawLevel(ctx, g0, t, view) {
   if (g0.players === 2) rope(ctx, g0.climbers[0], g0.climbers[1], g0.ropeLen, t, g0.reeling);
   g0.climbers.forEach((b, i) => climber(ctx, b, i, t, view?.anim?.[i] ?? {}));
   for (const s of g0.storks) stork(ctx, s.x, s.y, s.dir, g0.t + s.x * 0.01, 1, s.flee);
+  // Carved stones: waiting on the floor, or held up overhead.
+  for (const p of g0.pieces) if (!p.placed) carvedStone(ctx, p.x, p.y + (p.held == null ? Math.sin(t * 3 + p.i) * 2 : 0), t, p.held == null);
   ctx.restore();
+
+  // Close, blurred foreground.
+  const fg = foreground(g0);
+  ctx.globalAlpha = 0.6;
+  ctx.drawImage(fg, 0, -(cam * 1.35) - 200, W, fg.height);
+  ctx.globalAlpha = 1;
 
   // Wind streaks.
   if (g0.wind?.on) {
@@ -814,6 +946,27 @@ export function drawLevel(ctx, g0, t, view) {
   const haze = ctx.createLinearGradient(0, H * 0.7, 0, H);
   haze.addColorStop(0, 'rgba(0,0,0,0)'); haze.addColorStop(1, `${mix(th.haze, th.haze, 0).replace('rgb', 'rgba').replace(')', ',0.22)')}`);
   ctx.fillStyle = haze; ctx.fillRect(0, H * 0.7, W, H * 0.3);
+  heightMeter(ctx, g0);
+}
+
+// How far up the tower you are: a slim gauge on the right with the banner at
+// the top, each climber's marker and the missing parts.
+function heightMeter(ctx, g0) {
+  const x = W - 18, y0 = 70, y1 = H - 40, T = g0.T;
+  const at = (y) => y1 - (1 - y / g0.mapH) * (y1 - y0);
+  ctx.fillStyle = 'rgba(28,18,10,0.5)'; rrect(ctx, x - 5, y0 - 8, 10, y1 - y0 + 16, 5); ctx.fill();
+  ctx.fillStyle = 'rgba(255,240,210,0.25)'; ctx.fillRect(x - 1, y0, 2, y1 - y0);
+  ctx.fillStyle = '#b3261e'; ctx.fillRect(x, y0 - 14, 9, 6); ctx.fillStyle = '#e8d7b0'; ctx.fillRect(x - 1, y0 - 14, 1.5, 14);
+  for (const sl of g0.slots) {
+    const y = at((sl.r + 1) * T);
+    ctx.fillStyle = sl.filled ? '#f2c75a' : 'rgba(242,199,90,0.35)';
+    ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2); ctx.fill();
+  }
+  g0.climbers.forEach((b, i) => {
+    const y = at(b.y);
+    ctx.fillStyle = i ? '#3a8fd0' : '#e8902a';
+    ctx.beginPath(); ctx.moveTo(x - 6, y); ctx.lineTo(x - 13, y - 5); ctx.lineTo(x - 13, y + 5); ctx.fill();
+  });
 }
 
 // Particles: dust, chips, sparkles, feathers.

@@ -3,7 +3,7 @@
 // start to the banner, and to each golden stone? Scaffold boards count as a
 // ledge along their whole track. It ignores storks, wind and timing.
 
-const SOLID = '#xB', LEDGE = '=c';
+const SOLID = '#xXB_|', LEDGE = '=c';
 
 export function reach(map, { players = 2, jump = 3, side = 4 } = {}) {
   const h = map.length, w = map[0].length;
@@ -18,7 +18,8 @@ export function reach(map, { players = 2, jump = 3, side = 4 } = {}) {
     for (let c = a; c <= b; c++) row[c] = '=';
   }
   const at = (c, r) => (c < 0 || c >= w ? '#' : r < 0 || r >= h ? ' ' : grid[r][c]);
-  const solid = (c, r) => SOLID.includes(at(c, r)) && at(c, r) !== 'x';
+  // Rubble and cracked walls break; gates open (someone holds a plate, or it latches alone).
+  const solid = (c, r) => SOLID.includes(at(c, r)) && !'xX|'.includes(at(c, r));
   const blocks = (c, r) => SOLID.includes(at(c, r));
   const support = (c, r) => SOLID.includes(at(c, r)) || LEDGE.includes(at(c, r));
   const stand = (c, r) => !blocks(c, r) && support(c, r + 1);
@@ -26,11 +27,12 @@ export function reach(map, { players = 2, jump = 3, side = 4 } = {}) {
   const passUp = (c, r) => !solid(c, r);
 
   let start, flag;
-  const gold = [];
+  const gold = [], slots = [];
   grid.forEach((row, r) => row.forEach((ch, c) => {
     if (ch === 'S') start = [c, r];
     if (ch === 'F') flag = [c, r];
     if (ch === 'g') gold.push([c, r]);
+    if (ch === 'H') slots.push([c, r]);
   }));
   const seen = new Set([start.join()]), queue = [start];
   const add = (c, r) => { const k = `${c},${r}`; if (!seen.has(k)) { seen.add(k); queue.push([c, r]); } };
@@ -64,5 +66,7 @@ export function reach(map, { players = 2, jump = 3, side = 4 } = {}) {
     flag: reached(flag[0], flag[1], 0),
     gold: gold.filter(([c, r]) => reached(c, r, jump)).length,
     goldTotal: gold.length,
+    slots: slots.filter(([c, r]) => reached(c, r, jump)).length,
+    slotsTotal: slots.length,
   };
 }

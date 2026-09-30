@@ -7,6 +7,7 @@ import { h } from './dom.js';
 import { t, getLang, setLang, nextLang, LANGS } from './i18n.js';
 import { Climb } from '../core/climb.js';
 import { drawLevel, drawScene, drawFx, finish } from './art.js';
+import { drawReveal, portrait } from './parts.js';
 import { sfx } from './audio.js';
 import { settings, topScores, qualifies, addScore } from './store.js';
 import { langParam } from './arcade.js';
@@ -143,20 +144,42 @@ export function story(app, { panels, next, arg }) {
 export function level(app) {
   const S = app.session, n = S.level, def = levelDef(app, n);
   const g = new Climb({ rules: app.data.rules, levels: app.data.levels }, { level: n, players: S.players, difficulty: S.difficulty, seed: seed(app), carry: S.carry });
-  let t0 = 0;
-  app.ui.replaceChildren(h('div', { class: 'overlay level-intro' }, h('div', { class: 'parchment brief-card' },
-    h('p', { class: 'kicker' }, t('hud.level', { n: n + 1, total: levelCount(app) })),
-    h('h2', {}, t(`level.${def.id}.name`)),
-    h('p', { class: 'where' }, t(`level.${def.id}.where`)),
-    h('p', { class: 'tip' }, rich(t(`level.${def.id}.tip`))),
-    h('p', { class: 'small' }, rich(t(S.players === 2 ? 'help.duo' : 'help.solo'))),
-    h('p', { class: 'hint' }, rich(`[A] ${t('menu.go')}`)))));
+  // First a word in the workshop, then the card for the climb.
+  const lines = app.data.story.talks?.[def.id] ?? [];
+  let step = 0, t0 = 0;
+  const show = () => {
+    if (step < lines.length) {
+      const L = lines[step];
+      app.ui.replaceChildren(h('div', { class: 'overlay talk' }, h('div', { class: `parchment talk-box who-${L.who}` },
+        h('p', { class: 'kicker' }, t(`char.${L.who}`)), h('p', { class: 'line' }, t(L.text)),
+        h('p', { class: 'hint' }, rich(t('ui.next')), '    ', rich(t('ui.skip'))))));
+      return;
+    }
+    app.ui.replaceChildren(h('div', { class: 'overlay level-intro' }, h('div', { class: 'parchment brief-card' },
+      h('p', { class: 'kicker' }, t('hud.level', { n: n + 1, total: levelCount(app) })),
+      h('h2', {}, t(`level.${def.id}.name`)),
+      h('p', { class: 'where' }, t(`level.${def.id}.where`)),
+      h('div', { class: 'part-list' }, (def.parts ?? []).map((id) => h('span', { class: 'part-chip' }, t(`part.${id}.name`)))),
+      h('p', { class: 'tip' }, rich(t(`level.${def.id}.tip`))),
+      h('p', { class: 'small' }, rich(t(S.players === 2 ? 'help.duo' : 'help.solo'))),
+      h('p', { class: 'hint' }, rich(`[A] ${t('menu.go')}`)))));
+  };
+  show();
   return {
     update(dt) {
       t0 += dt;
-      if ((t0 > 0.6 && (app.input.any('a') || app.input.any('start'))) || t0 > 25) { sfx.ok(); app.go('play', { g }); }
+      if (step < lines.length) {
+        if (app.input.any('start')) { step = lines.length; t0 = 0; show(); }
+        else if ((t0 > 0.3 && app.input.any('a')) || t0 > 9) { sfx.move(); step++; t0 = 0; show(); }
+        return;
+      }
+      if ((t0 > 0.5 && (app.input.any('a') || app.input.any('start'))) || t0 > 25) { sfx.ok(); app.go('play', { g }); }
     },
-    draw(ctx) { drawLevel(ctx, g, app.time); ctx.fillStyle = 'rgba(20,12,6,0.3)'; ctx.fillRect(0, 0, W, H); finish(ctx); },
+    draw(ctx) {
+      drawLevel(ctx, g, app.time); ctx.fillStyle = 'rgba(20,12,6,0.35)'; ctx.fillRect(0, 0, W, H);
+      if (step < lines.length) portrait(ctx, lines[step].who, 150, 392, 1.25, app.time);
+      finish(ctx);
+    },
   };
 }
 
@@ -173,8 +196,9 @@ export function play(app, { g }) {
   const el = {
     left: h('div', { class: 'hud-left' }), right: h('div', { class: 'hud-right' }),
     toast: h('div', { class: 'toast hidden' }), help: h('p', { class: 'play-help' }, rich(t(P === 2 ? 'help.duo' : 'help.solo'))),
+    card: h('div', { class: 'part-card parchment hidden' }),
   };
-  app.ui.replaceChildren(h('div', { class: 'overlay play' }, el.left, el.right, el.toast, el.help));
+  app.ui.replaceChildren(h('div', { class: 'overlay play' }, el.left, el.right, el.toast, el.card, el.help));
   let hudKey = '';
   const renderHud = () => {
     const key = `${g.hearts}|${g.score}|${g.stats.gold}|${getLang()}`;
@@ -193,6 +217,13 @@ export function play(app, { g }) {
     toastUntil = app.time + secs;
   };
   const once = (key, text, secs) => { if (shown.has(key)) return; shown.add(key); toast(text, secs); };
+  // A restored part: its name and one line of history, for a few seconds.
+  let cardUntil = 0;
+  const partCard = (id) => {
+    el.card.replaceChildren(h('b', {}, t('msg.placed', { name: t(`part.${id}.name`) })), h('p', {}, t(`part.${id}.text`)));
+    el.card.className = 'part-card parchment';
+    cardUntil = app.time + 5;
+  };
 
   const burst = (x, y, n, kind, colour, speed = 160, life = 0.7) => {
     for (let k = 0; k < n; k++) {
@@ -209,7 +240,8 @@ export function play(app, { g }) {
       else if (e.type === 'bonk') sfx.bonk();
       else if (e.type === 'swing') sfx.swing();
       else if (e.type === 'pickup') {
-        if (e.kind === 'g') { sfx.gold(); burst(e.x, e.y, 16, 'spark', '#ffe38a', 150); floatText(e.x, e.y - 20, `+${app.data.rules.score.gold}`); toast(t('msg.gold'), 1.4); }
+        if (e.kind === 'p') { sfx.orange(); once('carry', t('msg.carry'), 3); }
+        else if (e.kind === 'g') { sfx.gold(); burst(e.x, e.y, 16, 'spark', '#ffe38a', 150); floatText(e.x, e.y - 20, `+${app.data.rules.score.gold}`); toast(t('msg.gold'), 1.4); }
         else if (e.kind === 'o') { sfx.orange(); burst(e.x, e.y, 8, 'spark', '#f7a13c', 100); floatText(e.x, e.y - 16, `+${app.data.rules.score.orange}`); }
         else { sfx.heart(); burst(e.x, e.y, 10, 'spark', '#ff7a7a', 100); }
       } else if (e.type === 'shoo') { sfx.shoo(); burst(e.x, e.y, 8, 'feather', '#f7f3ea', 120, 1.2); floatText(e.x, e.y - 20, `+${app.data.rules.score.shoo}`); once('shoo', t('msg.shoo'), 1.2); }
@@ -217,6 +249,13 @@ export function play(app, { g }) {
       else if (e.type === 'hurt') { sfx.hurt(); burst(e.x, e.y - 30, 6, 'spark', '#ffe07a', 90); }
       else if (e.type === 'fall') { sfx.fall(); toast(t('msg.fall'), 2, true); }
       else if (e.type === 'mantle') sfx.mantle();
+      else if (e.type === 'placed') {
+        sfx.gold(); burst(e.x, e.y - 30, 26, 'spark', '#ffe38a', 220, 1.2); floatText(e.x, e.y - 70, `+${app.data.rules.score.gold}`);
+        if (e.part) partCard(e.part);
+      } else if (e.type === 'dropPiece') toast(t('msg.drop'), 1.8, true);
+      else if (e.type === 'secret') { sfx.gold(); burst(e.x, e.y, 16, 'spark', '#ffd0a0', 160); toast(t('msg.secret'), 1.8); }
+      else if (e.type === 'plateDown') { sfx.bonk(); once('plate', t('msg.plate'), 3); }
+      else if (e.type === 'gateOpen' || e.type === 'gateShut') sfx.land();
       else if (e.type === 'crumble') { sfx.crumble(); burst(e.c * g.T + 24, e.r * g.T + 8, 10, 'chip', '#b8966a', 80); }
       else if (e.type === 'wobble') sfx.wobble();
       else if (e.type === 'shatter') burst(e.x, e.y, 8, 'chip', '#d5763f', 140);
@@ -250,6 +289,7 @@ export function play(app, { g }) {
   return {
     update(dt) {
       if (toastUntil && app.time > toastUntil) { el.toast.className = 'toast hidden'; toastUntil = 0; }
+      if (cardUntil && app.time > cardUntil) { el.card.className = 'part-card parchment hidden'; cardUntil = 0; }
       for (const p of fx) { p.life -= dt; p.vy += p.grav * dt; p.x += p.vx * dt; p.y += p.vy * dt; }
       for (let k = fx.length - 1; k >= 0; k--) if (fx[k].life <= 0) fx.splice(k, 1);
       if (g.finished) {
@@ -301,10 +341,46 @@ export function clear(app, { g }) {
       t0 += dt;
       if (t0 < 1.2 || !(app.input.any('a') || app.input.any('start'))) return;
       sfx.ok();
+      app.go('reveal', { g });
+    },
+    draw(ctx) { drawLevel(ctx, g, app.time); ctx.fillStyle = 'rgba(20,12,6,0.4)'; ctx.fillRect(0, 0, W, H); finish(ctx); },
+  };
+}
+
+// ---- then and now ------------------------------------------------------------------------
+
+export function reveal(app, { g }) {
+  const S = app.session, n = S.level, last = n + 1 >= levelCount(app), id = g.def.id;
+  const ERAS = ['then', 'ruin', 'now'];
+  const PX = [40, 340, 640], PY = 120, PW = 280, PH = 170;
+  let t0 = 0;
+  app.ui.replaceChildren(h('div', { class: 'overlay reveal' },
+    h('div', { class: 'reveal-head' }, h('p', { class: 'kicker' }, t(`level.${id}.name`)), h('h2', {}, t('reveal.title'))),
+    h('div', { class: 'eras' }, ERAS.map((era, k) => h('div', { class: 'era', style: { animationDelay: `${0.3 + k * 0.9}s` } },
+      h('b', {}, t(`era.${era}`)), h('p', {}, t(`level.${id}.${era}`))))),
+    h('div', { class: 'parchment restored' }, h('h3', {}, t('reveal.parts')),
+      g.slots.map((sl) => h('p', { class: sl.filled ? 'got' : 'missing' }, h('span', { class: 'mark' }, sl.filled ? '✓' : '·'), h('b', {}, t(`part.${sl.part}.name`)), ' — ', t(`part.${sl.part}.text`)))),
+    h('p', { class: 'hint' }, rich(t('ui.next')))));
+  return {
+    update(dt) {
+      t0 += dt;
+      if (t0 < 1.5 || !(app.input.any('a') || app.input.any('start'))) return;
+      sfx.ok();
       if (last) app.go('story', { panels: app.data.story.outro, next: 'results', arg: { won: true } });
       else { S.level++; app.go('level'); }
     },
-    draw(ctx) { drawLevel(ctx, g, app.time); ctx.fillStyle = 'rgba(20,12,6,0.4)'; ctx.fillRect(0, 0, W, H); finish(ctx); },
+    draw(ctx) {
+      drawScene(ctx, 'palace', app.time); ctx.fillStyle = 'rgba(20,12,6,0.6)'; ctx.fillRect(0, 0, W, H);
+      ERAS.forEach((era, k) => {
+        const a = Math.max(0, Math.min(1, (t0 - 0.3 - k * 0.9) / 0.6));
+        if (!a) return;
+        ctx.save(); ctx.globalAlpha = a; ctx.translate(PX[k], PY + (1 - a) * 12);
+        ctx.fillStyle = '#e8d7b0'; ctx.fillRect(-5, -5, PW + 10, PH + 10);
+        drawReveal(ctx, id, era, PW, PH, app.time);
+        ctx.restore();
+      });
+      if (t0 > 3) ['→', '→'].forEach((_, k) => { ctx.fillStyle = 'rgba(255,240,210,0.7)'; ctx.font = 'bold 22px Georgia, serif'; ctx.fillText('→', PX[k] + PW + 6, PY + PH / 2 + 8); });
+    },
   };
 }
 
