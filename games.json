@@ -147,6 +147,54 @@
       "poster": "assets/previews/olite.jpg"
     },
     {
+      "id": "pelota",
+      "folder": "../navarra-pelota",
+      "port": 8750,
+      "url": "games/pelota/",
+      "status": "ready",
+      "thumb": "assets/previews/pelota.jpg",
+      "preview": "assets/previews/pelota.webm",
+      "poster": "assets/previews/pelota.jpg",
+      "players": "1-2",
+      "minutes": "3-4",
+      "pace": "quick",
+      "bestFor": {
+        "es": "Partidos rápidos: ideal para retarse por turnos",
+        "eu": "Partida azkarrak: txandaka elkarri erronka egiteko aproposa",
+        "en": "Quick matches: perfect for taking turns to challenge each other"
+      },
+      "title": {
+        "es": "¡Pelotari!",
+        "eu": "Pelotari!",
+        "en": "Pelotari!"
+      },
+      "blurb": {
+        "es": "Pelota a mano en el frontón del pueblo, en fiestas: rojo contra azul.",
+        "eu": "Esku pilota herriko frontoian, jaietan: gorria urdinaren aurka.",
+        "en": "Hand pelota at the village frontón during the fiestas: red against blue."
+      },
+      "lesson": {
+        "es": "Las reglas y las palabras de la pelota a mano (frontis, chapa, dejada, tanto) y por qué hay un frontón en casi cada pueblo.",
+        "eu": "Esku pilotaren arauak eta hitzak (frontisa, txapa, dejada, tantoa) eta zergatik dagoen frontoi bat ia herri guztietan.",
+        "en": "The rules and words of hand pelota (frontis, chapa, dejada, tanto) and why nearly every village has a frontón."
+      },
+      "era": {
+        "es": "Tradición viva",
+        "eu": "Tradizio bizia",
+        "en": "A living tradition"
+      },
+      "place": {
+        "es": "Los frontones de Navarra",
+        "eu": "Nafarroako frontoiak",
+        "en": "Navarre's frontones"
+      },
+      "controls": {
+        "es": "Joystick, golpe fuerte y dejada",
+        "eu": "Joystick-a, kolpe indartsua eta dejada",
+        "en": "Stick, hard drive and soft shot"
+      }
+    },
+    {
       "id": "espadas",
       "folder": "../navarra-1212/mountain-kings",
       "port": 8740,

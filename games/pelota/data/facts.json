@@ -1,0 +1,47 @@
+{
+  "_note": "Every fact stays review_status draft until a qualified reviewer checks it and adds a source. A null source means nobody has cited one yet; do not invent one.",
+  "facts": [
+    {
+      "id": "pelota.fronton",
+      "text_key": "fact.fronton",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "pelota.ball",
+      "text_key": "fact.ball",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "pelota.hands",
+      "text_key": "fact.hands",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "pelota.old",
+      "text_key": "fact.old",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "pelota.fiestas",
+      "text_key": "fact.fiestas",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "pelota.kids",
+      "text_key": "fact.kids",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "pelota.modes",
+      "text_key": "fact.modes",
+      "source": null,
+      "review_status": "draft"
+    }
+  ]
+}
