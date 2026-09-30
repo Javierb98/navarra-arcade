@@ -193,14 +193,13 @@ async function boot() {
   };
   fit();
   try {
-    const [rules, controls, facts, story, cards, map, projects, requests, stages, ...locales] = await Promise.all([
-      get('data/rules.json'), get('data/controls.json'), get('data/facts.json'), get('data/story.json'),
-      get('data/cards.json'), get('data/map.json'), get('data/projects.json'), get('data/requests.json'), get('data/stages.json'),
+    const [rules, controls, facts, story, levels, ...locales] = await Promise.all([
+      get('data/rules.json'), get('data/controls.json'), get('data/facts.json'), get('data/story.json'), get('data/levels.json'),
       ...LANGS.map((l) => get(`data/locales/${l}.json`)),
     ]);
     initI18n(Object.fromEntries(LANGS.map((l, i) => [l, locales[i]])), langParam ?? settings.lang);
     setVolume(settings.volume);
-    app.data = { game: { rules, cards, map, projects, requests, stages }, facts: facts.facts, story };
+    app.data = { rules, levels, facts: facts.facts, story };
     app.input = new Input(controls);
     document.title = t('title.name');
     // From the arcade menu, skip the attract demo and go straight to setup.

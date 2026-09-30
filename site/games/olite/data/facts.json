@@ -4,64 +4,63 @@
     {
       "id": "olite.charles",
       "text_key": "fact.charles",
-      "image": "assets/facts/charles.png",
-      "scene": "palace",
-      "source": null,
-      "review_status": "draft"
-    },
-    {
-      "id": "olite.leonor",
-      "text_key": "fact.leonor",
-      "image": "assets/facts/leonor.png",
-      "scene": "palace",
+      "level": null,
       "source": null,
       "review_status": "draft"
     },
     {
       "id": "olite.gardens",
       "text_key": "fact.gardens",
-      "image": "assets/facts/gardens.png",
-      "scene": "palace",
+      "level": "gardens",
       "source": null,
       "review_status": "draft"
     },
     {
-      "id": "olite.lions",
-      "text_key": "fact.lions",
-      "image": "assets/facts/lions.png",
-      "scene": "palace",
+      "id": "olite.gallery",
+      "text_key": "fact.gallery",
+      "level": "gallery",
       "source": null,
       "review_status": "draft"
     },
     {
-      "id": "olite.wine",
-      "text_key": "fact.wine",
-      "image": "assets/facts/wine.png",
-      "scene": "palace",
+      "id": "olite.winds",
+      "text_key": "fact.winds",
+      "level": "winds",
       "source": null,
       "review_status": "draft"
     },
     {
-      "id": "olite.craftspeople",
-      "text_key": "fact.craftspeople",
-      "image": "assets/facts/craftspeople.png",
-      "scene": "palace",
+      "id": "olite.crowns",
+      "text_key": "fact.crowns",
+      "level": "crowns",
       "source": null,
       "review_status": "draft"
     },
     {
       "id": "olite.fire",
       "text_key": "fact.fire",
-      "image": "assets/facts/fire.png",
-      "scene": "palace",
+      "level": null,
       "source": null,
       "review_status": "draft"
     },
     {
-      "id": "olite.restoration",
-      "text_key": "fact.restoration",
-      "image": "assets/facts/restoration.png",
-      "scene": "palace",
+      "id": "olite.restore",
+      "text_key": "fact.restore",
+      "level": null,
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "olite.storks",
+      "text_key": "fact.storks",
+      "level": null,
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "olite.lions",
+      "text_key": "fact.lions",
+      "level": null,
       "source": null,
       "review_status": "draft"
     }

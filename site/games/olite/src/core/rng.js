@@ -1,5 +1,5 @@
-// Seeded PRNG (mulberry32). Everything random in combat goes through one of
-// these so a battle replays identically from its seed.
+// Seeded PRNG (mulberry32). Everything random in a climb goes through one of
+// these so a level replays identically from its seed.
 export function makeRng(seed) {
   let s = seed >>> 0;
   const next = () => {
@@ -15,12 +15,5 @@ export function makeRng(seed) {
     int: (n) => Math.floor(next() * n),
     chance: (p) => next() < p,
     pick: (arr) => arr[Math.floor(next() * arr.length)],
-    shuffle(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(next() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    },
   };
 }
