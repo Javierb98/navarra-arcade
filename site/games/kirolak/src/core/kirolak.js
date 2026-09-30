@@ -244,15 +244,20 @@ class Tug extends Event {
     });
     this.v *= 1 - R.friction * dt;
     this.x += this.v * dt;
-    const won = Math.abs(this.x) >= R.win ? (this.x > 0 ? 1 : 0) : this.roundT >= R.roundTime ? (Math.abs(this.x) < 0.05 ? null : this.x > 0 ? 1 : 0) : undefined;
-    if (won === undefined) return;
-    if (won != null) this.pulls[won]++;
+    // A pull ends when the marker crosses a line, or on time: then the rope
+    // goes to whichever side it's on (dead centre: whoever pulled cleaner).
+    let won;
+    if (Math.abs(this.x) >= R.win) won = this.x > 0 ? 1 : 0;
+    else if (this.roundT >= R.roundTime) won = this.x !== 0 ? (this.x > 0 ? 1 : 0) : this.p[1].good > this.p[0].good ? 1 : 0;
+    else return;
+    this.pulls[won]++;
     this.emit('round', { winner: won, pulls: [...this.pulls], round: this.round });
-    if (Math.max(...this.pulls) >= 2 || this.round >= 3) { this.finish(this.pulls[0] === this.pulls[1] ? null : this.pulls[0] > this.pulls[1] ? 0 : 1); return; }
+    // Best of three: every pull has a winner, so this always ends with one.
+    if (Math.max(...this.pulls) >= 2) { this.finish(this.pulls[0] > this.pulls[1] ? 0 : 1); return; }
     this.round++;
     this.reset(R.between);
   }
-  leader() { return this.pulls[0] !== this.pulls[1] ? (this.pulls[0] > this.pulls[1] ? 0 : 1) : Math.abs(this.x) < 0.02 ? null : this.x > 0 ? 1 : 0; }
+  leader() { return this.pulls[0] !== this.pulls[1] ? (this.pulls[0] > this.pulls[1] ? 0 : 1) : this.x !== 0 ? (this.x > 0 ? 1 : 0) : this.p[1].good > this.p[0].good ? 1 : 0; }
   measure(i) { return this.pulls[i]; }
 }
 
@@ -340,7 +345,8 @@ export class Day {
   next() {
     this.index++;
     if (this.index >= this.order.length) {
-      if (this.points[0] === this.points[1] && this.order.length < EVENTS.length + 2) this.order.push('sokatira');
+      // A level day gets one deciding tug of war (which can't end level).
+      if (this.points[0] === this.points[1] && !this.decided && this.order.length >= EVENTS.length) { this.decided = true; this.order.push('sokatira'); }
       else { this.over = true; this.winner = this.points[0] > this.points[1] ? 0 : this.points[1] > this.points[0] ? 1 : null; return null; }
     }
     return this.start();
