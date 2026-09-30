@@ -195,6 +195,54 @@
       }
     },
     {
+      "id": "kirolak",
+      "folder": "../navarra-herri-kirolak",
+      "port": 8760,
+      "url": "games/kirolak/",
+      "status": "ready",
+      "thumb": "assets/previews/kirolak.jpg",
+      "preview": "assets/previews/kirolak.webm",
+      "poster": "assets/previews/kirolak.jpg",
+      "players": "2",
+      "minutes": "4",
+      "pace": "quick",
+      "bestFor": {
+        "es": "Cara a cara entre dos: cuatro pruebas cortas y la txapela para quien gane",
+        "eu": "Biren arteko norgehiagoka: lau proba labur eta txapela irabazlearentzat",
+        "en": "Head to head for two: four short events and the txapela for the winner"
+      },
+      "title": {
+        "es": "Herri Kirolak",
+        "eu": "Herri Kirolak",
+        "en": "Herri Kirolak"
+      },
+      "blurb": {
+        "es": "Día de deporte rural vasco en la plaza: cortar troncos, levantar piedras, cargar pesos y tirar de la cuerda.",
+        "eu": "Herri kirol eguna plazan: aizkolaritza, harri-jasotzea, txingak eta sokatira.",
+        "en": "A day of Basque rural sports in the plaza: chopping logs, lifting stones, carrying weights and tug of war."
+      },
+      "lesson": {
+        "es": "Las pruebas del deporte rural vasco, sus nombres en euskera y cómo nacieron del trabajo del caserío.",
+        "eu": "Herri kirolen probak, haien izenak eta baserriko lanetik nola sortu ziren.",
+        "en": "The events of Basque rural sport, their Basque names, and how they grew out of farm work."
+      },
+      "era": {
+        "es": "Tradición viva",
+        "eu": "Tradizio bizia",
+        "en": "A living tradition"
+      },
+      "place": {
+        "es": "Las plazas de Navarra",
+        "eu": "Nafarroako plazak",
+        "en": "Navarre's village plazas"
+      },
+      "controls": {
+        "es": "Dos botones con ritmo y joystick",
+        "eu": "Bi botoi erritmoz eta joystick-a",
+        "en": "Two buttons in rhythm, and the stick"
+      }
+    },
+    {
       "id": "espadas",
       "folder": "../navarra-1212/mountain-kings",
       "port": 8740,

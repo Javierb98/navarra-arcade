@@ -86,6 +86,18 @@ const GAMES = {
     },
     async act(page, secs) { await wait(page, secs * 1000); },
   },
+  kirolak: {
+    async setup(page) {
+      await page.goto('http://localhost:8760/?debug&event=aizkolaritza'); await wait(page, 2500);
+      for (let k = 0; k < 12 && !(await page.evaluate(() => !!document.querySelector('.event-card'))); k++) { await tap(page, 'Digit1'); await wait(page, 500); }
+      await tap(page, 'KeyZ'); await wait(page, 3800);
+    },
+    async act(page, secs) {
+      // Both chop in rhythm, a beat apart.
+      const end = Date.now() + secs * 1000;
+      for (let k = 0; Date.now() < end; k++) { await tap(page, k % 2 ? 'KeyX' : 'KeyZ'); await wait(page, 60); await tap(page, k % 2 ? 'KeyR' : 'KeyE'); await wait(page, 120); }
+    },
+  },
   espadas: {
     async setup(page) {
       await page.goto('http://localhost:8740/'); await wait(page, 2000);
