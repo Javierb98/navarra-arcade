@@ -63,10 +63,29 @@ export class Match {
 
   // ---- the serve ---------------------------------------------------------------------
 
-  setupServe() {
-    const s = this.server, o = 1 - s, C = this.C;
-    Object.assign(this.p[s], { x: C.w * 0.55, y: C.serveY, vx: 0, vy: 0, swing: 0, buffer: null, plan: null });
-    Object.assign(this.p[o], { x: C.w * 0.4, y: C.serveY + 6, vx: 0, vy: 0, swing: 0, buffer: null, plan: null });
+  // Where each player stands for the serve.
+  spots() {
+    const s = this.server, C = this.C, out = [];
+    out[s] = { x: C.w * 0.55, y: C.serveY };
+    out[1 - s] = { x: C.w * 0.4, y: C.serveY + 6 };
+    return out;
+  }
+
+  // Between points both players walk back to their spots.
+  startWalk() {
+    this.phase = 'walk';
+    this.phaseT = 0;
+    this.targets = this.spots();
+    for (const pl of this.p) Object.assign(pl, { buffer: null, plan: null, shot: null });
+    this.emit('walk', { p: this.server });
+  }
+
+  setupServe(snap = true) {
+    const s = this.server, o = 1 - s, spots = this.spots();
+    for (const i of [s, o]) {
+      Object.assign(this.p[i], { vx: 0, vy: 0, swing: 0, buffer: null, plan: null });
+      if (snap) Object.assign(this.p[i], spots[i]);
+    }
     Object.assign(this.ball, { x: this.p[s].x + 0.4, y: this.p[s].y - 0.3, z: 1, vx: 0, vy: 0, vz: 0, wall: false, bounces: 0, lastHitter: s, held: s + 1 });
     this.phase = 'serve';
     this.phaseT = 0;
@@ -141,6 +160,7 @@ export class Match {
     if (this.phase === 'over') return;
     this.t += dt;
     this.phaseT += dt;
+    if (this.phase === 'walk') { this.walk(dt); return; }
     for (const pl of this.p) {
       const inp = pl.ai ? this.think(pl, dt) : (inputs[pl.i] ?? {});
       this.move(pl, inp, dt);
@@ -168,9 +188,25 @@ export class Match {
       const n = 4;
       for (let k = 0; k < n && this.phase === 'rally'; k++) this.fly(dt / n);
     } else if (this.phase === 'point' && this.phaseT > this.R.match.pointPause) {
-      this.setupServe();
+      this.startWalk();
     }
     if (this.phase === 'point') this.fly(dt, true);
+  }
+
+  walk(dt) {
+    const W = this.R.match.walk;
+    let there = 0;
+    for (const pl of this.p) {
+      const tg = this.targets[pl.i], dx = tg.x - pl.x, dy = tg.y - pl.y, d = Math.hypot(dx, dy);
+      const sp = this.R.player.speed * W.speed;
+      if (d < 0.08) { pl.vx = pl.vy = 0; there++; continue; }
+      const v = Math.min(sp, d / dt);
+      pl.vx = (dx / d) * v; pl.vy = (dy / d) * v;
+      pl.x += pl.vx * dt; pl.y += pl.vy * dt;
+    }
+    this.fly(dt, true);
+    // The server picks the ball up on the way.
+    if (there === 2 || this.phaseT > W.max) this.setupServe(this.phaseT > W.max);
   }
 
   move(pl, inp, dt) {

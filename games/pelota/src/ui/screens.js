@@ -5,19 +5,24 @@
 import { h } from './dom.js';
 import { t, getLang, setLang, nextLang, LANGS } from './i18n.js';
 import { Match } from '../core/pelota.js';
-import { drawCourt, scene, finish, portrait, drawTxapela } from './art.js';
+import { drawCourt, backdrop, finish, portrait, drawTxapela } from './art.js';
 import { sfx } from './audio.js';
 import { settings, topScores, qualifies, addScore } from './store.js';
 import { langParam } from './arcade.js';
+import { keysOn, keyName } from './keys.js';
 
 const W = 960, H = 540;
 const COURSE = 'mano';
 
-export function rich(text) {
+// "[A] drive" -> button glyph + text, so non-readers can match the button.
+// At a computer keyboard the key is shown too ("A·Z"). {p} picks whose keys.
+export function rich(text, p = 0) {
   const parts = [];
   let last = 0;
   for (const m of text.matchAll(/\[(A|B|C|START)\]/g)) {
-    parts.push(text.slice(last, m.index), h('span', { class: `btn btn-${m[1].toLowerCase()}` }, m[1]));
+    const b = m[1].toLowerCase();
+    parts.push(text.slice(last, m.index), h('span', { class: `btn btn-${b}` }, m[1]));
+    if (keysOn()) parts.push(h('kbd', {}, keyName(p, b)));
     last = m.index + m[0].length;
   }
   parts.push(text.slice(last));
@@ -163,7 +168,7 @@ export function menu(app) {
       if (inp.any('start') || (inp.any('a') && rows[row] === 'go')) { sfx.ok(); app.session = { ...S, stage: 0, total: 0, perfect: 0, longest: 0 }; app.go('story'); }
       else if (inp.any('a')) change(1);
     },
-    draw(ctx) { ctx.drawImage(scene(), 0, 0, W, H); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.45)'; ctx.fillRect(0, 0, W, H); },
+    draw(ctx) { backdrop(ctx, 'sunset', app.time); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.45)'; ctx.fillRect(0, 0, W, H); },
   };
 }
 
@@ -183,7 +188,7 @@ export function story(app) {
       if (app.input.any('start')) { app.go('howto'); return; }
       if (app.input.any('a') || (t0 += dt) > 8) { sfx.move(); t0 = 0; if (++i >= panels.length) app.go('howto'); else show(); }
     },
-    draw(ctx) { ctx.drawImage(scene('afternoon', i === 0), 0, 0, W, H); finish(ctx); },
+    draw(ctx) { backdrop(ctx, 'afternoon', app.time, i === 0 ? 0.8 : 0); finish(ctx); },
   };
 }
 
@@ -191,12 +196,12 @@ export function howto(app) {
   let t0 = 0;
   app.ui.replaceChildren(h('div', { class: 'overlay howto' }, h('div', { class: 'parchment brief-card' },
     h('h2', {}, t('howto.title')),
-    h('ul', { class: 'howto-list' }, ['move', 'a', 'txoko', 'ancho', 'globo', 'b', 'timing', 'turn'].map((k) => h('li', {}, rich(t(`howto.${k}`))))),
+    h('ul', { class: 'howto-list' }, ['move', 'a', 'b', 'aim', 'txoko', 'ancho', 'globo', 'timing', 'turn'].map((k) => h('li', {}, rich(t(`howto.${k}`))))),
     app.session.players === 2 ? h('p', { class: 'small' }, t('hud.to', { n: app.data.rules.match.to })) : null,
     h('p', { class: 'hint' }, rich(`[A] ${t('menu.go')}`)))));
   return {
     update(dt) { t0 += dt; if ((t0 > 0.6 && (app.input.any('a') || app.input.any('start'))) || t0 > 25) { sfx.ok(); app.go(app.session.players === 1 ? 'rival' : 'play'); } },
-    draw(ctx) { ctx.drawImage(scene(), 0, 0, W, H); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.35)'; ctx.fillRect(0, 0, W, H); },
+    draw(ctx) { backdrop(ctx, 'sunset', app.time); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.35)'; ctx.fillRect(0, 0, W, H); },
   };
 }
 
@@ -214,7 +219,7 @@ export function rival(app) {
   return {
     update(dt) { t0 += dt; if ((t0 > 0.6 && (app.input.any('a') || app.input.any('start'))) || t0 > 20) { sfx.ok(); app.go('play'); } },
     draw(ctx) {
-      ctx.drawImage(scene(st.place), 0, 0, W, H); finish(ctx);
+      backdrop(ctx, st.place, app.time); finish(ctx);
       ctx.fillStyle = 'rgba(20,12,6,0.4)'; ctx.fillRect(0, 0, W, H);
       portrait(ctx, 'red', 250, 250, 1.2, app.time);
       portrait(ctx, st.id, 710, 250, 1.2, app.time + 1);
@@ -239,7 +244,7 @@ export function play(app) {
   const el = {
     board: h('div', { class: 'board' }), status: h('p', { class: 'status' }),
     call: h('div', { class: 'call hidden' }), card: h('div', { class: 'gloss parchment hidden' }), fb: h('div', { class: 'fb hidden' }),
-    help: h('p', { class: 'play-help' }, rich(t('help.play'))),
+    help: h('div', { class: 'play-help' }),
   };
   app.ui.replaceChildren(h('div', { class: 'overlay play' }, el.board, el.status, el.call, el.card, el.fb, el.help));
   let fbUntil = 0;
@@ -315,7 +320,20 @@ export function play(app) {
     return [{ x: x.x || y.x, y: x.y || y.y, a: x.a || y.a, b: x.b || y.b }, {}];
   };
 
-  renderBoard(); renderStatus();
+  // How to hit and aim; shows each player's own keys at a keyboard.
+  let helpKey = '';
+  const renderHelp = () => {
+    const key = `${keysOn()}|${getLang()}`;
+    if (key === helpKey) return;
+    helpKey = key;
+    const line = (p) => {
+      const arrows = keysOn() ? ['left', 'right', 'down'].map((d) => keyName(p, d)) : ['←', '→', '↓'];
+      return h('p', {}, S.players === 2 ? h('span', { class: `who ${p ? 'blue' : 'red'}` }, t(p ? 'hud.blue' : 'hud.red')) : null,
+        ...rich(t('help.hit'), p), ' · ', h('span', { class: 'aim' }, t('help.aim', { l: arrows[0], r: arrows[1], d: arrows[2] })));
+    };
+    el.help.replaceChildren(...(S.players === 2 ? [line(0), line(1)] : [line(0)]));
+  };
+  renderBoard(); renderStatus(); renderHelp();
   return {
     update(dt) {
       if (callUntil && app.time > callUntil) { el.call.className = 'call hidden'; callUntil = 0; }
@@ -337,9 +355,9 @@ export function play(app) {
       m.step(inputs(), dt);
       follow(m, view, dt);
       handle();
-      renderBoard(); renderStatus();
+      renderBoard(); renderStatus(); renderHelp();
     },
-    draw(ctx) { drawCourt(ctx, m, app.time, { ...view, cheer: view.cheer > 0 }); },
+    draw(ctx) { drawCourt(ctx, m, app.time, view); },
   };
 }
 
@@ -368,7 +386,7 @@ export function results(app, { m }) {
       if (qualifies(COURSE, S.difficulty, total)) app.go('initials', { score: total });
       else app.go('fact');
     },
-    draw(ctx) { ctx.drawImage(scene('night', true), 0, 0, W, H); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.4)'; ctx.fillRect(0, 0, W, H); },
+    draw(ctx) { backdrop(ctx, 'night', app.time, 1); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.4)'; ctx.fillRect(0, 0, W, H); },
   };
 }
 
@@ -388,7 +406,7 @@ export function txapela(app, { m }) {
       if (t0 > 1.5 && (app.input.any('a') || app.input.any('start'))) { sfx.ok(); app.go('results', { m }); }
     },
     draw(ctx) {
-      ctx.drawImage(scene('night', Math.floor(app.time * 4) % 2 === 0), 0, 0, W, H);
+      backdrop(ctx, 'night', app.time, 1);
       ctx.fillStyle = 'rgba(10,8,20,0.35)'; ctx.fillRect(0, 0, W, H);
       const drop = Math.min(1, t0 / 1.4);
       portrait(ctx, 'red', 480, 210, 1.5, app.time);
@@ -433,7 +451,7 @@ export function initials(app, { score }) {
         show();
       }
     },
-    draw(ctx) { ctx.drawImage(scene(), 0, 0, W, H); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.45)'; ctx.fillRect(0, 0, W, H); },
+    draw(ctx) { backdrop(ctx, 'sunset', app.time); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.45)'; ctx.fillRect(0, 0, W, H); },
   };
 }
 
@@ -445,6 +463,6 @@ export function fact(app) {
   app.ui.replaceChildren(h('div', { class: 'overlay fact' }, card));
   return {
     update(dt) { t0 += dt; if ((t0 > 1 && (app.input.any('a') || app.input.any('start'))) || t0 > 20) app.go('attract'); },
-    draw(ctx) { ctx.drawImage(scene(), 0, 0, W, H); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.4)'; ctx.fillRect(0, 0, W, H); },
+    draw(ctx) { backdrop(ctx, 'sunset', app.time); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.4)'; ctx.fillRect(0, 0, W, H); },
   };
 }

@@ -227,3 +227,16 @@ h1, h2, h3, p { margin: 0; }
 .txapela { justify-content: flex-end; }
 .txapela-card { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); max-width: 600px; padding: 14px 28px; text-align: center; }
 .txapela-card h2 { font-size: 40px; color: #8a2018; }
+
+/* Keyboard keys next to the button glyphs, at a computer. */
+kbd {
+  display: inline-block; min-width: 18px; padding: 0 5px; margin: 0 4px 0 1px; border-radius: 4px;
+  font: bold 12px/18px var(--sans); text-align: center; vertical-align: 1px;
+  color: #1a1a1a; background: linear-gradient(#fdfdfd, #d9d9d9); border: 1px solid #8a8a8a; box-shadow: 0 1.5px 0 #6a6a6a;
+}
+.play-help { display: flex; flex-direction: column; gap: 3px; }
+.play-help p { margin: 0; }
+.play-help .who { font-weight: bold; margin-right: 8px; padding: 0 6px; border-radius: 8px; }
+.play-help .who.red { background: #b3261e; }
+.play-help .who.blue { background: #245a8a; }
+.play-help .aim { opacity: .9; }

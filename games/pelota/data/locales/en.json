@@ -44,7 +44,7 @@
   "howto.move": "Stick: run around the court",
   "howto.a": "[A] drive: strikes high and comes back deep",
   "howto.b": "[B] dejada: soft, dies near the wall",
-  "howto.aim": "Push the stick to one side as you strike to send it there",
+  "howto.aim": "To aim, hold a direction while you hit: ← into the corner, → to the right, ↓ a lob",
   "howto.turn": "You strike in turns: the coloured ring shows whose turn it is. The longer the rally, the faster it gets.",
   "hud.red": "Red",
   "hud.blue": "Blue",
@@ -128,5 +128,6 @@
   "gl.txapela.name": "Txapela",
   "gl.txapela.text": "The Basque beret. In Basque sports, the champion is crowned with a txapela.",
   "fact.txapela": "In Basque sports, the winner of a championship is crowned with a txapela instead of given a cup.",
-  "help.play": "[A] drive (← txoko · → wide · ↓ lob) · [B] dejada · strike on the gold ring"
+  "help.hit": "[A] drive · [B] dejada",
+  "help.aim": "To aim, hold {l} txoko, {r} wide or {d} lob as you hit"
 }

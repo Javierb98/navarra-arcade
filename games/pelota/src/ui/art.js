@@ -5,6 +5,7 @@
 // floodlights. No pixel art: the canvas is 2x the 960x540 stage.
 
 import { makeRng } from '../core/rng.js';
+import { drawCrowd } from './crowd.js';
 
 const W = 960, H = 540, SCALE = 2;
 
@@ -214,6 +215,18 @@ function paintLights(g, L) {
   }
 }
 
+// Paint on the left wall (x = 0) as if on a flat panel: draw(c) paints in a
+// 100x100 square that is mapped onto the wall between y0 (left edge, as
+// seen) and y1, from height z0 (top) down to z1. Affine is close enough for
+// a panel this small.
+function onWall(g, y0, y1, z0, z1, draw) {
+  const [ax, ay] = project(0, y0, z0), [ux, uy] = project(0, y1, z0), [vx, vy] = project(0, y0, z1);
+  g.save();
+  g.transform((ux - ax) / 100, (uy - ay) / 100, (vx - ax) / 100, (vy - ay) / 100, ax, ay);
+  draw(g);
+  g.restore();
+}
+
 // ---- the frontón --------------------------------------------------------------------------------
 
 // The frontis: big blocks of ashlar, the metal chapa at its foot, red lines, and the arms of Navarre.
@@ -289,14 +302,17 @@ function paintLeftWall(g, L) {
     g.strokeStyle = 'rgba(90,64,40,0.2)'; g.lineWidth = 0.9; line3(g, [0, 0, z], [0, far, z]);
     for (let y = row % 2 ? 0.6 : 0; y < far; y += 1.2) { g.strokeStyle = `rgba(90,64,40,${0.1 + rng.next() * 0.1})`; line3(g, [0, y, z - 0.6], [0, y, z]); }
   }
+  // The cuadro lines run up the wall, and each has its number painted on
+  // the stone beside it, in the wall's own perspective.
   for (let k = 1; k <= 7; k++) {
     const y = k * 4;
-    g.strokeStyle = 'rgba(255,255,255,0.85)'; g.lineWidth = 2; line3(g, [0, y, 0], [0, y, 2.4]);
-    quad(g, [[0.02, y - 1.3, 2.7], [0.02, y - 0.2, 2.7], [0.02, y - 0.2, 3.6], [0.02, y - 1.3, 3.6]]);
-    g.fillStyle = '#f3ece0'; g.fill(); g.strokeStyle = '#2e5a8a'; g.lineWidth = 1.5; g.stroke();
-    const [sx, sy, s] = project(0.02, y - 0.75, 2.95);
-    g.fillStyle = '#2e5a8a'; g.font = `bold ${Math.max(9, 0.62 * s)}px Georgia, serif`; g.textAlign = 'center';
-    g.fillText(String(k), sx, sy);
+    g.strokeStyle = 'rgba(255,255,255,0.85)'; g.lineWidth = 2; line3(g, [0, y, 0], [0, y, 2.2]);
+    onWall(g, y + 0.05, y - 0.95, 3.1, 2.35, (c) => {
+      c.fillStyle = 'rgba(245,238,224,0.9)'; c.fillRect(0, 0, 100, 100);
+      c.strokeStyle = '#2e5a8a'; c.lineWidth = 6; c.strokeRect(6, 6, 88, 88);
+      c.fillStyle = '#2e5a8a'; c.font = 'bold 78px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText(String(k), 50, 56);
+    });
   }
   for (let y = 1; y < far; y += 0.5) {
     const [sx, sy, s] = project(0, y, C.wall - 0.2 - rng.next() * 0.8);
@@ -339,27 +355,7 @@ function paintStands(g, L, frame) {
     g.fillStyle = mix(mix('#b09878', '#8a7258', r / rows), L.haze, L.floods ? 0.35 : 0); g.fill();
     quad(g, [[x, -1, z - 0.5], [x, C.l + 9, z - 0.5], [x, C.l + 9, z], [x, -1, z]]);
     g.fillStyle = mix(mix('#8a7258', '#6e5a44', r / rows), L.haze, L.floods ? 0.35 : 0); g.fill();
-    const rng = makeRng(r * 13 + 1);
-    for (let y = -0.5; y < C.l + 8; y += 0.62 + rng.next() * 0.25) {
-      if (rng.chance(0.1)) continue;
-      const cheer = frame && rng.chance(0.55);
-      const [sx, sy, s] = project(x + 0.5, y, z + 0.1);
-      const shirt = rng.chance(0.62) ? '#f4efe4' : ['#c0392b', '#2e6f9e', '#e0a030', '#5d8a36', '#8e44ad'][rng.int(5)];
-      const skin = ['#f0c9a0', '#e2b48a', '#c99470', '#f5d6b4'][rng.int(4)];
-      const hair = ['#3a2a20', '#1e1612', '#8a6a4a', '#c9c3b8', '#5a3a24'][rng.int(5)];
-      const u = s, bob = cheer ? 0.12 : 0;
-      const sg = g.createLinearGradient(sx - 0.25 * u, 0, sx + 0.25 * u, 0);
-      sg.addColorStop(0, shade(shirt, -0.12)); sg.addColorStop(1, shade(shirt, 0.08));
-      g.fillStyle = sg; g.beginPath(); g.ellipse(sx, sy - (0.35 + bob) * u, 0.24 * u, 0.33 * u, 0, 0, Math.PI * 2); g.fill();
-      if (rng.chance(0.5)) { g.fillStyle = '#c0392b'; g.beginPath(); g.moveTo(sx - 0.12 * u, sy - (0.62 + bob) * u); g.lineTo(sx + 0.12 * u, sy - (0.62 + bob) * u); g.lineTo(sx, sy - (0.48 + bob) * u); g.fill(); }
-      g.fillStyle = skin; g.beginPath(); g.arc(sx, sy - (0.78 + bob) * u, 0.13 * u, 0, Math.PI * 2); g.fill();
-      g.fillStyle = hair; g.beginPath(); g.arc(sx + 0.03 * u, sy - (0.81 + bob) * u, 0.125 * u, Math.PI * 0.9, Math.PI * 2.1); g.fill();
-      if (rng.chance(0.15)) { g.fillStyle = '#1e1e28'; g.beginPath(); g.ellipse(sx, sy - (0.9 + bob) * u, 0.16 * u, 0.06 * u, 0, 0, Math.PI * 2); g.fill(); }
-      if (cheer) {
-        g.strokeStyle = skin; g.lineWidth = 0.07 * u; g.lineCap = 'round';
-        g.beginPath(); g.moveTo(sx - 0.18 * u, sy - 0.6 * u); g.lineTo(sx - 0.3 * u, sy - 1.05 * u); g.moveTo(sx + 0.18 * u, sy - 0.6 * u); g.lineTo(sx + 0.3 * u, sy - 1.05 * u); g.stroke();
-      }
-    }
+    // The spectators are drawn every frame by crowd.js.
   }
 }
 
@@ -653,12 +649,45 @@ export function drawMarks(ctx, marks) {
   }
 }
 
+// The judge (juez) on a high chair beside the court, following the play.
+function judge(ctx, m, t, light) {
+  const [sx, sy, u] = project(COURT.w + 1.3, 15, 0);
+  const [bx] = project(m.ball.x, m.ball.y, m.ball.z);
+  const turn = Math.max(-1, Math.min(1, (bx - sx) / 200)) * 0.7 - 0.3;
+  ctx.save(); ctx.translate(sx, sy); ctx.scale(u, u); ctx.lineCap = 'round';
+  ctx.fillStyle = 'rgba(30,18,8,0.3)'; ctx.beginPath(); ctx.ellipse(-0.3, 0, 0.5, 0.1, 0, 0, Math.PI * 2); ctx.fill();
+  // The chair.
+  ctx.strokeStyle = '#6a4a2a'; ctx.lineWidth = 0.06;
+  ctx.beginPath(); ctx.moveTo(-0.25, 0); ctx.lineTo(-0.2, -1.0); ctx.moveTo(0.25, 0); ctx.lineTo(0.2, -1.0); ctx.moveTo(-0.22, -0.5); ctx.lineTo(0.22, -0.5); ctx.stroke();
+  ctx.fillStyle = '#7a5530'; ctx.fillRect(-0.3, -1.05, 0.6, 0.07);
+  // Legs dangling, white trousers.
+  ctx.strokeStyle = '#ece6da'; ctx.lineWidth = 0.13;
+  ctx.beginPath(); ctx.moveTo(-0.08, -1.02); ctx.lineTo(-0.12, -0.65); ctx.moveTo(0.08, -1.02); ctx.lineTo(0.06, -0.65); ctx.stroke();
+  // White shirt, red sash and pañuelo, black txapela.
+  ctx.fillStyle = '#f4f0e8'; ctx.beginPath(); ctx.moveTo(-0.2, -1.02); ctx.lineTo(-0.22, -1.48); ctx.quadraticCurveTo(0, -1.6, 0.22, -1.48); ctx.lineTo(0.2, -1.02); ctx.fill();
+  ctx.fillStyle = '#b3261e'; ctx.fillRect(-0.21, -1.12, 0.42, 0.07);
+  ctx.beginPath(); ctx.moveTo(-0.1, -1.52); ctx.lineTo(0.1, -1.52); ctx.lineTo(0, -1.4); ctx.fill();
+  const hx = turn * 0.02, hy = -1.68;
+  ctx.fillStyle = '#e2ae88'; ctx.beginPath(); ctx.ellipse(hx, hy, 0.1, 0.12, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#2a1a10'; ctx.beginPath(); ctx.arc(hx + turn * 0.05 - 0.03, hy - 0.01, 0.012, 0, Math.PI * 2); ctx.arc(hx + turn * 0.05 + 0.03, hy - 0.01, 0.012, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#8a8a88'; ctx.beginPath(); ctx.ellipse(hx + turn * 0.03 , hy + 0.06, 0.05, 0.02, 0, 0, Math.PI * 2); ctx.fill(); // grey moustache
+  ctx.fillStyle = '#16161e'; ctx.beginPath(); ctx.ellipse(hx, hy - 0.1, 0.14, 0.05, -0.08, 0, Math.PI * 2); ctx.fill();
+  // One arm resting; the other raised to signal when a point ends.
+  ctx.strokeStyle = '#f4f0e8'; ctx.lineWidth = 0.08;
+  const signal = m.phase === 'point' && m.phaseT < 1.5;
+  ctx.beginPath(); ctx.moveTo(0.19, -1.44); ctx.lineTo(signal ? 0.3 : 0.24, signal ? -1.75 : -1.2); ctx.lineTo(signal ? 0.34 : 0.14, signal ? -2.0 : -1.06); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-0.19, -1.44); ctx.lineTo(-0.24, -1.2); ctx.lineTo(-0.12, -1.06); ctx.stroke();
+  ctx.restore();
+}
+
 // The whole court with the match in progress.
 export function drawCourt(ctx, m, t, view = {}) {
   const light = view.light ?? 'sunset';
   ctx.save();
   if (view.shake > 0) ctx.translate((Math.random() - 0.5) * view.shake * 6, (Math.random() - 0.5) * view.shake * 4);
-  ctx.drawImage(scene(light, view.cheer && Math.floor(t * 4) % 2 === 0), -4, -4, W + 8, H + 8);
+  ctx.drawImage(scene(light), -4, -4, W + 8, H + 8);
+  drawCrowd(ctx, t, light, { cheer: Math.min(1, (view.cheer ?? 0) / 1.2), clap: Math.min(1, Math.max(0, (m.rally - 4) / 8)), ball: m.ball });
+  judge(ctx, m, t, light);
   drawMarks(ctx, view.marks ?? []);
   drawTiming(ctx, m, view.perfectAt ?? 0.84);
   if (LIGHTS[light].floods) {
@@ -677,6 +706,12 @@ export function drawCourt(ctx, m, t, view = {}) {
   drawFx(ctx, view.fx ?? []);
   ctx.restore();
   finish(ctx);
+}
+
+// The court with its crowd but no match: for the menus and between screens.
+export function backdrop(ctx, light = 'sunset', t = 0, cheer = 0) {
+  ctx.drawImage(scene(light), 0, 0, W, H);
+  drawCrowd(ctx, t, light, { cheer, ball: { x: 5, y: 10, z: 3 } });
 }
 
 export function clearArt() { cache.clear(); }
