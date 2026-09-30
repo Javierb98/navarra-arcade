@@ -186,5 +186,9 @@
   "request.gift.name": "Opari bat errege-mahairako",
   "request.gift.text": "Erregeak ardoa eskatzen du.",
   "request.bread.name": "Inor ez dadila gose",
-  "request.bread.text": "Ogia guztientzat 2 txanda jarraian."
+  "request.bread.text": "Ogia guztientzat 2 txanda jarraian.",
+  "msg.passed": "Karta lagunari emana",
+  "to.pass": "Lagunari eman",
+  "msg.lot": "Aukeratu orube huts bat putzurako",
+  "menu.mode.campaign.note": "Presarik gabe: txanda bakoitza gordetzen da, eta beste egun batean jarrai dezakezu."
 }

@@ -186,5 +186,9 @@
   "request.gift.name": "A gift for the royal table",
   "request.gift.text": "The king asks for wine.",
   "request.bread.name": "Let nobody go hungry",
-  "request.bread.text": "Bread for everyone 2 turns in a row."
+  "request.bread.text": "Bread for everyone 2 turns in a row.",
+  "msg.passed": "Card passed to your partner",
+  "to.pass": "Pass to partner",
+  "msg.lot": "Pick an empty lot for the well",
+  "menu.mode.campaign.note": "No rush: it saves every turn, so you can carry on another day."
 }

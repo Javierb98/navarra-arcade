@@ -1,4 +1,4 @@
-// Boot, the fixed-step loop, integer scaling, idle reset and the admin menu.
+// Boot, the fixed-step loop, sharp scaling, idle reset and the admin menu.
 // Screens live in screens.js; this file only moves between them.
 
 import { h } from './dom.js';
@@ -10,8 +10,9 @@ import * as screens from './screens.js';
 import { menuUrl, langParam, backToMenu } from './arcade.js';
 
 const FIXED = 1 / 60;
-const W = 480;
-const H = 270;
+const W = 960;
+const H = 540;
+const DPR = 2; // the canvas is drawn at twice the stage size
 const IDLE_AFTER = 60;
 const IDLE_GRACE = 10;
 
@@ -35,12 +36,12 @@ const app = {
   },
 };
 
+// CSS zoom (not transform: scale) so text is laid out at full resolution.
 function fit() {
   const k = Math.min(innerWidth / W, innerHeight / H);
-  const scale = k >= 1 ? Math.floor(k) : k;
-  stage.style.transform = `scale(${scale})`;
-  stage.style.left = `${Math.round((innerWidth - W * scale) / 2)}px`;
-  stage.style.top = `${Math.round((innerHeight - H * scale) / 2)}px`;
+  stage.style.zoom = k;
+  stage.style.left = `${(innerWidth - W * k) / 2 / k}px`;
+  stage.style.top = `${(innerHeight - H * k) / 2 / k}px`;
 }
 addEventListener('resize', fit);
 
@@ -170,6 +171,7 @@ function frame(now) {
       updateIdle(FIXED);
       if (!idleShown) app.screen.update(FIXED);
     }
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     app.screen.draw(ctx);
     failures = 0;
   } catch (err) {
@@ -191,14 +193,14 @@ async function boot() {
   };
   fit();
   try {
-    const [rules, controls, facts, story, cards, buildings, events, stages, ...locales] = await Promise.all([
+    const [rules, controls, facts, story, cards, map, projects, requests, stages, ...locales] = await Promise.all([
       get('data/rules.json'), get('data/controls.json'), get('data/facts.json'), get('data/story.json'),
-      get('data/cards.json'), get('data/buildings.json'), get('data/events.json'), get('data/stages.json'),
+      get('data/cards.json'), get('data/map.json'), get('data/projects.json'), get('data/requests.json'), get('data/stages.json'),
       ...LANGS.map((l) => get(`data/locales/${l}.json`)),
     ]);
     initI18n(Object.fromEntries(LANGS.map((l, i) => [l, locales[i]])), langParam ?? settings.lang);
     setVolume(settings.volume);
-    app.data = { game: { rules, cards, buildings, events }, stages: stages.stages, facts: facts.facts, story };
+    app.data = { game: { rules, cards, map, projects, requests, stages }, facts: facts.facts, story };
     app.input = new Input(controls);
     document.title = t('title.name');
     // From the arcade menu, skip the attract demo and go straight to setup.
