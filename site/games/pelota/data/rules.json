@@ -99,11 +99,15 @@
   },
   "match": {
     "to": 7,
-    "pointPause": 2.4,
+    "pointPause": 1.6,
     "serveWait": 6,
     "ramp": 0.035,
     "rampMax": 0.4,
-    "defaultOpponent": "martillo"
+    "defaultOpponent": "martillo",
+    "walk": {
+      "speed": 0.6,
+      "max": 4.5
+    }
   },
   "difficulty": {
     "easy": {

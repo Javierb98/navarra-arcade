@@ -44,7 +44,7 @@
   "howto.move": "Joystick-a: kantxan korrika",
   "howto.a": "[A] kolpea: goian jo eta urrun itzultzen da",
   "howto.b": "[B] dejada: leuna, frontis ondoan hiltzen da",
-  "howto.aim": "Kolpatzean, bultzatu joystick-a alde batera hara bidaltzeko",
+  "howto.aim": "Apuntatzeko, eutsi norabide bati jotzen duzun bitartean: ← izkinara, → eskuinera, ↓ globoa",
   "howto.turn": "Txandaka jotzen duzue: koloretako eraztunak nori dagokion adierazten du. Pilotakada zenbat eta luzeagoa, orduan eta azkarragoa.",
   "hud.red": "Gorria",
   "hud.blue": "Urdina",
@@ -128,5 +128,6 @@
   "gl.txapela.name": "Txapela",
   "gl.txapela.text": "Euskal txapela. Euskal kiroletan, txapelduna txapela batekin saritzen da.",
   "fact.txapela": "Euskal kiroletan, txapelketa bateko irabazleari txapela jartzen zaio, kopa eman beharrean.",
-  "help.play": "[A] kolpea (← txokoa · → zabalera · ↓ globoa) · [B] dejada · jo eraztun urrekoarekin"
+  "help.hit": "[A] kolpea · [B] dejada",
+  "help.aim": "Apuntatzeko, jo bitartean eutsi {l} txokoa, {r} zabalera edo {d} globoa"
 }

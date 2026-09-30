@@ -31,8 +31,13 @@ export class Input {
       ...cfg.keyboard.admin,
       ...(cfg.keyboard.exit ?? []),
     ]);
+    // Someone at a computer keyboard (letter keys), rather than a cabinet
+    // (whose encoders send Ctrl, Alt, Space, digits and arrows): screens
+    // then show the keys next to the button glyphs.
+    this.keyboard = false;
     addEventListener('keydown', (e) => {
       if (mapped.has(e.code)) e.preventDefault();
+      if (mapped.has(e.code) && e.code.startsWith('Key')) this.keyboard = true;
       if (!e.repeat) this.hit.add(e.code);
       this.down.add(e.code);
     });

@@ -44,7 +44,7 @@
   "howto.move": "Joystick: correr por la cancha",
   "howto.a": "[A] golpe: sube alto y vuelve lejos",
   "howto.b": "[B] dejada: suave, muere cerca del frontis",
-  "howto.aim": "Empuja el joystick a un lado al golpear para mandarla allí",
+  "howto.aim": "Para apuntar, mantén una dirección mientras golpeas: ← a la esquina, → a la derecha, ↓ un globo",
   "howto.turn": "Golpeáis por turnos: el aro de colores marca a quién le toca. Cuanto más dura el peloteo, más rápido va.",
   "hud.red": "Rojo",
   "hud.blue": "Azul",
@@ -128,5 +128,6 @@
   "gl.txapela.name": "Txapela",
   "gl.txapela.text": "La boina vasca. En los deportes vascos, al campeón se le pone una txapela como trofeo.",
   "fact.txapela": "En los deportes vascos, al ganador de un campeonato se le pone una txapela en vez de darle una copa.",
-  "help.play": "[A] golpe (← txoko · → ancho · ↓ globo) · [B] dejada · pega con el aro dorado"
+  "help.hit": "[A] golpe · [B] dejada",
+  "help.aim": "Apunta manteniendo {l} txoko, {r} ancho o {d} globo al golpear"
 }

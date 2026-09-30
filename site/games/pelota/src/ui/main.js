@@ -8,6 +8,7 @@ import { unlockAudio, setVolume, sfx } from './audio.js';
 import { settings, saveSettings, resetScores } from './store.js';
 import * as screens from './screens.js';
 import { menuUrl, langParam, backToMenu } from './arcade.js';
+import { initKeys, showKeys } from './keys.js';
 
 const FIXED = 1 / 60;
 const W = 960;
@@ -163,6 +164,7 @@ function frame(now) {
       acc -= FIXED;
       app.time += FIXED;
       app.input.poll(FIXED);
+      showKeys(app.input.keyboard);
       if (app.input.activity) unlockAudio();
       if (exitBox) { updateExit(); continue; }
       if (wantsExit(FIXED)) { openExit(); continue; }
@@ -201,6 +203,7 @@ async function boot() {
     setVolume(settings.volume);
     app.data = { rules, facts: facts.facts, story, glossary };
     app.input = new Input(controls);
+    initKeys(controls);
     document.title = t('title.name');
     // From the arcade menu, skip the attract demo and go straight to setup.
     app.go(menuUrl ? 'menu' : 'attract');
