@@ -291,7 +291,7 @@ function drawCompetitor(g, ev, i, t, a) {
   const look = { hair: i ? '#2a1c14' : '#4a3222', moustache: !!i };
   if (ev.id === 'aizkolaritza') {
     const logY = GROUND;
-    drawLog(g, x, logY, st.cut, dir, t);
+    drawLog(g, x, logY, ev.measure(i), dir, t);
     const stand = logY - 0.44 * U;
     // swing: 0 = strike, 1 = raised; the pelotari raises the axe as the power ring fills.
     const raise = st.doneAt != null ? 0 : Math.min(1, st.since / ev.R.windup);
@@ -400,7 +400,7 @@ export function drawMeters(g, ev, t) {
     if (ev.id === 'aizkolaritza') {
       const pw = st.doneAt != null ? 0 : Math.min(1, st.since / ev.R.windup);
       ring(g, mx, 250, 26, pw, col, pw >= ev.R.perfect);
-      bar(g, x - 70, 500, 140, 14, st.cut, col);
+      bar(g, x - 70, 500, 140, 14, ev.measure(i), col);
     } else if (ev.id === 'harri') {
       if (st.phase === 'raise') bar(g, mx - 8, 180, 16, 120, 0, col), (() => { g.fillStyle = col; g.beginPath(); g.roundRect(mx - 6, 298 - 116 * st.h, 12, 116 * st.h, 6); g.fill(); })();
       if (st.phase === 'shoulder') { balance(g, x, 150, 160, st.bal); bar(g, x - 60, 176, 120, 8, st.hold / ev.R.hold, '#fff'); }

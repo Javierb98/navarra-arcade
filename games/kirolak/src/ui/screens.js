@@ -231,7 +231,7 @@ export function play(app) {
     h('div', { class: 'side blue' }, h('b', {}, fmt(day.points[1])), h('span', { class: 'name' }, t('hud.blue'), day.players === 1 ? h('small', {}, ` ${t('hud.cpu')}`) : null)));
   el.help.replaceChildren(...rich(t(`ev.${ev.id}.how`)));
   const stats = () => {
-    const f = (i) => ev.id === 'aizkolaritza' ? `${Math.round(ev.p[i].cut * 100)}%` : ev.id === 'harri' ? `${ev.p[i].lifts}` : ev.id === 'txingak' ? t('unit.m', { n: ev.p[i].dist.toFixed(1) }) : '';
+    const f = (i) => ev.id === 'aizkolaritza' ? `${Math.round(ev.measure(i) * 100)}%` : ev.id === 'harri' ? `${ev.p[i].lifts}` : ev.id === 'txingak' ? t('unit.m', { n: ev.p[i].dist.toFixed(1) }) : '';
     el.stat.querySelector('.s0').textContent = f(0); el.stat.querySelector('.s1').textContent = f(1);
     el.timer.textContent = Math.ceil(Math.max(0, ev.time - ev.t));
   };

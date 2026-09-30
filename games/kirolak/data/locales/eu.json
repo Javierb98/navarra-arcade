@@ -39,7 +39,7 @@
   "menu.easy.note": "Aurkari lasaiagoa, hasteko.",
   "menu.normal.note": "Benetako aurkaria. Erritmoa, ez indar hutsa.",
   "menu.go": "Plazara!",
-  "intro.1": "Jaiak dira eta plazak zerrauts usaina du. Gaur herri kirolak daude.",
+  "intro.1": "Jaiak dira eta plaza jendez beteta dago. Gaur herri kirolak daude.",
   "intro.2": "Uste da proba asko baserriko eta mendiko lanetik sortu zirela: egurra ebaki, harriak mugitu, pisuak garraiatu.",
   "intro.3": "Gorria urdinaren aurka, lau proba. Hemen ez du gehien estutzen duenak irabazten, erritmoa daramanak baizik.",
   "ev.aizkolaritza.name": "Aizkolaritza",
@@ -116,5 +116,5 @@
   "fact.stones": "Harri-jasotzeko harriak zilindrikoak, kubikoak, laukizuzenak edo esferikoak izan daitezke.",
   "fact.sokatira": "Sokatiran, taldeek buruzagiak markatzen duen erritmora tiratzen dute.",
   "fact.txapela": "Euskal kiroletan, txapelketako irabazleari txapela jartzen zaio.",
-  "fact.plaza": "Probak herriko plazan egin ohi dira jaietan, zerrautsez estalitako lurrean."
+  "fact.plaza": "Probak herriko plazan egin ohi dira jaietan, herri osoa begira dagoela."
 }
