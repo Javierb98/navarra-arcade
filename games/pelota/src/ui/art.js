@@ -196,7 +196,7 @@ function paintTrees(g, L) {
 
 // Strings of fiesta bulbs and bunting across the plaza.
 function paintLights(g, L) {
-  const strings = [[250, 22, 960, 70, 60], [-20, 80, 330, 30, 30], [560, 170, 960, 200, 30]];
+  const strings = [[250, 22, 960, 70, 60], [-20, 80, 330, 30, 30]];
   const cols = ['#c0392b', '#f3ece0', '#2e7d4f'];
   for (const [si, [ax, ay, bx, by, sag]] of strings.entries()) {
     g.strokeStyle = 'rgba(40,28,16,0.75)'; g.lineWidth = 1.1;
@@ -307,22 +307,16 @@ function paintLeftWall(g, L) {
   for (let k = 1; k <= 7; k++) {
     const y = k * 4;
     g.strokeStyle = 'rgba(255,255,255,0.85)'; g.lineWidth = 2; line3(g, [0, y, 0], [0, y, 2.2]);
-    // Big white numerals painted straight onto the stone, just past the line.
-    // The wall recedes steeply, so the numeral is laid out along enough of
-    // it to keep a natural shape on screen.
-    const zTop = 2.9, zBot = 1.7;
-    const [, yA] = project(0, y, zTop), [, yB] = project(0, y, zBot);
-    const hPx = Math.abs(yB - yA);
-    let y1 = y - 0.2;
-    while (y1 > y - 6 && Math.abs(project(0, y1, zTop)[0] - project(0, y, zTop)[0]) < hPx * 0.62) y1 -= 0.05;
-    onWall(g, y - 0.15, y1 - 0.15, zTop, zBot, (c) => {
-      c.font = 'bold 118px "Trebuchet MS", "DejaVu Sans", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.lineWidth = 7; c.strokeStyle = 'rgba(90,64,40,0.35)'; c.strokeText(String(k), 50, 56);
-      c.fillStyle = 'rgba(250,248,240,0.92)'; c.fillText(String(k), 50, 56);
-      // Worn paint: a few flecks of stone showing through.
-      c.fillStyle = 'rgba(200,170,120,0.35)';
-      for (let f = 0; f < 10; f++) c.fillRect(20 + ((f * 37 + k * 11) % 60), 15 + ((f * 53 + k * 7) % 80), 3, 2);
-    });
+    // The cuadro's number, painted in white beside its line: upright and
+    // modest, about 45 cm tall, slightly narrowed by the angle of the wall.
+    const [nx, ny, ns] = project(0, y, 2.2);
+    g.save();
+    g.translate(nx, ny); g.scale(0.8, 1);
+    g.font = `bold ${Math.max(11, 0.55 * ns)}px "Trebuchet MS", "DejaVu Sans", sans-serif`;
+    g.textAlign = 'center'; g.textBaseline = 'bottom';
+    g.lineWidth = Math.max(1.5, 0.05 * ns); g.strokeStyle = 'rgba(70,48,28,0.55)'; g.strokeText(String(k), 0, -2);
+    g.fillStyle = '#ffffff'; g.fillText(String(k), 0, -2);
+    g.restore();
   }
   for (let y = 1; y < far; y += 0.5) {
     const [sx, sy, s] = project(0, y, C.wall - 0.2 - rng.next() * 0.8);
@@ -778,33 +772,6 @@ function judge(ctx, m, t, light) {
   ctx.restore();
 }
 
-// The aim: an arrow on the floor at the striker's feet showing the shot the
-// held direction will play, and its name.
-export function drawAim(ctx, pl, aim, t) {
-  if (!aim) return;
-  const C = COURT, to = {
-    drive: [pl.x, pl.y - 5], txoko: [0.6, pl.y - 4.5], ancho: [C.w - 0.4, pl.y - 4.5], globo: [pl.x, pl.y - 5], dejada: [pl.x, pl.y - 2.6],
-  }[aim.kind];
-  const [x0, y0, s0] = project(pl.x, pl.y - 0.3, 0.02);
-  const [x1, y1] = project(to[0], to[1], 0.02);
-  const pulse = 0.75 + Math.sin(t * 8) * 0.2;
-  ctx.save();
-  ctx.strokeStyle = `rgba(255,236,160,${pulse})`; ctx.fillStyle = `rgba(255,236,160,${pulse})`;
-  ctx.lineWidth = Math.max(3, 0.12 * s0); ctx.lineCap = 'round'; ctx.setLineDash([10, 8]);
-  ctx.beginPath(); ctx.moveTo(x0, y0);
-  if (aim.kind === 'globo') { ctx.quadraticCurveTo((x0 + x1) / 2, y0 - 90, x1, y1 - 20); } else ctx.lineTo(x1, y1);
-  ctx.stroke(); ctx.setLineDash([]);
-  const ex = x1, ey = aim.kind === 'globo' ? y1 - 20 : y1, a = Math.atan2(ey - (aim.kind === 'globo' ? y0 - 60 : y0), ex - x0);
-  ctx.beginPath(); ctx.moveTo(ex + Math.cos(a) * 10, ey + Math.sin(a) * 10);
-  ctx.lineTo(ex + Math.cos(a + 2.5) * 12, ey + Math.sin(a + 2.5) * 12); ctx.lineTo(ex + Math.cos(a - 2.5) * 12, ey + Math.sin(a - 2.5) * 12); ctx.fill();
-  // The shot's name in a small pill by the feet.
-  ctx.font = 'bold 13px "Trebuchet MS", sans-serif'; ctx.textAlign = 'center';
-  const w = ctx.measureText(aim.label).width + 14, lx = x0, ly = y0 + 22;
-  ctx.fillStyle = 'rgba(28,20,12,0.8)'; ctx.beginPath(); ctx.roundRect(lx - w / 2, ly - 12, w, 18, 9); ctx.fill();
-  ctx.fillStyle = '#ffe9a0'; ctx.fillText(aim.label, lx, ly + 2);
-  ctx.restore();
-}
-
 // The whole court with the match in progress.
 export function drawCourt(ctx, m, t, view = {}) {
   const light = view.light ?? 'sunset';
@@ -815,7 +782,6 @@ export function drawCourt(ctx, m, t, view = {}) {
   judge(ctx, m, t, light);
   drawMarks(ctx, view.marks ?? []);
   drawTiming(ctx, m, view.perfectAt ?? 0.84);
-  for (const a of view.aims ?? []) if (a) drawAim(ctx, m.p[a.p], a, t);
   if (LIGHTS[light].floods) {
     // Dew on the floor: faint reflections of the players.
     for (const pl of m.p) {
