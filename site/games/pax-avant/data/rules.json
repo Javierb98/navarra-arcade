@@ -1,0 +1,126 @@
+{
+  "flock": {
+    "normal": 12,
+    "easy": 10
+  },
+  "shepherd": {
+    "speed": 58,
+    "radius": 4,
+    "reach": 20,
+    "bellTime": 2.2,
+    "bellRadius": 110,
+    "bellRadiusOther": 40,
+    "bellPullOther": 0.35,
+    "ringPace": 0.6,
+    "ringEvery": 0.8
+  },
+  "dog": {
+    "heelSpeed": 80,
+    "runSpeed": 130,
+    "driveSpeed": 30,
+    "driveTime": 3,
+    "reach": 150,
+    "cooldown": 0.8,
+    "fear": 34,
+    "link": 22
+  },
+  "sheep": {
+    "radius": 3,
+    "maxSpeed": 36,
+    "bellSpeed": 30,
+    "cruise": 12,
+    "damping": 3,
+    "separation": 8,
+    "sepForce": 90,
+    "cohesionRadius": 45,
+    "cohesion": 5,
+    "align": 0.8,
+    "fleeDog": 150,
+    "fleeWolf": 220,
+    "wolfFear": 70,
+    "bellPull": 60,
+    "wander": 7,
+    "strayDistance": 70
+  },
+  "needs": {
+    "start": 0.8,
+    "hunger": 0.008,
+    "thirst": 0.007,
+    "eat": 0.2,
+    "grassPerFood": 2,
+    "drink": 0.6,
+    "waterPerDrink": 0.14,
+    "thirstyBelow": 0.45,
+    "seekWater": 110,
+    "cold": 0.01,
+    "grazeSpeed": 14
+  },
+  "grass": {
+    "regrow": 0.03,
+    "floor": 0.0005,
+    "overgrazed": 0.2
+  },
+  "trust": {
+    "start": 50,
+    "strayHelp": 6,
+    "lambHelp": 12,
+    "wolfHelp": 6,
+    "waterShare": 0.5,
+    "hog": 0.3,
+    "trespass": 0.25,
+    "sharedShelterAt": 60,
+    "earlyWarningAt": 70,
+    "kindAt": 40
+  },
+  "wolf": {
+    "speed": 30,
+    "fleeSpeed": 70,
+    "prowlRadius": 40,
+    "dogScare": 32,
+    "bellScare": 70,
+    "fireScare": 75,
+    "shepherdScare": 22
+  },
+  "weather": {
+    "warn": 8,
+    "warnEarly": 16,
+    "wind": 10
+  },
+  "weekBreak": 3.5,
+  "goals": {
+    "moveUp": 0.75,
+    "graze": 0.6,
+    "storm": 0.75,
+    "drought": 0.5,
+    "moveDown": 0.75
+  },
+  "difficulty": {
+    "easy": {
+      "grassUse": 0.6,
+      "cohesion": 1.6,
+      "wolfPatience": 6,
+      "arrows": true,
+      "alwaysKind": true
+    },
+    "normal": {
+      "grassUse": 1,
+      "cohesion": 1,
+      "wolfPatience": 14,
+      "arrows": false,
+      "alwaysKind": false
+    }
+  },
+  "score": {
+    "sheepHome": 40,
+    "condition": 400,
+    "health": 4,
+    "trust": 4,
+    "star": 100,
+    "lamb": 100
+  },
+  "ceremony": [
+    40,
+    58,
+    75
+  ]
+}

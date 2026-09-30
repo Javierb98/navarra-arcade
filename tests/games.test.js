@@ -25,7 +25,7 @@ test('every listed game has a folder, a title and blurb in all three languages, 
 });
 
 test('every game has an online address', () => {
-  for (const g of config.games.filter((x) => x.status !== 'hidden')) assert.match(g.url ?? '', /^https:\/\//, `${g.id}: no url`);
+  for (const g of config.games.filter((x) => x.status !== 'hidden')) assert.equal(g.url, `games/${g.id}/`, `${g.id}: url should be games/<id>/`);
 });
 
 test('ready games know how to come back to the menu', () => {

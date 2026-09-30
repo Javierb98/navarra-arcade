@@ -1,0 +1,101 @@
+{
+  "_note": "Every fact stays review_status \"draft\" until a qualified reviewer (local historian, Archivo Real y General de Navarra, library staff) has checked it and filled in `source`. A null source means nobody has cited one yet; do not invent one. `image` is optional: if the file is missing the game draws the placeholder `scene` instead.",
+  "facts": [
+    {
+      "id": "almadia.build",
+      "text_key": "fact.build",
+      "image": "assets/facts/build.png",
+      "scene": "build",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "almadia.highways",
+      "text_key": "fact.highways",
+      "image": "assets/facts/highways.png",
+      "scene": "map",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "almadia.journey",
+      "text_key": "fact.journey",
+      "image": "assets/facts/journey.png",
+      "scene": "map",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "almadia.thaw",
+      "text_key": "fact.thaw",
+      "image": "assets/facts/thaw.png",
+      "scene": "thaw",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "almadia.oars",
+      "text_key": "fact.oars",
+      "image": "assets/facts/oars.png",
+      "scene": "thaw",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "almadia.weirs",
+      "text_key": "fact.weirs",
+      "image": "assets/facts/weirs.png",
+      "scene": "weir",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "almadia.walk",
+      "text_key": "fact.walk",
+      "image": "assets/facts/walk.png",
+      "scene": "walk",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "almadia.end",
+      "text_key": "fact.end",
+      "image": "assets/facts/end.png",
+      "scene": "map",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "almadia.burgui",
+      "text_key": "fact.burgui",
+      "image": "assets/facts/burgui.png",
+      "scene": "burgui",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "almadia.unesco",
+      "text_key": "fact.unesco",
+      "image": "assets/facts/unesco.png",
+      "scene": "burgui",
+      "source": "UNESCO, Representative List of the Intangible Cultural Heritage of Humanity, 2022: \"Timber rafting\" (Austria, Czechia, Germany, Latvia, Poland, Spain).",
+      "review_status": "draft"
+    },
+    {
+      "id": "almadia.foz",
+      "text_key": "fact.foz",
+      "image": "assets/facts/foz.png",
+      "scene": "thaw",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "almadia.salazar",
+      "text_key": "fact.salazar",
+      "image": "assets/facts/salazar.png",
+      "scene": "map",
+      "source": null,
+      "review_status": "draft"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "_note": "Every fact stays review_status \"draft\" until a qualified reviewer (local historian, Archivo Real y General de Navarra, library staff) has checked it and filled in `source`. A null source means nobody has cited one yet; do not invent one. `image` is optional: if the file is missing the game draws the placeholder `scene` instead.",
+  "facts": [
+    {
+      "id": "paxavant.treaty",
+      "text_key": "fact.treaty",
+      "image": "assets/facts/treaty.png",
+      "scene": "treaty",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "paxavant.arbiters",
+      "text_key": "fact.arbiters",
+      "image": "assets/facts/arbiters.png",
+      "scene": "dispute",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "paxavant.stone",
+      "text_key": "fact.stone",
+      "image": "assets/facts/stone.png",
+      "scene": "treaty",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "paxavant.gesture",
+      "text_key": "fact.gesture",
+      "image": "assets/facts/gesture.png",
+      "scene": "ceremony1",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "paxavant.cows",
+      "text_key": "fact.cows",
+      "image": "assets/facts/cows.png",
+      "scene": "ceremony2",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "paxavant.oldest",
+      "text_key": "fact.oldest",
+      "image": "assets/facts/oldest.png",
+      "scene": "treaty",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "paxavant.transhumance",
+      "text_key": "fact.transhumance",
+      "image": "assets/facts/transhumance.png",
+      "scene": "transhumance",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "paxavant.cheese",
+      "text_key": "fact.cheese",
+      "image": "assets/facts/cheese.png",
+      "scene": "cheese",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "paxavant.mayors",
+      "text_key": "fact.mayors",
+      "image": "assets/facts/mayors.png",
+      "scene": "ceremony3",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "paxavant.today",
+      "text_key": "fact.today",
+      "image": "assets/facts/today.png",
+      "scene": "ceremony3",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "paxavant.commons",
+      "text_key": "fact.commons",
+      "image": "assets/facts/commons.png",
+      "scene": "pastures",
+      "source": null,
+      "review_status": "draft"
+    }
+  ]
+}

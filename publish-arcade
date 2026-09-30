@@ -1,0 +1,13 @@
+#!/bin/sh
+# Rebuild the online arcade from the latest games and publish it to GitHub
+# Pages (https://javierb98.github.io/navarra-arcade/). Run from anywhere.
+set -e
+cd "$(dirname "$(readlink -f "$0" 2>/dev/null || realpath "$0")")"
+npm test --silent
+python3 build-site.py
+git add -A
+git diff --cached --quiet || git commit -q -m "Update the online arcade"
+git push -q origin main
+# The website is the site/ folder, published as the gh-pages branch.
+git push -q -f origin "$(git subtree split --prefix site main)":gh-pages
+echo "Published: https://javierb98.github.io/navarra-arcade/ (live in a minute or two)"

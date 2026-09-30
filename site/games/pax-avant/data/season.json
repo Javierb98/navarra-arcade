@@ -1,0 +1,161 @@
+{
+  "_note": "One grazing season, week by week. `length` is in seconds. Event `t` is seconds into the week. Storm warnings arrive `rules.weather.warn` seconds ahead (more with high Trust), so keep a storm's `t` above `warnEarly`. Wolf `target` is the valley (0 Roncal, 1 Barétous) it heads for; wolves are only ever scared off.",
+  "weeks": [
+    {
+      "id": "w1",
+      "season": "spring",
+      "length": 42,
+      "goal": "moveUp",
+      "prompts": [
+        {
+          "t": 0.5,
+          "key": "tip.gate"
+        },
+        {
+          "t": 7,
+          "key": "tip.bell"
+        },
+        {
+          "t": 16,
+          "key": "tip.whistle"
+        },
+        {
+          "t": 27,
+          "key": "tip.up"
+        }
+      ],
+      "events": []
+    },
+    {
+      "id": "w2",
+      "season": "summer",
+      "length": 36,
+      "goal": "graze",
+      "prompts": [
+        {
+          "t": 1,
+          "key": "tip.grass"
+        },
+        {
+          "t": 12,
+          "key": "tip.share"
+        },
+        {
+          "t": 24,
+          "key": "tip.trust"
+        }
+      ],
+      "events": []
+    },
+    {
+      "id": "w3",
+      "season": "summer",
+      "length": 38,
+      "goal": "storm",
+      "prompts": [
+        {
+          "t": 1,
+          "key": "tip.water"
+        }
+      ],
+      "events": [
+        {
+          "t": 20,
+          "type": "storm",
+          "dur": 12
+        }
+      ]
+    },
+    {
+      "id": "w4",
+      "season": "summer",
+      "length": 38,
+      "goal": "night",
+      "night": true,
+      "prompts": [
+        {
+          "t": 1,
+          "key": "tip.fire"
+        }
+      ],
+      "events": [
+        {
+          "t": 6,
+          "type": "wolf",
+          "from": {
+            "x": 150,
+            "y": 22
+          },
+          "target": 0
+        },
+        {
+          "t": 12,
+          "type": "lamb",
+          "x": 150,
+          "y": 40,
+          "side": 1
+        },
+        {
+          "t": 22,
+          "type": "wolf",
+          "from": {
+            "x": 330,
+            "y": 22
+          },
+          "target": 1
+        }
+      ]
+    },
+    {
+      "id": "w5",
+      "season": "summer",
+      "length": 38,
+      "goal": "drought",
+      "prompts": [
+        {
+          "t": 1,
+          "key": "tip.drought"
+        }
+      ],
+      "events": [
+        {
+          "t": 0,
+          "type": "dry",
+          "spring": "roncal"
+        },
+        {
+          "t": 0,
+          "type": "dry",
+          "spring": "baretous"
+        },
+        {
+          "t": 14,
+          "type": "fog",
+          "dur": 14
+        }
+      ]
+    },
+    {
+      "id": "w6",
+      "season": "autumn",
+      "length": 45,
+      "goal": "moveDown",
+      "prompts": [
+        {
+          "t": 0.5,
+          "key": "tip.down"
+        },
+        {
+          "t": 20,
+          "key": "tip.close"
+        }
+      ],
+      "events": [
+        {
+          "t": 32,
+          "type": "snow"
+        }
+      ]
+    }
+  ]
+}

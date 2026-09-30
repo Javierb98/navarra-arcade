@@ -1,0 +1,334 @@
+{
+  "id": "salazar",
+  "name_key": "course.salazar.name",
+  "blurb_key": "course.salazar.blurb",
+  "length": 6200,
+  "startY": 60,
+  "targetTime": 155,
+  "intensity": 1.0,
+  "route": [
+    [
+      170,
+      30
+    ],
+    [
+      166,
+      56
+    ],
+    [
+      174,
+      82
+    ],
+    [
+      190,
+      108
+    ],
+    [
+      200,
+      124
+    ]
+  ],
+  "themes": [
+    {
+      "y": -1000,
+      "style": "forest"
+    },
+    {
+      "y": 4200,
+      "style": "gorge"
+    },
+    {
+      "y": 5500,
+      "style": "forest"
+    }
+  ],
+  "river": [
+    {
+      "y": -300,
+      "cx": 240,
+      "hw": 95
+    },
+    {
+      "y": 0,
+      "cx": 240,
+      "hw": 95
+    },
+    {
+      "y": 600,
+      "cx": 228,
+      "hw": 85
+    },
+    {
+      "y": 1200,
+      "cx": 250,
+      "hw": 80
+    },
+    {
+      "y": 1800,
+      "cx": 236,
+      "hw": 90
+    },
+    {
+      "y": 2400,
+      "cx": 250,
+      "hw": 85
+    },
+    {
+      "y": 3000,
+      "cx": 232,
+      "hw": 90
+    },
+    {
+      "y": 3600,
+      "cx": 246,
+      "hw": 95
+    },
+    {
+      "y": 4200,
+      "cx": 240,
+      "hw": 72
+    },
+    {
+      "y": 4600,
+      "cx": 252,
+      "hw": 62
+    },
+    {
+      "y": 5000,
+      "cx": 230,
+      "hw": 64
+    },
+    {
+      "y": 5400,
+      "cx": 244,
+      "hw": 80
+    },
+    {
+      "y": 6000,
+      "cx": 240,
+      "hw": 95
+    },
+    {
+      "y": 7200,
+      "cx": 240,
+      "hw": 95
+    }
+  ],
+  "current": [
+    {
+      "y": 0,
+      "speed": 38
+    },
+    {
+      "y": 1000,
+      "speed": 44
+    },
+    {
+      "y": 3000,
+      "speed": 47
+    },
+    {
+      "y": 4200,
+      "speed": 55
+    },
+    {
+      "y": 5400,
+      "speed": 47
+    },
+    {
+      "y": 7200,
+      "speed": 45
+    }
+  ],
+  "features": [
+    {
+      "type": "village",
+      "place": "ochagavia",
+      "y": -260,
+      "y2": 340,
+      "roof": "slate",
+      "church": "right"
+    },
+    {
+      "type": "bridge",
+      "y": 190,
+      "pillars": [
+        -34,
+        34
+      ],
+      "r": 9,
+      "crowd": true
+    },
+    {
+      "type": "prompt",
+      "y": 460,
+      "key": "tip.trees"
+    },
+    {
+      "type": "tree",
+      "side": "left",
+      "y": 800,
+      "y2": 830,
+      "reach": 78,
+      "r": 5
+    },
+    {
+      "type": "tree",
+      "side": "right",
+      "y": 1150,
+      "y2": 1180,
+      "reach": 80,
+      "r": 5
+    },
+    {
+      "type": "dock",
+      "side": "right",
+      "y": 1320,
+      "town": "sawmill"
+    },
+    {
+      "type": "tree",
+      "side": "left",
+      "y": 1500,
+      "y2": 1530,
+      "reach": 70,
+      "r": 5
+    },
+    {
+      "type": "village",
+      "place": "ezcaroz",
+      "y": 1700,
+      "y2": 2060,
+      "roof": "slate",
+      "church": "left"
+    },
+    {
+      "type": "duck",
+      "dx": -10,
+      "y": 2300,
+      "range": 36
+    },
+    {
+      "type": "tree",
+      "side": "right",
+      "y": 2500,
+      "y2": 2530,
+      "reach": 76,
+      "r": 5
+    },
+    {
+      "type": "tree",
+      "side": "left",
+      "y": 2720,
+      "y2": 2750,
+      "reach": 72,
+      "r": 5
+    },
+    {
+      "type": "sandbar",
+      "dx": -6,
+      "dx2": 32,
+      "y": 2900,
+      "y2": 2920,
+      "r": 12
+    },
+    {
+      "type": "eddy",
+      "side": "right",
+      "y": 3100,
+      "r": 30
+    },
+    {
+      "type": "village",
+      "place": "navascues",
+      "y": 3300,
+      "y2": 3660,
+      "roof": "slate",
+      "church": "right"
+    },
+    {
+      "type": "bridge",
+      "y": 3480,
+      "pillars": [
+        -36,
+        36
+      ],
+      "r": 9,
+      "crowd": true
+    },
+    {
+      "type": "dock",
+      "side": "left",
+      "y": 3820,
+      "town": "mill"
+    },
+    {
+      "type": "prompt",
+      "y": 4080,
+      "key": "tip.gorge"
+    },
+    {
+      "type": "rapids",
+      "y1": 4350,
+      "y2": 5100
+    },
+    {
+      "type": "rock",
+      "dx": 14,
+      "y": 4420,
+      "r": 8
+    },
+    {
+      "type": "rock",
+      "dx": -20,
+      "y": 4600,
+      "r": 8
+    },
+    {
+      "type": "rock",
+      "dx": 22,
+      "y": 4780,
+      "r": 7
+    },
+    {
+      "type": "rock",
+      "dx": -18,
+      "y": 4900,
+      "r": 7
+    },
+    {
+      "type": "rock",
+      "dx": -30,
+      "y": 5040,
+      "r": 8
+    },
+    {
+      "type": "eddy",
+      "side": "left",
+      "y": 5280,
+      "r": 26
+    },
+    {
+      "type": "tree",
+      "side": "right",
+      "y": 5500,
+      "y2": 5530,
+      "reach": 64,
+      "r": 5
+    },
+    {
+      "type": "dock",
+      "side": "right",
+      "y": 5700,
+      "town": "lumbier"
+    },
+    {
+      "type": "village",
+      "place": "lumbier",
+      "y": 5820,
+      "y2": 6500,
+      "roof": "tile",
+      "church": "left"
+    }
+  ]
+}

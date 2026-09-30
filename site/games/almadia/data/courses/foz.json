@@ -1,0 +1,326 @@
+{
+  "id": "foz",
+  "name_key": "course.foz.name",
+  "blurb_key": "course.foz.blurb",
+  "length": 5600,
+  "startY": 60,
+  "targetTime": 135,
+  "intensity": 0.9,
+  "route": [
+    [
+      240,
+      72
+    ],
+    [
+      244,
+      96
+    ],
+    [
+      236,
+      118
+    ]
+  ],
+  "themes": [
+    {
+      "y": -1000,
+      "style": "forest"
+    },
+    {
+      "y": 320,
+      "style": "gorge"
+    },
+    {
+      "y": 3200,
+      "style": "forest"
+    }
+  ],
+  "river": [
+    {
+      "y": -300,
+      "cx": 240,
+      "hw": 90
+    },
+    {
+      "y": 0,
+      "cx": 240,
+      "hw": 90
+    },
+    {
+      "y": 300,
+      "cx": 236,
+      "hw": 80
+    },
+    {
+      "y": 700,
+      "cx": 250,
+      "hw": 76
+    },
+    {
+      "y": 1100,
+      "cx": 226,
+      "hw": 70
+    },
+    {
+      "y": 1500,
+      "cx": 254,
+      "hw": 74
+    },
+    {
+      "y": 1900,
+      "cx": 232,
+      "hw": 70
+    },
+    {
+      "y": 2300,
+      "cx": 250,
+      "hw": 76
+    },
+    {
+      "y": 2700,
+      "cx": 230,
+      "hw": 72
+    },
+    {
+      "y": 3100,
+      "cx": 240,
+      "hw": 88
+    },
+    {
+      "y": 3500,
+      "cx": 245,
+      "hw": 95
+    },
+    {
+      "y": 4000,
+      "cx": 235,
+      "hw": 100
+    },
+    {
+      "y": 4600,
+      "cx": 250,
+      "hw": 92
+    },
+    {
+      "y": 5200,
+      "cx": 240,
+      "hw": 100
+    },
+    {
+      "y": 6400,
+      "cx": 240,
+      "hw": 100
+    }
+  ],
+  "current": [
+    {
+      "y": 0,
+      "speed": 40
+    },
+    {
+      "y": 500,
+      "speed": 48
+    },
+    {
+      "y": 1000,
+      "speed": 52
+    },
+    {
+      "y": 2600,
+      "speed": 52
+    },
+    {
+      "y": 3100,
+      "speed": 46
+    },
+    {
+      "y": 4000,
+      "speed": 44
+    },
+    {
+      "y": 6400,
+      "speed": 44
+    }
+  ],
+  "features": [
+    {
+      "type": "village",
+      "place": "burgui",
+      "y": -260,
+      "y2": 220,
+      "roof": "slate",
+      "church": "left"
+    },
+    {
+      "type": "prompt",
+      "y": 260,
+      "key": "tip.gorge"
+    },
+    {
+      "type": "rock",
+      "dx": -22,
+      "y": 800,
+      "r": 8
+    },
+    {
+      "type": "rock",
+      "dx": 24,
+      "y": 1000,
+      "r": 8
+    },
+    {
+      "type": "rock",
+      "dx": -18,
+      "y": 1220,
+      "r": 7
+    },
+    {
+      "type": "rock",
+      "dx": 28,
+      "y": 1420,
+      "r": 8
+    },
+    {
+      "type": "eddy",
+      "side": "left",
+      "y": 1560,
+      "r": 26
+    },
+    {
+      "type": "rapids",
+      "y1": 1650,
+      "y2": 2550
+    },
+    {
+      "type": "rock",
+      "dx": 2,
+      "y": 1750,
+      "r": 8
+    },
+    {
+      "type": "rock",
+      "dx": -30,
+      "y": 1900,
+      "r": 7
+    },
+    {
+      "type": "rock",
+      "dx": 30,
+      "y": 1960,
+      "r": 7
+    },
+    {
+      "type": "rock",
+      "dx": 4,
+      "y": 2120,
+      "r": 8
+    },
+    {
+      "type": "rock",
+      "dx": -28,
+      "y": 2300,
+      "r": 8
+    },
+    {
+      "type": "rock",
+      "dx": 26,
+      "y": 2360,
+      "r": 7
+    },
+    {
+      "type": "rock",
+      "dx": 0,
+      "y": 2500,
+      "r": 8
+    },
+    {
+      "type": "eddy",
+      "side": "right",
+      "y": 2680,
+      "r": 28
+    },
+    {
+      "type": "whirlpool",
+      "dx": -14,
+      "y": 2920,
+      "r": 24,
+      "spin": 1
+    },
+    {
+      "type": "dock",
+      "side": "right",
+      "y": 3280,
+      "town": "sawmill"
+    },
+    {
+      "type": "village",
+      "place": "salvatierra",
+      "y": 3440,
+      "y2": 3860,
+      "roof": "tile",
+      "church": "left"
+    },
+    {
+      "type": "bridge",
+      "y": 3650,
+      "pillars": [
+        -40,
+        40
+      ],
+      "r": 9,
+      "crowd": true
+    },
+    {
+      "type": "sandbar",
+      "dx": -76,
+      "dx2": -34,
+      "y": 4180,
+      "y2": 4200,
+      "r": 12
+    },
+    {
+      "type": "duck",
+      "dx": 20,
+      "y": 4380,
+      "range": 34
+    },
+    {
+      "type": "tree",
+      "side": "left",
+      "y": 4560,
+      "y2": 4590,
+      "reach": 70,
+      "r": 5
+    },
+    {
+      "type": "dock",
+      "side": "left",
+      "y": 4760,
+      "town": "mill"
+    },
+    {
+      "type": "prompt",
+      "y": 4800,
+      "key": "tip.weir"
+    },
+    {
+      "type": "eddy",
+      "side": "right",
+      "y": 4880,
+      "r": 28
+    },
+    {
+      "type": "weir",
+      "y": 4960,
+      "dx": 0,
+      "half": 20
+    },
+    {
+      "type": "village",
+      "place": "sigues",
+      "y": 5100,
+      "y2": 5800,
+      "roof": "tile",
+      "church": "right"
+    }
+  ]
+}

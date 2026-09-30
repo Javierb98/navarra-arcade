@@ -1,0 +1,80 @@
+{
+  "_note": "Same mapping as the games, so the cabinet works the same everywhere.",
+  "keyboard": {
+    "p1": {
+      "left": [
+        "ArrowLeft"
+      ],
+      "right": [
+        "ArrowRight"
+      ],
+      "up": [
+        "ArrowUp"
+      ],
+      "down": [
+        "ArrowDown"
+      ],
+      "a": [
+        "ControlLeft",
+        "KeyZ"
+      ],
+      "b": [
+        "AltLeft",
+        "KeyX"
+      ],
+      "c": [
+        "Space",
+        "KeyC"
+      ],
+      "start": [
+        "Digit1",
+        "Enter"
+      ]
+    },
+    "p2": {
+      "left": [
+        "KeyA"
+      ],
+      "right": [
+        "KeyD"
+      ],
+      "up": [
+        "KeyW"
+      ],
+      "down": [
+        "KeyS"
+      ],
+      "a": [
+        "KeyE"
+      ],
+      "b": [
+        "KeyR"
+      ],
+      "c": [
+        "KeyQ"
+      ],
+      "start": [
+        "Digit2"
+      ]
+    },
+    "admin": [
+      "F2",
+      "Digit9"
+    ],
+    "exit": [
+      "Escape"
+    ]
+  },
+  "gamepad": {
+    "p1": 0,
+    "p2": 1,
+    "buttons": {
+      "a": 0,
+      "b": 1,
+      "c": 2,
+      "start": 9,
+      "admin": 8
+    },
+    "deadzone": 0.35
+  }
+}

@@ -1,0 +1,19 @@
+:root {
+  --ground: #1b1712;
+  --text: #eee4cc;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--ground);
+  color: var(--text);
+  font: 16px/1.5 system-ui, sans-serif;
+  min-height: 100vh;
+}
+.loading { text-align: center; margin-top: 40vh; }
+
+.soon { text-align: center; margin-top: 28vh; padding: 0 16px; font-size: 20px; }
+.soon h1 { font-size: 64px; margin: 0; color: #f1e2a6; text-shadow: 4px 4px 0 #3a2410; }
+.soon .badge { display: inline-block; background: #d55e00; color: #fff; padding: 4px 14px; border-radius: 6px; font-weight: bold; }
+.soon .hint { color: #c9bea6; font-size: 16px; margin-top: 40px; }

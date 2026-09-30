@@ -1,0 +1,963 @@
+{
+  "_comment": "attack/defence/moves/range/hp/cost are per unit type; `missile` (if present) is the attack used for throwing and shooting, `attack` for hand to hand. Faction attack/defence/courage are multipliers from rules.traitScale. Tags: leader, cavalry, shieldwall, hitAndRun, wagon, elite. Roles pick the board shape and deployment preference. `look` (faction default, unit override) and `weapon` only change how figures are drawn: head bare|cap|hood|nasal|kettle|greathelm|turban|turbanHelm, hair, beard, veil, dress tunic|mail|gambeson|robe|surcoat, cloth and sash colours, legs wraps|garters|trousers|hose, shield round|buckler|kite|heater|adarga|null, shieldDeco rim|bands|bend|star|none, cloak wool|fleece, spear plain|winged|long, horse caparison|saddlecloth, pennon.",
+  "factions": {
+    "asturleonese": {
+      "name": {
+        "en": "Astur-Leonese",
+        "es": "Astur-leoneses"
+      },
+      "color": "#4a8a3c",
+      "emblem": "peaks",
+      "attack": "average",
+      "defence": "strong",
+      "courage": "strong",
+      "traits": [],
+      "blurb": {
+        "en": "Hard to shift from high ground and harder to frighten.",
+        "es": "Difíciles de desalojar de una altura y más aún de asustar."
+      },
+      "emblemNote": {
+        "en": "The three peaks are an invented device. The lion of León is a 12th-century emblem.",
+        "es": "Los tres picos son una enseña inventada. El león de León es un emblema del siglo XII."
+      },
+      "look": {
+        "head": "hood",
+        "hair": "short",
+        "beard": true,
+        "dress": "tunic",
+        "cloth": "#5b6444",
+        "legs": "wraps",
+        "shield": "round",
+        "shieldDeco": "rim",
+        "cloak": "wool",
+        "spear": "plain"
+      }
+    },
+    "vascones": {
+      "name": {
+        "en": "Vascones / Pamplona",
+        "es": "Vascones / Pamplona"
+      },
+      "color": "#c23b22",
+      "emblem": "rosette",
+      "attack": "strong",
+      "defence": "weak",
+      "courage": "strong",
+      "traits": [
+        "terrainMaster",
+        "selfReliant"
+      ],
+      "blurb": {
+        "en": "Lightly armed, fast on any slope, deadly when they choose the ground, and used to fighting in their own valley bands without waiting for orders.",
+        "es": "Armados a la ligera, rápidos en cualquier cuesta, letales cuando eligen el terreno y acostumbrados a pelear en sus propias bandas de valle sin esperar órdenes."
+      },
+      "emblemNote": {
+        "en": "The rosette is carved on Roman-era funerary stelae from this region, such as those from Gastiáin in Navarre. Nobody recorded what the Vascones of 778 fought under, if anything.",
+        "es": "La roseta aparece tallada en estelas funerarias de época romana de esta región, como las de Gastiáin (Navarra). Nadie dejó escrito bajo qué enseña luchaban los vascones de 778, si es que tenían alguna."
+      },
+      "look": {
+        "head": "bare",
+        "hair": "long",
+        "beard": true,
+        "dress": "tunic",
+        "cloth": "#7a5634",
+        "legs": "wraps",
+        "shield": "buckler",
+        "shieldDeco": "rim",
+        "cloak": "fleece",
+        "spear": "plain"
+      }
+    },
+    "franks": {
+      "name": {
+        "en": "Franks",
+        "es": "Francos"
+      },
+      "color": "#3d64b0",
+      "emblem": "spearhead",
+      "attack": "strong",
+      "defence": "strong",
+      "courage": "average",
+      "traits": [
+        "roughSlow"
+      ],
+      "blurb": {
+        "en": "Well armed and well mounted, and slow wherever the road stops.",
+        "es": "Bien armados y bien montados, y lentos en cuanto se acaba el camino."
+      },
+      "emblemNote": {
+        "en": "The winged spear is a real Carolingian weapon type. The fleur-de-lis arms of the French kings came four centuries later.",
+        "es": "La lanza de aletas es un tipo real de arma carolingia. Las armas de flores de lis de los reyes de Francia llegaron cuatro siglos después."
+      },
+      "look": {
+        "head": "nasal",
+        "hair": "short",
+        "beard": true,
+        "dress": "mail",
+        "cloth": "#4a5a86",
+        "legs": "garters",
+        "shield": "round",
+        "shieldDeco": "bands",
+        "cloak": "wool",
+        "spear": "winged"
+      }
+    },
+    "cordoba": {
+      "name": {
+        "en": "Umayyads of Córdoba",
+        "es": "Omeyas de Córdoba"
+      },
+      "color": "#ece4d2",
+      "emblem": "arch",
+      "attack": "strong",
+      "defence": "average",
+      "courage": "average",
+      "traits": [],
+      "blurb": {
+        "en": "The most varied army in the peninsula: fast horse, heavy horse, bows and a trained guard.",
+        "es": "El ejército más variado de la península: caballería ligera y pesada, arcos y una guardia entrenada."
+      },
+      "ink": "#2a2118",
+      "emblemNote": {
+        "en": "The horseshoe arch with banded voussoirs is the signature of Andalusi building. Umayyad banners are recorded as white; this is a device, not a flag.",
+        "es": "El arco de herradura con dovelas alternas es la firma de la arquitectura andalusí. Las banderas omeyas se describen blancas; esto es una enseña, no una bandera."
+      },
+      "look": {
+        "head": "turban",
+        "hair": "none",
+        "beard": true,
+        "dress": "robe",
+        "cloth": "#e6dcc4",
+        "sash": "#a8322a",
+        "legs": "trousers",
+        "shield": "adarga",
+        "shieldDeco": "none",
+        "cloak": null,
+        "spear": "long",
+        "shieldColour": "#b9965e"
+      }
+    },
+    "navarra": {
+      "name": {
+        "en": "Kingdom of Navarre",
+        "es": "Reino de Navarra"
+      },
+      "color": "#9e1f2e",
+      "emblem": "eagle",
+      "attack": "strong",
+      "defence": "average",
+      "courage": "strong",
+      "traits": [],
+      "blurb": {
+        "en": "A small kingdom with hard-hitting knights, and mountain men who still fight the old way.",
+        "es": "Un reino pequeño con caballeros que golpean duro y montañeses que aún pelean a la antigua."
+      },
+      "emblemNote": {
+        "en": "The eagle is the figure on Sancho VII's own seal. Seals carry no colour, so black on red is a later attribution, not something recorded. The chains that are Navarre's arms today are documented only well after 1212.",
+        "es": "El águila es la figura del sello del propio Sancho VII. Los sellos no tienen color, así que el negro sobre rojo es una atribución posterior, no algo documentado. Las cadenas, hoy escudo de Navarra, solo se documentan bastante después de 1212."
+      },
+      "emblemField": "#c0262d",
+      "look": {
+        "head": "kettle",
+        "hair": "short",
+        "beard": true,
+        "dress": "surcoat",
+        "cloth": "#b22a31",
+        "legs": "hose",
+        "shield": "heater",
+        "shieldDeco": "bend",
+        "cloak": null,
+        "spear": "plain",
+        "horse": "caparison"
+      }
+    },
+    "almohads": {
+      "name": {
+        "en": "Almohad Caliphate",
+        "es": "Califato almohade"
+      },
+      "color": "#f3efe4",
+      "ink": "#2a2118",
+      "emblem": "huelgas",
+      "attack": "average",
+      "defence": "average",
+      "courage": "average",
+      "traits": [],
+      "blurb": {
+        "en": "A great army from both shores of the Strait: volunteers and tribal levies in front, archers behind, and the caliph's guard around his tent.",
+        "es": "Un gran ejército de las dos orillas del Estrecho: voluntarios y levas tribales delante, arqueros detrás y la guardia del califa alrededor de su tienda."
+      },
+      "emblemNote": {
+        "en": "The star comes from the central medallion of the Almohad banner kept at the monastery of Las Huelgas in Burgos, traditionally said to have been taken at Las Navas; some historians have questioned whether it came from this battle. Its inscriptions, from the Qur'an, are not reproduced. Almohad war banners are also described as white, which is why their shields are white here.",
+        "es": "La estrella procede del medallón central del pendón almohade que se guarda en el monasterio de Las Huelgas (Burgos), tradicionalmente tomado en las Navas; algunos historiadores han puesto en duda que proceda de esta batalla. Sus inscripciones, coránicas, no se reproducen. Las banderas de guerra almohades también se describen blancas, y por eso aquí llevan escudos blancos."
+      },
+      "emblemField": "#a8322a",
+      "look": {
+        "head": "turban",
+        "hair": "none",
+        "beard": true,
+        "dress": "robe",
+        "cloth": "#f1ede2",
+        "sash": "#3c5b8a",
+        "legs": "trousers",
+        "shield": "adarga",
+        "shieldDeco": "none",
+        "cloak": null,
+        "spear": "long",
+        "shieldColour": "#b9965e"
+      }
+    }
+  },
+  "units": {
+    "ast_leader": {
+      "faction": "asturleonese",
+      "role": "leader",
+      "name": {
+        "en": "Leader",
+        "es": "Caudillo"
+      },
+      "attack": 6,
+      "defence": 5,
+      "moves": 3,
+      "range": 1,
+      "hp": 24,
+      "cost": 0,
+      "tags": [
+        "leader"
+      ],
+      "desc": {
+        "en": "The war-leader of the mountain kingdom, who fights in the front rank. If they fall, the whole army loses heart.",
+        "es": "El caudillo del reino de la montaña, que pelea en primera fila. Si cae, todo el ejército se desanima."
+      },
+      "look": {
+        "head": "nasal",
+        "cloak": "wool"
+      }
+    },
+    "ast_nobles": {
+      "faction": "asturleonese",
+      "role": "cavalry",
+      "name": {
+        "en": "Noble horsemen",
+        "es": "Jinetes nobles"
+      },
+      "attack": 7,
+      "defence": 5,
+      "moves": 4,
+      "range": 1,
+      "hp": 26,
+      "cost": 120,
+      "tags": [
+        "cavalry"
+      ],
+      "desc": {
+        "en": "The king's mounted companions, with mail, lance and sword. Too few to win a battle alone, and too valuable to lose.",
+        "es": "Los compañeros a caballo del rey, con loriga, lanza y espada. Demasiado pocos para ganar solos una batalla, y demasiado valiosos para perderlos."
+      },
+      "look": {
+        "head": "nasal",
+        "dress": "mail",
+        "cloak": "wool"
+      }
+    },
+    "ast_mountaineers": {
+      "faction": "asturleonese",
+      "role": "infantry",
+      "name": {
+        "en": "Mountain spearmen",
+        "es": "Lanceros montañeses"
+      },
+      "attack": 5,
+      "defence": 5,
+      "moves": 3,
+      "range": 1,
+      "hp": 30,
+      "cost": 80,
+      "tags": [
+        "shieldwall"
+      ],
+      "desc": {
+        "en": "Men of the valleys with spear and round shield. Slow to shift and slower to run, and very hard to move off high ground.",
+        "es": "Hombres de los valles con lanza y escudo redondo. Lentos en moverse y más aún en huir, y muy difíciles de desalojar de una altura."
+      }
+    },
+    "ast_slingers": {
+      "faction": "asturleonese",
+      "role": "ranged",
+      "name": {
+        "en": "Slingers",
+        "es": "Honderos"
+      },
+      "attack": 2,
+      "defence": 2,
+      "moves": 3,
+      "range": 4,
+      "hp": 18,
+      "cost": 60,
+      "tags": [],
+      "desc": {
+        "en": "Shepherds' weapons turned to war. They hurt at range and melt away when anyone gets close.",
+        "es": "Armas de pastor convertidas en armas de guerra. Hieren a distancia y se esfuman cuando alguien se acerca."
+      },
+      "missile": 5,
+      "weapon": "sling",
+      "look": {
+        "head": "bare",
+        "shield": null,
+        "cloak": null
+      }
+    },
+    "vas_chief": {
+      "faction": "vascones",
+      "role": "leader",
+      "name": {
+        "en": "Chieftain",
+        "es": "Jefe"
+      },
+      "attack": 6,
+      "defence": 4,
+      "moves": 3,
+      "range": 1,
+      "hp": 24,
+      "cost": 0,
+      "tags": [
+        "leader"
+      ],
+      "desc": {
+        "en": "A chief of the mountain valleys. The sources do not name the man who led the ambush of 778.",
+        "es": "Un jefe de los valles de la montaña. Las fuentes no dan el nombre de quien dirigió la emboscada de 778."
+      },
+      "look": {
+        "head": "cap",
+        "cloak": "fleece"
+      }
+    },
+    "vas_warriors": {
+      "faction": "vascones",
+      "role": "infantry",
+      "name": {
+        "en": "Short-spear warriors",
+        "es": "Guerreros de lanza corta"
+      },
+      "attack": 6,
+      "defence": 3,
+      "moves": 3,
+      "range": 1,
+      "hp": 30,
+      "cost": 80,
+      "tags": [
+        "shieldwall"
+      ],
+      "desc": {
+        "en": "Lightly armoured fighters with short spears and small shields. Einhard puts the Basque success down to their light arms. Deadly charging downhill, fragile on the flat.",
+        "es": "Luchadores con poca armadura, lanza corta y escudo pequeño. Eginardo atribuye el éxito vasco a la ligereza de sus armas. Letales cargando cuesta abajo, frágiles en el llano."
+      }
+    },
+    "vas_skirmishers": {
+      "faction": "vascones",
+      "role": "skirmisher",
+      "name": {
+        "en": "Javelin skirmishers",
+        "es": "Escaramuzadores de venablo"
+      },
+      "attack": 4,
+      "defence": 2,
+      "moves": 4,
+      "range": 5,
+      "hp": 20,
+      "cost": 60,
+      "tags": [
+        "hitAndRun"
+      ],
+      "desc": {
+        "en": "Javelin men who know every goat track. They move up, throw, and are gone before the enemy can close; hand to hand they are weak. A reconstruction: for 778 Einhard says only that the Basques had the advantage of light arms. That they fought with javelins is recorded later, in the 12th-century Pilgrim's Guide, which describes them carrying two or three javelins called 'auconas'.",
+        "es": "Lanzadores de venablos que conocen cada senda de cabras. Se adelantan, lanzan y desaparecen antes de que el enemigo llegue; cuerpo a cuerpo son flojos. Es una reconstrucción: para 778 Eginardo solo dice que los vascones tenían la ventaja de sus armas ligeras. Que peleaban con venablos consta más tarde, en la Guía del Peregrino del siglo XII, que los describe con dos o tres dardos llamados «auconas»."
+      },
+      "missile": 5,
+      "look": {
+        "shield": "buckler",
+        "cloak": null
+      }
+    },
+    "vas_horse": {
+      "faction": "vascones",
+      "role": "cavalry",
+      "name": {
+        "en": "Light horse",
+        "es": "Caballería ligera"
+      },
+      "attack": 5,
+      "defence": 3,
+      "moves": 5,
+      "range": 1,
+      "hp": 22,
+      "cost": 90,
+      "tags": [
+        "cavalry",
+        "hitAndRun"
+      ],
+      "desc": {
+        "en": "Riders on small, sure-footed mountain horses. Too light to stand in a melee, fast enough never to need to.",
+        "es": "Jinetes en caballos de montaña pequeños y seguros. Demasiado ligeros para aguantar un cuerpo a cuerpo, y lo bastante rápidos para no tener que hacerlo."
+      },
+      "look": {
+        "head": "cap",
+        "cloak": null
+      }
+    },
+    "fra_commander": {
+      "faction": "franks",
+      "role": "leader",
+      "name": {
+        "en": "Commander",
+        "es": "Comandante"
+      },
+      "attack": 7,
+      "defence": 6,
+      "moves": 4,
+      "range": 1,
+      "hp": 26,
+      "cost": 0,
+      "tags": [
+        "leader",
+        "cavalry"
+      ],
+      "desc": {
+        "en": "Hruodland (Roland), prefect of the Breton March, one of the three dead Einhard names. The poem makes him Charlemagne's nephew; the chronicle does not.",
+        "es": "Hruodlando (Roldán), prefecto de la Marca de Bretaña, uno de los tres muertos que nombra Eginardo. El poema lo hace sobrino de Carlomagno; la crónica, no."
+      },
+      "look": {
+        "cloak": "wool",
+        "cloth": "#6d2f3a"
+      }
+    },
+    "fra_horsemen": {
+      "faction": "franks",
+      "role": "cavalry",
+      "name": {
+        "en": "Armoured horsemen",
+        "es": "Jinetes acorazados"
+      },
+      "attack": 8,
+      "defence": 6,
+      "moves": 4,
+      "range": 1,
+      "hp": 30,
+      "cost": 140,
+      "tags": [
+        "cavalry"
+      ],
+      "desc": {
+        "en": "The Frankish king's armoured riders, with mail shirt, helmet, lance and sword. Terrible on open ground, and wasted on a mountainside.",
+        "es": "Los jinetes acorazados del rey franco, con loriga, yelmo, lanza y espada. Terribles en campo abierto, y desperdiciados en una ladera."
+      },
+      "look": {
+        "cloak": "wool"
+      }
+    },
+    "fra_spearmen": {
+      "faction": "franks",
+      "role": "infantry",
+      "name": {
+        "en": "Spearmen",
+        "es": "Lanceros"
+      },
+      "attack": 5,
+      "defence": 5,
+      "moves": 3,
+      "range": 1,
+      "hp": 32,
+      "cost": 90,
+      "tags": [
+        "shieldwall"
+      ],
+      "desc": {
+        "en": "Well-equipped foot soldiers with spear and round shield. Three stacked together make a shield wall that is very hard to break.",
+        "es": "Infantes bien equipados con lanza y escudo redondo. Tres juntos, uno sobre otro, forman un muro de escudos muy difícil de romper."
+      },
+      "look": {
+        "cloak": null
+      }
+    },
+    "fra_baggage": {
+      "faction": "franks",
+      "role": "wagon",
+      "name": {
+        "en": "Baggage train",
+        "es": "Bagaje"
+      },
+      "attack": 0,
+      "defence": 4,
+      "moves": 2,
+      "range": 1,
+      "hp": 36,
+      "cost": 40,
+      "tags": [
+        "wagon"
+      ],
+      "desc": {
+        "en": "Carts carrying the army's supplies and whatever came back from Zaragoza. The Vascones plundered it; the Franks cannot afford to lose it.",
+        "es": "Carros con los pertrechos del ejército y lo que se trajo de Zaragoza. Los vascones lo saquearon; los francos no pueden permitirse perderlo."
+      }
+    },
+    "cor_leader": {
+      "faction": "cordoba",
+      "role": "leader",
+      "name": {
+        "en": "General",
+        "es": "General"
+      },
+      "attack": 6,
+      "defence": 5,
+      "moves": 4,
+      "range": 1,
+      "hp": 26,
+      "cost": 0,
+      "tags": [
+        "leader",
+        "cavalry"
+      ],
+      "desc": {
+        "en": "A general of the Umayyad state, commanding a professional army of many origins.",
+        "es": "Un general del Estado omeya, al mando de un ejército profesional de muchos orígenes."
+      },
+      "look": {
+        "head": "turbanHelm",
+        "dress": "mail",
+        "cloth": "#1f6b5c",
+        "horse": "saddlecloth"
+      }
+    },
+    "cor_berbers": {
+      "faction": "cordoba",
+      "role": "cavalry",
+      "name": {
+        "en": "Berber light horse",
+        "es": "Caballería ligera bereber"
+      },
+      "attack": 5,
+      "defence": 3,
+      "moves": 6,
+      "range": 1,
+      "hp": 22,
+      "cost": 95,
+      "tags": [
+        "cavalry",
+        "hitAndRun"
+      ],
+      "desc": {
+        "en": "Light horse from North Africa, masters of the charge that isn't: strike, wheel away, strike again.",
+        "es": "Caballería ligera del norte de África, maestra de la carga fingida: golpear, dar la vuelta y golpear otra vez."
+      },
+      "look": {
+        "head": "turban",
+        "veil": true,
+        "dress": "robe",
+        "cloth": "#c9b58e",
+        "horse": null
+      }
+    },
+    "cor_heavy": {
+      "faction": "cordoba",
+      "role": "cavalry",
+      "name": {
+        "en": "Andalusi heavy horse",
+        "es": "Caballería pesada andalusí"
+      },
+      "attack": 8,
+      "defence": 5,
+      "moves": 4,
+      "range": 1,
+      "hp": 28,
+      "cost": 140,
+      "tags": [
+        "cavalry"
+      ],
+      "desc": {
+        "en": "Andalusi horsemen in mail. The hammer of the Córdoban army.",
+        "es": "Jinetes andalusíes con loriga. El martillo del ejército cordobés."
+      },
+      "look": {
+        "head": "turbanHelm",
+        "dress": "mail",
+        "horse": "saddlecloth"
+      }
+    },
+    "cor_infantry": {
+      "faction": "cordoba",
+      "role": "infantry",
+      "name": {
+        "en": "Line infantry",
+        "es": "Infantería de línea"
+      },
+      "attack": 5,
+      "defence": 5,
+      "moves": 3,
+      "range": 1,
+      "hp": 30,
+      "cost": 85,
+      "tags": [
+        "shieldwall"
+      ],
+      "desc": {
+        "en": "Trained, paid foot soldiers who hold their ranks.",
+        "es": "Infantes entrenados y a sueldo que mantienen la formación."
+      },
+      "look": {
+        "head": "turbanHelm"
+      }
+    },
+    "cor_archers": {
+      "faction": "cordoba",
+      "role": "ranged",
+      "name": {
+        "en": "Archers",
+        "es": "Arqueros"
+      },
+      "attack": 2,
+      "defence": 2,
+      "moves": 3,
+      "range": 6,
+      "hp": 18,
+      "cost": 70,
+      "tags": [],
+      "desc": {
+        "en": "Archers who can empty a saddle at long range. Keep them out of reach of the enemy's horse.",
+        "es": "Arqueros capaces de vaciar una silla a gran distancia. Mantenlos fuera del alcance de la caballería enemiga."
+      },
+      "missile": 6,
+      "weapon": "bow",
+      "look": {
+        "head": "turban",
+        "shield": null
+      }
+    },
+    "cor_guard": {
+      "faction": "cordoba",
+      "role": "infantry",
+      "name": {
+        "en": "Palace guard",
+        "es": "Guardia palatina"
+      },
+      "attack": 7,
+      "defence": 7,
+      "moves": 3,
+      "range": 1,
+      "hp": 30,
+      "cost": 150,
+      "tags": [
+        "shieldwall",
+        "elite"
+      ],
+      "moraleBonus": 10,
+      "desc": {
+        "en": "The ruler's own guard, the best armed men in the peninsula. Expensive, and worth it.",
+        "es": "La guardia del propio soberano, los hombres mejor armados de la península. Caros, y lo valen."
+      },
+      "look": {
+        "head": "turbanHelm",
+        "dress": "mail",
+        "cloth": "#1f6b5c",
+        "shield": "round",
+        "shieldDeco": "star"
+      }
+    },
+    "nav_sancho": {
+      "faction": "navarra",
+      "role": "leader",
+      "name": {
+        "en": "King",
+        "es": "Rey"
+      },
+      "attack": 8,
+      "defence": 7,
+      "moves": 4,
+      "range": 1,
+      "hp": 30,
+      "cost": 0,
+      "tags": [
+        "leader",
+        "cavalry"
+      ],
+      "desc": {
+        "en": "Sancho VII of Navarre, 'the Strong', who brought his knights south to join Castile and Aragon. If he falls, Navarre's line breaks with him.",
+        "es": "Sancho VII de Navarra, «el Fuerte», que llevó a sus caballeros al sur para unirse a Castilla y Aragón. Si cae, la línea navarra se rompe con él."
+      },
+      "look": {
+        "head": "greathelm",
+        "dress": "surcoat",
+        "horse": "caparison",
+        "pennon": true
+      }
+    },
+    "nav_knights": {
+      "faction": "navarra",
+      "role": "cavalry",
+      "name": {
+        "en": "Navarrese knights",
+        "es": "Caballeros navarros"
+      },
+      "attack": 8,
+      "defence": 6,
+      "moves": 4,
+      "range": 1,
+      "hp": 28,
+      "cost": 150,
+      "tags": [
+        "cavalry"
+      ],
+      "desc": {
+        "en": "Mailed knights with lance and sword, the king's own following. Devastating on open ground; slowed by a palisade like anyone else.",
+        "es": "Caballeros con loriga, lanza y espada, la mesnada del propio rey. Devastadores en campo abierto; una empalizada los frena como a cualquiera."
+      },
+      "look": {
+        "head": "greathelm",
+        "dress": "surcoat",
+        "horse": "caparison",
+        "pennon": true
+      }
+    },
+    "nav_foot": {
+      "faction": "navarra",
+      "role": "infantry",
+      "name": {
+        "en": "Town militia",
+        "es": "Peones de las villas"
+      },
+      "attack": 5,
+      "defence": 5,
+      "moves": 3,
+      "range": 1,
+      "hp": 30,
+      "cost": 85,
+      "tags": [
+        "shieldwall"
+      ],
+      "desc": {
+        "en": "Spearmen from the towns of the kingdom. Three stacked make a shield wall.",
+        "es": "Lanceros de las villas del reino. Tres en columna forman un muro de escudos."
+      },
+      "look": {
+        "head": "kettle",
+        "dress": "gambeson",
+        "cloth": "#8a7a5a"
+      }
+    },
+    "nav_crossbows": {
+      "faction": "navarra",
+      "role": "ranged",
+      "name": {
+        "en": "Crossbowmen",
+        "es": "Ballesteros"
+      },
+      "attack": 2,
+      "defence": 3,
+      "moves": 3,
+      "range": 8,
+      "hp": 20,
+      "cost": 85,
+      "tags": [],
+      "missile": 7,
+      "desc": {
+        "en": "Crossbows hit hard and far; the men who carry them do not want to be in a melee.",
+        "es": "Las ballestas pegan fuerte y lejos; los que las cargan no quieren verse en un cuerpo a cuerpo."
+      },
+      "weapon": "crossbow",
+      "look": {
+        "head": "kettle",
+        "dress": "gambeson",
+        "cloth": "#8a7a5a",
+        "shield": null
+      }
+    },
+    "nav_mountaineers": {
+      "faction": "navarra",
+      "role": "skirmisher",
+      "name": {
+        "en": "Mountain javelinmen",
+        "es": "Montañeses de venablo"
+      },
+      "attack": 4,
+      "defence": 2,
+      "moves": 4,
+      "range": 5,
+      "hp": 20,
+      "cost": 60,
+      "tags": [
+        "hitAndRun"
+      ],
+      "missile": 5,
+      "desc": {
+        "en": "Men of the Pyrenean valleys with two or three javelins each, just as the Pilgrim's Guide describes the Navarrese of this century.",
+        "es": "Hombres de los valles pirenaicos con dos o tres venablos cada uno, tal como la Guía del Peregrino describe a los navarros de este siglo."
+      },
+      "look": {
+        "head": "cap",
+        "hair": "long",
+        "dress": "tunic",
+        "cloth": "#7a5634",
+        "legs": "wraps",
+        "shield": "buckler",
+        "shieldDeco": "rim"
+      }
+    },
+    "alm_caliph": {
+      "faction": "almohads",
+      "role": "leader",
+      "name": {
+        "en": "Caliph",
+        "es": "Califa"
+      },
+      "attack": 5,
+      "defence": 7,
+      "moves": 3,
+      "range": 1,
+      "hp": 26,
+      "cost": 0,
+      "tags": [
+        "leader",
+        "anchored"
+      ],
+      "desc": {
+        "en": "Muhammad al-Nasir, fourth Almohad caliph, in his camp on the hill. The sources agree he fled when the camp broke.",
+        "es": "Muhammad al-Nasir, cuarto califa almohade, en su campamento del cerro. Las fuentes coinciden en que huyó cuando se rompió el campamento."
+      },
+      "look": {
+        "head": "turban",
+        "cloth": "#f7f3ea",
+        "horse": "saddlecloth"
+      }
+    },
+    "alm_guard": {
+      "faction": "almohads",
+      "role": "infantry",
+      "name": {
+        "en": "Caliph's guard",
+        "es": "Guardia del califa"
+      },
+      "attack": 7,
+      "defence": 6,
+      "moves": 2,
+      "range": 1,
+      "hp": 26,
+      "cost": 160,
+      "tags": [
+        "shieldwall",
+        "elite",
+        "anchored"
+      ],
+      "moraleBonus": 15,
+      "desc": {
+        "en": "The picked men around the caliph's tent, behind the palisade. They hold their post; getting them out of it is the whole battle.",
+        "es": "Los hombres escogidos alrededor de la tienda del califa, tras la empalizada. No abandonan su puesto; sacarlos de ahí es toda la batalla."
+      },
+      "look": {
+        "head": "turbanHelm",
+        "dress": "mail",
+        "cloth": "#2c2c36"
+      }
+    },
+    "alm_infantry": {
+      "faction": "almohads",
+      "role": "infantry",
+      "name": {
+        "en": "Almohad infantry",
+        "es": "Infantería almohade"
+      },
+      "attack": 5,
+      "defence": 5,
+      "moves": 3,
+      "range": 1,
+      "hp": 30,
+      "cost": 85,
+      "tags": [
+        "shieldwall"
+      ],
+      "desc": {
+        "en": "The regular foot of the Almohad army, drawn up on the crest in front of the camp.",
+        "es": "La infantería regular del ejército almohade, formada en la cresta delante del campamento."
+      },
+      "look": {
+        "head": "turbanHelm"
+      }
+    },
+    "alm_volunteers": {
+      "faction": "almohads",
+      "role": "infantry",
+      "name": {
+        "en": "Volunteers",
+        "es": "Voluntarios"
+      },
+      "attack": 5,
+      "defence": 3,
+      "moves": 3,
+      "range": 1,
+      "hp": 28,
+      "cost": 55,
+      "tags": [],
+      "moraleBonus": 10,
+      "desc": {
+        "en": "Volunteers who came to fight in the front line: brave, numerous, and lightly equipped.",
+        "es": "Voluntarios venidos a luchar en primera línea: valientes, numerosos y con poco equipo."
+      },
+      "look": {
+        "head": "turban",
+        "cloth": "#d9cfb8",
+        "shield": "round",
+        "shieldDeco": "none"
+      }
+    },
+    "alm_archers": {
+      "faction": "almohads",
+      "role": "ranged",
+      "name": {
+        "en": "Archers",
+        "es": "Arqueros"
+      },
+      "attack": 2,
+      "defence": 2,
+      "moves": 3,
+      "range": 6,
+      "hp": 18,
+      "cost": 70,
+      "tags": [],
+      "missile": 6,
+      "desc": {
+        "en": "Archers behind the forward line, shooting over it.",
+        "es": "Arqueros tras la primera línea, tirando por encima de ella."
+      },
+      "weapon": "bow",
+      "look": {
+        "head": "turban",
+        "shield": null
+      }
+    },
+    "alm_horse": {
+      "faction": "almohads",
+      "role": "cavalry",
+      "name": {
+        "en": "Light horse",
+        "es": "Caballería ligera"
+      },
+      "attack": 6,
+      "defence": 4,
+      "moves": 5,
+      "range": 1,
+      "hp": 24,
+      "cost": 100,
+      "tags": [
+        "cavalry",
+        "hitAndRun"
+      ],
+      "desc": {
+        "en": "Fast horsemen on the flanks, who strike and wheel away.",
+        "es": "Jinetes rápidos en los flancos, que golpean y se retiran."
+      },
+      "look": {
+        "head": "turban",
+        "veil": true,
+        "cloth": "#c9b58e"
+      }
+    }
+  }
+}

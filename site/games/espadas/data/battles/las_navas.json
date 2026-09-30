@@ -1,0 +1,121 @@
+{
+  "id": "las_navas",
+  "year": 1212,
+  "epilogue": true,
+  "title": { "en": "Las Navas de Tolosa", "es": "Las Navas de Tolosa" },
+  "date": { "en": "16 July 1212", "es": "16 de julio de 1212" },
+  "place": { "en": "The Sierra Morena, below the caliph's camp", "es": "Sierra Morena, al pie del campamento del califa" },
+
+  "briefing": {
+    "en": [
+      "Summer, 1212. Last year the Almohad caliph Muhammad al-Nasir crossed from Africa with a great army and took the castle of Salvatierra. Now Alfonso VIII of Castile has gathered a coalition at Toledo: Pedro II of Aragon, crusaders from beyond the Pyrenees, and, arriving late with a small following of knights, Sancho VII of Navarre, 'the Strong'.",
+      "Most of the crusaders turned back after the siege of Calatrava. The rest crossed the Sierra Morena and found the Almohad army waiting on the slopes beyond, in front of the caliph's camp. On Monday 16 July the kings attacked: Castile in the centre, Aragon on the left, Navarre on the right.",
+      "You lead the Navarrese on the right wing. Break the forward lines, climb the hill and get into the palisade around the caliph's tent before the day turns against the coalition."
+    ],
+    "es": [
+      "Verano de 1212. El año pasado el califa almohade Muhammad al-Nasir cruzó desde África con un gran ejército y tomó el castillo de Salvatierra. Ahora Alfonso VIII de Castilla ha reunido una coalición en Toledo: Pedro II de Aragón, cruzados de allende los Pirineos y, llegado tarde con una pequeña mesnada de caballeros, Sancho VII de Navarra, «el Fuerte».",
+      "La mayoría de los cruzados se volvió tras el asedio de Calatrava. Los demás cruzaron Sierra Morena y encontraron al ejército almohade esperando en las laderas, delante del campamento del califa. El lunes 16 de julio atacaron los reyes: Castilla en el centro, Aragón a la izquierda, Navarra a la derecha.",
+      "Tú mandas a los navarros del ala derecha. Rompe las primeras líneas, sube el cerro y entra en la empalizada que rodea la tienda del califa antes de que la jornada se vuelva contra la coalición."
+    ]
+  },
+
+  "cutscene": {
+    "steps": [
+      { "labels": [["pamplona", "Pamplona"], ["toledo", "Toledo"]], "route": ["toledo"], "to": 0 },
+      { "labels": [["pamplona", "Pamplona"], ["toledo", "Toledo"], ["calatrava", "Calatrava"]], "route": ["toledo", "calatrava", "navas"], "to": 0.55 },
+      { "labels": [["toledo", "Toledo"], ["calatrava", "Calatrava"], ["navas", "Las Navas"]], "route": ["toledo", "calatrava", "navas"], "to": 1 }
+    ],
+    "column": { "faction": "navarra", "side": "player", "types": ["nav_knights", "nav_sancho", "nav_knights", "nav_foot", "nav_crossbows", "nav_mountaineers"] }
+  },
+
+  "objective": {
+    "type": "seize",
+    "side": "player",
+    "cells": [[17, 2], [18, 2], [17, 3], [18, 3]],
+    "leaderFlight": true,
+    "text": {
+      "en": "Get a company inside the palisade into the caliph's camp, or drive the caliph from the field, or break his army. If the day ends first, the coalition's attack has stalled.",
+      "es": "Mete una compañía dentro de la empalizada, en el campamento del califa, o echa al califa del campo, o rompe su ejército. Si antes acaba la jornada, el ataque de la coalición se habrá estancado."
+    }
+  },
+
+  "results": {
+    "seized": {
+      "won": { "en": "Navarrese companies are inside the palisade. The caliph's camp is broken, and al-Nasir is in flight.", "es": "Hay compañías navarras dentro de la empalizada. El campamento del califa está roto y al-Nasir huye." }
+    },
+    "held": {
+      "lost": { "en": "The palisade held. The attack on the right has stalled, and the day is slipping away from the coalition.", "es": "La empalizada ha aguantado. El ataque por la derecha se ha estancado y la jornada se le escapa a la coalición." }
+    }
+  },
+
+  "historicalNote": {
+    "en": "On 16 July 1212 the coalition of Alfonso VIII of Castile, Pedro II of Aragon and Sancho VII of Navarre broke the army of the Almohad caliph Muhammad al-Nasir in the Sierra Morena. Rodrigo Jiménez de Rada, archbishop of Toledo, rode with the army and wrote the fullest account. The Christian lines came under heavy pressure before a final advance by the kings broke into the caliph's camp; al-Nasir fled, and died in Marrakesh the following year. Almohad power in the peninsula never recovered: within forty years Córdoba and Seville had fallen to Castile.",
+    "es": "El 16 de julio de 1212 la coalición de Alfonso VIII de Castilla, Pedro II de Aragón y Sancho VII de Navarra deshizo al ejército del califa almohade Muhammad al-Nasir en Sierra Morena. Rodrigo Jiménez de Rada, arzobispo de Toledo, iba con el ejército y dejó el relato más completo. Las líneas cristianas pasaron por graves apuros antes de que un último avance de los reyes irrumpiera en el campamento del califa; al-Nasir huyó y murió en Marrakech al año siguiente. El poder almohade en la península no se recuperó: en cuarenta años Córdoba y Sevilla habían caído en manos de Castilla."
+  },
+
+  "legendNote": {
+    "en": "Where legend takes over. Tradition says the caliph's guard stood chained together around his tent, that Sancho VII broke through the chains, and that the chains in Navarre's coat of arms come from that day. The chains are documented as Navarre's arms only well after 1212, and heraldists generally derive them from an earlier device of radiating bars (an escarbuncle) that the battle was later used to explain. Sancho was there and he charged; the rest is tradition. The emblem used in this battle, the eagle, is the one on Sancho VII's own seal. The story of the shepherd who showed the army a way through the mountains is also later tradition, and is left out here.",
+    "es": "Donde empieza la leyenda. La tradición cuenta que la guardia del califa estaba encadenada alrededor de su tienda, que Sancho VII rompió las cadenas y que de aquel día vienen las cadenas del escudo de Navarra. Las cadenas solo se documentan como armas de Navarra bastante después de 1212, y los heraldistas suelen derivarlas de una figura anterior de barras radiantes (un carbunclo) a la que más tarde se buscó explicación en la batalla. Sancho estuvo allí y cargó; lo demás es tradición. La enseña de esta batalla, el águila, es la del sello del propio Sancho VII. La historia del pastor que mostró al ejército un paso por la sierra también es tradición posterior, y aquí no se usa."
+  },
+
+  "sources": [
+    { "en": "Rodrigo Jiménez de Rada, De rebus Hispaniae, book VIII (eyewitness)", "es": "Rodrigo Jiménez de Rada, De rebus Hispaniae, libro VIII (testigo presencial)" },
+    { "en": "Letter of Alfonso VIII to Pope Innocent III, 1212", "es": "Carta de Alfonso VIII al papa Inocencio III, 1212" },
+    { "en": "Ibn Idhari, al-Bayan al-Mughrib", "es": "Ibn Idari, al-Bayan al-Mugrib" },
+    { "en": "Ibn Abi Zar, Rawd al-Qirtas", "es": "Ibn Abi Zar, Rawd al-Qirtas" },
+    { "en": "Martín Alvira Cabrer, Las Navas de Tolosa 1212: idea, liturgia y memoria de la batalla", "es": "Martín Alvira Cabrer, Las Navas de Tolosa 1212: idea, liturgia y memoria de la batalla" }
+  ],
+
+  "turnLimit": 14,
+
+  "map": {
+    "_legend": ", plain   r gentle rise   o olive grove   P palisade   T camp",
+    "rows": [
+      ",,,,,,,,,rroorrrrrrrrrrr",
+      ",,,,,,,,,rorrrorPPPPrrrr",
+      ",,,,,,,,,rrrrorrPTTPrrrr",
+      ",,,,,,,,,rorrrrrrTTPrrrr",
+      ",,,,,,,,,rrorrrrPPPPrrrr",
+      ",,,,,,,,,rrrorrrrrrrrrrr"
+    ]
+  },
+
+  "sides": {
+    "player": {
+      "faction": "navarra",
+      "budget": 900,
+      "maxUnits": 10,
+      "leader": { "type": "nav_sancho", "name": { "en": "Sancho VII 'the Strong'", "es": "Sancho VII «el Fuerte»" } },
+      "ambush": false,
+      "rocks": 0,
+      "facing": 1,
+      "retreat": ["left"],
+      "aggression": 0.8,
+      "deploy": [{ "x0": 0, "x1": 3, "y0": 0, "y1": 5 }],
+      "deployHints": { "focusX": 3 },
+      "suggested": { "nav_knights": 2, "nav_foot": 3, "nav_crossbows": 2, "nav_mountaineers": 2 }
+    },
+    "enemy": {
+      "faction": "almohads",
+      "ambush": false,
+      "rocks": 0,
+      "facing": -1,
+      "retreat": ["right"],
+      "aggression": 0.45,
+      "_note": "Navarre attacked on the right wing, so this is the part of the Almohad army in front of it, not the whole host.",
+      "units": [
+        { "type": "alm_volunteers", "x": 8, "y": 1 },
+        { "type": "alm_volunteers", "x": 8, "y": 2 },
+        { "type": "alm_volunteers", "x": 8, "y": 3 },
+        { "type": "alm_horse", "x": 11, "y": 5 },
+        { "type": "alm_archers", "x": 11, "y": 2 },
+        { "type": "alm_archers", "x": 11, "y": 3 },
+        { "type": "alm_infantry", "x": 14, "y": 2 },
+        { "type": "alm_infantry", "x": 14, "y": 3 },
+        { "type": "alm_guard", "x": 17, "y": 2 },
+        { "type": "alm_guard", "x": 17, "y": 3 },
+        { "type": "alm_caliph", "x": 18, "y": 2, "name": { "en": "Muhammad al-Nasir", "es": "Muhammad al-Nasir" } }
+      ]
+    }
+  }
+}

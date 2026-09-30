@@ -1,0 +1,93 @@
+{
+  "_comment": "Combat tuning. Every number the engine uses lives here. Run `npm test` after changing any of them: the balance sweep is the only thing that tells you whether a battle is still fair.",
+
+  "terrain": {
+    ".": { "key": "road",     "height": 0, "forest": false, "cost": 1 },
+    "s": { "key": "slope",    "height": 1, "forest": false, "cost": 2 },
+    "f": { "key": "wood",     "height": 1, "forest": true,  "cost": 2 },
+    "S": { "key": "crag",     "height": 2, "forest": false, "cost": 3 },
+    "F": { "key": "highwood", "height": 2, "forest": true,  "cost": 3 },
+    ",": { "key": "plain",    "height": 0, "forest": false, "cost": 1 },
+    "r": { "key": "rise",     "height": 1, "forest": false, "cost": 1 },
+    "o": { "key": "olives",   "height": 1, "forest": true,  "cost": 2 },
+    "P": { "key": "palisade", "height": 1, "forest": false, "cost": 3, "fort": true },
+    "T": { "key": "camp",     "height": 1, "forest": false, "cost": 1 },
+    "C": { "key": "cave",     "height": 2, "forest": false, "cost": 2, "fort": true },
+    "W": { "key": "river",    "height": 0, "forest": false, "cost": 1, "impassable": true },
+    "=": { "key": "bridge",   "height": 0, "forest": false, "cost": 1, "bridge": true }
+  },
+
+  "traitScale": { "strong": 1.2, "average": 1.0, "weak": 0.85 },
+  "courageMorale": { "strong": 85, "average": 70, "weak": 55 },
+
+  "damageBase": 12,
+  "damageRoll": [0.8, 1.2],
+  "counterFactor": 0.5,
+
+  "chargeMinSteps": 2,
+  "chargeBonus": 1.35,
+  "wedgeBonus": 1.3,
+  "ambushBonus": 1.6,
+  "downhillBonus": 1.2,
+  "uphillPenalty": 0.85,
+  "pursuitBonus": 1.5,
+  "cavalryVsHeights": 0.8,
+
+  "heightDefence": [1.0, 1.25, 1.4],
+  "forestDefence": 1.1,
+  "shieldWallDefence": 1.5,
+  "guardedDefence": 1.5,
+  "fortDefence": 1.35,
+  "fordDefence": 0.8,
+  "bridgeDefence": 0.75,
+
+  "moraleLossPerDamage": 2.2,
+  "ambushShock": 14,
+  "ambushSplash": 5,
+  "splashRadius": 2,
+  "friendRoutedMorale": 6,
+  "friendKilledMorale": 10,
+  "leaderDeathMorale": 30,
+  "wagonLostMorale": 18,
+
+  "recoveryPerTurn": 3,
+  "leaderAura": 4,
+  "leaderAuraRadius": 2,
+  "commandRadius": 3,
+  "inCommandLoss": 0.9,
+  "outOfCommandLoss": 1.1,
+  "leaderlessLoss": 1.35,
+  "leaderlessWaver": 10,
+  "waverThreshold": 25,
+  "waverDivisor": 40,
+
+  "rallyMorale": 15,
+  "rallyRadius": 2,
+  "rallyRecoverChance": 0.5,
+  "rallyRecoverMorale": 30,
+
+  "tauntRange": 3,
+  "tauntBase": 4,
+  "tauntSpread": 4,
+  "leaderTauntFactor": 1.5,
+  "tauntSelfMorale": 3,
+  "tauntFarShare": 0.15,
+
+  "rangeFalloff": 0.6,
+  "throwReachPerPower": 1.5,
+  "volleySpread": 1.1,
+  "volleyOvershoot": 1.5,
+  "volleyForest": 0.5,
+  "volleyFullShare": 0.45,
+  "volleyMaxQuality": 1.3,
+  "volleyMinQuality": 0.08,
+
+  "rockDamage": 9,
+  "rockShock": 8,
+
+  "minigames": { "chargeMin": 0.8, "chargeMax": 1.3, "meleeMin": 0.75, "meleeMax": 1.35, "tauntMin": 0.4, "tauntMax": 1.6 },
+
+  "courage": { "flank": 8, "rear": 14, "outnumbered": 5, "heavyShare": 0.3, "heavyLosses": 12, "leaderSeen": 12, "leaderSeenRadius": 3, "woundedWaver": 30 },
+
+  "maxMoveRounds": 14
+}

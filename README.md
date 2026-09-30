@@ -21,6 +21,18 @@ This starts the menu and every game, and opens the menu in your browser. `~/Docu
 
 Ports 8000–8010 are never used; `start.py` refuses them. If a port is already taken (say you left `npm start` running in a game folder), it says so and carries on.
 
+## Putting it online
+
+The whole arcade (menu plus every game) goes online as **one website** on GitHub Pages:
+
+```sh
+./publish-arcade
+```
+
+It runs the tests, rebuilds `site/` from the latest version of every game (`build-site.py`), commits, pushes, and publishes `site/` as the `gh-pages` branch, which GitHub Pages serves at **https://javierb98.github.io/navarra-arcade/**. Run it again whenever a game changes, or the website keeps the old version.
+
+Online, the menu opens the games from `games/<id>/` on the same site; on your Mac, `./fire-up-arcade` keeps using the local ports.
+
 ## Playing
 
 - **Menu:** stick left/right to choose, A or START to play. The selected game gets a large, slowly panning preview and an info panel: what it's about, **what you'll learn** (the history lesson), when and where it's set, and how many players.
