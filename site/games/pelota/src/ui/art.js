@@ -335,10 +335,16 @@ function paintFloor(g, L) {
   const fl = g.createLinearGradient(0, y0, 0, y1);
   fl.addColorStop(0, L.floor[0]); fl.addColorStop(1, L.floor[1]);
   g.fillStyle = fl; g.fill();
-  for (let k = 0; k < 90; k++) {
-    const [sx, sy, s] = project(rng.range(0.5, 9.5), rng.range(8, 30), 0);
-    g.fillStyle = `rgba(80,64,46,${0.03 + rng.next() * 0.05})`;
-    g.beginPath(); g.ellipse(sx, sy, s * rng.range(0.3, 1.2), s * 0.12, 0, 0, Math.PI * 2); g.fill();
+  // Fine grain in the concrete, and scuffs where the players run most.
+  for (let k = 0; k < 2200; k++) {
+    const [sx, sy, s] = project(rng.range(0, C.w), rng.range(0, far), 0);
+    g.fillStyle = rng.chance(0.5) ? 'rgba(255,248,230,0.06)' : 'rgba(60,46,30,0.06)';
+    g.fillRect(sx, sy, Math.max(0.6, 0.04 * s), Math.max(0.4, 0.015 * s));
+  }
+  for (let k = 0; k < 40; k++) {
+    const [sx, sy, s] = project(rng.range(2, 8), rng.range(12, 26), 0);
+    g.strokeStyle = 'rgba(70,56,40,0.07)'; g.lineWidth = Math.max(0.8, 0.03 * s);
+    g.beginPath(); g.moveTo(sx, sy); g.quadraticCurveTo(sx + 0.3 * s, sy - 0.02 * s, sx + rng.range(0.4, 1) * s, sy + rng.range(-0.05, 0.05) * s); g.stroke();
   }
   g.strokeStyle = 'rgba(255,255,255,0.9)'; g.lineWidth = 2.4;
   line3(g, [C.w, 0, 0], [C.w, C.l, 0]);
@@ -423,26 +429,43 @@ function paintLight(g, L, light) {
     // Afternoon: bright on the left wall, soft shade along the stands.
     g.fillStyle = 'rgba(255,240,200,0.08)';
     quad(g, [[0, 0, 0], [0, C.l + 9, 0], [0, C.l + 9, C.wall], [0, 0, C.wall]]); g.fill();
-    g.fillStyle = 'rgba(40,40,80,0.12)';
-    quad(g, [[C.w - 1.5, 0, 0], [C.w + 8, 0, 0], [C.w + 8, C.l + 9, 0], [C.w - 2.5, C.l + 9, 0]]); g.fill();
+    // Soft shade from the stands along the right-hand line.
+    const [ax] = project(C.w - 1.5, 20, 0), [bx] = project(C.w + 3, 20, 0);
+    quad(g, [[C.w - 2, 0, 0], [C.w + 8, 0, 0], [C.w + 8, C.l + 9, 0], [C.w - 2, C.l + 9, 0]]);
+    const sh = g.createLinearGradient(ax, 0, bx, 0);
+    sh.addColorStop(0, 'rgba(40,40,80,0)'); sh.addColorStop(1, 'rgba(40,40,80,0.14)');
+    g.fillStyle = sh; g.fill();
   }
 }
 
-// Ivy spilling down the walls in patches.
+// Ivy spilling down the walls: trailing stems with small leaves, lit on top.
 function paintIvy(g) {
   const rng = makeRng(61);
-  const patch = (pts) => {
-    for (const [x, y, z, len] of pts) {
-      for (let k = 0; k < len; k++) {
-        const zz = z - k * 0.18, yy = y + Math.sin(k * 0.7) * 0.2;
-        const [sx, sy, s] = x === 0 ? project(0.02, yy, zz) : project(x + Math.sin(k * 0.7) * 0.2, 0.02, zz);
-        g.fillStyle = mix('#5a8a30', '#243e14', rng.next());
-        g.beginPath(); g.ellipse(sx, sy, Math.min(7, 0.16 * s), Math.min(5, 0.12 * s), rng.next() * 3, 0, Math.PI * 2); g.fill();
-      }
-    }
+  const leaf = (sx, sy, r, rot, dark) => {
+    g.save(); g.translate(sx, sy); g.rotate(rot);
+    g.fillStyle = mix(dark ? '#2f4a1a' : '#5d8f34', '#1e3010', rng.next() * 0.4);
+    g.beginPath(); g.moveTo(0, r); g.bezierCurveTo(-r * 1.2, 0, -r * 0.5, -r, 0, -r * 0.4); g.bezierCurveTo(r * 0.5, -r, r * 1.2, 0, 0, r); g.fill();
+    g.restore();
   };
-  patch([[0, 4, 9.8, 18], [0, 4.6, 9.8, 12], [0, 9, 9.8, 26], [0, 9.5, 9.8, 16], [0, 15, 9.8, 22]]);
-  patch([[0.4, 0, 9.8, 16], [0.9, 0, 9.8, 10]]);
+  const stem = (at, len) => {
+    let [x, y, z] = at;
+    const pts = [];
+    for (let k = 0; k < len; k++) { z -= 0.12; y += (rng.next() - 0.5) * 0.1; pts.push([x, y, z]); }
+    g.strokeStyle = 'rgba(70,50,30,0.5)'; g.lineWidth = 0.8;
+    g.beginPath(); pts.forEach((p, k) => { const [sx, sy] = x === 0 ? project(0.01, p[1], p[2]) : project(p[0], 0.01, p[2]); if (k) g.lineTo(sx, sy); else g.moveTo(sx, sy); }); g.stroke();
+    pts.forEach((p, k) => {
+      const [sx, sy, s] = x === 0 ? project(0.01, p[1], p[2]) : project(p[0], 0.01, p[2]);
+      const r = Math.min(4.5, 0.07 * s) * (1 - k / len * 0.5);
+      leaf(sx + (k % 2 ? r : -r) * 0.8, sy, r, (k % 2 ? 0.6 : -0.6) + rng.next() * 0.4, rng.chance(0.4));
+    });
+  };
+  // A mat of leaves along the top of the left wall, with stems trailing down.
+  for (let y = 1; y < 20; y += 0.18) {
+    const [sx, sy, s] = project(0.01, y, 9.8 - rng.next() * 0.3);
+    leaf(sx, sy, Math.min(4.5, 0.08 * s), rng.next() * 6, rng.chance(0.5));
+  }
+  for (const [y, len] of [[2, 14], [3.1, 8], [5.5, 20], [6.2, 11], [9, 16], [12.5, 24], [13.2, 12], [17, 18]]) stem([0, y, 9.7], len);
+  for (const [x, len] of [[0.5, 12], [1.2, 7]]) stem([x, 0, 9.7], len);
 }
 
 // Swallows over the plaza.
@@ -506,77 +529,123 @@ export const TEAM = [
   { shirt: '#2f72b0', shirtD: '#1c4a78', name: 'blue' },
 ];
 
-// Drawn in metres about the feet, scaled to pixels. Light comes from the
-// right (the sun) or from above (the floodlights).
+// Drawn in metres about the feet, scaled to pixels, seen from behind.
+// Light comes from the right (the sun) or from above (the floodlights).
 export function pelotari(ctx, pl, t, { turn = false, anim = {}, light = 'sunset', reflection = false } = {}) {
   const L = LIGHTS[light];
   const [sx, sy, s] = project(pl.x, pl.y, 0);
   const T = TEAM[pl.i];
-  const [shx, shy, shl] = reflection ? [0, 0, 0] : L.shadow;
-  ctx.save(); ctx.translate(sx, sy); ctx.transform(1, 0, shx, shy, 0, 0);
-  ctx.fillStyle = `rgba(30,18,8,${shl})`;
-  ctx.beginPath(); ctx.ellipse(0, -0.9 * s, 0.26 * s, 0.9 * s, 0, 0, Math.PI * 2); ctx.fill();
-  ctx.restore();
-  ctx.fillStyle = 'rgba(30,18,8,0.3)'; ctx.beginPath(); ctx.ellipse(sx, sy, 0.4 * s, 0.1 * s, 0, 0, Math.PI * 2); ctx.fill();
+  const speed = Math.hypot(pl.vx, pl.vy), moving = speed > 0.6;
+  const run = anim.run ?? 0;
+  const swing = pl.swing > 0 ? 1 - pl.swing / 0.3 : -1;
+  // Knees bend when ready or running; the body bobs with each stride.
+  const ready = turn && !moving && swing < 0;
+  const crouch = swing >= 0 ? 0.1 * Math.sin(swing * Math.PI) + 0.06 : ready ? 0.14 : moving ? 0.07 : 0.03;
+  const bob = moving ? Math.abs(Math.sin(run)) * 0.045 : 0;
+  const lean = Math.max(-0.12, Math.min(0.12, pl.vx * 0.018));
+  if (!reflection) {
+    // Soft shadows: a pool at the feet, and a long, blurred one cast away from the light.
+    const [shx, shy, shl] = L.shadow;
+    ctx.save();
+    ctx.filter = 'blur(3px)';
+    ctx.translate(sx, sy); ctx.transform(1, 0, shx, shy, 0, 0);
+    const g = ctx.createLinearGradient(0, 0, 0, -1.8 * s);
+    g.addColorStop(0, `rgba(30,18,8,${shl})`); g.addColorStop(1, 'rgba(30,18,8,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(0, -0.9 * s, 0.24 * s, 0.9 * s, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    const pool = ctx.createRadialGradient(sx, sy, 0, sx, sy, 0.5 * s);
+    pool.addColorStop(0, 'rgba(30,18,8,0.4)'); pool.addColorStop(1, 'rgba(30,18,8,0)');
+    ctx.fillStyle = pool; ctx.beginPath(); ctx.ellipse(sx, sy, 0.5 * s, 0.13 * s, 0, 0, Math.PI * 2); ctx.fill();
+  }
   if (turn) {
     ctx.strokeStyle = T.shirt; ctx.lineWidth = Math.max(2, 0.06 * s);
     ctx.globalAlpha = 0.6 + Math.sin(t * 6) * 0.3;
     ctx.beginPath(); ctx.ellipse(sx, sy, 0.62 * s, 0.16 * s, 0, 0, Math.PI * 2); ctx.stroke();
     ctx.globalAlpha = 1;
   }
-  const u = s, run = anim.run ?? 0, moving = Math.hypot(pl.vx, pl.vy) > 0.6;
-  const swing = pl.swing > 0 ? 1 - pl.swing / 0.3 : -1;
-  const crouch = swing >= 0 ? 0.08 * Math.sin(swing * Math.PI) : moving ? 0.03 : 0.06;
-  ctx.save(); ctx.translate(sx, sy); ctx.scale(u, u); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  // Legs: thigh and shin, knees bending as they run; white trousers.
-  for (const [hx, ph] of [[-0.1, moving ? Math.sin(run) : 0.2], [0.1, moving ? -Math.sin(run) : -0.2]]) {
-    const hip = [hx, -0.95 + crouch], knee = [hx + ph * 0.12, -0.5 + Math.max(0, ph) * 0.06 + crouch * 0.5], foot = [hx + ph * 0.2, -0.04 - Math.max(0, ph) * 0.08];
-    ctx.strokeStyle = '#e9e4da'; ctx.lineWidth = 0.15;
-    ctx.beginPath(); ctx.moveTo(...hip); ctx.lineTo(...knee); ctx.lineTo(...foot); ctx.stroke();
-    ctx.strokeStyle = '#fbf8f2'; ctx.lineWidth = 0.06;
-    ctx.beginPath(); ctx.moveTo(hip[0] + 0.03, hip[1]); ctx.lineTo(knee[0] + 0.03, knee[1]); ctx.stroke();
-    ctx.fillStyle = '#f2f2f2'; ctx.beginPath(); ctx.ellipse(foot[0], foot[1] + 0.02, 0.08, 0.05, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = T.shirtD; ctx.fillRect(foot[0] - 0.07, foot[1] + 0.03, 0.14, 0.02);
-  }
-  // Shirt: shaded, with folds; a sash in the team colour.
-  const tw = swing >= 0 ? Math.sin(swing * Math.PI) * 0.06 : 0;
-  const tg = ctx.createLinearGradient(-0.3, 0, 0.3, 0);
-  tg.addColorStop(0, shade(T.shirt, -0.28)); tg.addColorStop(0.55, T.shirt); tg.addColorStop(1, shade(T.shirt, 0.22));
+  ctx.save(); ctx.translate(sx, sy); ctx.scale(s, s); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  const hipY = -0.95 + crouch - bob;
+  // Legs: thigh and shin with a bending knee, white trousers shaded on the far side.
+  const trou = '#f2eee6', trouD = '#cfc8ba';
+  const legs = moving ? [Math.sin(run), -Math.sin(run)] : ready ? [0.35, -0.35] : [0.12, -0.12];
+  legs.forEach((ph, k) => {
+    const side = k ? 1 : -1;
+    const hip = [side * 0.1 + lean * 0.3, hipY];
+    const knee = [side * (0.12 + (ready ? 0.06 : 0)) + ph * 0.1, hipY + 0.45 - Math.max(0, ph) * 0.06];
+    const foot = [side * (0.13 + (ready ? 0.1 : 0)) + ph * 0.16, -0.05 - Math.max(0, ph) * 0.1];
+    ctx.strokeStyle = k ? trouD : trou; ctx.lineWidth = 0.17;
+    ctx.beginPath(); ctx.moveTo(...hip); ctx.lineTo(...knee); ctx.stroke();
+    ctx.lineWidth = 0.135; ctx.beginPath(); ctx.moveTo(...knee); ctx.lineTo(...foot); ctx.stroke();
+    // A crease behind the knee.
+    ctx.strokeStyle = 'rgba(120,110,95,0.35)'; ctx.lineWidth = 0.012;
+    ctx.beginPath(); ctx.moveTo(knee[0] - 0.05, knee[1] - 0.01); ctx.quadraticCurveTo(knee[0], knee[1] + 0.03, knee[0] + 0.05, knee[1] - 0.01); ctx.stroke();
+    // Shoe: white canvas with a dark sole, seen from behind.
+    ctx.fillStyle = '#3a3230'; ctx.beginPath(); ctx.ellipse(foot[0], foot[1] + 0.045, 0.075, 0.03, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#f7f5f0'; ctx.beginPath(); ctx.ellipse(foot[0], foot[1] + 0.01, 0.07, 0.05, 0, 0, Math.PI * 2); ctx.fill();
+  });
+  // Seat of the trousers.
+  ctx.fillStyle = trou;
+  ctx.beginPath(); ctx.moveTo(-0.19 + lean * 0.3, hipY - 0.08); ctx.lineTo(0.19 + lean * 0.3, hipY - 0.08); ctx.lineTo(0.2 + lean * 0.3, hipY + 0.06); ctx.quadraticCurveTo(lean * 0.3, hipY + 0.12, -0.2 + lean * 0.3, hipY + 0.06); ctx.fill();
+  // The torso twists into the swing: the shoulder line rotates.
+  const twist = swing >= 0 ? Math.sin(swing * Math.PI) * 0.09 : ready ? -0.03 : 0;
+  const top = hipY - 0.55, cx = lean;
+  const shL = [cx - 0.23 - twist, top + 0.02 + twist * 0.3], shR = [cx + 0.23 - twist * 0.2, top - twist * 0.3];
+  // Arms behind the torso first (the far arm), then the shirt, then the near arm.
+  const skin = '#e6b48c', skinD = '#bf8a64';
+  const armL = moving ? -Math.sin(run) * 0.6 : ready ? -0.5 : 0.15;
+  const drawArm = (sh, a1, a2, colourUpper, colourLower, tape) => {
+    const el = [sh[0] + Math.sin(a1) * 0.27, sh[1] + Math.cos(a1) * 0.27];
+    const hd = [el[0] + Math.sin(a1 + a2) * 0.25, el[1] + Math.cos(a1 + a2) * 0.25];
+    ctx.strokeStyle = colourUpper; ctx.lineWidth = 0.105; ctx.beginPath(); ctx.moveTo(...sh); ctx.lineTo(...el); ctx.stroke();
+    ctx.strokeStyle = colourLower; ctx.lineWidth = 0.085; ctx.beginPath(); ctx.moveTo(...el); ctx.lineTo(...hd); ctx.stroke();
+    ctx.fillStyle = tape ? '#fbf9f4' : colourLower; ctx.beginPath(); ctx.ellipse(hd[0], hd[1], 0.055, 0.065, a1 + a2, 0, Math.PI * 2); ctx.fill();
+    return hd;
+  };
+  drawArm([shL[0] + 0.02, shL[1] + 0.04], -0.25 + armL * 0.5, 0.4 + Math.max(0, armL) * 0.4, skinD, skinD, true);
+  // Shirt: short sleeves, shoulder blades, a crease down the back; shaded from the light.
+  const tg = ctx.createLinearGradient(cx - 0.3, 0, cx + 0.3, 0);
+  tg.addColorStop(0, shade(T.shirt, -0.32)); tg.addColorStop(0.5, T.shirt); tg.addColorStop(1, shade(T.shirt, 0.2));
   ctx.fillStyle = tg;
   ctx.beginPath();
-  ctx.moveTo(-0.23 - tw, -0.98 + crouch); ctx.lineTo(-0.27 - tw, -1.44 + crouch);
-  ctx.quadraticCurveTo(0, -1.56 + crouch, 0.27 + tw, -1.44 + crouch); ctx.lineTo(0.23 + tw, -0.98 + crouch); ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = 'rgba(0,0,0,0.15)'; ctx.lineWidth = 0.015;
-  ctx.beginPath(); ctx.moveTo(-0.08, -1.4 + crouch); ctx.quadraticCurveTo(-0.1, -1.2 + crouch, -0.06, -1.02 + crouch); ctx.moveTo(0.1, -1.38 + crouch); ctx.quadraticCurveTo(0.12, -1.2 + crouch, 0.08, -1.02 + crouch); ctx.stroke();
-  ctx.fillStyle = shade(T.shirtD, -0.1); ctx.fillRect(-0.23, -1.02 + crouch, 0.46, 0.08);
-  ctx.fillStyle = '#f4efe6'; ctx.fillRect(-0.23, -0.98 + crouch, 0.46, 0.035);
-  ctx.strokeStyle = light === 'night' ? 'rgba(255,248,220,0.35)' : 'rgba(255,230,180,0.55)'; ctx.lineWidth = 0.02;
-  ctx.beginPath(); ctx.moveTo(0.26 + tw, -1.42 + crouch); ctx.lineTo(0.23 + tw, -1.0 + crouch); ctx.stroke();
-  // Arms: the left for balance; the right swings through the ball.
-  const skin = '#e6b48c', skinD = '#c08a64';
-  const armL = moving ? 0.35 + Math.sin(run) * 0.35 : 0.3;
-  ctx.strokeStyle = skinD; ctx.lineWidth = 0.085;
-  ctx.beginPath(); ctx.moveTo(-0.25, -1.4 + crouch); ctx.lineTo(-0.3 - Math.sin(armL) * 0.12, -1.12 + crouch); ctx.lineTo(-0.28 - Math.sin(armL) * 0.2, -0.88 + crouch); ctx.stroke();
+  ctx.moveTo(cx - 0.17, hipY - 0.07);
+  ctx.quadraticCurveTo(cx - 0.21, top + 0.3, shL[0] - 0.02, shL[1] + 0.08);
+  ctx.lineTo(shL[0] - 0.05, shL[1] + 0.16); ctx.lineTo(shL[0] + 0.05, shL[1] + 0.2); // sleeve
+  ctx.quadraticCurveTo(shL[0] + 0.02, shL[1] - 0.02, cx - 0.06, top - 0.05);
+  ctx.quadraticCurveTo(cx, top - 0.07, cx + 0.06, top - 0.05);
+  ctx.quadraticCurveTo(shR[0] - 0.02, shR[1] - 0.02, shR[0] - 0.05, shR[1] + 0.2);
+  ctx.lineTo(shR[0] + 0.05, shR[1] + 0.16); ctx.lineTo(shR[0] + 0.02, shR[1] + 0.08); // sleeve
+  ctx.quadraticCurveTo(cx + 0.21, top + 0.3, cx + 0.17, hipY - 0.07);
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.16)'; ctx.lineWidth = 0.014;
+  ctx.beginPath(); ctx.moveTo(cx - 0.02, top + 0.06); ctx.quadraticCurveTo(cx + 0.01, top + 0.3, cx - 0.01, hipY - 0.1); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx - 0.14, top + 0.12); ctx.quadraticCurveTo(cx - 0.1, top + 0.2, cx - 0.04, top + 0.16); ctx.moveTo(cx + 0.14, top + 0.12); ctx.quadraticCurveTo(cx + 0.1, top + 0.2, cx + 0.04, top + 0.16); ctx.stroke();
+  // Rim of light on the lit side.
+  ctx.strokeStyle = light === 'night' ? 'rgba(255,248,220,0.35)' : 'rgba(255,232,190,0.6)'; ctx.lineWidth = 0.02;
+  ctx.beginPath(); ctx.moveTo(shR[0] + 0.03, shR[1] + 0.12); ctx.quadraticCurveTo(cx + 0.2, top + 0.3, cx + 0.16, hipY - 0.1); ctx.stroke();
+  // A belt where shirt meets trousers.
+  ctx.fillStyle = shade(T.shirtD, -0.25); ctx.fillRect(cx - 0.18, hipY - 0.1, 0.36, 0.035);
+  // The striking arm: back and low when ready, whipping through the ball.
   let a1, a2;
-  if (swing >= 0) { a1 = -2.4 + swing * 3.6; a2 = 0.4 - swing * 0.5; }
-  else if (turn) { a1 = -0.9; a2 = 0.9; }
-  else { a1 = moving ? 0.3 - Math.sin(run) * 0.35 : 0.2; a2 = 0.3; }
-  const sh = [0.25 + tw, -1.4 + crouch];
-  const el = [sh[0] + Math.sin(a1) * 0.28, sh[1] + Math.cos(a1) * 0.28];
-  const hd = [el[0] + Math.sin(a1 + a2) * 0.26, el[1] + Math.cos(a1 + a2) * 0.26];
-  ctx.strokeStyle = skin; ctx.lineWidth = 0.09;
-  ctx.beginPath(); ctx.moveTo(...sh); ctx.lineTo(...el); ctx.lineTo(...hd); ctx.stroke();
-  ctx.fillStyle = '#fbf8f2'; ctx.beginPath(); ctx.arc(hd[0], hd[1], 0.06, 0, Math.PI * 2); ctx.fill();
-  if (swing >= 0 && swing < 0.7) {
-    ctx.strokeStyle = `rgba(255,250,235,${0.6 * (1 - swing)})`; ctx.lineWidth = 0.05;
-    ctx.beginPath(); ctx.arc(sh[0], sh[1], 0.52, -Math.PI / 2 - 0.9, -Math.PI / 2 - 0.9 + swing * 2.4); ctx.stroke();
+  if (swing >= 0) { a1 = -2.6 + swing * 3.9; a2 = 0.5 - swing * 0.6; }
+  else if (ready) { a1 = 1.1; a2 = 0.7; }
+  else { a1 = moving ? Math.sin(run) * 0.6 : 0.1; a2 = 0.35; }
+  const hand = drawArm([shR[0] - 0.02, shR[1] + 0.04], a1, a2, T.shirt, skin, true);
+  if (swing >= 0 && swing < 0.75) {
+    ctx.strokeStyle = `rgba(255,250,235,${0.55 * (1 - swing)})`; ctx.lineWidth = 0.05;
+    ctx.beginPath(); ctx.arc(shR[0], shR[1], 0.5, -Math.PI / 2 - 1.1, -Math.PI / 2 - 1.1 + swing * 2.6); ctx.stroke();
   }
-  // Neck and head from behind.
-  ctx.fillStyle = skinD; ctx.fillRect(-0.055, -1.62 + crouch, 0.11, 0.1);
-  ctx.fillStyle = skin; ctx.beginPath(); ctx.ellipse(-0.125, -1.72 + crouch, 0.028, 0.045, 0, 0, Math.PI * 2); ctx.ellipse(0.125, -1.72 + crouch, 0.028, 0.045, 0, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = pl.i ? '#2a1c14' : '#4a3222'; ctx.beginPath(); ctx.ellipse(0, -1.75 + crouch, 0.125, 0.14, 0, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = 'rgba(255,240,210,0.18)'; ctx.beginPath(); ctx.ellipse(0.05, -1.82 + crouch, 0.05, 0.04, 0, 0, Math.PI * 2); ctx.fill();
+  // Neck and head from behind: short dark hair with a crown, ears.
+  const hx = cx - twist * 0.3, hy = top - 0.19;
+  ctx.fillStyle = skinD; ctx.beginPath(); ctx.moveTo(hx - 0.055, top - 0.03); ctx.lineTo(hx - 0.045, hy + 0.06); ctx.lineTo(hx + 0.045, hy + 0.06); ctx.lineTo(hx + 0.055, top - 0.03); ctx.fill();
+  ctx.fillStyle = skin; ctx.beginPath(); ctx.ellipse(hx - 0.118, hy + 0.01, 0.028, 0.045, -0.2, 0, Math.PI * 2); ctx.ellipse(hx + 0.118, hy + 0.01, 0.028, 0.045, 0.2, 0, Math.PI * 2); ctx.fill();
+  const hair = pl.i ? '#2a1c14' : '#4a3222';
+  const hg = ctx.createRadialGradient(hx + 0.04, hy - 0.06, 0.01, hx, hy, 0.16);
+  hg.addColorStop(0, shade(hair, 0.25)); hg.addColorStop(1, hair);
+  ctx.fillStyle = hg; ctx.beginPath(); ctx.ellipse(hx, hy - 0.01, 0.12, 0.14, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.lineWidth = 0.008;
+  for (let k = -1; k <= 1; k++) { ctx.beginPath(); ctx.moveTo(hx + k * 0.04, hy - 0.08); ctx.quadraticCurveTo(hx + k * 0.05, hy, hx + k * 0.045, hy + 0.09); ctx.stroke(); }
   ctx.restore();
+  return hand;
 }
 
 // The ball: leather, its streak when it flies fast, its shadow.
@@ -680,6 +749,33 @@ function judge(ctx, m, t, light) {
   ctx.restore();
 }
 
+// The aim: an arrow on the floor at the striker's feet showing the shot the
+// held direction will play, and its name.
+export function drawAim(ctx, pl, aim, t) {
+  if (!aim) return;
+  const C = COURT, to = {
+    drive: [pl.x, pl.y - 5], txoko: [0.6, pl.y - 4.5], ancho: [C.w - 0.4, pl.y - 4.5], globo: [pl.x, pl.y - 5], dejada: [pl.x, pl.y - 2.6],
+  }[aim.kind];
+  const [x0, y0, s0] = project(pl.x, pl.y - 0.3, 0.02);
+  const [x1, y1] = project(to[0], to[1], 0.02);
+  const pulse = 0.75 + Math.sin(t * 8) * 0.2;
+  ctx.save();
+  ctx.strokeStyle = `rgba(255,236,160,${pulse})`; ctx.fillStyle = `rgba(255,236,160,${pulse})`;
+  ctx.lineWidth = Math.max(3, 0.12 * s0); ctx.lineCap = 'round'; ctx.setLineDash([10, 8]);
+  ctx.beginPath(); ctx.moveTo(x0, y0);
+  if (aim.kind === 'globo') { ctx.quadraticCurveTo((x0 + x1) / 2, y0 - 90, x1, y1 - 20); } else ctx.lineTo(x1, y1);
+  ctx.stroke(); ctx.setLineDash([]);
+  const ex = x1, ey = aim.kind === 'globo' ? y1 - 20 : y1, a = Math.atan2(ey - (aim.kind === 'globo' ? y0 - 60 : y0), ex - x0);
+  ctx.beginPath(); ctx.moveTo(ex + Math.cos(a) * 10, ey + Math.sin(a) * 10);
+  ctx.lineTo(ex + Math.cos(a + 2.5) * 12, ey + Math.sin(a + 2.5) * 12); ctx.lineTo(ex + Math.cos(a - 2.5) * 12, ey + Math.sin(a - 2.5) * 12); ctx.fill();
+  // The shot's name in a small pill by the feet.
+  ctx.font = 'bold 13px "Trebuchet MS", sans-serif'; ctx.textAlign = 'center';
+  const w = ctx.measureText(aim.label).width + 14, lx = x0, ly = y0 + 22;
+  ctx.fillStyle = 'rgba(28,20,12,0.8)'; ctx.beginPath(); ctx.roundRect(lx - w / 2, ly - 12, w, 18, 9); ctx.fill();
+  ctx.fillStyle = '#ffe9a0'; ctx.fillText(aim.label, lx, ly + 2);
+  ctx.restore();
+}
+
 // The whole court with the match in progress.
 export function drawCourt(ctx, m, t, view = {}) {
   const light = view.light ?? 'sunset';
@@ -690,6 +786,7 @@ export function drawCourt(ctx, m, t, view = {}) {
   judge(ctx, m, t, light);
   drawMarks(ctx, view.marks ?? []);
   drawTiming(ctx, m, view.perfectAt ?? 0.84);
+  for (const a of view.aims ?? []) if (a) drawAim(ctx, m.p[a.p], a, t);
   if (LIGHTS[light].floods) {
     // Dew on the floor: faint reflections of the players.
     for (const pl of m.p) {

@@ -34,7 +34,9 @@
     "high": 2.3,
     "sweet": 0.95,
     "swing": 0.3,
-    "buffer": 0.14
+    "buffer": 0.3,
+    "lunge": 2.6,
+    "lungeSpeed": 11
   },
   "shots": {
     "serve": {
@@ -129,7 +131,7 @@
     "perfectPower": 1.15,
     "height": 0.55,
     "distance": 0.6,
-    "early": 2.5
+    "early": 1.0
   },
   "opponents": {
     "txiki": {
