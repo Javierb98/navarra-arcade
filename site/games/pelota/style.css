@@ -224,9 +224,10 @@ h1, h2, h3, p { margin: 0; }
 .fb b.poor { color: #e8c8b8; font-size: 24px; }
 .fb span { font: bold 15px var(--sans); color: #fff; text-shadow: 0 1px 4px #000; margin-top: 2px; }
 @keyframes fbUp { from { transform: translate(-50%, 10px) scale(.9); opacity: 0; } 20% { transform: translate(-50%, 0) scale(1.05); opacity: 1; } 75% { opacity: 1; } to { transform: translate(-50%, -24px); opacity: 0; } }
-.txapela { justify-content: flex-end; }
-.txapela-card { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); max-width: 600px; padding: 14px 28px; text-align: center; }
-.txapela-card h2 { font-size: 40px; color: #8a2018; }
+.txapela { justify-content: flex-start; }
+.txapela-card { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); max-width: 600px; padding: 14px 28px; text-align: center; }
+.txapela-card h2 { font-size: 36px; color: #8a2018; }
+.txapela-card p { font-size: 17px; }
 
 /* Keyboard keys next to the button glyphs, at a computer. */
 kbd {
