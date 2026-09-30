@@ -25,7 +25,7 @@
   "title.press": "Sakatu [START]",
   "title.players": "1 edo 2 jokalari · gorria urdinaren aurka",
   "menu.players": "Jokalariak",
-  "menu.players.1": "Jokalari 1: jaietako txapelketa",
+  "menu.players.1": "Jokalari 1: txapelketa makinaren aurka",
   "menu.players.2": "2 jokalari, gorria urdinaren aurka",
   "menu.difficulty": "Zailtasuna",
   "menu.difficulty.easy": "Erraza",
@@ -129,5 +129,6 @@
   "gl.txapela.text": "Euskal txapela. Euskal kiroletan, txapelduna txapela batekin saritzen da.",
   "fact.txapela": "Euskal kiroletan, txapelketa bateko irabazleari txapela jartzen zaio, kopa eman beharrean.",
   "help.hit": "[A] kolpea · [B] dejada",
-  "help.aim": "Apuntatzeko, jo bitartean eutsi {l} txokoa, {r} zabalera edo {d} globoa"
+  "help.aim": "Apuntatzeko, jo bitartean eutsi {l} txokoa, {r} zabalera edo {d} globoa",
+  "menu.duo.note": "Gorria urdinaren aurka, 7 tantora. Minutu gutxiko partida azkarra."
 }

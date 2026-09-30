@@ -25,7 +25,7 @@
   "title.press": "Pulsa [START]",
   "title.players": "1 o 2 jugadores · rojo contra azul",
   "menu.players": "Jugadores",
-  "menu.players.1": "1 jugador: torneo de las fiestas",
+  "menu.players.1": "1 jugador: torneo contra la máquina",
   "menu.players.2": "2 jugadores, rojo contra azul",
   "menu.difficulty": "Dificultad",
   "menu.difficulty.easy": "Fácil",
@@ -129,5 +129,6 @@
   "gl.txapela.text": "La boina vasca. En los deportes vascos, al campeón se le pone una txapela como trofeo.",
   "fact.txapela": "En los deportes vascos, al ganador de un campeonato se le pone una txapela en vez de darle una copa.",
   "help.hit": "[A] golpe · [B] dejada",
-  "help.aim": "Apunta manteniendo {l} txoko, {r} ancho o {d} globo al golpear"
+  "help.aim": "Apunta manteniendo {l} txoko, {r} ancho o {d} globo al golpear",
+  "menu.duo.note": "Rojo contra azul, a 7 tantos. Un partido rápido de unos minutos."
 }

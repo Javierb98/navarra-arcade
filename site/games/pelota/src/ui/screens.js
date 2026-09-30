@@ -133,7 +133,7 @@ export function attract(app) {
 // ---- menu -------------------------------------------------------------------------------------
 
 export function menu(app) {
-  const S = { players: 1, difficulty: settings.difficulty };
+  const S = { players: 2, difficulty: settings.difficulty }; // made for two; one player gets the tournament
   const rows = ['players', 'difficulty', 'lang', 'go'];
   let row = 0;
   const value = (r) => {
@@ -145,7 +145,7 @@ export function menu(app) {
     h('h1', { class: 'logo small' }, t('title.name')),
     h('div', { class: 'rows' }, rows.map((r, i) => h('div', { class: `row row-${r} ${i === row ? 'sel' : ''}` },
       r !== 'go' ? h('span', { class: 'label' }, t(`menu.${r}`)) : null, value(r)))),
-    h('p', { class: 'note' }, t(`menu.${S.difficulty}.note`)),
+    h('p', { class: 'note' }, S.players === 2 ? t('menu.duo.note') : t(`menu.${S.difficulty}.note`)),
     h('p', { class: 'hint' }, rich(t('menu.hint'))))));
   show();
   const change = (dir) => {
