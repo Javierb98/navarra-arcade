@@ -307,11 +307,21 @@ function paintLeftWall(g, L) {
   for (let k = 1; k <= 7; k++) {
     const y = k * 4;
     g.strokeStyle = 'rgba(255,255,255,0.85)'; g.lineWidth = 2; line3(g, [0, y, 0], [0, y, 2.2]);
-    onWall(g, y + 0.05, y - 0.95, 3.1, 2.35, (c) => {
-      c.fillStyle = 'rgba(245,238,224,0.9)'; c.fillRect(0, 0, 100, 100);
-      c.strokeStyle = '#2e5a8a'; c.lineWidth = 6; c.strokeRect(6, 6, 88, 88);
-      c.fillStyle = '#2e5a8a'; c.font = 'bold 78px Georgia, serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
-      c.fillText(String(k), 50, 56);
+    // Big white numerals painted straight onto the stone, just past the line.
+    // The wall recedes steeply, so the numeral is laid out along enough of
+    // it to keep a natural shape on screen.
+    const zTop = 2.9, zBot = 1.7;
+    const [, yA] = project(0, y, zTop), [, yB] = project(0, y, zBot);
+    const hPx = Math.abs(yB - yA);
+    let y1 = y - 0.2;
+    while (y1 > y - 6 && Math.abs(project(0, y1, zTop)[0] - project(0, y, zTop)[0]) < hPx * 0.62) y1 -= 0.05;
+    onWall(g, y - 0.15, y1 - 0.15, zTop, zBot, (c) => {
+      c.font = 'bold 118px "Trebuchet MS", "DejaVu Sans", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.lineWidth = 7; c.strokeStyle = 'rgba(90,64,40,0.35)'; c.strokeText(String(k), 50, 56);
+      c.fillStyle = 'rgba(250,248,240,0.92)'; c.fillText(String(k), 50, 56);
+      // Worn paint: a few flecks of stone showing through.
+      c.fillStyle = 'rgba(200,170,120,0.35)';
+      for (let f = 0; f < 10; f++) c.fillRect(20 + ((f * 37 + k * 11) % 60), 15 + ((f * 53 + k * 7) % 80), 3, 2);
     });
   }
   for (let y = 1; y < far; y += 0.5) {
@@ -564,86 +574,105 @@ export function pelotari(ctx, pl, t, { turn = false, anim = {}, light = 'sunset'
     ctx.globalAlpha = 1;
   }
   ctx.save(); ctx.translate(sx, sy); ctx.scale(s, s); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-  const hipY = -0.95 + crouch - bob;
-  // Legs: thigh and shin with a bending knee, white trousers shaded on the far side.
-  const trou = '#f2eee6', trouD = '#cfc8ba';
-  const legs = moving ? [Math.sin(run), -Math.sin(run)] : ready ? [0.35, -0.35] : [0.12, -0.12];
-  legs.forEach((ph, k) => {
+  // Seen from behind, limbs swing toward and away from the camera, so a
+  // swing shows as a limb getting shorter and the foot lifting, not as a
+  // sideways splay.
+  const hipY = -0.94 + crouch - bob;
+  const cx = lean * 0.6;
+  const stance = ready ? 0.15 : 0.09;
+  const trou = '#f3efe7', trouD = '#d6cfc2', skin = '#e3ad84', skinD = '#bb8660';
+  // Legs: far (left) then near (right).
+  const legPh = moving ? [Math.sin(run), -Math.sin(run)] : [0, 0];
+  legPh.forEach((ph, k) => {
     const side = k ? 1 : -1;
-    const hip = [side * 0.1 + lean * 0.3, hipY];
-    const knee = [side * (0.12 + (ready ? 0.06 : 0)) + ph * 0.1, hipY + 0.45 - Math.max(0, ph) * 0.06];
-    const foot = [side * (0.13 + (ready ? 0.1 : 0)) + ph * 0.16, -0.05 - Math.max(0, ph) * 0.1];
-    ctx.strokeStyle = k ? trouD : trou; ctx.lineWidth = 0.17;
-    ctx.beginPath(); ctx.moveTo(...hip); ctx.lineTo(...knee); ctx.stroke();
-    ctx.lineWidth = 0.135; ctx.beginPath(); ctx.moveTo(...knee); ctx.lineTo(...foot); ctx.stroke();
-    // A crease behind the knee.
-    ctx.strokeStyle = 'rgba(120,110,95,0.35)'; ctx.lineWidth = 0.012;
-    ctx.beginPath(); ctx.moveTo(knee[0] - 0.05, knee[1] - 0.01); ctx.quadraticCurveTo(knee[0], knee[1] + 0.03, knee[0] + 0.05, knee[1] - 0.01); ctx.stroke();
-    // Shoe: white canvas with a dark sole, seen from behind.
-    ctx.fillStyle = '#3a3230'; ctx.beginPath(); ctx.ellipse(foot[0], foot[1] + 0.045, 0.075, 0.03, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#f7f5f0'; ctx.beginPath(); ctx.ellipse(foot[0], foot[1] + 0.01, 0.07, 0.05, 0, 0, Math.PI * 2); ctx.fill();
+    const lift = Math.max(0, ph) * 0.2;        // the foot kicks up behind
+    const hx = cx + side * 0.085, fx = side * (stance + 0.02);
+    const kneeY = hipY + 0.44 - lift * 0.3, footY = -0.04 - lift;
+    ctx.fillStyle = k ? trouD : trou;
+    ctx.beginPath();
+    ctx.moveTo(hx - 0.085, hipY); ctx.lineTo(hx + 0.085, hipY);
+    ctx.lineTo(fx + 0.07, kneeY); ctx.lineTo(fx + 0.06, footY - 0.03);
+    ctx.lineTo(fx - 0.06, footY - 0.03); ctx.lineTo(fx - 0.075, kneeY); ctx.closePath(); ctx.fill();
+    // Shoe: when the foot lifts we see its sole.
+    ctx.fillStyle = lift > 0.05 ? '#8a7a6a' : '#fafaf6';
+    ctx.beginPath(); ctx.ellipse(fx, footY, 0.068, lift > 0.05 ? 0.05 : 0.04, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#3a3230'; ctx.fillRect(fx - 0.065, footY + 0.02, 0.13, 0.022);
   });
-  // Seat of the trousers.
-  ctx.fillStyle = trou;
-  ctx.beginPath(); ctx.moveTo(-0.19 + lean * 0.3, hipY - 0.08); ctx.lineTo(0.19 + lean * 0.3, hipY - 0.08); ctx.lineTo(0.2 + lean * 0.3, hipY + 0.06); ctx.quadraticCurveTo(lean * 0.3, hipY + 0.12, -0.2 + lean * 0.3, hipY + 0.06); ctx.fill();
-  // The torso twists into the swing: the shoulder line rotates.
-  const twist = swing >= 0 ? Math.sin(swing * Math.PI) * 0.09 : ready ? -0.03 : 0;
-  const top = hipY - 0.55, cx = lean;
-  const shL = [cx - 0.23 - twist, top + 0.02 + twist * 0.3], shR = [cx + 0.23 - twist * 0.2, top - twist * 0.3];
-  // Arms behind the torso first (the far arm), then the shirt, then the near arm.
-  const skin = '#e6b48c', skinD = '#bf8a64';
-  const armL = moving ? -Math.sin(run) * 0.6 : ready ? -0.5 : 0.15;
-  const drawArm = (sh, a1, a2, colourUpper, colourLower, tape) => {
-    const el = [sh[0] + Math.sin(a1) * 0.27, sh[1] + Math.cos(a1) * 0.27];
-    const hd = [el[0] + Math.sin(a1 + a2) * 0.25, el[1] + Math.cos(a1 + a2) * 0.25];
-    ctx.strokeStyle = colourUpper; ctx.lineWidth = 0.105; ctx.beginPath(); ctx.moveTo(...sh); ctx.lineTo(...el); ctx.stroke();
-    ctx.strokeStyle = colourLower; ctx.lineWidth = 0.085; ctx.beginPath(); ctx.moveTo(...el); ctx.lineTo(...hd); ctx.stroke();
-    ctx.fillStyle = tape ? '#fbf9f4' : colourLower; ctx.beginPath(); ctx.ellipse(hd[0], hd[1], 0.055, 0.065, a1 + a2, 0, Math.PI * 2); ctx.fill();
-    return hd;
+  // The shirt: a polo tucked into the trousers, shoulders rounded.
+  const twist = swing >= 0 ? Math.sin(swing * Math.PI) * 0.06 : 0;
+  const top = hipY - 0.56;
+  const sw = 0.22; // half shoulder width
+  const shirtG = ctx.createLinearGradient(cx - sw, 0, cx + sw, 0);
+  shirtG.addColorStop(0, shade(T.shirt, -0.3)); shirtG.addColorStop(0.55, T.shirt); shirtG.addColorStop(1, shade(T.shirt, 0.18));
+  // Far arm first, behind the body.
+  const arm = (shx, shy, fwd, out, near) => {
+    // fwd: -1 (back) .. 1 (forward, away from camera): foreshortens the arm.
+    const len = 0.52 * (1 - Math.abs(fwd) * 0.45);
+    const elx = shx + out * 0.05, ely = shy + len * 0.5;
+    const hx2 = shx + out * 0.07, hy2 = shy + len;
+    ctx.strokeStyle = near ? skin : skinD; ctx.lineWidth = 0.075;
+    ctx.beginPath(); ctx.moveTo(shx, shy + 0.1); ctx.lineTo(elx, ely); ctx.lineTo(hx2, hy2); ctx.stroke();
+    // Sleeve over the upper arm.
+    ctx.fillStyle = near ? T.shirt : shade(T.shirt, -0.25);
+    ctx.beginPath(); ctx.ellipse(shx + out * 0.015, shy + 0.08, 0.06, 0.1, 0, 0, Math.PI * 2); ctx.fill();
+    // Hand, with a white band of tape across the palm.
+    ctx.fillStyle = near ? skin : skinD; ctx.beginPath(); ctx.arc(hx2, hy2 + 0.02, 0.04, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#f6f3ec'; ctx.fillRect(hx2 - 0.04, hy2 + 0.005, 0.08, 0.025);
   };
-  drawArm([shL[0] + 0.02, shL[1] + 0.04], -0.25 + armL * 0.5, 0.4 + Math.max(0, armL) * 0.4, skinD, skinD, true);
-  // Shirt: short sleeves, shoulder blades, a crease down the back; shaded from the light.
-  const tg = ctx.createLinearGradient(cx - 0.3, 0, cx + 0.3, 0);
-  tg.addColorStop(0, shade(T.shirt, -0.32)); tg.addColorStop(0.5, T.shirt); tg.addColorStop(1, shade(T.shirt, 0.2));
-  ctx.fillStyle = tg;
+  const swingArm = moving ? Math.sin(run) : 0;
+  arm(cx - sw + 0.02, top + 0.02, -swingArm, -1, false);
+  // Body.
+  ctx.fillStyle = shirtG;
   ctx.beginPath();
-  ctx.moveTo(cx - 0.17, hipY - 0.07);
-  ctx.quadraticCurveTo(cx - 0.21, top + 0.3, shL[0] - 0.02, shL[1] + 0.08);
-  ctx.lineTo(shL[0] - 0.05, shL[1] + 0.16); ctx.lineTo(shL[0] + 0.05, shL[1] + 0.2); // sleeve
-  ctx.quadraticCurveTo(shL[0] + 0.02, shL[1] - 0.02, cx - 0.06, top - 0.05);
-  ctx.quadraticCurveTo(cx, top - 0.07, cx + 0.06, top - 0.05);
-  ctx.quadraticCurveTo(shR[0] - 0.02, shR[1] - 0.02, shR[0] - 0.05, shR[1] + 0.2);
-  ctx.lineTo(shR[0] + 0.05, shR[1] + 0.16); ctx.lineTo(shR[0] + 0.02, shR[1] + 0.08); // sleeve
-  ctx.quadraticCurveTo(cx + 0.21, top + 0.3, cx + 0.17, hipY - 0.07);
+  ctx.moveTo(cx - 0.17, hipY + 0.02);
+  ctx.lineTo(cx - 0.185, top + 0.2);
+  ctx.quadraticCurveTo(cx - sw - 0.01, top + 0.04, cx - sw + 0.05, top - 0.01);
+  ctx.quadraticCurveTo(cx, top - 0.06, cx + sw - 0.05, top - 0.01);
+  ctx.quadraticCurveTo(cx + sw + 0.01, top + 0.04, cx + 0.185, top + 0.2);
+  ctx.lineTo(cx + 0.17, hipY + 0.02);
   ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = 'rgba(0,0,0,0.16)'; ctx.lineWidth = 0.014;
-  ctx.beginPath(); ctx.moveTo(cx - 0.02, top + 0.06); ctx.quadraticCurveTo(cx + 0.01, top + 0.3, cx - 0.01, hipY - 0.1); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(cx - 0.14, top + 0.12); ctx.quadraticCurveTo(cx - 0.1, top + 0.2, cx - 0.04, top + 0.16); ctx.moveTo(cx + 0.14, top + 0.12); ctx.quadraticCurveTo(cx + 0.1, top + 0.2, cx + 0.04, top + 0.16); ctx.stroke();
-  // Rim of light on the lit side.
-  ctx.strokeStyle = light === 'night' ? 'rgba(255,248,220,0.35)' : 'rgba(255,232,190,0.6)'; ctx.lineWidth = 0.02;
-  ctx.beginPath(); ctx.moveTo(shR[0] + 0.03, shR[1] + 0.12); ctx.quadraticCurveTo(cx + 0.2, top + 0.3, cx + 0.16, hipY - 0.1); ctx.stroke();
-  // A belt where shirt meets trousers.
-  ctx.fillStyle = shade(T.shirtD, -0.25); ctx.fillRect(cx - 0.18, hipY - 0.1, 0.36, 0.035);
-  // The striking arm: back and low when ready, whipping through the ball.
-  let a1, a2;
-  if (swing >= 0) { a1 = -2.6 + swing * 3.9; a2 = 0.5 - swing * 0.6; }
-  else if (ready) { a1 = 1.1; a2 = 0.7; }
-  else { a1 = moving ? Math.sin(run) * 0.6 : 0.1; a2 = 0.35; }
-  const hand = drawArm([shR[0] - 0.02, shR[1] + 0.04], a1, a2, T.shirt, skin, true);
-  if (swing >= 0 && swing < 0.75) {
-    ctx.strokeStyle = `rgba(255,250,235,${0.55 * (1 - swing)})`; ctx.lineWidth = 0.05;
-    ctx.beginPath(); ctx.arc(shR[0], shR[1], 0.5, -Math.PI / 2 - 1.1, -Math.PI / 2 - 1.1 + swing * 2.6); ctx.stroke();
+  // Soft folds where the shirt tucks in.
+  ctx.strokeStyle = 'rgba(0,0,0,0.1)'; ctx.lineWidth = 0.012;
+  ctx.beginPath(); ctx.moveTo(cx - 0.1, hipY - 0.12); ctx.quadraticCurveTo(cx - 0.06, hipY - 0.02, cx - 0.02, hipY); ctx.moveTo(cx + 0.09, hipY - 0.1); ctx.quadraticCurveTo(cx + 0.06, hipY - 0.02, cx + 0.03, hipY); ctx.stroke();
+  // Collar.
+  ctx.fillStyle = shade(T.shirt, -0.15); ctx.beginPath(); ctx.ellipse(cx, top - 0.02, 0.08, 0.03, 0, 0, Math.PI * 2); ctx.fill();
+  // Trouser waistband.
+  ctx.fillStyle = trou; ctx.fillRect(cx - 0.175, hipY - 0.005, 0.35, 0.045);
+  // Light along the lit edge.
+  ctx.strokeStyle = light === 'night' ? 'rgba(255,248,220,0.3)' : 'rgba(255,232,190,0.55)'; ctx.lineWidth = 0.018;
+  ctx.beginPath(); ctx.moveTo(cx + sw - 0.04, top + 0.02); ctx.quadraticCurveTo(cx + 0.19, top + 0.2, cx + 0.17, hipY - 0.02); ctx.stroke();
+  // Near (right, striking) arm.
+  let hand;
+  if (swing >= 0 || ready) {
+    // The swing: from low behind the hip, up and forward past the shoulder.
+    const k = swing >= 0 ? swing : 0;
+    const ang = -0.4 - k * 2.4; // radians, from pointing down-right to up-left-ish
+    const shx = cx + sw - 0.02 - twist, shy = top + 0.03;
+    const reach = 0.5 * (1 - Math.sin(k * Math.PI) * 0.25);
+    const ex = shx + Math.cos(ang + Math.PI / 2) * reach * 0.5, ey = shy + Math.sin(ang + Math.PI / 2) * reach * 0.5;
+    const hx2 = shx + Math.cos(ang + Math.PI / 2 - 0.2) * reach, hy2 = shy + Math.sin(ang + Math.PI / 2 - 0.2) * reach;
+    ctx.fillStyle = T.shirt; ctx.beginPath(); ctx.ellipse(shx, shy + 0.07, 0.06, 0.1, ang * 0.3, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = skin; ctx.lineWidth = 0.075; ctx.beginPath(); ctx.moveTo(shx, shy + 0.1); ctx.lineTo(ex, ey); ctx.lineTo(hx2, hy2); ctx.stroke();
+    ctx.fillStyle = skin; ctx.beginPath(); ctx.arc(hx2, hy2, 0.042, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#f6f3ec'; ctx.fillRect(hx2 - 0.042, hy2 - 0.012, 0.084, 0.025);
+    hand = [hx2, hy2];
+    if (swing >= 0 && swing < 0.7) {
+      ctx.strokeStyle = `rgba(255,250,235,${0.5 * (1 - swing)})`; ctx.lineWidth = 0.04;
+      ctx.beginPath(); ctx.arc(shx, shy, reach * 0.95, Math.PI / 2 - 0.6, Math.PI / 2 - 0.6 - k * 2.4, true); ctx.stroke();
+    }
+  } else {
+    arm(cx + sw - 0.02, top + 0.02, swingArm, 1, true);
   }
-  // Neck and head from behind: short dark hair with a crown, ears.
-  const hx = cx - twist * 0.3, hy = top - 0.19;
-  ctx.fillStyle = skinD; ctx.beginPath(); ctx.moveTo(hx - 0.055, top - 0.03); ctx.lineTo(hx - 0.045, hy + 0.06); ctx.lineTo(hx + 0.045, hy + 0.06); ctx.lineTo(hx + 0.055, top - 0.03); ctx.fill();
-  ctx.fillStyle = skin; ctx.beginPath(); ctx.ellipse(hx - 0.118, hy + 0.01, 0.028, 0.045, -0.2, 0, Math.PI * 2); ctx.ellipse(hx + 0.118, hy + 0.01, 0.028, 0.045, 0.2, 0, Math.PI * 2); ctx.fill();
+  // Neck and head from behind: hair with a lit crown, ears.
+  const hx = cx - twist * 0.3, hy = top - 0.17;
+  ctx.fillStyle = skinD; ctx.fillRect(hx - 0.045, top - 0.1, 0.09, 0.1);
+  ctx.fillStyle = skin; ctx.beginPath(); ctx.ellipse(hx - 0.112, hy + 0.02, 0.026, 0.042, -0.2, 0, Math.PI * 2); ctx.ellipse(hx + 0.112, hy + 0.02, 0.026, 0.042, 0.2, 0, Math.PI * 2); ctx.fill();
   const hair = pl.i ? '#2a1c14' : '#4a3222';
-  const hg = ctx.createRadialGradient(hx + 0.04, hy - 0.06, 0.01, hx, hy, 0.16);
-  hg.addColorStop(0, shade(hair, 0.25)); hg.addColorStop(1, hair);
-  ctx.fillStyle = hg; ctx.beginPath(); ctx.ellipse(hx, hy - 0.01, 0.12, 0.14, 0, 0, Math.PI * 2); ctx.fill();
-  ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.lineWidth = 0.008;
-  for (let k = -1; k <= 1; k++) { ctx.beginPath(); ctx.moveTo(hx + k * 0.04, hy - 0.08); ctx.quadraticCurveTo(hx + k * 0.05, hy, hx + k * 0.045, hy + 0.09); ctx.stroke(); }
+  const hg = ctx.createRadialGradient(hx + 0.035, hy - 0.06, 0.01, hx, hy, 0.15);
+  hg.addColorStop(0, shade(hair, 0.3)); hg.addColorStop(1, hair);
+  ctx.fillStyle = hg; ctx.beginPath(); ctx.ellipse(hx, hy, 0.115, 0.13, 0, 0, Math.PI * 2); ctx.fill();
+  // Short hair at the nape.
+  ctx.fillStyle = hair; ctx.beginPath(); ctx.moveTo(hx - 0.09, hy + 0.06); ctx.quadraticCurveTo(hx, hy + 0.15, hx + 0.09, hy + 0.06); ctx.fill();
   ctx.restore();
   return hand;
 }
