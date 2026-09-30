@@ -1,0 +1,11 @@
+{
+  "name": "navarra-arcade",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Game menu and launcher for the Navarra history arcade games.",
+  "scripts": {
+    "start": "./fire-up-arcade",
+    "test": "node --test tests/*.test.js"
+  }
+}

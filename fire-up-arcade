@@ -1,0 +1,9 @@
+#!/bin/sh
+# Start the Navarra arcade: the game menu plus every game, each on its own
+# port, and open the menu in the browser. Ctrl+C stops everything.
+#   ./fire-up-arcade          start and open the menu
+#   ./fire-up-arcade --all    include hidden games too
+#   ./fire-up-arcade --no-open  start without opening a browser window
+# Works from anywhere, including through a link to this file.
+here=$(cd "$(dirname "$(readlink -f "$0" 2>/dev/null || realpath "$0")")" && pwd)
+exec python3 "$here/start.py" --open "$@"

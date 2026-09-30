@@ -1,0 +1,163 @@
+{
+  "_note": "The arcade menu. Each game is a folder served on its own port; the menu lists them in this order. status: ready (playable), soon (shown greyed out), hidden (not shown or served). Ports 8000-8010 are off limits on the dev machine. lesson/era/place/controls fill the info panel; history text is a draft for a historian to check. url is where the game lives online (GitHub Pages); the menu uses it when it is itself online, and the local port when run with fire-up-arcade.",
+  "menuPort": 8700,
+  "games": [
+    {
+      "id": "almadia",
+      "folder": "../navarra-almadia",
+      "port": 8710,
+      "url": "https://javierb98.github.io/navarra-almadia/",
+      "status": "ready",
+      "thumb": "assets/thumbs/almadia.png",
+      "players": "1-2",
+      "title": {
+        "es": "¡Almadía!",
+        "eu": "Almadia!",
+        "en": "Almadía!"
+      },
+      "blurb": {
+        "es": "Baja los ríos de Navarra en una balsa de troncos, del Pirineo al mar.",
+        "eu": "Jaitsi Nafarroako ibaiak enbor-almadia batean, Pirinioetatik itsasora.",
+        "en": "Ride a log raft down the rivers of Navarra, from the Pyrenees to the sea."
+      },
+      "lesson": {
+        "es": "Cómo viajaba la madera del Pirineo por los ríos hasta el mar, y por qué los almadieros tenían que trabajar en equipo para guiar sus balsas.",
+        "eu": "Nola bidaiatzen zuen Pirinioetako egurrak ibaietan behera itsasoraino, eta zergatik lan egin behar zuten almadiazainek taldean almadiak gidatzeko.",
+        "en": "How Pyrenean timber travelled down the rivers to the sea, and why the almadieros had to work as a team to steer their rafts."
+      },
+      "era": {
+        "es": "Oficio tradicional, hasta el siglo XX",
+        "eu": "Ohiko ofizioa, XX. mendera arte",
+        "en": "A traditional trade, into the 20th century"
+      },
+      "place": {
+        "es": "Ríos Esca, Salazar, Aragón y Ebro",
+        "eu": "Esca, Zaraitzu, Aragoi eta Ebro ibaiak",
+        "en": "The Esca, Salazar, Aragón and Ebro rivers"
+      },
+      "controls": {
+        "es": "Joystick y botones",
+        "eu": "Joystick-a eta botoiak",
+        "en": "Stick and buttons"
+      }
+    },
+    {
+      "id": "pax-avant",
+      "folder": "../navarra-pax-avant",
+      "port": 8720,
+      "url": "https://javierb98.github.io/navarra-pax-avant/",
+      "status": "ready",
+      "thumb": "assets/thumbs/pax-avant.png",
+      "players": "1-2",
+      "title": {
+        "es": "Pax Avant",
+        "eu": "Pax Avant",
+        "en": "Pax Avant"
+      },
+      "blurb": {
+        "es": "Pastores de Roncal y Baretous comparten los pastos: el Tributo de las Tres Vacas.",
+        "eu": "Erronkari eta Baretoko artzainek larreak partekatzen dituzte: Hiru Behien Zerga.",
+        "en": "Shepherds of Roncal and Barétous share the pastures: the Tribute of the Three Cows."
+      },
+      "lesson": {
+        "es": "Por qué los valles de Roncal y Baretous hicieron las paces por los pastos y el agua, y cómo lo celebran aún cada 13 de julio en la Piedra de San Martín.",
+        "eu": "Zergatik egin zituzten bakeak Erronkari eta Baretoko ibarrek larre eta uragatik, eta nola ospatzen duten oraindik uztailaren 13an San Martin Harrian.",
+        "en": "Why the Roncal and Barétous valleys made peace over pastures and water, and how they still celebrate it every 13 July at the San Martín stone."
+      },
+      "era": {
+        "es": "Tratado de 1375 (se cuenta) · hoy",
+        "eu": "1375eko ituna (diotenez) · gaur",
+        "en": "Treaty of 1375 (so it's said) · today"
+      },
+      "place": {
+        "es": "Piedra de San Martín, valle de Roncal",
+        "eu": "San Martin Harria, Erronkari ibarra",
+        "en": "San Martín stone, Roncal valley"
+      },
+      "controls": {
+        "es": "Joystick y botones",
+        "eu": "Joystick-a eta botoiak",
+        "en": "Stick and buttons"
+      }
+    },
+    {
+      "id": "olite",
+      "folder": "../navarra-olite",
+      "port": 8730,
+      "url": "https://javierb98.github.io/navarra-olite/",
+      "status": "soon",
+      "thumb": "art:olite",
+      "players": "1-2",
+      "title": {
+        "es": "Olite",
+        "eu": "Erriberri",
+        "en": "Olite"
+      },
+      "blurb": {
+        "es": "Construye la ciudad y el palacio real de Carlos III el Noble.",
+        "eu": "Eraiki Karlos III.a Noblearen hiria eta errege-jauregia.",
+        "en": "Build the town and royal palace of Charles III the Noble."
+      },
+      "lesson": {
+        "es": "Cómo crecieron una villa medieval y su palacio real, y cuánta gente hacía falta para ello: campesinos, canteros, artesanos y comerciantes.",
+        "eu": "Nola hazi ziren Erdi Aroko hiribildu bat eta bere errege-jauregia, eta zenbat jende behar zen horretarako: nekazariak, hargin, artisau eta merkatariak.",
+        "en": "How a medieval town and its royal palace grew, and how many people it took: farmers, stonemasons, craftspeople and merchants."
+      },
+      "era": {
+        "es": "Carlos III el Noble, 1387–1425",
+        "eu": "Karlos III.a Noblea, 1387–1425",
+        "en": "Charles III the Noble, 1387–1425"
+      },
+      "place": {
+        "es": "Olite",
+        "eu": "Erriberri",
+        "en": "Olite"
+      },
+      "controls": {
+        "es": "Joystick y botones",
+        "eu": "Joystick-a eta botoiak",
+        "en": "Stick and buttons"
+      }
+    },
+    {
+      "id": "espadas",
+      "folder": "../navarra-1212/mountain-kings",
+      "port": 8740,
+      "url": "https://javierb98.github.io/navarra-1212/",
+      "status": "ready",
+      "thumb": "assets/thumbs/espadas.png",
+      "players": "1",
+      "title": {
+        "es": "Espadas de Hispania",
+        "eu": "Espadas de Hispania",
+        "en": "Espadas de Hispania"
+      },
+      "blurb": {
+        "es": "Batallas de la España medieval, 722-1212.",
+        "eu": "Erdi Aroko Espainiako guduak, 722-1212.",
+        "en": "Battles of medieval Spain, 722-1212."
+      },
+      "_note": "Played with a mouse (or keyboard). Leave by holding Esc or 1 for two seconds, or the corner button. No Basque yet: Euskara opens it in Castellano.",
+      "lesson": {
+        "es": "Cuatro batallas de la península, de Covadonga a Las Navas de Tolosa, y cómo se luchaba de verdad: formaciones, moral y terreno. Separa la leyenda de lo documentado.",
+        "eu": "Penintsulako lau gudu, Covadongatik Navas de Tolosaraino, eta nola borrokatzen zen benetan: formazioak, morala eta lurra. Kondaira eta dokumentatutakoa bereizten ditu.",
+        "en": "Four battles of the peninsula, from Covadonga to Las Navas de Tolosa, and how fighting really worked: formations, morale and terrain. It separates legend from record."
+      },
+      "era": {
+        "es": "722–1212",
+        "eu": "722–1212",
+        "en": "722–1212"
+      },
+      "place": {
+        "es": "Península Ibérica",
+        "eu": "Iberiar penintsula",
+        "en": "The Iberian peninsula"
+      },
+      "controls": {
+        "es": "Se juega con ratón",
+        "eu": "Saguarekin jolasten da",
+        "en": "Played with a mouse"
+      }
+    }
+  ]
+}
