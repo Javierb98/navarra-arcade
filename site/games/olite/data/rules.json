@@ -1,0 +1,48 @@
+{
+  "seasonNames": [
+    "spring",
+    "summer",
+    "autumn",
+    "winter"
+  ],
+  "eatPerPerson": 0.5,
+  "winterEat": 1,
+  "hungerLeaves": 1,
+  "eventChance": 0.55,
+  "difficulty": {
+    "easy": {
+      "hand": 5,
+      "plays": 4,
+      "seasonLimit": false,
+      "eventGoodOnly": true,
+      "bonusStart": {
+        "food": 2,
+        "coin": 2
+      }
+    },
+    "normal": {
+      "hand": 4,
+      "plays": 3,
+      "seasonLimit": true,
+      "eventGoodOnly": false,
+      "bonusStart": {}
+    }
+  },
+  "twoPlayer": {
+    "hand": 3,
+    "plays": 2
+  },
+  "score": {
+    "goalItem": 100,
+    "seasonLeft": 40,
+    "person": 10,
+    "wine": 5,
+    "coin": 3,
+    "hungerPenalty": 30
+  },
+  "stars": {
+    "two": 3,
+    "three": 5
+  },
+  "swapsPerSeason": 1
+}

@@ -1,0 +1,197 @@
+{
+  "_note": "plans: buildings, always on show; build one when you can pay and have what it needs. cards: the deck of action cards drawn into your hand (people who stay, one-off supplies). role: town or builder, which player gets it with two players. cost includes workers, this season's labour. needs: buildings or people you must already have. count: copies in the deck. Text and history lines live in the locale files under card.<id>.*",
+  "plans": [
+    {
+      "id": "house",
+      "role": "town",
+      "cost": {
+        "timber": 1,
+        "stone": 1,
+        "workers": 1
+      },
+      "build": "house"
+    },
+    {
+      "id": "field",
+      "role": "town",
+      "cost": {
+        "coin": 1,
+        "workers": 1
+      },
+      "build": "field"
+    },
+    {
+      "id": "vineyard",
+      "role": "town",
+      "cost": {
+        "coin": 1,
+        "workers": 1
+      },
+      "build": "vineyard"
+    },
+    {
+      "id": "market",
+      "role": "town",
+      "cost": {
+        "timber": 2,
+        "coin": 2,
+        "workers": 1
+      },
+      "build": "market",
+      "needs": {
+        "house": 4
+      }
+    },
+    {
+      "id": "quarry",
+      "role": "builder",
+      "cost": {
+        "coin": 2,
+        "workers": 2
+      },
+      "build": "quarry"
+    },
+    {
+      "id": "mill",
+      "role": "builder",
+      "cost": {
+        "stone": 2,
+        "timber": 1,
+        "workers": 2
+      },
+      "build": "mill",
+      "needs": {
+        "field": 2
+      }
+    },
+    {
+      "id": "press",
+      "role": "builder",
+      "cost": {
+        "stone": 2,
+        "timber": 2,
+        "workers": 2
+      },
+      "build": "press",
+      "needs": {
+        "vineyard": 2
+      }
+    },
+    {
+      "id": "wall",
+      "role": "builder",
+      "cost": {
+        "stone": 5,
+        "timber": 1,
+        "coin": 2,
+        "workers": 3
+      },
+      "build": "wall",
+      "needs": {
+        "mason": 1,
+        "house": 4
+      }
+    }
+  ],
+  "cards": [
+    {
+      "id": "marketday",
+      "type": "supply",
+      "role": "town",
+      "cost": {
+        "workers": 1
+      },
+      "count": 3,
+      "gain": {
+        "coin": 1
+      },
+      "sell": {
+        "wine": 1,
+        "coin": 2
+      }
+    },
+    {
+      "id": "harvest",
+      "type": "supply",
+      "role": "town",
+      "cost": {
+        "workers": 1
+      },
+      "count": 3,
+      "gain": {
+        "food": 3
+      }
+    },
+    {
+      "id": "vereda",
+      "type": "supply",
+      "role": "town",
+      "cost": {},
+      "count": 2,
+      "workers": 3
+    },
+    {
+      "id": "merchant",
+      "type": "people",
+      "role": "town",
+      "cost": {
+        "coin": 1,
+        "food": 1
+      },
+      "count": 1,
+      "hire": "merchant",
+      "needs": {
+        "market": 1
+      }
+    },
+    {
+      "id": "mason",
+      "type": "people",
+      "role": "builder",
+      "cost": {
+        "coin": 2,
+        "food": 1
+      },
+      "count": 2,
+      "hire": "mason",
+      "needs": {
+        "house": 3
+      }
+    },
+    {
+      "id": "carpenter",
+      "type": "people",
+      "role": "builder",
+      "cost": {
+        "coin": 2,
+        "food": 1
+      },
+      "count": 1,
+      "hire": "carpenter"
+    },
+    {
+      "id": "stonecart",
+      "type": "supply",
+      "role": "builder",
+      "cost": {
+        "workers": 1
+      },
+      "count": 3,
+      "gain": {
+        "stone": 3
+      }
+    },
+    {
+      "id": "timberraft",
+      "type": "supply",
+      "role": "builder",
+      "cost": {
+        "coin": 2
+      },
+      "count": 4,
+      "gain": {
+        "timber": 3
+      }
+    }
+  ]
+}

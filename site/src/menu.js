@@ -149,7 +149,7 @@ function render(dir = 0) {
 
   renderSponsor();
   el.credit.replaceChildren(...(credits ? [h('span', { class: 'sponsor-label' }, S(credits.label)),
-    credits.logo ? h('img', { src: credits.logo, alt: credits.name }) : h('span', { class: 'sponsor-name' }, credits.name)] : []));
+    h('span', { class: 'credit-mark' }, credits.logo ? h('img', { src: credits.logo, alt: '' }) : null, credits.name)] : []));
   el.hint.replaceChildren(...rich(t(focus === 'lang' ? 'hintLang' : 'hint')));
   el.exit.replaceChildren(...rich(t('exitHint')));
 }
