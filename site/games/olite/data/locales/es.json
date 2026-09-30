@@ -102,7 +102,7 @@
   "msg.placed": "{name} en su sitio",
   "msg.fire": "¡Fuego en la villa!",
   "msg.fireOut": "Fuego apagado",
-  "msg.hungry": "{n} manzanas sin pan: el rey pierde {f} de confianza",
+  "msg.hungry": "{n} casas sin pan: el rey pierde {f} de confianza",
   "msg.fed": "¡Pan para todos! El rey está contento",
   "msg.arrived": "Llegan nuevos vecinos",
   "msg.finished": "¡Obra terminada: {name}!",
@@ -150,10 +150,10 @@
   "card.gift.text": "Regálalo: +3 de favor. O guárdalo para una petición.",
   "card.gift.history": "El vino de Olite se servía en la mesa real.",
   "card.baker.name": "Panadero",
-  "card.baker.text": "En el mapa: +3 de pan a su manzana y +1 a las de alrededor. Se puede mover.",
+  "card.baker.text": "En el mapa: +3 de pan a su casa y +1 a las de alrededor. Se puede mover.",
   "card.baker.history": "El pan era el alimento principal; en las villas había panaderos y hornos de pan cocer.",
   "card.oven.name": "Horno de pan",
-  "card.oven.text": "En un solar vacío: +2 de pan a su manzana y a todas las de alrededor. Fijo.",
+  "card.oven.text": "En un solar vacío: +2 de pan a su casa y a todas las de alrededor. Fijo.",
   "card.oven.history": "Muchas villas tenían hornos comunes donde los vecinos llevaban a cocer su pan.",
   "card.firewatch.name": "Vigía del fuego",
   "card.firewatch.text": "En el mapa: apaga el fuego de al lado y evita que prenda. Se puede mover.",
@@ -186,5 +186,9 @@
   "request.gift.name": "Un regalo para la mesa real",
   "request.gift.text": "El rey pide vino.",
   "request.bread.name": "Que nadie pase hambre",
-  "request.bread.text": "Pan para todos durante 2 turnos seguidos."
+  "request.bread.text": "Pan para todos durante 2 turnos seguidos.",
+  "msg.passed": "Carta pasada a tu compañero",
+  "to.pass": "Pasar al compañero",
+  "msg.lot": "Elige un solar libre para el pozo",
+  "menu.mode.campaign.note": "Sin prisa: se guarda cada turno y puedes seguir otro día."
 }
