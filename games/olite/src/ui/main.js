@@ -5,15 +5,15 @@ const params = new URLSearchParams(location.search);
 const menuUrl = params.get('menu');
 const lang = ['es', 'eu', 'en'].includes(params.get('lang')) ? params.get('lang') : 'es';
 const TEXT = {
-  es: { soon: 'Próximamente', about: 'Construye la ciudad y el palacio real de Olite con Carlos III el Noble.', back: 'Pulsa cualquier botón para volver al menú' },
-  eu: { soon: 'Laster', about: 'Eraiki Erriberriko hiria eta errege-jauregia Karlos III.a Nobletarekin.', back: 'Sakatu edozein botoi menura itzultzeko' },
-  en: { soon: 'Coming soon', about: 'Build the town and royal palace of Olite with Charles III the Noble.', back: 'Press any button to go back to the menu' },
+  es: { title: 'Piedra por piedra', soon: 'Próximamente', about: 'Construye la ciudad y el palacio real de Olite con Carlos III el Noble.', back: 'Pulsa cualquier botón para volver al menú' },
+  eu: { title: 'Harriz harri', soon: 'Laster', about: 'Eraiki Erriberriko hiria eta errege-jauregia Karlos III.a Nobletarekin.', back: 'Sakatu edozein botoi menura itzultzeko' },
+  en: { title: 'Stone by Stone', soon: 'Coming soon', about: 'Build the town and royal palace of Olite with Charles III the Noble.', back: 'Press any button to go back to the menu' },
 }[lang];
 
 document.documentElement.lang = lang;
 document.getElementById('app').innerHTML = `
   <div class="soon">
-    <h1>Olite</h1>
+    <h1>${TEXT.title}</h1>
     <p class="badge">${TEXT.soon}</p>
     <p>${TEXT.about}</p>
     ${menuUrl ? `<p class="hint">${TEXT.back}</p>` : ''}

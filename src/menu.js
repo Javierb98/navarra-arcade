@@ -88,6 +88,7 @@ function build() {
   el.cardEls = games.map((g, i) => {
     const card = h('div', { class: `card ${g.status}`, onClick: () => (i === sel ? launch() : pick(i)) },
       g.thumb ? h('div', { class: 'thumb', style: { backgroundImage: `url(${g.thumb})` } }) : h('div', { class: 'thumb blank' }),
+      h('span', { class: `pace ${g.pace}` }),
       h('span', { class: 'name' }));
     el.cards.append(card);
     return card;
@@ -118,6 +119,7 @@ function render(dir = 0) {
   el.cardEls.forEach((c, i) => {
     c.classList.toggle('sel', i === sel);
     c.querySelector('.name').textContent = games[i].title[lang] ?? games[i].title.es;
+    c.querySelector('.pace').textContent = `${t(games[i].pace)} · ${t('min', { n: games[i].minutes })}`;
     const blank = c.querySelector('.thumb.blank');
     if (blank) blank.textContent = games[i].title[lang] ?? games[i].title.es;
   });
@@ -131,13 +133,13 @@ function render(dir = 0) {
       g.thumb ? h('div', { class: 'pan', style: { backgroundImage: `url(${g.thumb})` } }) : h('div', { class: 'pan blank' }, L(g.title)),
       g.status === 'soon' ? h('span', { class: 'badge' }, t('soon')) : null),
     h('div', { class: 'info' },
-      h('h2', {}, L(g.title)),
+      h('div', { class: 'title-row' }, h('h2', {}, L(g.title)), h('span', { class: `pace-tag ${g.pace}` }, `${t(g.pace)} · ${t('min', { n: g.minutes })}`)),
       h('p', { class: 'blurb' }, L(g.blurb)),
+      h('p', { class: `best ${g.pace}` }, L(g.bestFor)),
       h('h3', {}, t('learn')),
       h('p', { class: 'lesson' }, L(g.lesson)),
       h('div', { class: 'chips' },
-        h('span', { class: 'chip' }, h('b', {}, t('when')), ' ', L(g.era)),
-        h('span', { class: 'chip' }, h('b', {}, t('where')), ' ', L(g.place)),
+        h('span', { class: 'chip' }, h('b', {}, t('when')), ' ', L(g.era), ' · ', h('b', {}, t('where')), ' ', L(g.place)),
         h('span', { class: 'chip' }, players, ' · ', L(g.controls)))));
   el.feature.replaceChildren(panel);
 
@@ -151,8 +153,9 @@ function render(dir = 0) {
 const S = (o) => (typeof o === 'string' ? o : o ? o[lang] ?? o.es : '');
 
 function sponsorBadge(sp, big = false) {
-  return h('div', { class: `sponsor ${sp.placeholder ? 'placeholder' : ''} ${big ? 'big' : ''}` },
-    sp.logo ? h('img', { src: sp.logo, alt: S(sp.name) }) : h('span', { class: 'sponsor-name' }, S(sp.name)),
+  const logo = (big && sp.logoBig) || sp.logo;
+  return h('div', { class: `sponsor ${sp.placeholder ? 'placeholder' : ''} ${big ? 'big' : ''} ${sp.plate === 'dark' ? 'dark' : ''} ${big && sp.logoBig ? 'tall' : ''}` },
+    logo ? h('img', { src: logo, alt: S(sp.name) }) : h('span', { class: 'sponsor-name' }, S(sp.name)),
     big && sp.tagline ? h('span', { class: 'sponsor-tag' }, S(sp.tagline)) : null);
 }
 
@@ -248,11 +251,20 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 
+// A local test list (data/sponsors.local.json, never published) wins over the
+// public one when it exists.
+async function loadSponsors() {
+  for (const p of ['data/sponsors.local.json', 'data/sponsors.json']) {
+    try { const r = await fetch(p, { cache: 'no-store' }); if (r.ok) return await r.json(); } catch { /* try the next */ }
+  }
+  return null;
+}
+
 async function boot() {
   fit();
   try {
     const get = (p) => fetch(p, { cache: 'no-store' }).then((r) => { if (!r.ok) throw new Error(p); return r.json(); });
-    const [config, controls, table, sponsorList] = await Promise.all([get('games.json'), get('data/controls.json'), get('data/strings.json'), get('data/sponsors.json').catch(() => null)]);
+    const [config, controls, table, sponsorList] = await Promise.all([get('games.json'), get('data/controls.json'), get('data/strings.json'), loadSponsors()]);
     sponsors = sponsorList;
     games = config.games.filter((g) => g.status !== 'hidden');
     // "art:<name>" thumbnails are painted by the menu itself.
