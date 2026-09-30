@@ -63,6 +63,10 @@ Everything is in `games.json`. No code changes needed:
 - `lesson`, `era`, `place`, `controls`: the info panel, each in `es`, `eu` and `en`. The history text is a draft for a historian to check.
 - For a game to come back to the menu, it needs the small exit hook that Almadía and Pax Avant have in `src/ui/arcade.js`. The menu opens games as `?menu=<menu address>&lang=<es|eu|en>`.
 
+### Sponsors
+
+`data/sponsors.json` lists the sponsors shown in the corner plate and the idle "thank you" panel (name, `logo`, optional `logoBig` for the panel, `plate: "dark"` for white logos, and a `tagline`). To try out logos privately, put them in `data/sponsors.local.json` and `assets/sponsors/local/`. Those are used on this Mac only, ignored by git and never copied into the website.
+
 `npm test` checks the list: unique ports outside 8000–8010, folders present, all three languages filled in, and every ready game has its exit hook.
 
 ## On the cabinet (Raspberry Pi)

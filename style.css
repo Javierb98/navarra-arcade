@@ -37,7 +37,7 @@ h1 {
 .lang.on { color: #111; background: var(--rope); border-color: var(--rope); }
 
 /* ---- featured game ---- */
-.feature { height: 146px; position: relative; }
+.feature { height: 150px; position: relative; }
 .feature-inner { position: absolute; inset: 0; display: flex; gap: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px; }
 /* Gold corner details, like the fittings on an old chest. */
 .feature-inner::before, .card::before {
@@ -56,7 +56,7 @@ h1 {
 @keyframes inLeft { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.preview { flex: 0 0 200px; height: 112px; align-self: center; border-radius: 4px; overflow: hidden; position: relative; border: 1px solid var(--line); }
+.preview { flex: 0 0 178px; height: 100px; align-self: center; border-radius: 4px; overflow: hidden; position: relative; border: 1px solid var(--line); }
 /* A slow pan across the game's picture, like a camera drifting over it. */
 .pan { position: absolute; inset: 0; background-size: 135% auto; background-repeat: no-repeat; image-rendering: pixelated; animation: pan 16s ease-in-out infinite alternate; }
 @keyframes pan { 0% { background-position: 0% 20%; } 50% { background-position: 60% 80%; } 100% { background-position: 100% 30%; } }
@@ -66,9 +66,9 @@ h1 {
 
 .info { flex: 1; min-width: 0; display: flex; flex-direction: column; font-weight: normal; }
 .info h2 { margin: 0; font-size: 13px; font-weight: bold; color: var(--rope); }
-.info .blurb { margin: 1px 0 3px; font-size: 8.5px; color: var(--muted); }
+.info .blurb { margin: 1px 0 1px; font-size: 8px; color: var(--muted); }
 .info h3 { margin: 0; font-size: 7.5px; text-transform: uppercase; letter-spacing: 1px; color: var(--sel); }
-.info .lesson { margin: 1px 0 0; font-size: 8.5px; line-height: 1.28; }
+.info .lesson { margin: 1px 0 0; font-size: 8px; line-height: 1.25; }
 .chips { margin-top: auto; display: flex; flex-wrap: wrap; gap: 2px 3px; }
 .chip { font-size: 7px; font-weight: normal; background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line); border-radius: 3px; padding: 1px 4px; color: var(--muted); }
 .chip b { color: var(--text); }
@@ -79,7 +79,7 @@ h1 {
 .cards { display: flex; gap: 6px; justify-content: center; transition: opacity 0.25s; }
 .cards.dim { opacity: 0.55; }
 .card { position: relative; overflow: hidden; flex: 0 1 108px; min-width: 0; background: var(--panel); border: 1.5px solid var(--line); border-radius: 5px; padding: 3px; text-align: center; cursor: pointer; transition: transform 0.2s ease-out, border-color 0.2s; }
-.card .thumb { height: 34px; border-radius: 3px; background-size: cover; background-position: center; image-rendering: pixelated; }
+.card .thumb { height: 31px; border-radius: 3px; background-size: cover; background-position: center; image-rendering: pixelated; }
 .card .thumb.blank { background: repeating-linear-gradient(45deg, #3a3342 0 4px, #2f2937 4px 8px); color: var(--muted); font-size: 10px; display: flex; align-items: center; justify-content: center; }
 .card.soon .thumb { filter: grayscale(0.5) brightness(0.8); }
 .card .name { display: block; margin-top: 2px; font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -100,7 +100,7 @@ footer { margin-top: auto; display: flex; align-items: center; gap: 8px; }
 .sponsor-label { font-size: 6.5px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
 .sponsor-slot { animation: fadeIn 0.6s ease-out; }
 .sponsor { display: inline-flex; align-items: center; justify-content: center; height: 18px; min-width: 90px; padding: 0 6px; border-radius: 3px; background: rgba(251, 246, 234, 0.92); color: #1d2233; }
-.sponsor img { max-height: 14px; max-width: 110px; }
+.sponsor img { max-height: 14px; max-width: 92px; }
 .sponsor-name { font-size: 8.5px; white-space: nowrap; }
 .sponsor.placeholder { background: rgba(255, 255, 255, 0.06); color: var(--rope); border: 1px dashed rgba(241, 226, 166, 0.6); }
 .sponsor.big { flex-direction: column; height: 46px; min-width: 120px; gap: 2px; }
@@ -123,3 +123,16 @@ footer p { margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* How long a game takes: green and round for quick, blue and square for long
+   (shape as well as colour, for colour-blind players). */
+.card .pace { position: absolute; top: 5px; left: 5px; font-size: 6.5px; padding: 0 4px; line-height: 11px; color: #fff; }
+.pace.quick, .pace-tag.quick { background: #009e73; border-radius: 6px; }
+.pace.long { background: #0072b2; border-radius: 1px; }
+.title-row { display: flex; align-items: center; gap: 6px; }
+.best { margin: 0 0 3px; font-size: 7.5px; color: var(--rope); }
+.pace-tag { display: inline-block; flex: none; font-size: 7px; padding: 0 4px; line-height: 11px; color: #fff; }
+.pace-tag.long { background: #0072b2; border-radius: 1px; }
+.sponsor.dark { background: #0f3d2e; color: #fff; }
+.sponsor.big.tall { height: 72px; }
+.sponsor.big.tall img { max-height: 54px; }

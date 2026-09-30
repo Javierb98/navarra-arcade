@@ -13,7 +13,10 @@
     "when": "Cuándo",
     "where": "Dónde",
     "lang": "Idioma",
-    "hintLang": "← → elegir idioma · [A] o ↓ volver a los juegos"
+    "hintLang": "← → elegir idioma · [A] o ↓ volver a los juegos",
+    "quick": "Rápido",
+    "long": "Largo",
+    "min": "{n} min"
   },
   "eu": {
     "title": "Nafarroako Arcadea",
@@ -29,7 +32,10 @@
     "when": "Noiz",
     "where": "Non",
     "lang": "Hizkuntza",
-    "hintLang": "← → hizkuntza aukeratu · [A] edo ↓ jokoetara itzuli"
+    "hintLang": "← → hizkuntza aukeratu · [A] edo ↓ jokoetara itzuli",
+    "quick": "Azkarra",
+    "long": "Luzea",
+    "min": "{n} min"
   },
   "en": {
     "title": "Navarra Arcade",
@@ -45,6 +51,9 @@
     "when": "When",
     "where": "Where",
     "lang": "Language",
-    "hintLang": "← → choose a language · [A] or ↓ back to the games"
+    "hintLang": "← → choose a language · [A] or ↓ back to the games",
+    "quick": "Quick",
+    "long": "Long",
+    "min": "{n} min"
   }
 }

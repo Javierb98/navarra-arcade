@@ -20,7 +20,8 @@ GAME_FILES = ['index.html', 'style.css', 'src', 'data', 'assets']
 
 def copy(src, dst):
     if os.path.isdir(src):
-        shutil.copytree(src, dst, ignore=shutil.ignore_patterns('.DS_Store', '.gitkeep'))
+        # *.local.* files and local/ folders are for testing on this Mac only.
+        shutil.copytree(src, dst, ignore=shutil.ignore_patterns('.DS_Store', '.gitkeep', '*.local.*', 'local'))
     elif os.path.isfile(src):
         os.makedirs(os.path.dirname(dst), exist_ok=True)
         shutil.copy2(src, dst)

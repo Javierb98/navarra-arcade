@@ -1,5 +1,5 @@
 {
-  "_note": "The arcade menu. Each game is a folder served on its own port; the menu lists them in this order. status: ready (playable), soon (shown greyed out), hidden (not shown or served). Ports 8000-8010 are off limits on the dev machine. lesson/era/place/controls fill the info panel; history text is a draft for a historian to check. url is the game's address inside the online site (built by build-site.py); run locally with fire-up-arcade, the menu uses the port instead.",
+  "_note": "The arcade menu. Each game is a folder served on its own port; the menu lists them in this order. status: ready (playable), soon (shown greyed out), hidden (not shown or served). Ports 8000-8010 are off limits on the dev machine. lesson/era/place/controls fill the info panel; history text is a draft for a historian to check. url is the game's address inside the online site (built by build-site.py); run locally with fire-up-arcade, the menu uses the port instead. minutes/pace/bestFor tell players how long a game takes (quick games suit a queue; long ones someone with time).",
   "menuPort": 8700,
   "games": [
     {
@@ -10,6 +10,13 @@
       "status": "ready",
       "thumb": "assets/thumbs/almadia.png",
       "players": "1-2",
+      "minutes": "3–5",
+      "pace": "quick",
+      "bestFor": {
+        "es": "Partidas cortas: ideal para turnarse o jugar en pareja",
+        "eu": "Partida laburrak: txandaka edo bikotean jolasteko aproposa",
+        "en": "Short runs: great for taking turns or playing in pairs"
+      },
       "title": {
         "es": "¡Almadía!",
         "eu": "Almadia!",
@@ -49,6 +56,13 @@
       "status": "ready",
       "thumb": "assets/thumbs/pax-avant.png",
       "players": "1-2",
+      "minutes": "5",
+      "pace": "quick",
+      "bestFor": {
+        "es": "Una temporada de 5 minutos, mejor en pareja",
+        "eu": "5 minutuko denboraldia, bikotean hobe",
+        "en": "A 5-minute season, best with two"
+      },
       "title": {
         "es": "Pax Avant",
         "eu": "Pax Avant",
@@ -88,15 +102,22 @@
       "status": "soon",
       "thumb": "art:olite",
       "players": "1-2",
+      "minutes": "8–10",
+      "pace": "long",
+      "bestFor": {
+        "es": "Para quien tenga tiempo: cada etapa es una partida completa",
+        "eu": "Denbora duenarentzat: etapa bakoitza partida oso bat da",
+        "en": "For someone with time: each stage is a complete game"
+      },
       "title": {
-        "es": "Olite",
-        "eu": "Erriberri",
-        "en": "Olite"
+        "es": "Piedra por piedra",
+        "eu": "Harriz harri",
+        "en": "Stone by Stone"
       },
       "blurb": {
-        "es": "Construye la ciudad y el palacio real de Carlos III el Noble.",
-        "eu": "Eraiki Karlos III.a Noblearen hiria eta errege-jauregia.",
-        "en": "Build the town and royal palace of Charles III the Noble."
+        "es": "Levanta la villa de Olite y el palacio real de Carlos III el Noble.",
+        "eu": "Eraiki Erriberriko hiribildua eta Karlos III.a Noblearen errege-jauregia.",
+        "en": "Raise the town of Olite and the royal palace of Charles III the Noble."
       },
       "lesson": {
         "es": "Cómo crecieron una villa medieval y su palacio real, y cuánta gente hacía falta para ello: campesinos, canteros, artesanos y comerciantes.",
@@ -127,6 +148,13 @@
       "status": "ready",
       "thumb": "assets/thumbs/espadas.png",
       "players": "1",
+      "minutes": "10–15",
+      "pace": "long",
+      "bestFor": {
+        "es": "Batallas por turnos para pensar con calma, de uno en uno",
+        "eu": "Txandakako guduak, lasai pentsatzeko, banaka",
+        "en": "Turn-based battles to think through, one player at a time"
+      },
       "title": {
         "es": "Espadas de Hispania",
         "eu": "Espadas de Hispania",

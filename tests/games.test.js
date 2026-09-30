@@ -15,10 +15,11 @@ test('every port is unique and outside 8000-8010', () => {
 test('every listed game has a folder, a title and blurb in all three languages, and its picture', () => {
   for (const g of config.games) {
     assert.ok(['ready', 'soon', 'hidden'].includes(g.status), `${g.id}: bad status`);
+    assert.ok(['quick', 'long'].includes(g.pace) && g.minutes, `${g.id}: say how long it takes`);
     if (g.status === 'hidden') continue;
     assert.ok(existsSync(new URL(g.folder + '/index.html', root)), `${g.id}: no index.html in ${g.folder}`);
     for (const l of ['es', 'eu', 'en']) {
-      for (const f of ['title', 'blurb', 'lesson', 'era', 'place', 'controls']) assert.ok(g[f]?.[l], `${g.id}: missing ${f} in ${l}`);
+      for (const f of ['title', 'blurb', 'lesson', 'era', 'place', 'controls', 'bestFor']) assert.ok(g[f]?.[l], `${g.id}: missing ${f} in ${l}`);
     }
     if (g.thumb && !g.thumb.startsWith('art:')) assert.ok(existsSync(new URL(g.thumb, root)), `${g.id}: thumbnail missing`);
   }
