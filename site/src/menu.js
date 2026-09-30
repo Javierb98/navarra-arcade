@@ -31,6 +31,8 @@ let sponsors = null;
 let credits = null;
 let sponsorAt = 0;
 let showcaseStep = 0;
+let sponsorsAreTest = false;
+let showingThanks = false;
 let sponsorClock = 0;
 
 const t = (key, vars = {}) => (strings[lang]?.[key] ?? strings.es?.[key] ?? key).replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m);
@@ -167,14 +169,18 @@ function sponsorBadge(sp, big = false) {
 function renderSponsor() {
   if (!sponsors?.sponsors?.length) { el.sponsor.replaceChildren(); return; }
   const sp = sponsors.sponsors[sponsorAt % sponsors.sponsors.length];
-  el.sponsor.replaceChildren(h('span', { class: 'sponsor-label' }, S(sponsors.label)), h('div', { class: 'sponsor-slot' }, sponsorBadge(sp)));
+  el.sponsor.replaceChildren(
+    h('span', { class: 'sponsor-label' }, S(sponsors.label), sponsorsAreTest ? h('span', { class: 'test-tag' }, 'TEST') : null),
+    h('div', { class: 'sponsor-slot' }, sponsorBadge(sp)));
 }
 
-// The idle showcase's "thank you" panel, with every sponsor.
+// The showcase's big sponsor screen, shown after the last game in the rotation.
 function renderThanks() {
-  el.feature.replaceChildren(h('div', { class: 'feature-inner thanks from-right' },
-    h('h2', {}, S(sponsors.thanks)),
-    h('div', { class: 'sponsor-grid' }, sponsors.sponsors.map((sp) => sponsorBadge(sp, true)))));
+  el.cardEls.forEach((c) => c.classList.remove('sel'));
+  const list = sponsors.sponsors;
+  el.feature.replaceChildren(h('div', { class: `feature-inner thanks from-right ${list.length === 1 ? 'solo' : ''}` },
+    h('h2', {}, S(sponsors.label), sponsorsAreTest ? h('span', { class: 'test-tag' }, 'TEST') : null),
+    h('div', { class: 'sponsor-grid' }, list.map((sp) => sponsorBadge(sp, true)))));
 }
 
 function setLanguage(l) {
@@ -238,8 +244,9 @@ function update(dt) {
   if (idle > IDLE_SHOWCASE && Math.floor(idle / 7) !== Math.floor((idle - dt) / 7)) {
     focus = 'games';
     showcaseStep++;
-    if (sponsors?.sponsors?.length && showcaseStep % (games.length + 1) === 0) renderThanks();
-    else { sel = (sel + 1) % games.length; render(1); }
+    // Round the games in order; after the last one, the sponsors (if any).
+    if (sel === games.length - 1 && sponsors?.sponsors?.length && !showingThanks) { showingThanks = true; renderThanks(); }
+    else { showingThanks = false; sel = (sel + 1) % games.length; render(1); }
   }
   // The corner plate moves on to the next sponsor every few seconds.
   sponsorClock += dt;
@@ -258,10 +265,13 @@ function frame(now) {
 // A local test list (data/sponsors.local.json, never published) wins over the
 // public one when it exists.
 async function loadSponsors() {
-  for (const p of ['data/sponsors.local.json', 'data/sponsors.json']) {
-    try { const r = await fetch(p, { cache: 'no-store' }); if (r.ok) return await r.json(); } catch { /* try the next */ }
+  const get = async (p) => { try { const r = await fetch(p, { cache: 'no-store' }); return r.ok ? await r.json() : null; } catch { return null; } };
+  // Test mode: a private sponsors file on this Mac. Never used online.
+  if (!ONLINE) {
+    const test = await get('data/sponsors.local.json');
+    if (test) { sponsorsAreTest = true; return test; }
   }
-  return null;
+  return get('data/sponsors.json');
 }
 
 async function boot() {

@@ -41,6 +41,10 @@ def main():
     with open(index, 'w', encoding='utf-8') as f:
         f.write(html)
     open(os.path.join(SITE, '.nojekyll'), 'w').close()
+    # Belt and braces: test sponsors must never reach the website.
+    for d, _, files in os.walk(SITE):
+        if any('.local.' in f for f in files) or os.path.basename(d) == 'local':
+            raise SystemExit(f'refusing to publish test sponsor files found in {d}')
 
     for g in config['games']:
         if g['status'] == 'hidden':

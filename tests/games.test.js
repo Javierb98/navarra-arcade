@@ -45,3 +45,8 @@ test("the maker's credit points at a real logo", () => {
   for (const l of ['es', 'eu', 'en']) assert.ok(credits.label[l], `credit label missing in ${l}`);
   if (credits.logo) assert.ok(existsSync(new URL(credits.logo, root)), 'credit logo missing');
 });
+
+test('the public sponsor list only has sponsors who really agreed (no samples)', () => {
+  const pub = JSON.parse(readFileSync(new URL('data/sponsors.json', root), 'utf8'));
+  for (const sp of pub.sponsors) assert.ok(!sp.placeholder, 'sample ad slots belong in sponsors.local.json');
+});

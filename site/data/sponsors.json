@@ -1,25 +1,9 @@
 {
-  "_note": "Who the menu thanks. Add a sponsor with its name (a string, or one per language), an optional logo (a PNG or SVG in assets/sponsors/, ideally on a transparent background, wider than tall) and an optional tagline. Entries with \"placeholder\": true are sample ad slots to show potential funders; delete them once real sponsors sign up.",
-  "label": { "es": "Con el apoyo de", "eu": "Laguntzaileak", "en": "Brought to you by" },
-  "thanks": { "es": "Este arcade es posible gracias a", "eu": "Eskerrik asko gure laguntzaileei", "en": "This arcade is made possible by" },
-  "sponsors": [
-    {
-      "name": { "es": "Tu empresa aquí", "eu": "Zure enpresa hemen", "en": "Your business here" },
-      "logo": null,
-      "tagline": { "es": "Anúnciate en las bibliotecas de Navarra", "eu": "Iragarri Nafarroako liburutegietan", "en": "Advertise in Navarra's libraries" },
-      "placeholder": true
-    },
-    {
-      "name": { "es": "Tu logo aquí", "eu": "Zure logoa hemen", "en": "Your logo here" },
-      "logo": null,
-      "tagline": { "es": "Apoya la historia de Navarra", "eu": "Lagundu Nafarroako historiari", "en": "Support the history of Navarra" },
-      "placeholder": true
-    },
-    {
-      "name": { "es": "Tu fundación aquí", "eu": "Zure fundazioa hemen", "en": "Your foundation here" },
-      "logo": null,
-      "tagline": { "es": "Juegos gratuitos para niños y niñas", "eu": "Doako jokoak haurrentzat", "en": "Free games for children" },
-      "placeholder": true
-    }
-  ]
+  "_note": "CONFIRMED sponsors only: everything here appears on the public website and on every cabinet. Keep it empty until a sponsor has agreed. To try out logos on your own Mac, use data/sponsors.local.json (test mode: never published). Each sponsor: name (string or per language), logo, optional logoBig, plate \"dark\" for white logos, optional tagline.",
+  "label": {
+    "es": "Con el apoyo de",
+    "eu": "Laguntzaileak",
+    "en": "Brought to you by"
+  },
+  "sponsors": []
 }

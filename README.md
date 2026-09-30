@@ -68,7 +68,7 @@ Everything is in `games.json`. No code changes needed:
 `data/credits.json` is the maker's credit in the bottom-right corner ("Hecho por" Evocultiva). It is public.
 
 
-`data/sponsors.json` lists the sponsors shown in the corner plate and the idle "thank you" panel (name, `logo`, optional `logoBig` for the panel, `plate: "dark"` for white logos, and a `tagline`). To try out logos privately, put them in `data/sponsors.local.json` and `assets/sponsors/local/`. Those are used on this Mac only, ignored by git and never copied into the website.
+`data/sponsors.json` lists **confirmed** sponsors only (empty for now): they appear in the corner plate and on a big "Con el apoyo de" screen after the last game of the idle showcase, both on the website and on every cabinet. It takes (name, `logo`, optional `logoBig` for the panel, `plate: "dark"` for white logos, and a `tagline`). **Test mode:** to try out a sponsor before they've agreed, put them in `data/sponsors.local.json` (logos in `assets/sponsors/local/`). The menu on this Mac then shows them, marked TEST. That file is ignored by git, `build-site.py` refuses to publish it, and a cabinet set up from GitHub never has it.
 
 `npm test` checks the list: unique ports outside 8000–8010, folders present, all three languages filled in, and every ready game has its exit hook.
 

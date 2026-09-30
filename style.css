@@ -140,3 +140,7 @@ footer p { margin: 0; }
 /* The maker's credit, bottom right. */
 .credit { flex: 0 0 96px; display: flex; flex-direction: column; align-items: flex-end; }
 .credit img { height: 13px; border-radius: 2px; background: #fff; padding: 2px 4px; box-sizing: content-box; }
+.test-tag { display: inline-block; margin-left: 5px; padding: 0 3px; font-size: 6.5px; letter-spacing: 0.5px; color: #fff; background: #cc79a7; border-radius: 2px; vertical-align: 1px; }
+.thanks.solo .sponsor.big { height: 70px; min-width: 220px; }
+.thanks.solo .sponsor.big img { max-height: 46px; max-width: 200px; }
+.thanks h2 { font-size: 15px; }
