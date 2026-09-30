@@ -55,7 +55,10 @@ h1 {
 @keyframes inLeft { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.preview { flex: 0 0 178px; height: 100px; align-self: center; border-radius: 4px; overflow: hidden; position: relative; border: 1px solid var(--line); }
+.preview { flex: 0 0 210px; height: 118px; align-self: center; border-radius: 4px; overflow: hidden; position: relative; border: 1px solid var(--line); }
+/* Gameplay footage in the preview. */
+.clip { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
+.preview.soon .clip { filter: grayscale(0.5) brightness(0.85); }
 /* A slow pan across the game's picture, like a camera drifting over it. */
 .pan { position: absolute; inset: 0; background-size: 135% auto; background-repeat: no-repeat; image-rendering: pixelated; animation: pan 16s ease-in-out infinite alternate; }
 @keyframes pan { 0% { background-position: 0% 20%; } 50% { background-position: 60% 80%; } 100% { background-position: 100% 30%; } }
@@ -91,15 +94,20 @@ h1 {
 .preview { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 4px 10px rgba(0, 0, 0, 0.45); }
 
 /* ---- footer ---- */
-footer { margin-top: auto; display: flex; align-items: center; gap: 8px; }
-.hints { flex: 1; text-align: center; }
+/* One calm band: sponsor left, controls centred, maker right. The two side
+   columns are the same width so the controls sit truly in the middle. */
+footer {
+  margin-top: auto; display: flex; align-items: center; gap: 10px; min-height: 36px;
+  padding: 4px 8px; border-radius: 6px; background: rgba(14, 12, 20, 0.82); border: 1px solid var(--line);
+}
+.hints { flex: 1; text-align: center; display: flex; flex-direction: column; gap: 2px; }
 
 /* ---- sponsors ---- */
-.sponsor-plate { flex: 0 0 136px; display: flex; flex-direction: column; align-items: flex-start; }
-.sponsor-label { font-size: 7.5px; margin-bottom: 1px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
+.sponsor-plate { flex: 0 0 118px; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.sponsor-label { font-size: 6px; text-transform: uppercase; letter-spacing: 0.9px; color: var(--muted); font-weight: bold; }
 .sponsor-slot { animation: fadeIn 0.6s ease-out; }
-.sponsor { display: inline-flex; align-items: center; justify-content: center; height: 24px; min-width: 128px; padding: 0 8px; border-radius: 3px; background: rgba(251, 246, 234, 0.92); color: #1d2233; }
-.sponsor img { max-height: 19px; max-width: 116px; }
+.sponsor { display: inline-flex; align-items: center; justify-content: center; height: 20px; min-width: 104px; padding: 0 8px; border-radius: 3px; background: rgba(251, 246, 234, 0.92); color: #1d2233; }
+.sponsor img { max-height: 16px; max-width: 96px; }
 .sponsor-name { font-size: 10px; white-space: nowrap; }
 .sponsor.placeholder { background: rgba(255, 255, 255, 0.06); color: var(--rope); border: 1px dashed rgba(241, 226, 166, 0.6); }
 .sponsor.big { flex-direction: column; height: 46px; min-width: 132px; gap: 2px; }
@@ -110,8 +118,8 @@ footer { margin-top: auto; display: flex; align-items: center; gap: 8px; }
 .thanks h2 { margin: 0; font-size: 13px; color: var(--rope); }
 .sponsor-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
 footer p { margin: 0; }
-.hint { color: var(--muted); font-size: 8.5px; }
-.hint.small { font-size: 7.5px; }
+.hint { color: var(--text); font-size: 8.5px; font-weight: normal; }
+.hint.small { color: var(--muted); font-size: 7px; }
 .btn { display: inline-block; min-width: 12px; height: 12px; padding: 0 3px; border-radius: 6px; font-size: 7.5px; line-height: 12px; text-align: center; background: #eee; color: #111; margin: 0 1px; vertical-align: 1px; }
 .btn-a { background: #f0e442; }
 .btn-c { background: var(--rope); border-radius: 2px; }
@@ -137,16 +145,13 @@ footer p { margin: 0; }
 .sponsor.big.tall img { max-height: 54px; }
 
 /* The maker's credit, bottom right. */
-.credit { flex: 0 0 86px; display: flex; flex-direction: column; align-items: flex-end; }
-.credit .sponsor-label { font-size: 6.5px; }
-.credit-mark { display: inline-flex; align-items: center; gap: 3px; font-size: 8px; color: var(--text); }
-.credit-mark img { height: 12px; width: 12px; }
-.test-tag { display: inline-block; margin-left: 5px; padding: 0 3px; font-size: 6.5px; letter-spacing: 0.5px; color: #fff; background: #cc79a7; border-radius: 2px; vertical-align: 1px; }
+.credit { flex: 0 0 118px; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.credit-mark { display: inline-flex; align-items: center; gap: 4px; height: 20px; font-size: 9px; color: var(--text); }
+.credit-mark img { height: 14px; width: 14px; object-fit: contain; }
 .thanks.solo .sponsor.big { height: 70px; min-width: 220px; }
 .thanks.solo .sponsor.big img { max-height: 46px; max-width: 200px; }
 .thanks h2 { font-size: 15px; }
 
 /* Calm, solid backing behind text so it never sits on the dithered sky. */
 header h1 { padding: 0 6px; border-radius: 4px; background-color: rgba(14, 12, 20, 0.55); }
-.hints { background: rgba(14, 12, 20, 0.8); border-radius: 4px; padding: 1px 6px; }
 .info .blurb, .info .lesson { font-weight: normal; letter-spacing: 0.1px; }
