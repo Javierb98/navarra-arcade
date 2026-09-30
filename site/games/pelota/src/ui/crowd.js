@@ -11,7 +11,7 @@ import { project, COURT, LIGHTS, mix } from './art.js';
 
 const SKIN = ['#f1cba6', '#e6b48c', '#d49c74', '#c08660', '#f6d8bc', '#a8704c'];
 const HAIR = ['#2a1c14', '#3e2a1c', '#5a3a24', '#8a6040', '#b89060', '#d8d2c8', '#9a9690', '#1a1410'];
-const SHIRT = ['#f5f1e8', '#f5f1e8', '#f5f1e8', '#f0ebe0', '#eae4d6']; // fiesta whites
+const SHIRT = ['#f5f1e8', '#efe9dc']; // fiesta whites
 const COLOUR = ['#c0392b', '#2e6f9e', '#d68a2a', '#4e7a3a', '#7a4a8a', '#3a4a5a', '#b85a7a', '#e0c070'];
 
 // Build the audience once: who sits where, and what they look like.
@@ -34,8 +34,8 @@ function build(seed = 7) {
         long: woman && !old && rng.chance(0.6), bun: woman && (old || rng.chance(0.2)), curls: rng.chance(0.15),
         bald: !woman && old && rng.chance(0.5),
         txapela: !woman && (old ? rng.chance(0.6) : rng.chance(0.12)),
-        shirt: rng.chance(0.78) ? rng.pick(SHIRT) : rng.pick(COLOUR),
-        panuelo: rng.chance(0.65), sash: rng.chance(0.4),
+        shirt: rng.chance(0.5) ? rng.pick(SHIRT) : rng.pick(COLOUR),
+        panuelo: rng.chance(0.5), sash: false,
         glasses: old && rng.chance(0.4),
         beard: !woman && !kid && rng.chance(0.15),
         fan: woman && rng.chance(0.2),
@@ -44,8 +44,8 @@ function build(seed = 7) {
       });
     }
   }
-  // Farther first, so nearer people overlap them.
-  people.sort((a, b) => a.r - b.r || b.y - a.y);
+  // Back rows first and, along a row, the far end first, so nearer people overlap them.
+  people.sort((a, b) => b.r - a.r || a.y - b.y);
   for (const p of people) [p.sx, p.sy, p.u] = project(p.x, p.y, p.z);
   return people;
 }
@@ -103,9 +103,10 @@ function person(ctx, p, t, col, ballX, mood) {
   g.addColorStop(0, mix(sh, '#ffffff', 0.15)); g.addColorStop(0.6, sh); g.addColorStop(1, mix(sh, '#2a1a10', 0.25));
   ctx.fillStyle = g;
   ctx.beginPath();
-  ctx.moveTo(-0.2, base + 0.02); ctx.lineTo(-0.22, base - 0.42 + breathe);
-  ctx.quadraticCurveTo(-0.02, base - 0.56 + breathe, 0.2, base - 0.44 + breathe);
-  ctx.lineTo(0.21, base + 0.02); ctx.closePath(); ctx.fill();
+  ctx.moveTo(-0.16, base + 0.02); ctx.lineTo(-0.19, base - 0.4 + breathe);
+  ctx.quadraticCurveTo(-0.02, base - 0.52 + breathe, 0.18, base - 0.42 + breathe);
+  ctx.lineTo(0.17, base + 0.02); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = 'rgba(40,26,16,0.35)'; ctx.lineWidth = 0.018; ctx.stroke();
   if (p.sash) { ctx.fillStyle = col('#b3261e'); ctx.fillRect(-0.21, base - 0.1, 0.42, 0.06); }
   // Arms.
   const skin = col(p.skin);
@@ -138,12 +139,14 @@ function person(ctx, p, t, col, ballX, mood) {
   // A red pañuelo knotted at the neck.
   if (p.panuelo) {
     ctx.fillStyle = col('#c8261e');
-    ctx.beginPath(); ctx.moveTo(-0.12, base - 0.5); ctx.lineTo(0.1, base - 0.5); ctx.lineTo(-0.02 + turn * 0.03, base - 0.36); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(-0.09, base - 0.5); ctx.lineTo(0.08, base - 0.5); ctx.lineTo(-0.01 + turn * 0.03, base - 0.4); ctx.closePath(); ctx.fill();
   }
   // Head in three-quarter view: the face turns with `turn` (-1 left .. 1 right).
   const hy = base - 0.66 + breathe * 2, hx = turn * 0.02;
   ctx.fillStyle = skin; ctx.fillRect(-0.04, base - 0.58, 0.08, 0.08); // neck
+  ctx.save(); ctx.translate(hx, hy); ctx.scale(1.2, 1.2); ctx.translate(-hx, -hy); // heads a touch big, so faces read at a distance
   ctx.beginPath(); ctx.ellipse(hx, hy, 0.105, 0.125, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = 'rgba(60,34,20,0.35)'; ctx.lineWidth = 0.014; ctx.stroke();
   // Ear on the side away from the face.
   ctx.beginPath(); ctx.ellipse(hx - turn * 0.075 + (turn >= 0 ? -0.02 : 0.02), hy + 0.01, 0.02, 0.035, 0, 0, Math.PI * 2); ctx.fill();
   // Face features, shifted toward where they look.
@@ -173,6 +176,7 @@ function person(ctx, p, t, col, ballX, mood) {
     ctx.beginPath(); ctx.ellipse(hx - 0.01, hy - 0.1, 0.14, 0.05, -0.1, 0, Math.PI * 2); ctx.fill();
     ctx.beginPath(); ctx.arc(hx - 0.01, hy - 0.15, 0.012, 0, Math.PI * 2); ctx.fill();
   }
+  ctx.restore();
   ctx.restore();
 }
 
