@@ -9,13 +9,31 @@
 // World units are metres. x runs across the court from the left wall (0) to
 // the open right side (w); y runs back from the frontis (0) to the back line
 // (l); z is height.
+//
+// Shots (data/rules.json "shots"), picked by button and stick at the moment
+// of the hit:
+//   A            drive: strikes high, comes back deep
+//   A + left     txoko: into the left corner, off both walls, stays low
+//   A + right    ancho: wide to the open side, close to the line
+//   A + back     globo: a high lob that lands very deep
+//   B            dejada: soft, dies close to the frontis (stick picks the side)
 
 import { makeRng } from './rng.js';
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
+export function shotFor(button, stick = {}) {
+  if (button === 'b') return 'dejada';
+  const x = stick.x ?? 0, y = stick.y ?? 0;
+  if (y > 0.5 && Math.abs(x) < 0.7) return 'globo';
+  if (x < -0.5) return 'txoko';
+  if (x > 0.5) return 'ancho';
+  return 'drive';
+}
+
 export class Match {
-  constructor(rules, { players = 1, difficulty = 'normal', seed = 1, to = null, ai = null } = {}) {
+  // opponent: the computer's profile (data/rules.json "opponents").
+  constructor(rules, { players = 1, difficulty = 'normal', seed = 1, to = null, ai = null, opponent = null } = {}) {
     this.R = rules;
     this.C = rules.court;
     this.players = players === 2 ? 2 : 1;
@@ -25,8 +43,9 @@ export class Match {
     this.to = to ?? rules.match.to;
     // Red (0) and blue (1). With one player, blue is the computer.
     const aiFor = ai ?? [false, this.players === 1];
-    this.p = [0, 1].map((i) => ({ i, x: this.C.w * (i ? 0.66 : 0.34), y: this.C.l * 0.7, vx: 0, vy: 0, swing: 0, buffer: null, ai: aiFor[i], plan: null, react: 0 }));
-    this.ball = { x: 5, y: 20, z: 1, vx: 0, vy: 0, vz: 0, wall: false, bounces: 0, lastHitter: 0, held: 0, spin: 0 };
+    const prof = (i) => (aiFor[i] ? (i === 1 && opponent) || rules.opponents[rules.match.defaultOpponent] : null);
+    this.p = [0, 1].map((i) => ({ i, x: this.C.w * (i ? 0.66 : 0.34), y: this.C.l * 0.7, vx: 0, vy: 0, swing: 0, buffer: null, ai: aiFor[i], prof: prof(i), plan: null, react: 0, shot: null }));
+    this.ball = { x: 5, y: 20, z: 1, vx: 0, vy: 0, vz: 0, wall: false, bounces: 0, lastHitter: 0, held: 0, spin: 0, kind: 'serve' };
     this.score = [0, 0];
     this.server = 0;
     this.turn = 1;
@@ -35,7 +54,7 @@ export class Match {
     this.t = 0;
     this.events = [];
     this.rally = 0;
-    this.stats = { longest: 0, hits: [0, 0], faults: {} };
+    this.stats = { longest: 0, hits: [0, 0], perfect: [0, 0], shots: [{}, {}], faults: {} };
     this.winner = null;
     this.setupServe();
   }
@@ -47,7 +66,7 @@ export class Match {
   setupServe() {
     const s = this.server, o = 1 - s, C = this.C;
     Object.assign(this.p[s], { x: C.w * 0.55, y: C.serveY, vx: 0, vy: 0, swing: 0, buffer: null, plan: null });
-    Object.assign(this.p[o], { x: C.w * 0.35, y: C.serveY + 5, vx: 0, vy: 0, swing: 0, buffer: null, plan: null });
+    Object.assign(this.p[o], { x: C.w * 0.4, y: C.serveY + 6, vx: 0, vy: 0, swing: 0, buffer: null, plan: null });
     Object.assign(this.ball, { x: this.p[s].x + 0.4, y: this.p[s].y - 0.3, z: 1, vx: 0, vy: 0, vz: 0, wall: false, bounces: 0, lastHitter: s, held: s + 1 });
     this.phase = 'serve';
     this.phaseT = 0;
@@ -59,48 +78,51 @@ export class Match {
     const s = this.server;
     this.ball.held = 0;
     this.ball.z = 1.1;
-    this.shoot(this.p[s], 'serve', aim, 1);
+    this.shoot(this.p[s], 'serve', { x: aim }, 1);
     this.phase = 'rally';
     this.emit('serve', { p: s });
   }
 
   // ---- shots ------------------------------------------------------------------------------
 
-  // Send the ball at a point on the frontis. The shot's flight time and target
-  // height decide its character: a drive strikes high and runs deep, a soft
-  // shot (dejada) kisses the wall just above the chapa and dies short.
-  shoot(pl, kind, aim, quality) {
+  // Send the ball at the frontis. The shot's speed and target height decide
+  // its character; the stick picks where across the court it comes down.
+  shoot(pl, kind, stick, quality) {
     const S = this.R.shots[kind], b = this.ball, C = this.C;
-    const err = (1 - quality) * this.errorFor(pl);
+    const perfect = quality >= this.R.timing.perfect;
+    const err = (1 - quality) * this.errorFor(pl) * (S.risk ?? 1) * (perfect ? 0.4 : 1);
     const n = () => (this.r.next() + this.r.next() + this.r.next() - 1.5) * 0.8;
     const zt = this.r.range(S.z[0], S.z[1]) + n() * err * 0.9;
-    // Hard shots still rise when they meet the wall, so they rebound deep.
-    const T = Math.max(0.35, b.y / (S.speed * this.r.range(0.92, 1.08)));
-    // The stick picks where across the court the ball comes down (left wall
-    // side to open side); work back to where it must strike the frontis,
-    // since it keeps drifting sideways after the rebound.
-    const land = clamp(C.w / 2 + clamp(aim, -1, 1) * (C.w / 2 - 1), 0.8, C.w - 0.8);
+    // Rallies get quicker as they go on; a clean hit is quicker still.
+    const ramp = 1 + Math.min(this.R.match.rampMax, this.rally * this.R.match.ramp);
+    const power = (perfect ? this.R.timing.perfectPower : 0.85 + 0.2 * quality) * ramp;
+    const T = Math.max(0.3, b.y / (S.speed * power * this.r.range(0.94, 1.06)));
+    let land;
+    if (S.land != null) land = S.land * C.w;
+    else land = C.w / 2 + clamp(stick.x ?? 0, -1, 1) * (C.w / 2 - 1);
+    land = clamp(land, 0.5, C.w - 0.5);
     const k = (0.92 * S.back) / T;
-    const xt = clamp((land + b.x * k) / (1 + k) + n() * err * 1.6, 0.3, C.w + 1.5);
+    const xt = clamp((land + b.x * k) / (1 + k) + n() * err * 1.6, 0.15, C.w + 1.5);
     b.vx = (xt - b.x) / T;
     b.vy = -b.y / T;
     b.vz = (zt - b.z + 0.5 * this.R.ball.g * T * T) / T;
-    b.wall = false; b.bounces = 0; b.lastHitter = pl.i; b.spin = kind === 'soft' ? -1 : 1;
+    b.wall = false; b.bounces = 0; b.lastHitter = pl.i; b.spin = kind === 'dejada' ? -1 : 1; b.kind = kind;
     this.turn = 1 - pl.i;
     this.stats.hits[pl.i]++;
+    if (perfect) this.stats.perfect[pl.i]++;
+    this.stats.shots[pl.i][kind] = (this.stats.shots[pl.i][kind] ?? 0) + 1;
     this.rally++;
-    this.emit('hit', { p: pl.i, kind, quality, x: b.x, y: b.y, z: b.z });
+    this.emit('hit', { p: pl.i, kind, quality, perfect, power, x: b.x, y: b.y, z: b.z });
   }
 
-  errorFor(pl) {
-    return pl.ai ? this.R.ai[this.difficulty].error : this.diff.error;
-  }
+  errorFor(pl) { return pl.ai ? pl.prof.error : this.diff.error; }
 
-  // How clean a hit is: best with the ball about waist-high and close in.
-  quality(pl) {
-    const b = this.ball, d = Math.hypot(b.x - pl.x, b.y - pl.y);
+  // How clean a hit is: best with the ball about waist-high, close in, and
+  // struck right away rather than with the button pressed early.
+  quality(pl, early = 0) {
+    const b = this.ball, T = this.R.timing, d = Math.hypot(b.x - pl.x, b.y - pl.y);
     const hz = Math.abs(b.z - this.R.player.sweet);
-    return clamp(1 - hz * 0.45 - Math.max(0, d - 0.6) * 0.5, 0, 1);
+    return clamp(1 - hz * T.height - Math.max(0, d - 0.55) * T.distance - early * T.early, 0, 1);
   }
 
   reachable(pl) {
@@ -113,7 +135,7 @@ export class Match {
 
   // ---- the step ------------------------------------------------------------------------------
 
-  // inputs[i]: { x, y (stick, -1..1), a (drive, pressed this step), b (soft, pressed) }
+  // inputs[i]: { x, y (stick, -1..1; y > 0 is back, away from the wall), a, b (pressed this step) }
   step(inputs, dt) {
     this.events = [];
     if (this.phase === 'over') return;
@@ -122,15 +144,15 @@ export class Match {
     for (const pl of this.p) {
       const inp = pl.ai ? this.think(pl, dt) : (inputs[pl.i] ?? {});
       this.move(pl, inp, dt);
-      if (inp.a || inp.b) pl.buffer = { kind: inp.a ? 'drive' : 'soft', t: this.R.player.buffer, aim: inp.x ?? 0 };
+      if (inp.a || inp.b) pl.buffer = { button: inp.a ? 'a' : 'b', t: 0, stick: { x: inp.x ?? 0, y: inp.y ?? 0 } };
       if (pl.buffer) {
-        pl.buffer.aim = inp.x ?? pl.buffer.aim;
-        if (this.phase === 'serve' && pl.i === this.server && this.phaseT > 0.4) { this.serve(pl.buffer.aim); pl.swing = this.R.player.swing; pl.buffer = null; }
+        if (inp.x != null) pl.buffer.stick = { x: inp.x, y: inp.y ?? 0 };
+        if (this.phase === 'serve' && pl.i === this.server && this.phaseT > 0.4) { this.serve(pl.buffer.stick.x); pl.swing = this.R.player.swing; pl.buffer = null; }
         else if (this.reachable(pl)) {
           pl.swing = this.R.player.swing;
-          this.shoot(pl, pl.buffer.kind, pl.buffer.aim, this.quality(pl));
+          this.shoot(pl, shotFor(pl.buffer.button, pl.buffer.stick), pl.buffer.stick, this.quality(pl, pl.buffer.t));
           pl.buffer = null;
-        } else if ((pl.buffer.t -= dt) <= 0) {
+        } else if ((pl.buffer.t += dt) > this.R.player.buffer) {
           if (this.phase === 'rally' && pl.i === this.turn) { pl.swing = this.R.player.swing; this.emit('whiff', { p: pl.i }); }
           pl.buffer = null;
         }
@@ -146,7 +168,7 @@ export class Match {
       const n = 4;
       for (let k = 0; k < n && this.phase === 'rally'; k++) this.fly(dt / n);
     } else if (this.phase === 'point' && this.phaseT > this.R.match.pointPause) {
-      if (this.phase !== 'over') this.setupServe();
+      this.setupServe();
     }
     if (this.phase === 'point') this.fly(dt, true);
   }
@@ -154,7 +176,7 @@ export class Match {
   move(pl, inp, dt) {
     const P = this.R.player, C = this.C;
     const serving = this.phase === 'serve' && pl.i === this.server;
-    const sp = P.speed * (pl.ai ? this.R.ai[this.difficulty].speed : 1);
+    const sp = P.speed * (pl.ai ? pl.prof.speed : 1);
     let ix = serving ? 0 : clamp(inp.x ?? 0, -1, 1), iy = serving ? 0 : clamp(inp.y ?? 0, -1, 1);
     const len = Math.hypot(ix, iy);
     if (len > 1) { ix /= len; iy /= len; }
@@ -191,7 +213,7 @@ export class Match {
         if (b.z < C.chapa) { this.emit('chapa', { x: b.x, z: b.z }); this.point(1 - b.lastHitter, 'chapa'); return; }
         if (b.z > C.top || b.x > C.w) { this.emit('wallOut', { x: b.x, z: b.z }); this.point(1 - b.lastHitter, 'fuera'); return; }
         b.wall = true;
-        this.emit('wall', { x: b.x, z: b.z });
+        this.emit('wall', { x: b.x, z: b.z, speed: Math.hypot(b.vx, b.vy, b.vz) });
       }
     }
     // The left wall.
@@ -221,8 +243,9 @@ export class Match {
     this.phase = 'point';
     this.phaseT = 0;
     this.server = winner;
-    this.emit('point', { winner, reason, score: [...this.score], rally: this.rally });
-    if (this.score[winner] >= this.to) {
+    const matchPoint = this.score[winner] >= this.to;
+    this.emit('point', { winner, reason, score: [...this.score], rally: this.rally, kind: this.ball.kind, last: matchPoint });
+    if (matchPoint) {
       this.phase = 'over';
       this.winner = winner;
       this.emit('over', { winner });
@@ -233,20 +256,33 @@ export class Match {
 
   // Where will the ball be, a little ahead? Runs the same physics on a copy.
   predict(secs = 3, step = 1 / 30) {
-    const saved = { ...this.ball }, phase = this.phase, events = this.events, score = [...this.score], stats = JSON.stringify(this.stats), server = this.server, rally = this.rally, turn = this.turn, winner = this.winner, phaseT = this.phaseT;
-    const path = [];
+    const saved = { ...this.ball }, keep = { phase: this.phase, events: this.events, score: [...this.score], stats: this.stats, server: this.server, rally: this.rally, turn: this.turn, winner: this.winner, phaseT: this.phaseT };
+    this.stats = JSON.parse(JSON.stringify(this.stats));
     this.events = [];
+    const path = [];
     for (let t = step; t <= secs && this.phase === 'rally'; t += step) {
       this.fly(step);
       if (this.phase === 'rally') path.push({ t, x: this.ball.x, y: this.ball.y, z: this.ball.z, wall: this.ball.wall, bounces: this.ball.bounces });
     }
     Object.assign(this.ball, saved);
-    Object.assign(this, { phase, events, score, stats: JSON.parse(stats), server, rally, turn, winner, phaseT });
+    Object.assign(this, keep);
     return path;
   }
 
+  // Which shot, given where the other player stands and this player's style.
+  choose(pl) {
+    const other = this.p[1 - pl.i], C = this.C, st = pl.prof.style, r = this.r.next();
+    let kind = 'drive';
+    if (other.y > C.l * 0.7 && r < st.dejada) kind = 'dejada';
+    else if (other.y < C.l * 0.5 && r < st.globo) kind = 'globo';
+    else if (other.x > C.w * 0.55 && r < st.txoko) kind = 'txoko';
+    else if (other.x < C.w * 0.45 && r < st.ancho) kind = 'ancho';
+    const stick = { x: kind === 'txoko' ? -1 : kind === 'ancho' ? 1 : other.x > C.w / 2 ? -this.r.range(0.3, 1) : this.r.range(0.3, 1), y: kind === 'globo' ? 1 : 0 };
+    return { button: kind === 'dejada' ? 'b' : 'a', stick };
+  }
+
   think(pl, dt) {
-    const A = this.R.ai[this.difficulty], C = this.C, P = this.R.player, b = this.ball;
+    const A = pl.prof, C = this.C, P = this.R.player, b = this.ball;
     const other = this.p[1 - pl.i];
     const go = (tx, ty) => {
       const dx = tx - pl.x, dy = ty - pl.y, d = Math.hypot(dx, dy);
@@ -254,36 +290,46 @@ export class Match {
     };
     if (this.phase === 'serve') {
       if (pl.i === this.server && this.phaseT > 0.9 + A.react * 3) return { a: true, x: this.r.range(-0.6, 0.8) };
-      return pl.i === this.server ? {} : go(C.w * 0.4, C.serveY + 5);
+      return pl.i === this.server ? {} : go(C.w * 0.45, C.serveY + 6);
     }
-    if (this.phase !== 'rally' || this.turn !== pl.i) {
-      pl.plan = null;
-      // Out of the way, back and to the far side from the striker.
-      return go(other.x > C.w / 2 ? C.w * 0.3 : C.w * 0.7, C.l * 0.72);
+    if (this.phase !== 'rally') { pl.plan = null; return {}; }
+    if (this.turn !== pl.i) {
+      pl.plan = null; pl.shot = null;
+      // Back to a good base between shots, clear of the striker.
+      const bx = other.x > C.w / 2 ? C.w * 0.38 : C.w * 0.62;
+      return go(bx, C.l * A.base);
     }
     // Plan an intercept once the ball is on its way back, after a reaction time.
-    if (!b.wall) { pl.react = 0; return go(clamp(b.x, 1, C.w - 1), C.l * 0.65); }
+    if (!b.wall) { pl.react = 0; return go(clamp(b.x, 1, C.w - 1), C.l * A.base); }
     pl.react += dt;
     if (pl.react < A.react) return {};
-    if (!pl.plan || this.t - pl.plan.at > 0.3) {
+    if (!pl.plan || this.t - pl.plan.at > 0.25) {
       const path = this.predict(2.5);
       const sp = P.speed * A.speed;
       let best = null;
       for (const q of path) {
         if (!q.wall || q.bounces >= 2 || q.z < P.low + 0.15 || q.z > P.high - 0.4) continue;
         const need = Math.hypot(q.x - pl.x, q.y - pl.y) / sp;
-        if (need <= q.t + 0.05) { best = q; if (q.bounces >= 1 && Math.abs(q.z - P.sweet) < 0.5) break; if (!best.bounces) continue; break; }
+        if (need > q.t + 0.05) continue;
+        // The best spot: after the bounce, near the sweet height.
+        const score = Math.abs(q.z - P.sweet) + (q.bounces ? 0 : 0.6) + q.t * 0.15;
+        if (!best || score < best.score) best = { ...q, score };
       }
       pl.plan = { at: this.t, q: best ?? path.find((q) => q.bounces === 1) ?? path.at(-1) };
     }
     const q = pl.plan.q ?? b;
-    const mv = go(q.x - 0.2, q.y + 0.2);
-    if (this.reachable(pl) && this.quality(pl) > 0.35 + this.r.next() * 0.3) {
-      const soft = this.r.chance(A.soft) && other.y > C.l * 0.55;
-      // Aim away from the other player.
-      const aim = other.x > C.w / 2 ? -this.r.range(0.3, 1) : this.r.range(0.2, 0.9);
-      return { ...mv, a: !soft, b: soft, x: aim };
+    const mv = go(q.x - 0.25, q.y + 0.25);
+    if (this.reachable(pl) && this.quality(pl) > A.patience - this.r.next() * 0.2) {
+      pl.shot = pl.shot ?? this.choose(pl);
+      return { ...mv, a: pl.shot.button === 'a', b: pl.shot.button === 'b', x: pl.shot.stick.x, y: pl.shot.stick.y };
     }
     return mv;
+  }
+
+  // For the timing ring: how close the ball is to a clean strike for the player whose turn it is.
+  timing() {
+    const pl = this.p[this.turn], b = this.ball;
+    if (this.phase !== 'rally' || !b.wall) return null;
+    return { p: this.turn, reach: this.reachable(pl), q: this.quality(pl), d: Math.hypot(b.x - pl.x, b.y - pl.y) };
   }
 }
