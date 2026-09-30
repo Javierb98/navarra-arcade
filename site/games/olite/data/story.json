@@ -1,11 +1,78 @@
 {
   "intro": [
-    { "scene": "fire", "text": "intro.1" },
-    { "scene": "ruins", "text": "intro.2" },
-    { "scene": "palace", "text": "intro.3" }
+    {
+      "scene": "fire",
+      "text": "intro.1"
+    },
+    {
+      "scene": "ruins",
+      "text": "intro.2"
+    },
+    {
+      "scene": "palace",
+      "text": "intro.3"
+    }
   ],
   "outro": [
-    { "scene": "palace", "text": "outro.1" },
-    { "scene": "palace", "text": "outro.2" }
-  ]
+    {
+      "scene": "palace",
+      "text": "outro.1"
+    },
+    {
+      "scene": "palace",
+      "text": "outro.2"
+    }
+  ],
+  "talks": {
+    "walls": [
+      {
+        "who": "aitziber",
+        "text": "talk.walls.1"
+      },
+      {
+        "who": "inigo",
+        "text": "talk.walls.2"
+      }
+    ],
+    "gardens": [
+      {
+        "who": "aitziber",
+        "text": "talk.gardens.1"
+      },
+      {
+        "who": "maite",
+        "text": "talk.gardens.2"
+      }
+    ],
+    "gallery": [
+      {
+        "who": "aitziber",
+        "text": "talk.gallery.1"
+      },
+      {
+        "who": "inigo",
+        "text": "talk.gallery.2"
+      }
+    ],
+    "winds": [
+      {
+        "who": "aitziber",
+        "text": "talk.winds.1"
+      },
+      {
+        "who": "maite",
+        "text": "talk.winds.2"
+      }
+    ],
+    "crowns": [
+      {
+        "who": "aitziber",
+        "text": "talk.crowns.1"
+      },
+      {
+        "who": "inigo",
+        "text": "talk.crowns.2"
+      }
+    ]
+  }
 }

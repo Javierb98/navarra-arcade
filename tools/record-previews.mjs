@@ -70,8 +70,9 @@ const GAMES = {
   olite: {
     async setup(page) {
       await page.goto('http://localhost:8730/?debug&level=2'); await wait(page, 2500);
-      await tap(page, 'Digit1'); await wait(page, 400); await tap(page, 'Digit1'); await wait(page, 500); await tap(page, 'Digit1'); await wait(page, 700);
-      await tap(page, 'KeyZ'); await wait(page, 1200);
+      // Through the title, menu, story and workshop talk until the climb starts.
+      for (let k = 0; k < 30 && !(await page.evaluate(() => !!window.climb)); k++) { await tap(page, k < 2 ? 'Digit1' : 'KeyZ'); await wait(page, 450); }
+      await wait(page, 1000);
     },
     act: climbAutopilot,
   },

@@ -14,13 +14,17 @@
 //   c  crumbling ledge: gives way soon after you stand on it, comes back later
 //   B  crate: solid, only there with one player (it stands in for a partner's boost)
 //   m  moving scaffold board (a run of m is one board)
-//   g  golden stone (restores the palace)    o  orange (points)    h  heart
+//   g  a carved stone: carry it to a slot    H  a slot: a missing part of the palace
+//   _  pressure plate (a floor tile)          |  trapdoor/gate: open while a nearby plate is held
+//   X  cracked wall: breaks like rubble, hides secrets
+//   o  orange (points)    h  heart
 //   k  storks fly across this row              r  a loose roof tile drops from here
 //   S  where the climbers start                F  the royal banner at the top
 
 import { makeRng } from './rng.js';
 
-const SOLID = new Set(['#', 'x', 'B']);
+const SOLID = new Set(['#', 'x', 'X', 'B', '_', '|']);
+const BREAKS = new Set(['x', 'X']);
 const LEDGE = new Set(['=', 'c']);
 
 export class Climb {
@@ -41,7 +45,7 @@ export class Climb {
     const C = this.rules.climber;
     this.climbers = Array.from({ length: this.players }, (_, i) => ({
       i, x: this.spawn.x + i * this.T, y: this.spawn.y, vx: 0, vy: 0, dx: 0,
-      w: C.w, h: C.h, face: 1, grounded: false, support: null, coyote: 0, buffer: 0,
+      w: C.w, h: C.h, face: 1, grounded: false, support: null, coyote: 0, buffer: 0, carry: null,
       stun: 0, safe: 0, hitT: 0, hitCool: 0, hitDone: false, hanging: false, atFlag: false,
       input: {},
     }));
@@ -49,7 +53,7 @@ export class Climb {
 
     this.hearts = carry?.hearts ?? this.diff.hearts;
     this.score = carry?.score ?? 0;
-    this.stats = { gold: 0, goldTotal: this.items.filter((it) => it.type === 'g').length, oranges: 0, shoos: 0, breaks: 0, falls: 0 };
+    this.stats = { gold: 0, goldTotal: this.slots.length, oranges: 0, shoos: 0, breaks: 0, falls: 0, secrets: 0 };
     this.storks = [];
     this.drops = [];
     this.wind = { on: false, dir: 1, t: this.def.wind ? this.def.wind.every : 0 };
@@ -75,11 +79,19 @@ export class Climb {
     this.storkRows = [];
     this.droppers = [];
     this.crumbles = new Map();
+    this.pieces = [];
+    this.slots = [];
+    this.plates = [];
+    this.gates = [];
     for (let r = 0; r < this.h; r++) {
       for (let c = 0; c < this.w; c++) {
         const ch = this.grid[r][c];
         const at = { x: c * T + T / 2, y: r * T + T / 2 };
-        if ('goh'.includes(ch)) { this.items.push({ type: ch, ...at, taken: false }); this.grid[r][c] = ' '; }
+        if ('oh'.includes(ch)) { this.items.push({ type: ch, ...at, taken: false }); this.grid[r][c] = ' '; }
+        else if (ch === 'g') { this.pieces.push({ i: this.pieces.length, ...at, home: { ...at }, vy: 0, held: null, placed: false }); this.grid[r][c] = ' '; }
+        else if (ch === 'H') { this.slots.push({ c, r, ...at, filled: false }); this.grid[r][c] = ' '; }
+        else if (ch === '_') this.plates.push({ c, r, pressed: false, latched: false });
+        else if (ch === '|') this.gates.push({ c, r, open: false });
         else if (ch === 'S') { this.spawn = { x: at.x, y: (r + 1) * T }; this.grid[r][c] = ' '; }
         else if (ch === 'F') { this.flag = { x: at.x, y: (r + 1) * T, c, r }; this.grid[r][c] = ' '; }
         else if (ch === 'k') { if (!this.storkRows.includes(r)) this.storkRows.push(r); this.grid[r][c] = ' '; }
@@ -103,6 +115,11 @@ export class Climb {
       m.max = (b + 1) * T - m.w;
     }
     this.storkT = this.storkRows.map((_, k) => 1 + k * 1.3);
+    // Slots name real parts of the palace, lowest first (data: level.parts).
+    this.slots.sort((a, b) => b.r - a.r || a.c - b.c);
+    this.slots.forEach((sl, k) => { sl.i = k; sl.part = this.def.parts?.[k] ?? null; });
+    // A gate answers to the plates within a few floors of it.
+    for (const gt of this.gates) gt.plates = this.plates.filter((p) => Math.abs(p.r - gt.r) <= 7);
     if (!this.spawn) throw new Error(`${this.def.id}: no S in the map`);
     if (!this.flag) throw new Error(`${this.def.id}: no F in the map`);
   }
@@ -112,8 +129,11 @@ export class Climb {
     if (r < 0 || r >= this.h) return ' ';
     const ch = this.grid[r][c];
     if (ch === 'c' && this.crumbles.get(`${c},${r}`)?.broken) return ' ';
+    if (ch === '|' && this.gateAt(c, r)?.open) return ' ';
     return ch;
   }
+
+  gateAt(c, r) { return this.gates.find((g) => g.c === c && g.r === r); }
 
   get mapH() { return this.h * this.T; }
   clampCam(y) { return Math.max(0, Math.min(this.mapH - this.viewH, y)); }
@@ -189,9 +209,11 @@ export class Climb {
 
   // Hitting a tile from below (or with the mallet): rubble breaks.
   bump(c, r) {
-    if (this.tile(c, r) !== 'x') { this.emit('bonk', { c, r }); return; }
+    const ch = this.tile(c, r);
+    if (!BREAKS.has(ch)) { this.emit('bonk', { c, r }); return; }
     this.grid[r][c] = ' ';
     this.stats.breaks++;
+    if (ch === 'X') { this.stats.secrets++; this.emit('secret', { c, r, x: c * this.T + this.T / 2, y: r * this.T + this.T / 2 }); }
     this.score += this.rules.score.break;
     this.emit('break', { c, r, x: c * this.T + this.T / 2, y: r * this.T + this.T / 2 });
   }
@@ -225,6 +247,11 @@ export class Climb {
       if (cr.broken) { if ((cr.back -= dt) <= 0) { cr.broken = false; cr.t = 0; this.emit('restored', { key }); } }
       else if (cr.standing) { if ((cr.t += dt) >= R.crumble.after) { cr.broken = true; cr.back = R.crumble.back; const [c, r] = key.split(',').map(Number); this.emit('crumble', { c, r }); } }
       cr.standing = false;
+    }
+    this.updatePlates();
+    for (const p of this.pieces) {
+      if (p.cool > 0) p.cool -= dt;
+      if (p.held == null && !p.placed && p.vy > 0) this.dropPiece(p, dt);
     }
     const visible = (y) => y > this.camY - this.T && y < this.camY + this.viewH;
     // Storks cross their rows every so often, but only on screen.
@@ -265,6 +292,45 @@ export class Climb {
     }
   }
 
+  // Plates are pressed by anyone standing on them. With one player a plate
+  // stays down once pressed, since nobody is there to hold it.
+  updatePlates() {
+    for (const p of this.plates) {
+      const was = p.pressed;
+      p.pressed = this.climbers.some((b) => b.grounded && b.support?.type === 'tile' && b.support.c === p.c && b.support.r === p.r);
+      if (p.pressed && this.players === 1) p.latched = true;
+      if (p.pressed !== was) this.emit(p.pressed ? 'plateDown' : 'plateUp', { c: p.c, r: p.r });
+    }
+    for (const gt of this.gates) {
+      const want = gt.plates.some((p) => p.pressed || p.latched);
+      if (want === gt.open) continue;
+      // A gate never shuts on someone standing in it.
+      const x0 = gt.c * this.T, y0 = gt.r * this.T;
+      if (!want && this.climbers.some((b) => b.x + b.w / 2 > x0 && b.x - b.w / 2 < x0 + this.T && b.y > y0 && b.y - b.h < y0 + this.T)) continue;
+      gt.open = want;
+      this.emit(want ? 'gateOpen' : 'gateShut', { c: gt.c, r: gt.r });
+    }
+  }
+
+  // A dropped carved stone falls to the next floor.
+  dropPiece(p, dt) {
+    p.vy = Math.min(900, p.vy + this.rules.climber.gravity * dt);
+    const y = p.y + p.vy * dt, c = Math.floor(p.x / this.T);
+    const r = Math.floor((y + 12) / this.T);
+    const ch = this.tile(c, r);
+    if (SOLID.has(ch) || LEDGE.has(ch)) { p.y = r * this.T - 12; p.vy = 0; p.resting = true; return; }
+    p.y = y;
+    if (p.y > this.mapH) Object.assign(p, { x: p.home.x, y: p.home.y, vy: 0 });
+  }
+
+  drop(b) {
+    if (b.carry == null) return;
+    const p = this.pieces[b.carry];
+    Object.assign(p, { held: null, x: b.x, y: b.y - b.h - 8, vy: 1, resting: false, cool: 1 });
+    b.carry = null;
+    this.emit('dropPiece', { i: b.i, x: p.x, y: p.y });
+  }
+
   updateClimber(b, inp, dt) {
     const C = this.rules.climber;
     b.input = inp;
@@ -281,7 +347,7 @@ export class Climb {
     if (want) b.face = want;
     const accel = b.grounded ? C.accelGround : C.accelAir;
     // A gust shifts the speed you settle at: walk into it and you barely move.
-    const target = want * C.speed + (this.wind.on ? this.wind.dir * this.def.wind.force : 0);
+    const target = want * C.speed * (b.carry != null ? this.rules.carry.speed : 1) + (this.wind.on ? this.wind.dir * this.def.wind.force : 0);
     b.vx += Math.max(-accel * dt, Math.min(accel * dt, target - b.vx));
 
     b.coyote = b.grounded ? C.coyote : b.coyote - dt;
@@ -297,7 +363,7 @@ export class Climb {
     b.vy = Math.min(b.vy, C.maxFall);
 
     // The mallet.
-    if (free && inp.hitPressed && b.hitCool <= 0) {
+    if (free && inp.hitPressed && b.hitCool <= 0 && b.carry == null) {
       b.hitT = this.rules.hit.time; b.hitCool = this.rules.hit.cooldown; b.hitDone = false;
       this.emit('swing', { i: b.i });
     }
@@ -337,7 +403,7 @@ export class Climb {
     // Rubble right in front of you.
     const c = Math.floor((b.face > 0 ? x1 - 4 : x0 + 4) / this.T);
     for (const r of [Math.floor((b.y - 10) / this.T), Math.floor((b.y - b.h + 4) / this.T)]) {
-      if (this.tile(c, r) === 'x') { this.bump(c, r); b.hitDone = true; }
+      if (BREAKS.has(this.tile(c, r))) { this.bump(c, r); b.hitDone = true; }
     }
   }
 
@@ -411,8 +477,26 @@ export class Climb {
       else if (it.type === 'h') { this.hearts = Math.min(this.diff.maxHearts, this.hearts + 1); }
       this.emit('pickup', { kind: it.type, x: it.x, y: it.y, i: b.i });
     }
+    // Carved stones: pick one up, carry it to a slot.
+    for (const p of this.pieces) {
+      if (b.carry != null || p.held != null || p.placed || p.cool > 0 || Math.abs(p.x - b.x) > 26 || p.y < top - 18 || p.y > bottom + 8) continue;
+      p.held = b.i; b.carry = p.i;
+      this.emit('pickup', { kind: 'p', x: p.x, y: p.y, i: b.i });
+    }
+    if (b.carry != null) {
+      const p = this.pieces[b.carry];
+      p.x = b.x; p.y = b.y - b.h - 12;
+      const sl = this.slots.find((q) => !q.filled && Math.abs(q.x - b.x) < 40 && Math.abs(q.y - (b.y - b.h / 2)) < 44);
+      if (sl) {
+        sl.filled = true; p.placed = true; p.held = null; b.carry = null;
+        Object.assign(p, { x: sl.x, y: sl.y });
+        this.stats.gold++; this.score += S.gold;
+        this.emit('placed', { slot: sl.i, part: sl.part, x: sl.x, y: sl.y, i: b.i });
+      }
+    }
     if (b.safe > 0 || b.stun > 0) return;
     const hurt = (fromX) => {
+      this.drop(b);
       b.stun = this.rules.stork.stun;
       b.safe = this.rules.stork.stun + 0.6;
       b.vx = (b.x >= fromX ? 1 : -1) * this.rules.stork.knock;
@@ -431,6 +515,7 @@ export class Climb {
     const down = this.climbers.filter((b) => b.y - b.h > limit);
     if (!down.length) return;
     for (const b of down) {
+      if (b.carry != null) { const p = this.pieces[b.carry]; Object.assign(p, { held: null, x: p.home.x, y: p.home.y, vy: 0 }); b.carry = null; }
       this.hearts--;
       this.stats.falls++;
       this.emit('fall', { i: b.i });
