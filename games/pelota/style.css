@@ -211,3 +211,19 @@ h1, h2, h3, p { margin: 0; }
 .restored .mark { display: inline-block; width: 18px; font-weight: bold; color: var(--good); }
 .restored .missing { opacity: .55; }
 .reveal > .hint { position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; color: var(--muted); }
+
+/* ---- rival cards, hit feedback, the txapela ---- */
+.rival { justify-content: flex-end; }
+.rival-card { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); min-width: 460px; padding: 14px 28px; text-align: center; }
+.rival-card h2 { font-size: 32px; }
+.rival-card .about { font-size: 18px; font-style: italic; margin: 4px 0 8px; }
+.fb { position: absolute; left: 50%; top: 250px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; pointer-events: none; animation: fbUp 1.1s ease-out forwards; }
+.fb b { font: bold 30px/1 var(--serif); text-shadow: 0 2px 0 rgba(0, 0, 0, .5), 0 4px 12px rgba(0, 0, 0, .5); }
+.fb b.perfect { color: #ffd65a; font-size: 38px; }
+.fb b.good { color: #fff4d6; }
+.fb b.poor { color: #e8c8b8; font-size: 24px; }
+.fb span { font: bold 15px var(--sans); color: #fff; text-shadow: 0 1px 4px #000; margin-top: 2px; }
+@keyframes fbUp { from { transform: translate(-50%, 10px) scale(.9); opacity: 0; } 20% { transform: translate(-50%, 0) scale(1.05); opacity: 1; } 75% { opacity: 1; } to { transform: translate(-50%, -24px); opacity: 0; } }
+.txapela { justify-content: flex-end; }
+.txapela-card { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); max-width: 600px; padding: 14px 28px; text-align: center; }
+.txapela-card h2 { font-size: 40px; color: #8a2018; }

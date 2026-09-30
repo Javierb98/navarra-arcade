@@ -5,7 +5,7 @@
 import { h } from './dom.js';
 import { t, getLang, setLang, nextLang, LANGS } from './i18n.js';
 import { Match } from '../core/pelota.js';
-import { drawCourt, scene, finish } from './art.js';
+import { drawCourt, scene, finish, portrait, drawTxapela } from './art.js';
 import { sfx } from './audio.js';
 import { settings, topScores, qualifies, addScore } from './store.js';
 import { langParam } from './arcade.js';
@@ -55,7 +55,7 @@ function demo(app) {
   };
 }
 
-function newView() { return { anim: [{ run: 0 }, { run: 0 }], trail: [], marks: [], cheer: 0 }; }
+function newView(light = 'sunset') { return { anim: [{ run: 0 }, { run: 0 }], trail: [], marks: [], cheer: 0, fx: [], shake: 0, light }; }
 
 // Animation state that isn't part of the rules: run cycles, the ball's
 // streak, marks on the wall and floor, the crowd.
@@ -70,9 +70,31 @@ function follow(m, view, dt) {
     if (e.type === 'bounce') view.marks.push({ x: e.x, y: e.y, z: 0, life: 0.7, max: 0.7 });
     if (e.type === 'point') view.cheer = 1.6 + Math.min(2, e.rally * 0.2);
   }
+  for (const e of m.events) {
+    if (e.type === 'wall') puff(view, e.x, 0.15, e.z, 5, '#e8dcc4', 0.25);
+    if (e.type === 'bounce') puff(view, e.x, e.y, 0.05, 4, '#cdbb9a', 0.18);
+    if (e.type === 'hit' && e.perfect) view.shake = 0.35;
+  }
+  for (const pl of m.p) if (Math.hypot(pl.vx, pl.vy) > 5 && Math.random() < dt * 8) puff(view, pl.x, pl.y + 0.2, 0.05, 1, '#c8b494', 0.12);
   for (const k of view.marks) k.life -= dt;
   view.marks = view.marks.filter((k) => k.life > 0);
   view.cheer = Math.max(0, view.cheer - dt);
+  view.shake = Math.max(0, view.shake - dt * 1.5);
+  for (const p of view.fx) { p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.z = Math.max(0, p.z + p.vz * dt); p.vz -= (p.g ?? 0) * dt; }
+  view.fx = view.fx.filter((p) => p.life > 0);
+}
+
+// A puff of dust or plaster, in world coordinates.
+function puff(view, x, y, z, n, colour, size) {
+  for (let k = 0; k < n; k++) {
+    const a = Math.random() * Math.PI * 2;
+    view.fx.push({ kind: 'puff', x, y, z, vx: Math.cos(a) * 0.9, vy: Math.sin(a) * 0.5 + 0.3, vz: 0.3 + Math.random() * 0.5, life: 0.5, max: 0.5, size: size * 0.35, grow: size * 0.9, colour, alpha: 0.3 });
+  }
+}
+
+function confetti(view, n = 80) {
+  const cols = ['#c0392b', '#f3ece0', '#2e7d4f', '#e8b840'];
+  for (let k = 0; k < n; k++) view.fx.push({ kind: 'confetti', x: Math.random() * 12, y: 8 + Math.random() * 20, z: 6 + Math.random() * 4, vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2, vz: -0.5 - Math.random(), g: 0.3, life: 4, max: 4, colour: cols[k % 4] });
 }
 
 // ---- attract -------------------------------------------------------------------------------
@@ -138,7 +160,7 @@ export function menu(app) {
       if (inp.any('left')) change(-1);
       if (inp.any('right')) change(1);
       if (inp.any('c')) { nextLang(1); sfx.move(); show(); }
-      if (inp.any('start') || (inp.any('a') && rows[row] === 'go')) { sfx.ok(); app.session = { ...S }; app.go('story'); }
+      if (inp.any('start') || (inp.any('a') && rows[row] === 'go')) { sfx.ok(); app.session = { ...S, stage: 0, total: 0, perfect: 0, longest: 0 }; app.go('story'); }
       else if (inp.any('a')) change(1);
     },
     draw(ctx) { ctx.drawImage(scene(), 0, 0, W, H); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.45)'; ctx.fillRect(0, 0, W, H); },
@@ -161,7 +183,7 @@ export function story(app) {
       if (app.input.any('start')) { app.go('howto'); return; }
       if (app.input.any('a') || (t0 += dt) > 8) { sfx.move(); t0 = 0; if (++i >= panels.length) app.go('howto'); else show(); }
     },
-    draw(ctx) { ctx.drawImage(scene(i === 0), 0, 0, W, H); finish(ctx); },
+    draw(ctx) { ctx.drawImage(scene('afternoon', i === 0), 0, 0, W, H); finish(ctx); },
   };
 }
 
@@ -169,12 +191,36 @@ export function howto(app) {
   let t0 = 0;
   app.ui.replaceChildren(h('div', { class: 'overlay howto' }, h('div', { class: 'parchment brief-card' },
     h('h2', {}, t('howto.title')),
-    h('ul', { class: 'howto-list' }, ['move', 'a', 'b', 'aim', 'turn'].map((k) => h('li', {}, rich(t(`howto.${k}`))))),
-    h('p', { class: 'small' }, t('hud.to', { n: app.data.rules.match.to })),
+    h('ul', { class: 'howto-list' }, ['move', 'a', 'txoko', 'ancho', 'globo', 'b', 'timing', 'turn'].map((k) => h('li', {}, rich(t(`howto.${k}`))))),
+    app.session.players === 2 ? h('p', { class: 'small' }, t('hud.to', { n: app.data.rules.match.to })) : null,
     h('p', { class: 'hint' }, rich(`[A] ${t('menu.go')}`)))));
   return {
-    update(dt) { t0 += dt; if ((t0 > 0.6 && (app.input.any('a') || app.input.any('start'))) || t0 > 25) { sfx.ok(); app.go('play'); } },
+    update(dt) { t0 += dt; if ((t0 > 0.6 && (app.input.any('a') || app.input.any('start'))) || t0 > 25) { sfx.ok(); app.go(app.session.players === 1 ? 'rival' : 'play'); } },
     draw(ctx) { ctx.drawImage(scene(), 0, 0, W, H); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.35)'; ctx.fillRect(0, 0, W, H); },
+  };
+}
+
+// ---- the next rival in the tournament ----------------------------------------------------------------
+
+export function rival(app) {
+  const S = app.session, stages = app.data.rules.tournament, st = stages[S.stage];
+  let t0 = 0;
+  app.ui.replaceChildren(h('div', { class: 'overlay rival' }, h('div', { class: 'parchment rival-card' },
+    h('p', { class: 'kicker' }, t('rival.kicker', { n: S.stage + 1, total: stages.length })),
+    h('h2', {}, t(`rival.${st.id}.name`)),
+    h('p', { class: 'about' }, t(`rival.${st.id}.about`)),
+    h('p', { class: 'small' }, `${t(`light.${st.place}`)} · ${t('rival.to', { n: st.to })}`),
+    h('p', { class: 'hint' }, rich(`[A] ${t('menu.go')}`)))));
+  return {
+    update(dt) { t0 += dt; if ((t0 > 0.6 && (app.input.any('a') || app.input.any('start'))) || t0 > 20) { sfx.ok(); app.go('play'); } },
+    draw(ctx) {
+      ctx.drawImage(scene(st.place), 0, 0, W, H); finish(ctx);
+      ctx.fillStyle = 'rgba(20,12,6,0.4)'; ctx.fillRect(0, 0, W, H);
+      portrait(ctx, 'red', 250, 250, 1.2, app.time);
+      portrait(ctx, st.id, 710, 250, 1.2, app.time + 1);
+      ctx.fillStyle = '#fff4d6'; ctx.font = 'bold 44px "Palatino Linotype", Palatino, Georgia, serif'; ctx.textAlign = 'center';
+      ctx.fillText('vs', 480, 262);
+    },
   };
 }
 
@@ -182,18 +228,27 @@ export function howto(app) {
 
 export function play(app) {
   const S = app.session;
-  const m = new Match(app.data.rules, { players: S.players, difficulty: S.difficulty, seed: seed(app) });
+  const R = app.data.rules, st = S.players === 1 ? R.tournament[S.stage] : null;
+  const m = new Match(R, { players: S.players, difficulty: S.difficulty, seed: seed(app), opponent: st ? R.opponents[st.id] : null, to: st ? st.to : R.match.to });
   if (new URLSearchParams(location.search).has('debug')) window.match = m; // developer peek
-  const view = newView();
+  const view = newView(new URLSearchParams(location.search).get('light') ?? (st ? st.place : 'sunset')); // ?light= is a developer switch
+  view.perfectAt = R.timing.perfect;
   const taught = new Set();
   let endT = 0, callUntil = 0, cardUntil = 0;
 
   const el = {
     board: h('div', { class: 'board' }), status: h('p', { class: 'status' }),
-    call: h('div', { class: 'call hidden' }), card: h('div', { class: 'gloss parchment hidden' }),
-    help: h('p', { class: 'play-help' }, rich(`${t('howto.a')} · ${t('howto.b')}`)),
+    call: h('div', { class: 'call hidden' }), card: h('div', { class: 'gloss parchment hidden' }), fb: h('div', { class: 'fb hidden' }),
+    help: h('p', { class: 'play-help' }, rich(t('help.play'))),
   };
-  app.ui.replaceChildren(h('div', { class: 'overlay play' }, el.board, el.status, el.call, el.card, el.help));
+  app.ui.replaceChildren(h('div', { class: 'overlay play' }, el.board, el.status, el.call, el.card, el.fb, el.help));
+  let fbUntil = 0;
+  const feedback = (e) => {
+    const grade = e.perfect ? 'perfect' : e.quality > 0.55 ? 'good' : 'poor';
+    el.fb.replaceChildren(h('b', { class: grade }, t(`fb.${grade}`)), h('span', {}, t(`shot.${e.kind}`)));
+    el.fb.className = `fb ${e.p ? 'blue' : 'red'}`;
+    fbUntil = app.time + 1.1;
+  };
 
   let boardKey = '';
   const renderBoard = () => {
@@ -230,7 +285,12 @@ export function play(app) {
 
   const handle = () => {
     for (const e of m.events) {
-      if (e.type === 'hit') { sfx.hit(e.quality); if (e.kind === 'soft') teach('dejada'); }
+      if (e.type === 'hit') {
+        sfx.hit(e.quality);
+        if (!m.p[e.p].ai) feedback(e);
+        if (e.kind === 'dejada') teach('dejada');
+        if (e.kind === 'txoko') teach('txoko');
+      }
       else if (e.type === 'serve') { sfx.hit(1); if (m.score[0] + m.score[1] > 0) teach('saque'); }
       else if (e.type === 'wall') { sfx.wall(); teach('frontis'); }
       else if (e.type === 'chapa') sfx.chapa();
@@ -243,7 +303,7 @@ export function play(app) {
         sfx.point(e.rally);
         if (reason) teach(reason);
         teach('tanto');
-      } else if (e.type === 'over') { call(t('call.win', { who: who(e.winner) }), `${m.score[0]} – ${m.score[1]}`, 4); sfx.win(); }
+      } else if (e.type === 'over') { call(t('call.win', { who: who(e.winner) }), `${m.score[0]} – ${m.score[1]}`, 4); sfx.win(); if (!m.p[e.winner].ai) confetti(view); }
     }
   };
 
@@ -260,10 +320,18 @@ export function play(app) {
     update(dt) {
       if (callUntil && app.time > callUntil) { el.call.className = 'call hidden'; callUntil = 0; }
       if (cardUntil && app.time > cardUntil) { el.card.className = 'gloss parchment hidden'; cardUntil = 0; }
+      if (fbUntil && app.time > fbUntil) { el.fb.className = 'fb hidden'; fbUntil = 0; }
       nextLesson();
       if (m.phase === 'over') {
         m.step([], dt); follow(m, view, dt);
-        if ((endT += dt) > 4) app.go('results', { m });
+        if ((endT += dt) > 4) {
+          S.perfect += m.stats.perfect[0]; S.longest = Math.max(S.longest, m.stats.longest);
+          S.total += m.score[S.players === 1 ? 0 : m.winner] * R.score.point + m.stats.longest * R.score.rally + (m.winner === 0 || S.players === 2 ? R.score.win : 0);
+          if (S.players === 1 && m.winner === 0) {
+            if (S.stage + 1 < R.tournament.length) { S.stage++; app.go('rival'); }
+            else app.go('txapela', { m });
+          } else app.go('results', { m });
+        }
         return;
       }
       m.step(inputs(), dt);
@@ -278,18 +346,18 @@ export function play(app) {
 // ---- the end -------------------------------------------------------------------------------------------
 
 export function results(app, { m }) {
-  const S = app.session, R = app.data.rules.score;
-  // One player: your own points. Two: the winner's.
-  const me = S.players === 1 ? 0 : m.winner;
-  const total = m.score[me] * R.point + m.stats.longest * R.rally + (m.winner === me ? R.win : 0);
+  const S = app.session;
+  const total = S.total;
+  const champion = S.players === 1 && m.winner === 0;
   let t0 = 0;
   const row = (label, value) => h('div', { class: 'res-row' }, h('span', {}, label), h('span', { class: 'res-val' }, value));
-  const title = S.players === 1 ? (m.winner === 0 ? t('results.youWon') : t('results.youLost')) : t('call.win', { who: who(m.winner) });
+  const title = S.players === 1 ? (champion ? t('txapela.title') : t('results.out')) : t('call.win', { who: who(m.winner) });
   app.ui.replaceChildren(h('div', { class: 'overlay results' }, h('div', { class: 'parchment res-card' },
     h('h2', {}, title),
     h('p', { class: 'final' }, h('span', { class: 'red' }, `${t('hud.red')} ${m.score[0]}`), ' – ', h('span', { class: 'blue' }, `${m.score[1]} ${t('hud.blue')}`)),
-    row(t('results.longest'), String(m.stats.longest)),
-    row(t('results.hits'), `${m.stats.hits[0]} / ${m.stats.hits[1]}`),
+    S.players === 1 && !champion ? h('p', { class: 'small' }, t('results.reached', { n: S.stage + 1 })) : null,
+    row(t('results.longest'), String(S.longest)),
+    row(t('results.perfect'), String(S.perfect)),
     h('div', { class: 'res-total' }, h('span', {}, t('results.total')), h('b', {}, String(total))),
     h('p', { class: 'hint' }, rich(t('ui.next'))))));
   return {
@@ -300,8 +368,44 @@ export function results(app, { m }) {
       if (qualifies(COURSE, S.difficulty, total)) app.go('initials', { score: total });
       else app.go('fact');
     },
-    draw(ctx) { ctx.drawImage(scene(true), 0, 0, W, H); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.4)'; ctx.fillRect(0, 0, W, H); },
+    draw(ctx) { ctx.drawImage(scene('night', true), 0, 0, W, H); finish(ctx); ctx.fillStyle = 'rgba(20,12,6,0.4)'; ctx.fillRect(0, 0, W, H); },
   };
+}
+
+// Winning the tournament: the txapela.
+export function txapela(app, { m }) {
+  let t0 = 0;
+  const view = newView('night');
+  confetti(view, 140);
+  app.ui.replaceChildren(h('div', { class: 'overlay txapela' }, h('div', { class: 'parchment txapela-card' },
+    h('h2', {}, t('txapela.title')), h('p', {}, t('txapela.text')),
+    h('p', { class: 'hint' }, rich(t('ui.next'))))));
+  sfx.win();
+  return {
+    update(dt) {
+      t0 += dt;
+      for (const p of view.fx) { p.life -= dt * 0.5; p.x += p.vx * dt; p.y += p.vy * dt; p.z = Math.max(0, p.z + p.vz * dt); }
+      if (t0 > 1.5 && (app.input.any('a') || app.input.any('start'))) { sfx.ok(); app.go('results', { m }); }
+    },
+    draw(ctx) {
+      ctx.drawImage(scene('night', Math.floor(app.time * 4) % 2 === 0), 0, 0, W, H);
+      ctx.fillStyle = 'rgba(10,8,20,0.35)'; ctx.fillRect(0, 0, W, H);
+      const drop = Math.min(1, t0 / 1.4);
+      portrait(ctx, 'red', 480, 210, 1.5, app.time);
+      drawTxapela(ctx, 480, 210 - 40 * 1.5 - (1 - drop) * 160, 1.5 * 1.1);
+      drawFxLite(ctx, view.fx);
+      finish(ctx);
+    },
+  };
+}
+
+function drawFxLite(ctx, fx) {
+  for (const p of fx) {
+    ctx.globalAlpha = Math.max(0, p.life / p.max);
+    ctx.fillStyle = p.colour;
+    ctx.fillRect(80 + p.x * 70, 540 - p.z * 60 - (p.max - p.life) * 60 % 540, 5, 3);
+  }
+  ctx.globalAlpha = 1;
 }
 
 const ALPHABET = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';

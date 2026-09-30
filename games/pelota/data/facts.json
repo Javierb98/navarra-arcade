@@ -42,6 +42,12 @@
       "text_key": "fact.modes",
       "source": null,
       "review_status": "draft"
+    },
+    {
+      "id": "pelota.txapela",
+      "text_key": "fact.txapela",
+      "source": null,
+      "review_status": "draft"
     }
   ]
 }
