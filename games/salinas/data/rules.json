@@ -1,0 +1,100 @@
+{
+  "_note": "Seconds, metres, kilos. Run npm test and node tools/sim.js after changing anything.",
+  "season": {
+    "days": 8,
+    "dayLength": 40
+  },
+  "start": {
+    "coins": 0,
+    "beds": 3,
+    "water": [
+      0.35,
+      0.55,
+      0.75
+    ]
+  },
+  "walk": 3.2,
+  "flow": {
+    "base": 0.16,
+    "perLevel": 0.35
+  },
+  "evap": 0.085,
+  "sun": {
+    "perDay": 0.03
+  },
+  "saltPerFill": 20,
+  "quality": {
+    "window": 6,
+    "fade": 10,
+    "floor": 0.35,
+    "white": 0.9
+  },
+  "rake": {
+    "base": 0.6,
+    "perLevel": 0.4
+  },
+  "basket": {
+    "base": 15,
+    "perLevel": 10,
+    "slow": 0.35
+  },
+  "price": {
+    "base": 1.0,
+    "whiteBonus": 1.6
+  },
+  "storm": {
+    "chance": 0.45,
+    "earliest": 14,
+    "warning": 7,
+    "length": 8,
+    "dissolve": 0.12,
+    "coverPerLevel": 0.3
+  },
+  "donkey": {
+    "speed": 1.5,
+    "carry": 15
+  },
+  "costs": {
+    "era": {
+      "base": 40,
+      "growth": 1.35
+    },
+    "rasero": [
+      30,
+      60,
+      110
+    ],
+    "cesto": [
+      25,
+      55,
+      100
+    ],
+    "canal": [
+      35,
+      70,
+      130
+    ],
+    "burro": [
+      90,
+      180
+    ],
+    "toldo": [
+      45,
+      90,
+      160
+    ]
+  },
+  "difficulty": {
+    "easy": {
+      "evap": 1.25,
+      "storm": 0.6
+    },
+    "normal": {
+      "evap": 1,
+      "storm": 1
+    }
+  },
+  "score": {
+    "whiteKg": 1
+  }
+}
