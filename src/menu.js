@@ -242,15 +242,24 @@ function fitText() {
     const room = info.getBoundingClientRect().height;
     for (let z = 1; z >= 0.62 && body.getBoundingClientRect().height > room + 0.5; z -= 0.04) body.style.zoom = String(z);
   }
-  for (const c of el.cardEls) for (const n of c.querySelectorAll('.name, .pace')) shrink(n);
+  // Cards match each other: every name, and every time tag, gets the one
+  // size at which all of them fit.
+  for (const sel of ['.name', '.pace']) {
+    const all = el.cardEls.map((c) => c.querySelector(sel));
+    for (const n of all) shrink(n, sel === '.name');
+    const sizes = all.filter((n) => n.clientWidth).map((n) => parseFloat(getComputedStyle(n).fontSize));
+    if (sizes.length) { const min = Math.min(...sizes); for (const n of all) n.style.fontSize = `${min}px`; }
+  }
   for (const n of [el.hint, el.exit, ...el.feature.querySelectorAll('.pace-tag')]) shrink(n);
 }
 // One line of text, made smaller until it fits its box.
-function shrink(n) {
+// (Names may take two lines, so for them height counts too.)
+function shrink(n, twoLines = false) {
   n.style.fontSize = '';
   if (!n.clientWidth) return;
   let size = parseFloat(getComputedStyle(n).fontSize);
-  while (n.scrollWidth > n.clientWidth + 0.5 && size > 4.5) { size -= 0.25; n.style.fontSize = `${size}px`; }
+  const over = () => n.scrollWidth > n.clientWidth + 0.5 || (twoLines && n.scrollHeight > n.clientHeight + 0.5);
+  while (over() && size > 4.5) { size -= 0.25; n.style.fontSize = `${size}px`; }
 }
 addEventListener('resize', () => el && fitText());
 document.fonts?.ready.then(() => el && fitText());

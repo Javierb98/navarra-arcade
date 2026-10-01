@@ -40,7 +40,7 @@ h1 {
 .lang.on { color: #111; background: var(--rope); border-color: var(--rope); }
 
 /* ---- featured game ---- */
-.feature { flex: none; height: 134px; position: relative; }
+.feature { flex: none; height: 124px; position: relative; }
 .feature-inner { position: absolute; inset: 0; display: flex; gap: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px; }
 /* Gold corner details, like the fittings on an old chest. */
 .feature-inner::before, .card::before {
@@ -59,7 +59,7 @@ h1 {
 @keyframes inLeft { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.preview { flex: 0 0 200px; height: 112px; align-self: center; border-radius: 4px; overflow: hidden; position: relative; border: 1px solid var(--line); }
+.preview { flex: 0 0 190px; height: 107px; align-self: center; border-radius: 4px; overflow: hidden; position: relative; border: 1px solid var(--line); }
 /* Gameplay footage in the preview. */
 .clip { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
 .preview.soon .clip { filter: grayscale(0.5) brightness(0.85); }
@@ -86,7 +86,7 @@ h1 {
 .cards { display: flex; gap: 6px; justify-content: center; transition: opacity 0.25s; }
 .cards.dim { opacity: 0.55; }
 .card { position: relative; overflow: hidden; flex: 0 1 108px; min-width: 0; background: var(--panel); border: 1.5px solid var(--line); border-radius: 5px; padding: 3px; text-align: center; cursor: pointer; transition: transform 0.2s ease-out, border-color 0.2s; }
-.card .thumb { height: 22px; border-radius: 3px; background-size: cover; background-position: center; image-rendering: pixelated; }
+.card .thumb { height: 20px; border-radius: 3px; background-size: cover; background-position: center; image-rendering: pixelated; }
 .card .thumb.blank { background: repeating-linear-gradient(45deg, #3a3342 0 4px, #2f2937 4px 8px); color: var(--muted); font-size: 10px; display: flex; align-items: center; justify-content: center; }
 .card.soon .thumb { filter: grayscale(0.5) brightness(0.8); }
 .card .name { display: block; margin-top: 2px; padding: 0 5px; font-size: 8px; white-space: nowrap; overflow: hidden; }
@@ -192,10 +192,10 @@ body.tall footer { order: 4; }
 
 /* Title and languages share one row; languages go to two-letter codes. */
 body.tall header { gap: 6px; }
-body.tall h1 { font-size: 15px; letter-spacing: 0.5px; white-space: nowrap; }
+body.tall h1 { letter-spacing: 0.5px; white-space: nowrap; }
 body.tall .lang-label, body.tall .lang .long { display: none; }
 body.tall .lang .short { display: inline; }
-body.tall .lang { font-size: 9px; padding: 2px 5px; }
+body.tall .lang { padding: 2px 5px; }
 .lang .short { display: none; }
 
 /* The strip: small cards, swiped sideways, snapping into place. */
@@ -204,8 +204,7 @@ body.tall .cards::-webkit-scrollbar { display: none; }
 body.tall .card { flex: 0 0 78px; padding: 2px; scroll-snap-align: center; }
 body.tall .card.sel { transform: none; }
 body.tall .card .thumb { height: 28px; }
-body.tall .card .name { font-size: 7.5px; margin-top: 1px; }
-body.tall .card .pace { font-size: 6.5px; }
+body.tall .card .name { margin-top: 1px; }
 
 /* The featured game takes what's left; its text scrolls inside if it must. */
 body.tall #menu > .feature { flex: 0 1 auto; height: auto; min-height: 0; display: flex; }
@@ -214,14 +213,11 @@ body.tall .feature-inner { flex-direction: column; gap: 4px; padding: 5px; }
 body.tall .preview { flex: none; width: var(--preview-w, 100%); height: auto; aspect-ratio: 16 / 9; align-self: center; }
 body.tall .info { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 0 2px; }
 body.tall .info::-webkit-scrollbar { display: none; }
-body.tall .info h2 { font-size: 12px; }
 body.tall .title-row { gap: 5px; }
-body.tall .pace-tag { font-size: 7px; line-height: 10px; }
-body.tall .info .blurb, body.tall .info .lesson { font-size: 8px; line-height: 1.25; }
-body.tall .best { font-size: 7.5px; margin-bottom: 2px; }
-body.tall .info h3 { font-size: 7px; }
+body.tall .pace-tag { line-height: 10px; }
+body.tall .info .blurb, body.tall .info .lesson { line-height: 1.25; }
+body.tall .best { margin-bottom: 2px; }
 body.tall .chips { margin-top: 3px; }
-body.tall .chip { font-size: 7px; }
 
 /* Play is always there upright, touch or not (a mouse can click it too). */
 body.tall .play {
@@ -234,31 +230,15 @@ body.tall .play:disabled { color: var(--muted); background: var(--panel); border
 /* Footer: one line of help, then sponsor and maker side by side. */
 body.tall footer { flex-wrap: wrap; justify-content: space-between; gap: 2px 6px; min-height: 0; padding: 4px 6px; }
 body.tall .hints { order: -1; flex: 1 0 100%; gap: 0; }
-body.tall .hint { font-size: 7.5px; }
 body.tall .hint.small { display: none; }
 body.tall .sponsor-plate, body.tall .credit { flex: 0 1 auto; gap: 1px; }
-body.tall .sponsor-label { font-size: 5.5px; }
 body.tall .sponsor-slot { height: 16px; min-width: 84px; }
 body.tall .sponsor { height: 16px; min-width: 84px; padding: 0 6px; }
 body.tall .sponsor img { max-height: 13px; max-width: 76px; }
-body.tall .credit-mark { height: 16px; font-size: 8px; }
+body.tall .credit-mark { height: 16px; }
 body.tall .credit-mark img { height: 11px; width: 11px; }
 
-body.tall .thanks h2 { font-size: 13px; }
 body.tall .thanks.solo .sponsor.big { min-width: 0; width: 90%; }
-
-/* ---- Basque lettering for the titles and names ---- */
-h1 { font-family: var(--display); font-weight: normal; font-size: 20px; line-height: 1.05; letter-spacing: 1.5px; }
-.info h2 { font-family: var(--display); font-weight: normal; font-size: 16px; letter-spacing: .6px; }
-.info h3 { font-family: var(--display); font-weight: normal; font-size: 9.5px; letter-spacing: 1.2px; }
-.card .name { font-family: var(--display); font-weight: normal; font-size: 10px; letter-spacing: .4px; }
-.thanks h2 { font-family: var(--display); font-weight: normal; letter-spacing: 1px; }
-.sponsor-label { font-family: var(--display); font-weight: normal; font-size: 7.5px; letter-spacing: 1.4px; }
-.play { font-family: var(--display) !important; font-weight: normal !important; letter-spacing: 2px !important; }
-body.tall h1 { font-size: 19px; }
-body.tall .info h2 { font-size: 15px; }
-body.tall .card .name { font-size: 9px; }
-body.tall .sponsor-label { font-size: 6.5px; }
 
 /* ---- the maker's mark ---- */
 .credit-mark { gap: 5px; height: 20px; }
@@ -279,6 +259,42 @@ body.tall .sponsor-label { font-size: 6.5px; }
   animation: shine 7s linear infinite;
 }
 .credit-name small { font-family: var(--display); font-size: 8px; letter-spacing: .5px; color: var(--muted); margin-left: 1px; }
-body.tall .credit-name b { font-size: 12px; }
 body.tall .medal { width: 18px; height: 18px; }
 body.tall .medal img { width: 12px; height: 12px; }
+
+/* ---- one type scale ----
+   Five sizes, each with one job. Basque lettering (BilboINC) only for the
+   big names; everything people read in sentences is the plain face, bright
+   and with room between lines. Phones and tablets keep the same scale. */
+#stage {
+  --t-hero: 20px;   /* the arcade's name */
+  --t-title: 15px;  /* the featured game's name */
+  --t-name: 10px;   /* names on the cards */
+  --t-body: 8.5px;  /* sentences: blurb, lesson, help */
+  --t-small: 7px;   /* labels, tags, chips */
+}
+body.tall #stage { --t-hero: 17px; --t-title: 14px; --t-name: 9px; --t-body: 8.5px; --t-small: 7px; }
+
+h1 { font-family: var(--display); font-weight: normal; font-size: var(--t-hero); line-height: 1.05; letter-spacing: 1.5px; }
+.info h2, .thanks h2 { font-family: var(--display); font-weight: normal; font-size: var(--t-title); letter-spacing: .6px; line-height: 1.1; }
+.card .name { font-family: var(--display); font-weight: normal; font-size: var(--t-name); letter-spacing: .4px; }
+.play { font-family: var(--display) !important; font-weight: normal !important; letter-spacing: 2px !important; }
+
+.info .blurb, .info .lesson, .hint { font-size: var(--t-body); line-height: 1.35; font-weight: normal; }
+.info .blurb { color: #e2d9c4; margin: 2px 0 1px; }
+.info .lesson { color: var(--text); }
+.lang { font-size: var(--t-body); }
+
+.info h3, .sponsor-label, .lang-label, .best, .chip, .pace-tag, .card .pace, .hint.small, .credit-name small {
+  font-family: var(--font); font-size: var(--t-small); line-height: 1.3;
+}
+.info h3, .sponsor-label { font-weight: bold; text-transform: uppercase; letter-spacing: 1.1px; }
+.info h3 { margin-top: 3px; }
+.best { color: var(--rope); font-weight: normal; }
+.chip { line-height: 1.35; }
+.pace-tag, .card .pace { line-height: 1.5; font-weight: bold; }
+.hint.small { color: var(--muted); }
+.credit-name small { font-weight: bold; }
+
+/* Card names: one size for all, up to two lines, centred. */
+.card .name { white-space: normal; overflow: hidden; line-height: 1.05; height: 2.1em; display: flex; align-items: center; justify-content: center; text-align: center; overflow-wrap: normal; word-break: keep-all; }
