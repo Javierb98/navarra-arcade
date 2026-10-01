@@ -99,7 +99,7 @@ const GAMES = {
         const { Helper } = await import('/src/core/minas.js');
         const m = window.mine; window.helper = new Helper(m, 0);
         for (let k = 0; k < 30 * 70; k++) { m.step([window.helper.input()], 1 / 30); }
-        if (window.helper.mode !== 'down') { m.pods[0].fuel = m.stat('tank'); window.helper.mode = 'down'; }
+        if (window.helper.mode !== 'down') { m.miners[0].light = m.stat('lamp'); window.helper.mode = 'down'; }
       });
       await this.act(page, 3);
     },
@@ -109,6 +109,7 @@ const GAMES = {
       while (Date.now() < end) {
         const inp = await page.evaluate(() => window.helper.input());
         await set('ArrowLeft', inp.x < -0.3); await set('ArrowRight', inp.x > 0.3); await set('ArrowUp', inp.y < -0.3); await set('ArrowDown', inp.y > 0.3);
+        if (inp.b) await tap(page, 'KeyX');
         await wait(page, 40);
       }
       for (const k of held) await page.keyboard.up(k);
