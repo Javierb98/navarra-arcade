@@ -243,6 +243,54 @@
       }
     },
     {
+      "id": "minas",
+      "folder": "../navarra-minas",
+      "port": 8780,
+      "url": "games/minas/",
+      "status": "ready",
+      "thumb": "assets/previews/minas.jpg",
+      "preview": "assets/previews/minas.webm",
+      "poster": "assets/previews/minas.jpg",
+      "players": "1",
+      "minutes": "20-30",
+      "pace": "long",
+      "bestFor": {
+        "es": "Para quien tenga tiempo: una partida larga, sin reloj, para un jugador",
+        "eu": "Denbora duenarentzat: partida luzea, erlojurik gabe, jokalari batentzat",
+        "en": "For someone with time: a long game with no clock, for one player"
+      },
+      "title": {
+        "es": "Los Hombres Verdes",
+        "eu": "Gizon Berdeak",
+        "en": "The Green Men"
+      },
+      "blurb": {
+        "es": "Cava hacia abajo y viaja atrás en el tiempo: de la mina de potasa a las galerías romanas, hasta la cueva de los mineros más antiguos.",
+        "eu": "Zulatu behera eta bidaiatu atzera denboran: potasa-meategitik galeria erromatarretara, meatzaririk zaharrenen haitzuloraino.",
+        "en": "Dig down and travel back in time: from the potash mine to the Roman galleries, all the way to the cave of the oldest miners."
+      },
+      "lesson": {
+        "es": "Las minas de Navarra y su gente: Potasas en Beriáin, el hierro de Eugi y Orbaizeta, el cobre de Arce, los romanos y los Hombres Verdes de Urbiola.",
+        "eu": "Nafarroako meategiak eta haien jendea: Potasa Beriainen, Eugiko eta Orbaizetako burdina, Artzibarko kobrea, erromatarrak eta Urbiolako Gizon Berdeak.",
+        "en": "Navarre's mines and their people: the potash pits of Beriáin, the iron of Eugi and Orbaizeta, Arce's copper, the Romans, and the Green Men of Urbiola."
+      },
+      "era": {
+        "es": "De la Edad del Bronce al siglo XX",
+        "eu": "Brontze Arotik XX. mendera",
+        "en": "From the Bronze Age to the 20th century"
+      },
+      "place": {
+        "es": "Bajo toda Navarra",
+        "eu": "Nafarroa osoaren azpian",
+        "en": "Under all of Navarre"
+      },
+      "controls": {
+        "es": "Joystick y botones",
+        "eu": "Joystick-a eta botoiak",
+        "en": "Stick and buttons"
+      }
+    },
+    {
       "id": "espadas",
       "folder": "../navarra-1212/mountain-kings",
       "port": 8740,

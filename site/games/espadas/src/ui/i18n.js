@@ -2,7 +2,10 @@
 // { en, es } objects, read with L().
 
 export const LANGS = ['en', 'es'];
-let lang = 'en';
+// The browser's language if it's English or Spanish; Spanish otherwise
+// (including Basque, which this game doesn't have yet).
+const browser = (navigator.languages?.length ? navigator.languages : [navigator.language ?? '']).map((l) => String(l).toLowerCase().split('-')[0]);
+let lang = browser.find((l) => LANGS.includes(l)) ?? 'es';
 let strings = { en: {}, es: {} };
 
 export function initI18n(table) {

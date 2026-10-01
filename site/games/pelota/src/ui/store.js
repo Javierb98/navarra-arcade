@@ -12,7 +12,14 @@ const write = (k, v) => {
   try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage blocked: keep going */ }
 };
 
-export const settings = { lang: 'es', difficulty: 'normal', volume: 7, ...read(SETTINGS, {}) };
+// The browser's own language when it's one we have; Spanish otherwise.
+export function browserLang(have = ['es', 'eu', 'en']) {
+  const list = typeof navigator === 'undefined' ? [] : navigator.languages?.length ? navigator.languages : [navigator.language ?? ''];
+  for (const l of list) { const code = String(l).toLowerCase().split('-')[0]; if (have.includes(code)) return code; }
+  return 'es';
+}
+
+export const settings = { lang: browserLang(), difficulty: 'normal', volume: 7, ...read(SETTINGS, {}) };
 export const saveSettings = () => write(SETTINGS, settings);
 
 const table = (course, difficulty) => `${course}.${difficulty}`;

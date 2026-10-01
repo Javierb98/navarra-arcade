@@ -1,8 +1,9 @@
-// Settings and high scores, kept in this browser only. Scores are three
-// initials and a number; nothing else about players is stored anywhere.
+// Settings and best times, kept in this browser only. A score is three
+// initials and the seconds it took to reach the cave (lower is better);
+// nothing else about players is stored anywhere.
 
-const SETTINGS = 'kirolak.settings';
-const SCORES = 'kirolak.scores';
+const SETTINGS = 'minas.settings';
+const SCORES = 'minas.times';
 const KEEP = 5;
 
 const read = (k, fallback) => {
@@ -30,13 +31,13 @@ export function topScores(course, difficulty) {
 
 export function qualifies(course, difficulty, score) {
   const list = topScores(course, difficulty);
-  return score > 0 && (list.length < KEEP || score > list[list.length - 1].score);
+  return score > 0 && (list.length < KEEP || score < list[list.length - 1].score);
 }
 
 export function addScore(course, difficulty, name, score) {
   const all = read(SCORES, {});
   const list = [...(all[table(course, difficulty)] ?? []), { name, score }]
-    .sort((a, b) => b.score - a.score).slice(0, KEEP);
+    .sort((a, b) => a.score - b.score).slice(0, KEEP);
   all[table(course, difficulty)] = list;
   write(SCORES, all);
   return list;
