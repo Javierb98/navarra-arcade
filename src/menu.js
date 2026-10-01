@@ -73,8 +73,8 @@ function fit() {
     stage.style.width = `${w}px`;
     stage.style.height = `${H / k}px`;
     stage.style.left = stage.style.top = '0px';
-    // The preview may not eat more than ~40% of the screen's height.
-    stage.style.setProperty('--preview-w', `${Math.min(w - 30, (H / k) * 0.42 * 16 / 9)}px`);
+    // The preview may not eat more than a quarter (a phone) to a third (a tablet) of the screen's height.
+    stage.style.setProperty('--preview-w', `${Math.min(w - 30, (H / k) * (w > 300 ? 0.36 : 0.25) * 16 / 9)}px`);
   } else {
     const k = Math.min(W / 480, H / 270);
     stage.style.zoom = k;
@@ -158,7 +158,8 @@ function render(dir = 0) {
   el.title.textContent = t('title');
   el.langs.replaceChildren(
     h('span', { class: 'lang-label' }, t('lang')),
-    ...LANGS.map((l) => h('button', { class: `lang ${l === lang ? 'on' : ''}`, onClick: () => setLanguage(l) }, LANG_NAMES[l])));
+    ...LANGS.map((l) => h('button', { class: `lang ${l === lang ? 'on' : ''}`, onClick: () => setLanguage(l) },
+      h('span', { class: 'long' }, LANG_NAMES[l]), h('span', { class: 'short' }, l.toUpperCase()))));
   el.langs.classList.toggle('focus', focus === 'lang');
   el.cardEls.forEach((c, i) => {
     c.classList.toggle('sel', i === sel);
@@ -186,7 +187,7 @@ function render(dir = 0) {
       h('p', { class: 'lesson' }, L(g.lesson)),
       h('div', { class: 'chips' },
         h('span', { class: 'chip' }, h('b', {}, t('when')), ' ', L(g.era), ' · ', h('b', {}, t('where')), ' ', L(g.place)),
-        h('span', { class: 'chip' }, players, ...(isTouch ? [] : [' · ', L(g.controls)])))));
+        h('span', { class: 'chip' }, players, ...(isTouch || document.body.classList.contains('tall') ? [] : [' · ', L(g.controls)])))));
   el.feature.replaceChildren(panel);
   const clip = panel.querySelector('video');
   if (clip) { clip.muted = true; clip.play().catch(() => {}); } // muted, so browsers let it autoplay
