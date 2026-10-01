@@ -195,6 +195,54 @@
       }
     },
     {
+      "id": "salinas",
+      "folder": "../navarra-salinas",
+      "port": 8770,
+      "url": "games/salinas/",
+      "status": "ready",
+      "thumb": "assets/previews/salinas.jpg",
+      "preview": "assets/previews/salinas.webm",
+      "poster": "assets/previews/salinas.jpg",
+      "players": "1-2",
+      "minutes": "6-7",
+      "pace": "long",
+      "bestFor": {
+        "es": "Para quien tenga un rato: una temporada entera de sal, sola o en pareja",
+        "eu": "Denbora duenarentzat: gatz-denboraldi oso bat, bakarrik edo bikoteka",
+        "en": "For someone with time: a whole salt season, alone or in pairs"
+      },
+      "title": {
+        "es": "Salinas de Oro",
+        "eu": "Salinas de Oro",
+        "en": "Salinas de Oro"
+      },
+      "blurb": {
+        "es": "Un verano en las salinas: llena las eras, rastrilla la sal blanca, véndela y mejora tus herramientas.",
+        "eu": "Uda bat gatzagetan: bete larrainak, arrastelatu gatz zuria, saldu eta hobetu zure tresnak.",
+        "en": "A summer at the salt pans: fill the beds, rake the white salt, sell it and upgrade your tools."
+      },
+      "lesson": {
+        "es": "Cómo se saca la sal de un manantial de interior: eras, compuertas, el sol que evapora y por qué la sal era tan valiosa.",
+        "eu": "Nola ateratzen den gatza barnealdeko iturburu batetik: larrainak, konportak, lurruntzen duen eguzkia eta zergatik zen gatza hain baliotsua.",
+        "en": "How salt is made from an inland spring: beds, sluices, the evaporating sun, and why salt was so valuable."
+      },
+      "era": {
+        "es": "Tradición de siglos",
+        "eu": "Mendeetako tradizioa",
+        "en": "A centuries-old trade"
+      },
+      "place": {
+        "es": "Salinas de Oro",
+        "eu": "Salinas de Oro",
+        "en": "Salinas de Oro"
+      },
+      "controls": {
+        "es": "Joystick, rastrillar y compuerta",
+        "eu": "Joystick-a, arrastelatu eta konporta",
+        "en": "Stick, rake and sluice"
+      }
+    },
+    {
       "id": "espadas",
       "folder": "../navarra-1212/mountain-kings",
       "port": 8740,

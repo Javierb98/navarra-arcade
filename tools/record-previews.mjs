@@ -89,6 +89,28 @@ const GAMES = {
       for (let k = 0; Date.now() < end; k++) { await tap(page, k % 2 ? 'KeyX' : 'KeyZ'); await wait(page, 60); await tap(page, k % 2 ? 'KeyR' : 'KeyE'); await wait(page, 120); }
     },
   },
+  salinas: {
+    async setup(page) {
+      await page.goto('http://localhost:8770/?debug&lang=es'); await wait(page, 2000);
+      for (let k = 0; k < 10 && !(await page.evaluate(() => !!window.season)); k++) { await tap(page, k < 3 ? 'Digit1' : 'KeyZ'); await wait(page, 500); }
+      // Let the game's own helper play red, through the keys, so the clip is real play.
+      await page.evaluate(async () => { const { Helper } = await import('/src/core/salinas.js'); const s = window.season; window.helper = new Helper(s, 0); s.helpers = [window.helper]; s.t = 14; s.weather = { cloud: 0, rain: false, next: Infinity, left: 0 }; s.beds.forEach((b, k) => { if (b.open) { b.water = [0, 0.05, 0.3][k % 3]; b.salt = 22; } }); });
+      await this.act(page, 6);
+    },
+    async act(page, secs) {
+      const end = Date.now() + secs * 1000, held = new Set();
+      const set = async (k, on) => { if (on && !held.has(k)) { held.add(k); await page.keyboard.down(k); } else if (!on && held.has(k)) { held.delete(k); await page.keyboard.up(k); } };
+      while (Date.now() < end) {
+        const inp = await page.evaluate(() => window.helper.input());
+        await set('ArrowLeft', inp.x < -0.3); await set('ArrowRight', inp.x > 0.3); await set('ArrowUp', inp.y < -0.3); await set('ArrowDown', inp.y > 0.3);
+        await set('KeyZ', !!inp.aHeld);
+        if (inp.a) await tap(page, 'KeyZ');
+        if (inp.b) await tap(page, 'KeyX');
+        await wait(page, 50);
+      }
+      for (const k of held) await page.keyboard.up(k);
+    },
+  },
   espadas: {
     async setup(page) {
       await page.goto('http://localhost:8740/'); await wait(page, 2000);

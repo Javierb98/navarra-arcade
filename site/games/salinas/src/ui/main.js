@@ -195,26 +195,18 @@ async function boot() {
   };
   fit();
   try {
-    const [rules, controls, facts, story, glossary, ...locales] = await Promise.all([
-      get('data/rules.json'), get('data/controls.json'), get('data/facts.json'), get('data/story.json'), get('data/glossary.json'),
+    const [rules, controls, facts, story, glossary, layout, ...locales] = await Promise.all([
+      get('data/rules.json'), get('data/controls.json'), get('data/facts.json'), get('data/story.json'), get('data/glossary.json'), get('data/layout.json'),
       ...LANGS.map((l) => get(`data/locales/${l}.json`)),
     ]);
     initI18n(Object.fromEntries(LANGS.map((l, i) => [l, locales[i]])), langParam ?? settings.lang);
     setVolume(settings.volume);
-    app.data = { rules, facts: facts.facts, story, glossary };
+    app.data = { rules, layout, facts: facts.facts, story, glossary };
     app.input = new Input(controls);
     initKeys(controls);
     document.title = t('title.name');
     // From the arcade menu, skip the attract demo and go straight to setup.
-    // Developer shortcut: ?debug&go=win opens the champion's crowning straight away.
-    const dev = new URLSearchParams(location.search);
-    if (dev.has('debug') && dev.get('go') === 'win') {
-      const { Match } = await import('../core/pelota.js');
-      const m = new Match(rules, { players: 1, to: 7 });
-      m.score = [7, 4]; m.phase = 'over'; m.winner = 0; m.stats.longest = 9; m.stats.perfect = [12, 5];
-      app.session = { players: 1, difficulty: 'normal', stage: 2, total: 2150, perfect: 12, longest: 9 };
-      app.go('txapela', { m });
-    } else app.go(menuUrl ? 'menu' : 'attract');
+    app.go(menuUrl ? 'menu' : 'attract');
     requestAnimationFrame(frame);
   } catch (err) {
     console.error(err);
