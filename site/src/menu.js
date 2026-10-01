@@ -34,6 +34,8 @@ let showcaseStep = 0;
 let sponsorsAreTest = false;
 let showingThanks = false;
 let sponsorClock = 0;
+let showcaseT = 0;
+const SHOWCASE_STEP = 7; // seconds per game in the idle showcase
 
 const t = (key, vars = {}) => (strings[lang]?.[key] ?? strings.es?.[key] ?? key).replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m);
 
@@ -172,13 +174,31 @@ function sponsorBadge(sp, big = false) {
     big && sp.tagline ? h('span', { class: 'sponsor-tag' }, S(sp.tagline)) : null);
 }
 
-// The corner plate: one sponsor at a time, fading to the next.
+// The corner plate: one sponsor at a time in the same spot. When there are
+// several, the plate flips over to show the next, like a turning sign.
+let shownSponsor = null;
 function renderSponsor() {
-  if (!sponsors?.sponsors?.length) { el.sponsor.replaceChildren(); return; }
+  if (!sponsors?.sponsors?.length) { el.sponsor.replaceChildren(); shownSponsor = null; return; }
   const sp = sponsors.sponsors[sponsorAt % sponsors.sponsors.length];
-  el.sponsor.replaceChildren(
-    h('span', { class: 'sponsor-label' }, S(sponsors.label)),
-    h('div', { class: 'sponsor-slot' }, sponsorBadge(sp)));
+  let slot = el.sponsor.querySelector('.sponsor-slot');
+  if (!slot) {
+    slot = h('div', { class: 'sponsor-slot' });
+    el.sponsor.replaceChildren(h('span', { class: 'sponsor-label' }, S(sponsors.label)), slot);
+    shownSponsor = null;
+  } else el.sponsor.querySelector('.sponsor-label').textContent = S(sponsors.label);
+  if (shownSponsor === sp) {
+    // Same sponsor (a language change): just refresh it in place.
+    slot.replaceChildren(h('div', { class: 'face' }, sponsorBadge(sp)));
+    return;
+  }
+  const incoming = h('div', { class: `face ${shownSponsor ? 'flip-in' : ''}` }, sponsorBadge(sp));
+  const outgoing = slot.querySelector('.face');
+  if (outgoing && shownSponsor) {
+    outgoing.className = 'face flip-out';
+    outgoing.addEventListener('animationend', () => outgoing.remove(), { once: true });
+    slot.append(incoming);
+  } else slot.replaceChildren(incoming);
+  shownSponsor = sp;
 }
 
 // The showcase's big sponsor screen, shown after the last game in the rotation.
@@ -248,7 +268,10 @@ function update(dt) {
   if (input.any('c')) cycle(1);
   // Nobody here: show the games off one by one.
   // After each round of games, the showcase thanks the sponsors.
-  if (idle > IDLE_SHOWCASE && Math.floor(idle / 7) !== Math.floor((idle - dt) / 7)) {
+  // Each game is shown for 7 s; the sponsors' screen stays 50% longer.
+  showcaseT = idle > IDLE_SHOWCASE ? showcaseT + dt : 0;
+  if (idle > IDLE_SHOWCASE && showcaseT >= (showingThanks ? SHOWCASE_STEP * 1.5 : SHOWCASE_STEP)) {
+    showcaseT = 0;
     focus = 'games';
     showcaseStep++;
     // Round the games in order; after the last one, the sponsors (if any).
