@@ -1,0 +1,331 @@
+{
+  "_note": "Tiles, seconds, coins. One tile is about a metre. Run npm test and node tools/sim.js after changing anything.",
+  "world": {
+    "w": 24,
+    "h": 96,
+    "start": [
+      12
+    ]
+  },
+  "shaft": {
+    "x": 4,
+    "to": 10,
+    "gallery": 7,
+    "speed": [
+      0,
+      7,
+      14
+    ]
+  },
+  "cave": {
+    "x0": 7,
+    "x1": 16,
+    "y0": 90,
+    "y1": 93
+  },
+  "start": {
+    "money": 20
+  },
+  "layers": [
+    {
+      "from": 4,
+      "to": 20,
+      "rock": 1,
+      "harder": 0.07,
+      "card": "potasas"
+    },
+    {
+      "from": 20,
+      "to": 38,
+      "rock": 2,
+      "harder": 0.112,
+      "card": "hierro"
+    },
+    {
+      "from": 38,
+      "to": 56,
+      "rock": 3,
+      "harder": 0.14,
+      "card": "cobre"
+    },
+    {
+      "from": 56,
+      "to": 74,
+      "rock": 4,
+      "harder": 0.14,
+      "card": "romanos"
+    },
+    {
+      "from": 74,
+      "to": 96,
+      "rock": 5,
+      "harder": 0.112,
+      "card": "bronce"
+    }
+  ],
+  "rocks": [
+    {
+      "hard": 0
+    },
+    {
+      "hard": 0.36,
+      "needs": 0
+    },
+    {
+      "hard": 0.6,
+      "needs": 0
+    },
+    {
+      "hard": 0.9,
+      "needs": 1
+    },
+    {
+      "hard": 1.2,
+      "needs": 1
+    },
+    {
+      "hard": 1.56,
+      "needs": 3
+    },
+    {
+      "hard": 2.04,
+      "needs": 3
+    }
+  ],
+  "ores": {
+    "moneda": {
+      "from": 58,
+      "to": 74,
+      "chance": 0.012,
+      "value": 90,
+      "find": true
+    },
+    "lucerna": {
+      "from": 58,
+      "to": 74,
+      "chance": 0.01,
+      "value": 90,
+      "find": true
+    },
+    "hacha": {
+      "from": 76,
+      "to": 94,
+      "chance": 0.012,
+      "value": 120,
+      "find": true
+    },
+    "casco": {
+      "from": 7,
+      "to": 20,
+      "chance": 0.008,
+      "value": 70,
+      "find": true
+    },
+    "bala": {
+      "from": 21,
+      "to": 38,
+      "chance": 0.008,
+      "value": 80,
+      "find": true
+    },
+    "dinero": {
+      "from": 39,
+      "to": 56,
+      "chance": 0.008,
+      "value": 90,
+      "find": true
+    },
+    "sal": {
+      "from": 5,
+      "to": 20,
+      "chance": 0.048,
+      "value": 4
+    },
+    "potasa": {
+      "from": 6,
+      "to": 22,
+      "chance": 0.072,
+      "value": 10
+    },
+    "hierro": {
+      "from": 20,
+      "to": 40,
+      "chance": 0.064,
+      "value": 19
+    },
+    "magnesita": {
+      "from": 22,
+      "to": 40,
+      "chance": 0.04,
+      "value": 24
+    },
+    "cobre": {
+      "from": 38,
+      "to": 58,
+      "chance": 0.064,
+      "value": 30
+    },
+    "plata": {
+      "from": 42,
+      "to": 74,
+      "chance": 0.032,
+      "value": 51
+    },
+    "galena": {
+      "from": 56,
+      "to": 76,
+      "chance": 0.056,
+      "value": 34
+    },
+    "malaquita": {
+      "from": 72,
+      "to": 95,
+      "chance": 0.064,
+      "value": 42
+    }
+  },
+  "vein": 0.5,
+  "badAir": {
+    "from": 30,
+    "chance": 0.03,
+    "damage": 30
+  },
+  "loose": {
+    "from": 8,
+    "chance": 0.08,
+    "warn": 0.7,
+    "damage": 22
+  },
+  "miner": {
+    "size": 0.8,
+    "speed": 4.5,
+    "accel": 14,
+    "airAccel": 6,
+    "gravity": 20,
+    "maxFall": 14,
+    "safeFall": 9.5,
+    "fallDamage": 4,
+    "climb": 3.4,
+    "loadSlow": 0.02,
+    "hp": 60,
+    "regen": 8,
+    "drain": 1
+  },
+  "upgrades": {
+    "pick": {
+      "base": 1,
+      "per": 0.45,
+      "cost": [
+        85,
+        255,
+        645
+      ]
+    },
+    "lamp": {
+      "base": 40,
+      "per": 22,
+      "cost": [
+        70,
+        205,
+        510
+      ]
+    },
+    "bag": {
+      "base": 6,
+      "per": 4,
+      "cost": [
+        70,
+        185,
+        440
+      ]
+    },
+    "gear": {
+      "base": 0,
+      "per": 0.2,
+      "cost": [
+        85,
+        240,
+        545
+      ]
+    },
+    "ladders": {
+      "base": 30,
+      "per": 20,
+      "cost": [
+        70,
+        205
+      ]
+    },
+    "shaft": {
+      "base": 0,
+      "per": 1,
+      "cost": [
+        205,
+        680
+      ]
+    }
+  },
+  "prices": {
+    "oil": 0.5,
+    "oilRate": 30,
+    "rescue": 60,
+    "freeOil": 0.4
+  },
+  "buildings": [
+    {
+      "id": "pozo",
+      "x": 4.5,
+      "w": 2
+    },
+    {
+      "id": "taller",
+      "x": 9.5,
+      "w": 3
+    },
+    {
+      "id": "lampisteria",
+      "x": 14.5,
+      "w": 2
+    },
+    {
+      "id": "bascula",
+      "x": 20,
+      "w": 3
+    }
+  ],
+  "helper": {
+    "lightPerTile": 0.45,
+    "lightSpare": 8
+  },
+  "difficulty": {
+    "easy": {
+      "damage": 0.5
+    },
+    "normal": {
+      "damage": 1
+    }
+  },
+  "score": {
+    "_note": "The score is the seconds taken to reach the cave; lower is better."
+  },
+  "eras": {
+    "_note": "When each tool level was used, shown in the workshop. Only where the record is clear; others stay out.",
+    "pick": [
+      "bronce",
+      "romanos",
+      "s17",
+      "s20"
+    ],
+    "lamp": [
+      "bronce",
+      "romanos",
+      "y1900",
+      "s20"
+    ],
+    "shaft": [
+      null,
+      null,
+      "s20"
+    ]
+  }
+}
