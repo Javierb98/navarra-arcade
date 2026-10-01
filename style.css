@@ -1,7 +1,11 @@
 /* The menu shares the games' look: a 480x270 stage scaled up whole, pixel
    art kept crisp, Okabe-Ito colours. Everything moves slowly (pans, slides,
    glows): nothing flashes. */
+/* Basque lettering for titles and names: BilboINC by Hélène Marian
+   Srodogora (Velvetyne), CC BY-NC-SA; see assets/fonts/BilboINC-licence.txt. */
+@font-face { font-family: "BilboINC"; src: url("assets/fonts/BilboINC.woff2") format("woff2"); font-display: block; }
 :root {
+  --display: "BilboINC", "Trebuchet MS", sans-serif;
   --ground: #0f1424;
   --panel: rgba(14, 12, 20, 0.94);
   --line: rgba(255, 240, 200, 0.22);
@@ -82,7 +86,7 @@ h1 {
 .cards { display: flex; gap: 6px; justify-content: center; transition: opacity 0.25s; }
 .cards.dim { opacity: 0.55; }
 .card { position: relative; overflow: hidden; flex: 0 1 108px; min-width: 0; background: var(--panel); border: 1.5px solid var(--line); border-radius: 5px; padding: 3px; text-align: center; cursor: pointer; transition: transform 0.2s ease-out, border-color 0.2s; }
-.card .thumb { height: 26px; border-radius: 3px; background-size: cover; background-position: center; image-rendering: pixelated; }
+.card .thumb { height: 22px; border-radius: 3px; background-size: cover; background-position: center; image-rendering: pixelated; }
 .card .thumb.blank { background: repeating-linear-gradient(45deg, #3a3342 0 4px, #2f2937 4px 8px); color: var(--muted); font-size: 10px; display: flex; align-items: center; justify-content: center; }
 .card.soon .thumb { filter: grayscale(0.5) brightness(0.8); }
 .card .name { display: block; margin-top: 2px; padding: 0 5px; font-size: 8px; white-space: nowrap; overflow: hidden; }
@@ -139,7 +143,7 @@ footer p { margin: 0; }
 
 /* How long a game takes: green and round for quick, blue and square for long
    (shape as well as colour, for colour-blind players). */
-.card .pace { position: absolute; top: 5px; left: 5px; max-width: calc(100% - 10px); font-size: 6.5px; padding: 0 4px; line-height: 11px; color: #fff; white-space: nowrap; overflow: hidden; }
+.card .pace { display: block; width: fit-content; max-width: 100%; margin: 0 auto 2px; font-size: 6.5px; padding: 0 5px; line-height: 10px; color: #fff; white-space: nowrap; overflow: hidden; }
 .pace.quick, .pace-tag.quick { background: #009e73; border-radius: 6px; }
 .pace.long { background: #0072b2; border-radius: 1px; }
 .title-row { display: flex; align-items: center; gap: 6px; }
@@ -199,9 +203,9 @@ body.tall .cards { justify-content: flex-start; gap: 5px; overflow-x: auto; scro
 body.tall .cards::-webkit-scrollbar { display: none; }
 body.tall .card { flex: 0 0 78px; padding: 2px; scroll-snap-align: center; }
 body.tall .card.sel { transform: none; }
-body.tall .card .thumb { height: 30px; }
+body.tall .card .thumb { height: 28px; }
 body.tall .card .name { font-size: 7.5px; margin-top: 1px; }
-body.tall .card .pace { display: none; }
+body.tall .card .pace { font-size: 6.5px; }
 
 /* The featured game takes what's left; its text scrolls inside if it must. */
 body.tall #menu > .feature { flex: 0 1 auto; height: auto; min-height: 0; display: flex; }
@@ -242,3 +246,39 @@ body.tall .credit-mark img { height: 11px; width: 11px; }
 
 body.tall .thanks h2 { font-size: 13px; }
 body.tall .thanks.solo .sponsor.big { min-width: 0; width: 90%; }
+
+/* ---- Basque lettering for the titles and names ---- */
+h1 { font-family: var(--display); font-weight: normal; font-size: 20px; line-height: 1.05; letter-spacing: 1.5px; }
+.info h2 { font-family: var(--display); font-weight: normal; font-size: 16px; letter-spacing: .6px; }
+.info h3 { font-family: var(--display); font-weight: normal; font-size: 9.5px; letter-spacing: 1.2px; }
+.card .name { font-family: var(--display); font-weight: normal; font-size: 10px; letter-spacing: .4px; }
+.thanks h2 { font-family: var(--display); font-weight: normal; letter-spacing: 1px; }
+.sponsor-label { font-family: var(--display); font-weight: normal; font-size: 7.5px; letter-spacing: 1.4px; }
+.play { font-family: var(--display) !important; font-weight: normal !important; letter-spacing: 2px !important; }
+body.tall h1 { font-size: 19px; }
+body.tall .info h2 { font-size: 15px; }
+body.tall .card .name { font-size: 9px; }
+body.tall .sponsor-label { font-size: 6.5px; }
+
+/* ---- the maker's mark ---- */
+.credit-mark { gap: 5px; height: 20px; }
+.medal {
+  position: relative; flex: none; width: 18px; height: 18px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 40% 35%, #2c3b2a, #0c120c 70%);
+  box-shadow: 0 0 0 1.2px #d9b45a, 0 0 0 2.2px rgba(60, 40, 10, .9), 0 0 8px 1px rgba(230, 180, 80, .35);
+  animation: medal 5s ease-in-out infinite;
+}
+@keyframes medal { 50% { box-shadow: 0 0 0 1.2px #f1d488, 0 0 0 2.2px rgba(60, 40, 10, .9), 0 0 12px 2px rgba(240, 200, 100, .55); } }
+.medal img { width: 13px; height: 13px; object-fit: contain; }
+.credit-name { display: inline-flex; align-items: baseline; }
+.credit-name b {
+  font-family: var(--display); font-weight: normal; font-size: 13px; letter-spacing: 1px; line-height: 1;
+  background: linear-gradient(100deg, #e6c36a 35%, #fff4cf 50%, #e6c36a 65%) 0 0 / 300% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: shine 7s linear infinite;
+}
+.credit-name small { font-family: var(--display); font-size: 8px; letter-spacing: .5px; color: var(--muted); margin-left: 1px; }
+body.tall .credit-name b { font-size: 12px; }
+body.tall .medal { width: 18px; height: 18px; }
+body.tall .medal img { width: 12px; height: 12px; }

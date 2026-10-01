@@ -138,8 +138,9 @@ function build() {
   );
   el.cardEls = games.map((g, i) => {
     const card = h('div', { class: `card ${g.status}`, onClick: () => (i === sel ? launch() : pick(i)) },
-      g.poster || g.thumb ? h('div', { class: 'thumb', style: { backgroundImage: `url(${g.poster ?? g.thumb})` } }) : h('div', { class: 'thumb blank' }),
+      // How long it takes sits above the picture, never over it.
       h('span', { class: `pace ${g.pace}` }),
+      g.poster || g.thumb ? h('div', { class: 'thumb', style: { backgroundImage: `url(${g.poster ?? g.thumb})` } }) : h('div', { class: 'thumb blank' }),
       h('span', { class: 'name' }));
     el.cards.append(card);
     return card;
@@ -204,8 +205,13 @@ function render(dir = 0) {
   if (clip) { clip.muted = true; clip.play().catch(() => {}); } // muted, so browsers let it autoplay
 
   renderSponsor();
+  // The maker's mark: the logo in a gold-rimmed medallion, the name in
+  // Basque lettering.
+  const [maker, ...rest] = (credits?.name ?? '').split('.');
   el.credit.replaceChildren(...(credits ? [h('span', { class: 'sponsor-label' }, S(credits.label)),
-    h('span', { class: 'credit-mark' }, credits.logo ? h('img', { src: credits.logo, alt: '' }) : null, credits.name)] : []));
+    h('span', { class: 'credit-mark' },
+      credits.logo ? h('span', { class: 'medal' }, h('img', { src: credits.logo, alt: '' })) : null,
+      h('span', { class: 'credit-name' }, h('b', {}, maker), rest.length ? h('small', {}, `.${rest.join('.')}`) : null))] : []));
   // On a touch screen there's no stick to describe: say what to tap instead.
   el.hint.replaceChildren(...rich(t(isTouch ? 'hintTouch' : focus === 'lang' ? 'hintLang' : 'hint')));
   el.exit.replaceChildren(...rich(t(isTouch ? 'exitHintTouch' : 'exitHint')));
