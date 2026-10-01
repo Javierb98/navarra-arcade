@@ -15,7 +15,7 @@
 html, body { margin: 0; height: 100%; overflow: hidden; cursor: default; background: var(--ground); }
 
 #stage { position: absolute; width: 480px; height: 270px; font: bold 10px/1.3 var(--font); color: var(--text); overflow: hidden; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-#bg { position: absolute; inset: 0; image-rendering: pixelated; }
+#bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
 #menu { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 5px 10px 10px; gap: 4px; transition: opacity 0.4s; }
 #menu.leaving { opacity: 0.25; }
 
@@ -160,3 +160,84 @@ footer p { margin: 0; }
 /* Calm, solid backing behind text so it never sits on the dithered sky. */
 header h1 { padding: 0 6px; border-radius: 4px; background-color: rgba(14, 12, 20, 0.55); }
 .info .blurb, .info .lesson { font-weight: normal; letter-spacing: 0.1px; }
+
+/* ---- the Play button: only on touch screens, where there's no [A] ---- */
+.play { display: none; }
+body.touch .play {
+  display: block; flex: none; align-self: center; font: inherit; font-size: 11px; letter-spacing: 1px;
+  color: #111; background: linear-gradient(#f6e9b8, var(--rope)); border: 1px solid #fff8dc; border-radius: 6px;
+  padding: 4px 22px; cursor: pointer; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45); touch-action: manipulation;
+}
+body.touch .play:active { transform: translateY(1px); }
+body.touch .play:disabled { color: var(--muted); background: var(--panel); border-color: var(--line); }
+body.touch:not(.tall) .play { position: absolute; z-index: 2; right: 5px; bottom: 5px; padding: 2px 12px; font-size: 9px; }
+/* No room for the chips on a phone on its side, and "joystick" means nothing there. */
+body.touch:not(.tall) .chips { display: none; }
+body.touch:not(.tall) .info { overflow: hidden; }
+body.touch .card, body.touch .lang { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+/* ---- upright screens: one compact column that fits without scrolling ---- */
+body.tall #menu { padding: 6px 7px 7px; gap: 5px; overflow: hidden; }
+body.tall #menu > * { flex-shrink: 0; }
+/* The games come first, right under the title, like tabs. */
+body.tall .cards { order: 1; }
+body.tall .feature { order: 2; }
+body.tall .play { order: 3; }
+body.tall footer { order: 4; }
+
+/* Title and languages share one row; languages go to two-letter codes. */
+body.tall header { gap: 6px; }
+body.tall h1 { font-size: 15px; letter-spacing: 0.5px; white-space: nowrap; }
+body.tall .lang-label, body.tall .lang .long { display: none; }
+body.tall .lang .short { display: inline; }
+body.tall .lang { font-size: 9px; padding: 2px 5px; }
+.lang .short { display: none; }
+
+/* The strip: small cards, swiped sideways, snapping into place. */
+body.tall .cards { justify-content: flex-start; gap: 5px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 2px 2px; scrollbar-width: none; }
+body.tall .cards::-webkit-scrollbar { display: none; }
+body.tall .card { flex: 0 0 78px; padding: 2px; scroll-snap-align: center; }
+body.tall .card.sel { transform: none; }
+body.tall .card .thumb { height: 30px; }
+body.tall .card .name { font-size: 7.5px; margin-top: 1px; }
+body.tall .card .pace { display: none; }
+
+/* The featured game takes what's left; its text scrolls inside if it must. */
+body.tall .feature { flex: 0 1 auto; height: auto; min-height: 0; display: flex; }
+body.tall .feature-inner { position: relative; inset: auto; flex: 1 1 auto; min-height: 0; }
+body.tall .feature-inner { flex-direction: column; gap: 4px; padding: 5px; }
+body.tall .preview { flex: none; width: var(--preview-w, 100%); height: auto; aspect-ratio: 16 / 9; align-self: center; }
+body.tall .info { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 0 2px; }
+body.tall .info::-webkit-scrollbar { display: none; }
+body.tall .info h2 { font-size: 12px; }
+body.tall .title-row { gap: 5px; }
+body.tall .pace-tag { font-size: 7px; line-height: 10px; }
+body.tall .info .blurb, body.tall .info .lesson { font-size: 8px; line-height: 1.25; }
+body.tall .best { font-size: 7.5px; margin-bottom: 2px; }
+body.tall .info h3 { font-size: 7px; }
+body.tall .chips { margin-top: 3px; }
+body.tall .chip { font-size: 7px; }
+
+/* Play is always there upright, touch or not (a mouse can click it too). */
+body.tall .play {
+  display: block; align-self: center; width: 64%; padding: 4px 0; font: inherit; font-size: 11px; letter-spacing: 1px;
+  color: #111; background: linear-gradient(#f6e9b8, var(--rope)); border: 1px solid #fff8dc; border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45); cursor: pointer; touch-action: manipulation;
+}
+body.tall .play:disabled { color: var(--muted); background: var(--panel); border-color: var(--line); }
+
+/* Footer: one line of help, then sponsor and maker side by side. */
+body.tall footer { flex-wrap: wrap; justify-content: space-between; gap: 2px 6px; min-height: 0; padding: 4px 6px; }
+body.tall .hints { order: -1; flex: 1 0 100%; gap: 0; }
+body.tall .hint { font-size: 7.5px; }
+body.tall .hint.small { display: none; }
+body.tall .sponsor-plate, body.tall .credit { flex: 0 1 auto; gap: 1px; }
+body.tall .sponsor-label { font-size: 5.5px; }
+body.tall .sponsor-slot { height: 16px; min-width: 84px; }
+body.tall .sponsor { height: 16px; min-width: 84px; padding: 0 6px; }
+body.tall .sponsor img { max-height: 13px; max-width: 76px; }
+body.tall .credit-mark { height: 16px; font-size: 8px; }
+body.tall .credit-mark img { height: 11px; width: 11px; }
+
+body.tall .thanks h2 { font-size: 13px; }
+body.tall .thanks.solo .sponsor.big { min-width: 0; width: 90%; }
