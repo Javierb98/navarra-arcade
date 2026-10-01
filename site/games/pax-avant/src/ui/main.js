@@ -8,6 +8,7 @@ import { unlockAudio, setVolume, sfx } from './audio.js';
 import { settings, saveSettings, resetScores } from './store.js';
 import { W, H } from './render.js';
 import * as screens from './screens.js';
+import { initTouch, playArea } from './touch.js';
 import { menuUrl, langParam, backToMenu } from './arcade.js';
 
 const FIXED = 1 / 60;
@@ -37,11 +38,13 @@ const app = {
 // CSS zoom (not a transform), so text is laid out and drawn sharp at the real
 // screen size; whole-number steps keep the pixel art's pixels even.
 function fit() {
-  const k = Math.min(innerWidth / W, innerHeight / H);
+  // On a phone or tablet the on-screen controls take part of the screen.
+  const a = playArea(W, H);
+  const k = Math.min(a.w / W, a.h / H);
   const scale = k >= 1 ? Math.floor(k) : k;
   stage.style.zoom = scale;
-  stage.style.left = `${(innerWidth - W * scale) / 2 / scale}px`;
-  stage.style.top = `${(innerHeight - H * scale) / 2 / scale}px`;
+  stage.style.left = `${(a.x + (a.w - W * scale) / 2) / scale}px`;
+  stage.style.top = `${(a.y + (a.h - H * scale) / 2) / scale}px`;
 }
 addEventListener('resize', fit);
 
@@ -202,6 +205,7 @@ async function boot() {
     setVolume(settings.volume);
     app.data = { rules, facts: facts.facts, story, map, calendar };
     app.input = new Input(controls);
+    if (initTouch(controls, { onGesture: unlockAudio, onLayout: fit })) fit();
     loadImages(facts.facts);
     document.title = t('title.name');
     // From the arcade menu, skip the attract demo and go straight to setup.

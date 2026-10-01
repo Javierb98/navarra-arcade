@@ -7,6 +7,7 @@ import { Input } from './input.js';
 import { unlockAudio, setVolume, sfx } from './audio.js';
 import { settings, saveSettings, resetScores } from './store.js';
 import * as screens from './screens.js';
+import { initTouch, playArea } from './touch.js';
 import { menuUrl, langParam, backToMenu } from './arcade.js';
 import { initKeys, showKeys } from './keys.js';
 
@@ -39,10 +40,13 @@ const app = {
 
 // CSS zoom (not transform: scale) so text is laid out at full resolution.
 function fit() {
-  const k = Math.min(innerWidth / W, innerHeight / H);
-  stage.style.zoom = k;
-  stage.style.left = `${(innerWidth - W * k) / 2 / k}px`;
-  stage.style.top = `${(innerHeight - H * k) / 2 / k}px`;
+  // On a phone or tablet the on-screen controls take part of the screen.
+  const a = playArea(W, H);
+  const k = Math.min(a.w / W, a.h / H);
+  const scale = k;
+  stage.style.zoom = scale;
+  stage.style.left = `${(a.x + (a.w - W * scale) / 2) / scale}px`;
+  stage.style.top = `${(a.y + (a.h - H * scale) / 2) / scale}px`;
 }
 addEventListener('resize', fit);
 
@@ -203,6 +207,7 @@ async function boot() {
     setVolume(settings.volume);
     app.data = { rules, layout, facts: facts.facts, story, glossary };
     app.input = new Input(controls);
+    if (initTouch(controls, { onGesture: unlockAudio, onLayout: fit })) fit();
     initKeys(controls);
     document.title = t('title.name');
     // From the arcade menu, skip the attract demo and go straight to setup.

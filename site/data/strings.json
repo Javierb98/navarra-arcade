@@ -16,7 +16,10 @@
     "hintLang": "← → elegir idioma · [A] o ↓ volver a los juegos",
     "quick": "Rápido",
     "long": "Largo",
-    "min": "{n} min"
+    "min": "{n} min",
+    "play": "Jugar",
+    "hintTouch": "Toca un juego para verlo · toca Jugar para empezar",
+    "exitHintTouch": "Dentro del juego, toca ✕ para volver aquí"
   },
   "eu": {
     "title": "Nafarroako Arcadea",
@@ -35,7 +38,10 @@
     "hintLang": "← → hizkuntza aukeratu · [A] edo ↓ jokoetara itzuli",
     "quick": "Azkarra",
     "long": "Luzea",
-    "min": "{n} min"
+    "min": "{n} min",
+    "play": "Jokatu",
+    "hintTouch": "Ukitu joko bat ikusteko · ukitu Jokatu hasteko",
+    "exitHintTouch": "Jokoaren barruan, ukitu ✕ hona itzultzeko"
   },
   "en": {
     "title": "Navarra Arcade",
@@ -54,6 +60,9 @@
     "hintLang": "← → choose a language · [A] or ↓ back to the games",
     "quick": "Quick",
     "long": "Long",
-    "min": "{n} min"
+    "min": "{n} min",
+    "play": "Play",
+    "hintTouch": "Tap a game to see it · tap Play to start",
+    "exitHintTouch": "In a game, tap ✕ to come back here"
   }
 }
