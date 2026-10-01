@@ -13,30 +13,32 @@
       0.75
     ]
   },
-  "walk": 3.2,
+  "walk": 4.6,
   "flow": {
-    "base": 0.16,
+    "base": 0.3,
     "perLevel": 0.35
   },
-  "evap": 0.085,
+  "evap": 0.15,
   "sun": {
     "perDay": 0.03
   },
   "saltPerFill": 20,
   "quality": {
-    "window": 6,
-    "fade": 10,
+    "window": 5,
+    "fade": 8,
     "floor": 0.35,
-    "white": 0.9
+    "white": 0.9,
+    "flor": 2.5,
+    "florBonus": 2
   },
   "rake": {
-    "base": 0.6,
+    "base": 0.85,
     "perLevel": 0.4
   },
   "basket": {
     "base": 15,
     "perLevel": 10,
-    "slow": 0.35
+    "slow": 0.25
   },
   "price": {
     "base": 1.0,
@@ -56,45 +58,79 @@
   },
   "costs": {
     "era": {
-      "base": 40,
-      "growth": 1.35
+      "base": 60,
+      "growth": 1.4
     },
     "rasero": [
-      30,
-      60,
-      110
+      50,
+      110,
+      220
     ],
     "cesto": [
-      25,
-      55,
-      100
+      40,
+      100,
+      200
     ],
     "canal": [
-      35,
-      70,
-      130
+      60,
+      130,
+      260
     ],
     "burro": [
-      90,
-      180
+      160,
+      340
     ],
     "toldo": [
-      45,
-      90,
-      160
+      70,
+      150,
+      300
     ]
   },
   "difficulty": {
     "easy": {
       "evap": 1.25,
-      "storm": 0.6
+      "storm": 0.6,
+      "goats": 0.6
     },
     "normal": {
       "evap": 1,
-      "storm": 1
+      "storm": 1,
+      "goats": 1
     }
   },
   "score": {
-    "whiteKg": 1
+    "whiteKg": 1,
+    "streak": 20
+  },
+  "streak": {
+    "step": 0.5,
+    "max": 3
+  },
+  "cart": {
+    "first": 6,
+    "every": [
+      14,
+      22
+    ],
+    "time": 24,
+    "want": [
+      10,
+      20
+    ],
+    "grow": 0.12,
+    "bonus": 1.5,
+    "tip": 5
+  },
+  "goat": {
+    "first": 12,
+    "every": [
+      12,
+      20
+    ],
+    "max": 2,
+    "walk": 1.1,
+    "run": 4,
+    "scare": 1.1,
+    "trample": 2.5
   }
 }

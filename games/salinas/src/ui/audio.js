@@ -60,5 +60,11 @@ export const sfx = {
   buy: () => [660, 880, 1320].forEach((f, i) => soft(f, 0.1, { delay: i * 0.06 })),
   thunder: (k = 1) => { noise(1.2 * k + 0.3, 0.15 * k + 0.03); tone(55, 1.2 * k, { type: 'sine', gain: 0.18 * k, slide: -15 }); },
   miss: () => tone(180, 0.12, { type: 'sine', gain: 0.07 }),
+  flor: () => [1047, 1319, 1568, 2093].forEach((f, i) => soft(f, 0.12, { delay: i * 0.05, gain: 0.08 })),
+  streak: (n) => soft(523 * Math.pow(2, Math.min(n, 8) / 12), 0.12, { gain: 0.09 }),
+  bell: () => { tone(1200, 0.4, { type: 'sine', gain: 0.08 }); tone(1800, 0.3, { type: 'sine', gain: 0.04, delay: 0.02 }); tone(1200, 0.3, { type: 'sine', gain: 0.06, delay: 0.3 }); },
+  cash: () => [1319, 1568, 1760, 2093].forEach((f, i) => soft(f, 0.1, { delay: i * 0.05, gain: 0.1 })),
+  bleat: () => tone(520, 0.35, { type: 'sawtooth', gain: 0.03, slide: -120 }),
+  shoo: () => { noise(0.1, 0.08); soft(700, 0.08, { gain: 0.06 }); },
   win: () => { [523, 659, 784, 1047].forEach((f, i) => soft(f, 0.22, { delay: i * 0.14, gain: 0.12 })); },
 };

@@ -42,7 +42,11 @@ export class Season {
     this.workers = [0, 1].slice(0, this.players).map((i) => ({ i, x: this.L.start[i].x, y: this.L.start[i].y, vx: 0, vy: 0, carry: 0, carryValue: 0, raking: null, face: 1 }));
     this.donkey = { x: this.store.x + 1, y: this.store.y, carry: 0, value: 0, target: null };
     this.weather = { cloud: 0, rain: false, next: this.nextStorm(), left: 0 };
-    this.stats = { kg: 0, coins: 0, white: 0, grey: 0, washed: 0, overflow: 0, sold: [] };
+    this.stats = { kg: 0, coins: 0, white: 0, grey: 0, washed: 0, overflow: 0, sold: [], flor: 0, orders: 0, best: 0, shoos: 0, trampled: 0 };
+    // Excitement: a streak of white rakes, muleteers' carts with orders, and goats.
+    this.streak = 0;
+    this.cart = null; this.nextCart = this.R.cart.first;
+    this.goats = []; this.nextGoat = this.R.goat.first;
     this.events = [];
   }
 
@@ -60,6 +64,9 @@ export class Season {
   rakeRate() { return this.R.rake.base * (1 + this.levels.rasero * this.R.rake.perLevel); }
   basket() { return this.R.basket.base + this.levels.cesto * this.R.basket.perLevel; }
   price(q) { return this.R.price.base * (q >= this.R.quality.white ? this.R.price.whiteBonus : 1) * (0.5 + 0.5 * q); }
+  mult() { const S = this.R.streak; return Math.min(S.max, 1 + Math.max(0, this.streak - 1) * S.step); }
+  // Just dried, the salt shimmers: flor de sal, worth double.
+  isFlor(b) { return b.water === 0 && b.salt > 0 && b.dry < this.R.quality.flor; }
   cost(u) {
     const C = this.R.costs[u], lv = u === 'era' ? this.levels.era - this.R.start.beds : this.levels[u];
     if (u === 'era' && this.levels.era >= this.beds.length) return null;
@@ -76,6 +83,8 @@ export class Season {
     this.updateWeather(dt);
     this.updateBeds(dt);
     for (const w of this.workers) this.updateWorker(w, inputs[w.i] ?? {}, dt);
+    this.updateCart(dt);
+    this.updateGoats(dt);
     if (this.levels.burro > 0) this.updateDonkey(dt);
     if (this.t >= this.R.season.dayLength) this.endDay();
   }
@@ -124,8 +133,8 @@ export class Season {
       if (this.weather.rain) {
         const guard = 1 - Math.min(0.9, this.levels.toldo * R.storm.coverPerLevel);
         const loss = R.storm.dissolve * guard * dt;
-        if (b.salt > 0) { const l = Math.min(b.salt, b.salt * loss); b.salt -= l; this.stats.washed += l; }
-        if (b.heap > 0) { const l = Math.min(b.heap, b.heap * loss); b.heap -= l; this.stats.washed += l; }
+        if (b.salt > 0) { const l = Math.min(b.salt, b.salt * loss); b.salt -= l; this.stats.washed += l; if (b.water === 0 && this.streak) { this.streak = 0; this.emit('streakLost'); } }
+        if (b.heap > 0) { const l = Math.min(b.heap, b.heap * loss); if (b.heapValue) b.heapValue *= 1 - l / b.heap; b.heap -= l; this.stats.washed += l; }
         if (b.water > 0 && b.water < 1) b.water = Math.min(1, b.water + dt * 0.04 * guard);
       }
       b.state = !b.water && !b.salt ? (b.heap ? 'heap' : 'empty') : b.water > 0 ? (b.sluice ? 'filling' : 'drying') : 'ready';
@@ -167,16 +176,17 @@ export class Season {
     }
     // A at the store: unload the basket.
     if (inp.a && dist(w, this.store) < this.store.r && w.carry > 0) {
-      this.store.kg += w.carry; this.store.value += w.carryValue;
-      this.emit('unload', { p: w.i, kg: w.carry });
+      this.deliver(w.carry, w.carryValue, w.i);
       w.carry = 0; w.carryValue = 0;
       return;
     }
     // A at a bed: pick up its heap, or start raking dry salt (hold A).
     if (inp.a && bed && bed.heap > 0 && w.carry < this.basket()) {
       const take = Math.min(bed.heap, this.basket() - w.carry);
-      w.carryValue += take * this.price(bed.heapQ);
+      const share = (bed.heapValue ?? take * this.price(bed.heapQ)) * (take / bed.heap);
+      w.carryValue += share; bed.heapValue = (bed.heapValue ?? 0) - share;
       w.carry += take; bed.heap -= take;
+      if (bed.heap <= 1e-6) { bed.heap = 0; bed.heapValue = 0; }
       this.emit('pickup', { p: w.i, kg: take, bed: bed.i });
       return;
     }
@@ -184,13 +194,19 @@ export class Season {
       w.raking = bed.i;
       bed.rake += this.rakeRate() * dt;
       if (bed.rake >= 1) {
-        // The salt goes into a heap at the bed's edge, at the quality it had when raked.
-        const kg = bed.salt;
+        // The salt goes into a heap at the bed's edge, valued as it was when raked:
+        // white beats grey, flor de sal doubles it, and a streak of white rakes multiplies it.
+        const kg = bed.salt, white = bed.quality >= R.quality.white, flor = this.isFlor(bed);
+        if (white) this.streak++; else this.streak = 0;
+        this.stats.best = Math.max(this.stats.best, this.streak);
+        const value = kg * this.price(bed.quality) * (flor ? R.quality.florBonus : 1) * this.mult();
         bed.heapQ = bed.heap ? (bed.heapQ * bed.heap + bed.quality * kg) / (bed.heap + kg) : bed.quality;
+        bed.heapValue = (bed.heapValue ?? 0) + value;
         bed.heap += kg; bed.salt = 0; bed.rake = 0; bed.fill = 0;
         this.stats.kg += kg;
-        if (bed.quality >= R.quality.white) this.stats.white += kg; else this.stats.grey += kg;
-        this.emit('raked', { p: w.i, bed: bed.i, kg, white: bed.quality >= R.quality.white });
+        if (flor) this.stats.flor += kg;
+        if (white) this.stats.white += kg; else this.stats.grey += kg;
+        this.emit('raked', { p: w.i, bed: bed.i, kg, white, flor, streak: this.streak, mult: this.mult() });
       }
     } else w.raking = null;
   }
@@ -209,9 +225,79 @@ export class Season {
     if (d.target.store) { this.store.kg += d.carry; this.store.value += d.value; if (d.carry) this.emit('donkey', { kg: d.carry }); d.carry = 0; d.value = 0; }
     else {
       const b = this.beds[d.target.bed], take = Math.min(b.heap, cap - d.carry);
-      d.value += take * this.price(b.heapQ); d.carry += take; b.heap -= take;
+      if (take > 0) { const share = (b.heapValue ?? take * this.price(b.heapQ)) * (take / b.heap); d.value += share; b.heapValue = (b.heapValue ?? 0) - share; d.carry += take; b.heap -= take; if (b.heap <= 1e-6) { b.heap = 0; b.heapValue = 0; } }
     }
     d.target = null;
+  }
+
+  // ---- deliveries, muleteers' carts and goats ------------------------------------------------------
+
+  // Salt brought to the store goes first to a waiting cart's order (paid on the spot, with a bonus).
+  deliver(kg, value, p) {
+    let rest = kg, restValue = value;
+    if (this.cart && this.cart.got < this.cart.want) {
+      const give = Math.min(rest, this.cart.want - this.cart.got);
+      const v = value * (give / kg);
+      this.cart.got += give; this.cart.value += v; rest -= give; restValue -= v;
+      this.emit('cartLoad', { p, kg: give, got: this.cart.got, want: this.cart.want });
+      if (this.cart.got >= this.cart.want - 1e-6) {
+        const pay = Math.round(this.cart.value * this.R.cart.bonus + this.R.cart.tip);
+        this.coins += pay; this.stats.coins += pay; this.stats.orders++;
+        this.emit('cartDone', { coins: pay });
+        this.cart.leaving = true;
+      }
+    }
+    if (rest > 1e-6) { this.store.kg += rest; this.store.value += restValue; this.emit('unload', { p, kg: rest }); }
+  }
+
+  updateCart(dt) {
+    const C = this.R.cart;
+    if (this.cart) {
+      const c = this.cart;
+      if (c.leaving) { c.x += dt * 2.2; if (c.x > c.arrive + 6) this.cart = null; return; }
+      if (c.x < c.arrive) { c.x = Math.min(c.arrive, c.x + dt * 2.2); return; }
+      c.left -= dt;
+      if (c.left <= 0) { c.leaving = true; this.emit('cartGone', { got: c.got, want: c.want }); if (c.got > 0) { const pay = Math.round(c.value); this.coins += pay; this.stats.coins += pay; } }
+      return;
+    }
+    if (this.t >= this.nextCart && this.t < this.R.season.dayLength - C.time * 0.6) {
+      const want = Math.round(this.r.range(C.want[0], C.want[1]) * (1 + (this.day - 1) * C.grow) / 5) * 5;
+      this.cart = { want, got: 0, value: 0, left: C.time, x: this.L.cart.x - 4, arrive: this.L.cart.x, y: this.L.cart.y };
+      this.nextCart = this.t + this.r.range(C.every[0], C.every[1]);
+      this.emit('cart', { want });
+    }
+  }
+
+  updateGoats(dt) {
+    const G = this.R.goat;
+    if (this.t >= this.nextGoat && this.goats.length < G.max) {
+      const fromRight = this.r.chance(0.5);
+      this.goats.push({ x: fromRight ? this.L.bounds.x1 + 0.5 : this.L.bounds.x0 + 0.3, y: this.r.range(2, 8), target: null, flee: 0, munch: 0, face: fromRight ? -1 : 1 });
+      this.nextGoat = this.t + this.r.range(G.every[0], G.every[1]) / this.diff.goats;
+      this.emit('goat');
+    }
+    for (const g of this.goats) {
+      // Workers scare goats off by running at them.
+      for (const w of this.workers) if (!g.flee && dist(w, g) < G.scare) { g.flee = 1; g.face = Math.sign(g.x - w.x) || 1; this.stats.shoos++; this.emit('shoo', { p: w.i, x: g.x, y: g.y }); }
+      if (g.flee) { g.x += g.face * G.run * dt; g.y += (g.y < 5 ? -1 : 1) * G.run * 0.3 * dt; continue; }
+      // Otherwise they head for a bed with salt in it and trample it.
+      if (g.target == null || !this.beds[g.target].open) {
+        const tasty = this.beds.filter((b) => b.open && (b.salt > 0 || b.heap > 0));
+        g.target = tasty.length ? this.r.pick(tasty).i : null;
+      }
+      if (g.target == null) continue;
+      const b = this.beds[g.target], tx = b.x + b.w / 2, ty = b.y + b.h / 2, dx = tx - g.x, dy = ty - g.y, l = Math.hypot(dx, dy);
+      if (l > 0.3) { g.x += (dx / l) * G.walk * dt; g.y += (dy / l) * G.walk * dt; g.face = Math.sign(dx) || g.face; g.munch = 0; }
+      else {
+        g.munch += dt;
+        const lose = G.trample * dt;
+        const ls = Math.min(b.salt, lose), lh = Math.min(b.heap, lose);
+        b.salt -= ls; if (lh) { if (b.heapValue) b.heapValue *= 1 - lh / b.heap; b.heap -= lh; }
+        this.stats.trampled += ls + lh;
+        if (g.munch > 0 && g.munch - dt <= 0) this.emit('trample', { bed: b.i });
+      }
+    }
+    this.goats = this.goats.filter((g) => g.x > this.L.bounds.x0 - 2 && g.x < this.L.bounds.x1 + 2 && g.y > -1 && g.y < 11);
   }
 
   // ---- evenings ----------------------------------------------------------------------------
@@ -224,6 +310,7 @@ export class Season {
     this.emit('sold', { kg: this.store.kg, coins: earned, day: this.day });
     this.store.kg = 0; this.store.value = 0;
     for (const b of this.beds) b.sluice = false;
+    this.cart = null; this.goats = [];
     this.phase = this.day >= this.days ? 'over' : 'evening';
     if (this.phase === 'over') this.emit('over', { coins: this.stats.coins });
   }
@@ -242,11 +329,12 @@ export class Season {
     if (this.phase !== 'evening') return;
     this.day++; this.t = 0; this.phase = 'day';
     this.weather = { cloud: 0, rain: false, next: this.nextStorm(), left: 0 };
+    this.nextCart = this.R.cart.first; this.nextGoat = this.R.goat.first;
     for (const w of this.workers) { w.raking = null; }
     this.emit('morning', { day: this.day });
   }
 
-  score() { return Math.round(this.stats.coins + this.coins * 0 + this.stats.white * this.R.score.whiteKg); }
+  score() { return Math.round(this.stats.coins + this.stats.white * this.R.score.whiteKg + this.stats.best * this.R.score.streak); }
 }
 
 // ---- a sensible salt worker, for the attract demo and the balance tests ------------------------
@@ -274,6 +362,9 @@ export class Helper {
       const m = go(s.store.x, s.store.y);
       return dist(w, s.store) < s.store.r * 0.8 ? { a: true } : m;
     }
+    // 1b. Chase off a goat that's trampling salt.
+    const goat = s.goats.find((g) => !g.flee && g.target != null && Math.hypot(g.x - w.x, g.y - w.y) < 6);
+    if (goat) return go(goat.x, goat.y);
     // 2. Close a full sluice.
     const full = open.find((b) => b.sluice && b.water >= 0.98 && !this.claimed(b));
     if (full) { mine(full); const sp = s.sluicePoint(full); const m = go(sp.x, sp.y); return s.nearestBed(w) === full && dist(w, sp) < 0.9 ? { b: true } : m; }

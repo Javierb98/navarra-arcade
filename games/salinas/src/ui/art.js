@@ -127,6 +127,16 @@ function bed(g, s, b, t) {
       g.beginPath(); g.ellipse(x + 3 + rng.next() * (w - 6), y + 3 + rng.next() * (h - 6), 1.5 + rng.next() * 3, 1 + rng.next() * 1.5, rng.next() * 3, 0, Math.PI * 2); g.fill();
     }
     g.globalAlpha = 1;
+    // Flor de sal: just dried, the top crust shimmers gold. Rake it now!
+    if (s.isFlor(b)) {
+      const k = 1 - b.dry / s.R.quality.flor;
+      g.save(); g.globalCompositeOperation = 'lighter';
+      const sh = g.createLinearGradient(x + ((t * 220) % (w + 120)) - 120, y, x + ((t * 220) % (w + 120)) - 40, y + h);
+      sh.addColorStop(0, 'rgba(255,214,90,0)'); sh.addColorStop(0.5, `rgba(255,214,90,${0.55 * k})`); sh.addColorStop(1, 'rgba(255,214,90,0)');
+      g.fillStyle = sh; g.fillRect(x, y, w, h);
+      g.restore();
+      g.strokeStyle = `rgba(255,210,80,${0.5 + 0.5 * Math.sin(t * 14)})`; g.lineWidth = 3; g.strokeRect(x - 2, y - 2, w + 4, h + 4);
+    }
     // White salt sparkles in the sun.
     if (b.water === 0 && b.quality >= 0.9) for (let k = 0; k < 6; k++) { const ph = (t * 1.5 + k * 0.37 + b.i) % 1; if (ph < 0.25) { const sx = x + ((k * 53 + b.i * 17) % 100) / 100 * w, sy = y + ((k * 29 + b.i * 13) % 100) / 100 * h; g.fillStyle = `rgba(255,255,255,${1 - ph * 4})`; star(g, sx, sy, 3 + ph * 6); } }
   }
@@ -267,6 +277,60 @@ function donkey(g, s, t) {
   g.restore();
 }
 
+// The muleteer's cart: a mule, a two-wheeled cart, the arriero, and his order.
+function cart(g, s, t) {
+  const c = s.cart; if (!c) return;
+  const x = X(c.x), y = Y(c.y), wob = Math.sin(t * 8) * (c.x < c.arrive || c.leaving ? 1.5 : 0);
+  g.fillStyle = 'rgba(40,24,10,0.3)'; g.beginPath(); g.ellipse(x + 20, y + 4, 70, 9, 0, 0, Math.PI * 2); g.fill();
+  // Mule.
+  g.fillStyle = '#7a6a5e'; g.beginPath(); g.ellipse(x + 70, y - 22 + wob, 22, 11, 0, 0, Math.PI * 2); g.fill();
+  g.beginPath(); g.moveTo(x + 86, y - 26); g.lineTo(x + 96, y - 40); g.lineTo(x + 103, y - 36); g.lineTo(x + 92, y - 20); g.fill();
+  g.beginPath(); g.ellipse(x + 101, y - 38, 8, 5, 0.4, 0, Math.PI * 2); g.fill();
+  g.beginPath(); g.ellipse(x + 95, y - 48, 2, 7, -0.3, 0, Math.PI * 2); g.ellipse(x + 99, y - 48, 2, 7, 0.2, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = '#5e5248'; g.lineWidth = 4; for (const lx of [56, 62, 78, 84]) { g.beginPath(); g.moveTo(x + lx, y - 14); g.lineTo(x + lx + wob, y); g.stroke(); }
+  // Cart and its salt sacks.
+  g.fillStyle = '#8a5e34'; g.fillRect(x - 30, y - 34, 76, 16);
+  g.strokeStyle = '#5a3a1e'; g.lineWidth = 3; g.beginPath(); g.moveTo(x + 46, y - 26); g.lineTo(x + 62, y - 24); g.stroke();
+  g.fillStyle = '#4a3020'; g.beginPath(); g.arc(x + 6, y - 10, 14, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = '#9a7040'; g.lineWidth = 2; for (let k = 0; k < 4; k++) { const a = k * Math.PI / 4 + (c.x < c.arrive || c.leaving ? t * 4 : 0); g.beginPath(); g.moveTo(x + 6 - Math.cos(a) * 12, y - 10 - Math.sin(a) * 12); g.lineTo(x + 6 + Math.cos(a) * 12, y - 10 + Math.sin(a) * 12); g.stroke(); }
+  const sacks = Math.round((c.got / c.want) * 6);
+  for (let k = 0; k < sacks; k++) { g.fillStyle = '#efe8d6'; g.beginPath(); g.roundRect(x - 26 + (k % 3) * 22, y - 50 + (k >= 3 ? -10 : 0), 20, 16, 5); g.fill(); }
+  // The arriero, in black with a red sash.
+  g.fillStyle = '#2a2a30'; g.beginPath(); g.roundRect(x - 48, y - 40, 14, 22, 4); g.fill();
+  g.fillStyle = '#c0392b'; g.fillRect(x - 48, y - 26, 14, 3);
+  g.fillStyle = '#e2ae88'; g.beginPath(); g.arc(x - 41, y - 46, 6, 0, Math.PI * 2); g.fill();
+  g.fillStyle = '#1a1a22'; g.beginPath(); g.ellipse(x - 41, y - 51, 8, 3, 0, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = '#f0ece2'; g.lineWidth = 4; g.beginPath(); g.moveTo(x - 46, y - 18); g.lineTo(x - 46, y); g.moveTo(x - 37, y - 18); g.lineTo(x - 37, y); g.stroke();
+  // The order: a speech bubble with how much he wants and a ring for the time left.
+  if (!c.leaving && c.x >= c.arrive) {
+    const bx = x + 10, by = y - 92, k = c.left / s.R.cart.time;
+    g.fillStyle = 'rgba(255,250,236,0.96)'; g.beginPath(); g.roundRect(bx - 48, by - 24, 96, 40, 12); g.fill();
+    g.beginPath(); g.moveTo(bx - 8, by + 16); g.lineTo(bx, by + 28); g.lineTo(bx + 8, by + 16); g.fill();
+    g.fillStyle = '#3a2a1a'; g.font = 'bold 17px "Trebuchet MS", sans-serif'; g.textAlign = 'center';
+    g.fillText(`${Math.round(c.got)} / ${c.want} kg`, bx - 6, by);
+    g.lineWidth = 4; g.strokeStyle = 'rgba(0,0,0,0.15)'; g.beginPath(); g.arc(bx + 34, by - 5, 9, 0, Math.PI * 2); g.stroke();
+    g.strokeStyle = k > 0.3 ? '#3a8a4a' : Math.floor(t * 6) % 2 ? '#c0392b' : '#e8b840'; g.beginPath(); g.arc(bx + 34, by - 5, 9, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * k); g.stroke();
+  }
+}
+
+function goat(g, s, gt, t) {
+  const x = X(gt.x), y = Y(gt.y), f = gt.face || 1, munch = gt.munch > 0 && !gt.flee;
+  g.save(); g.translate(x, y); g.scale(f, 1);
+  g.fillStyle = 'rgba(40,24,10,0.3)'; g.beginPath(); g.ellipse(0, 1, 16, 4, 0, 0, Math.PI * 2); g.fill();
+  const step = munch ? 0 : Math.sin(t * (gt.flee ? 20 : 10)) * 3;
+  g.strokeStyle = '#5a4a3e'; g.lineWidth = 3;
+  for (const [lx, k] of [[-9, 1], [-4, -1], [6, 1], [10, -1]]) { g.beginPath(); g.moveTo(lx, -9); g.lineTo(lx + step * k, 0); g.stroke(); }
+  g.fillStyle = '#f2ece0'; g.beginPath(); g.ellipse(0, -14, 13, 7, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = '#5a4a3e'; g.beginPath(); g.ellipse(-4, -15, 5, 4, 0, 0, Math.PI * 2); g.fill();
+  const hy = munch ? -6 + Math.abs(Math.sin(t * 8)) * 2 : -22;
+  g.fillStyle = '#f2ece0'; g.beginPath(); g.ellipse(14, hy, 6, 5, munch ? 0.8 : 0.3, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = '#8a7a6a'; g.lineWidth = 2; g.beginPath(); g.moveTo(13, hy - 4); g.quadraticCurveTo(9, hy - 12, 6, hy - 9); g.stroke();
+  g.fillStyle = '#2a1a10'; g.beginPath(); g.arc(16, hy - 1, 1, 0, Math.PI * 2); g.fill();
+  g.fillStyle = '#d8d0c0'; g.beginPath(); g.moveTo(18, hy + 3); g.lineTo(17, hy + 9); g.lineTo(20, hy + 4); g.fill(); // beard
+  g.restore();
+  if (gt.flee) { g.fillStyle = '#3a2a1a'; g.font = 'bold 16px sans-serif'; g.textAlign = 'center'; g.fillText('!', x, y - 34); }
+}
+
 // ---- sun, clouds, rain, and the light of the day ------------------------------------------------
 
 function sky(g, s, t) {
@@ -290,6 +354,9 @@ function weatherOverlay(g, s, t) {
   const c = s.weather.cloud;
   if (c > 0) { g.fillStyle = `rgba(40,50,70,${c * (s.weather.rain ? 0.32 : 0.15)})`; g.fillRect(0, 0, W, H); }
   if (s.weather.rain) {
+    // Now and then, a flash of lightning.
+    const flash = (Math.sin(t * 1.7) + Math.sin(t * 2.9)) > 1.85;
+    if (flash) { g.fillStyle = 'rgba(255,255,255,0.35)'; g.fillRect(0, 0, W, H); g.strokeStyle = 'rgba(255,255,240,0.9)'; g.lineWidth = 2.5; g.beginPath(); let lx = 300 + (Math.floor(t) * 137) % 400, ly = 0; g.moveTo(lx, ly); while (ly < 110) { lx += (Math.sin(ly * 7 + t) * 14); ly += 14; g.lineTo(lx, ly); } g.stroke(); }
     g.strokeStyle = 'rgba(210,225,240,0.55)'; g.lineWidth = 1.2;
     for (let k = 0; k < 160; k++) { const x = ((k * 97 + t * 260) % (W + 60)) - 30, y = ((k * 53 + t * 700) % (H + 40)) - 20; g.beginPath(); g.moveTo(x, y); g.lineTo(x - 5, y + 14); g.stroke(); }
   }
@@ -307,7 +374,8 @@ export function drawScene(g, s, t, fx = []) {
   for (const b of s.beds) bed(g, s, b, t);
   store(g, s);
   // Sort the moving figures by depth.
-  const figs = [...s.workers.map((w) => ({ y: w.y, draw: () => worker(g, s, w, t) })), { y: s.donkey.y, draw: () => donkey(g, s, t) }];
+  cart(g, s, t);
+  const figs = [...s.workers.map((w) => ({ y: w.y, draw: () => worker(g, s, w, t) })), { y: s.donkey.y, draw: () => donkey(g, s, t) }, ...s.goats.map((gt) => ({ y: gt.y, draw: () => goat(g, s, gt, t) }))];
   figs.sort((a, b) => a.y - b.y).forEach((f) => f.draw());
   for (const b of s.beds) badge(g, s, b, t);
   weatherOverlay(g, s, t);
