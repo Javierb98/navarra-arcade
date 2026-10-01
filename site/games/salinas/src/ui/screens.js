@@ -147,7 +147,7 @@ export function howto(app) {
   let t0 = 0;
   app.ui.replaceChildren(h('div', { class: 'overlay howto' }, h('div', { class: 'parchment brief-card' },
     h('h2', {}, t('howto.title')),
-    h('ol', { class: 'howto-list' }, ['move', 'b', 'sun', 'a', 'carry', 'storm'].map((k) => h('li', {}, rich(t(`howto.${k}`))))),
+    h('ol', { class: 'howto-list' }, ['move', 'b', 'sun', 'a', 'flor', 'carry', 'extra', 'storm'].map((k) => h('li', {}, rich(t(`howto.${k}`))))),
     h('p', { class: 'hint' }, rich(`[A] ${t('menu.go')}`)))));
   return {
     update(dt) { t0 += dt; if ((t0 > 0.6 && (app.input.any('a') || app.input.any('start'))) || t0 > 30) { sfx.ok(); app.go('day'); } },
@@ -165,12 +165,12 @@ export function day(app) {
   let cardUntil = 0, toastUntil = 0, endT = 0;
   const el = {
     top: h('div', { class: 'topbar' }), toast: h('div', { class: 'toast hidden' }), card: h('div', { class: 'gloss parchment hidden' }),
-    help: h('p', { class: 'play-help' }, rich(t('help.play'))), floats: h('div', { class: 'floats' }),
+    help: h('p', { class: 'play-help' }, rich(t('help.play'))), floats: h('div', { class: 'floats' }), streak: h('div', { class: 'streak' }),
   };
-  app.ui.replaceChildren(h('div', { class: 'overlay play' }, el.top, el.floats, el.toast, el.card, el.help));
+  app.ui.replaceChildren(h('div', { class: 'overlay play' }, el.top, el.streak, el.floats, el.toast, el.card, el.help));
   let topKey = '';
   const renderTop = () => {
-    const key = `${s.day}|${Math.round(s.coins)}|${Math.round(s.store.kg)}|${s.workers.map((w) => Math.round(w.carry)).join()}|${getLang()}`;
+    const key = `${s.day}|${Math.round(s.coins)}|${Math.round(s.store.kg)}|${s.workers.map((w) => Math.round(w.carry)).join()}|${s.streak}|${getLang()}`;
     if (key === topKey) return;
     topKey = key;
     el.top.replaceChildren(
@@ -178,6 +178,8 @@ export function day(app) {
       h('div', { class: 'tb-stat' }, h('span', { class: 'coin' }), h('b', {}, fmt(s.coins)), h('small', {}, t('hud.coins'))),
       h('div', { class: 'tb-stat' }, h('span', { class: 'sack' }), h('b', {}, t('kg', { n: fmt(s.store.kg) })), h('small', {}, t('hud.store'))),
       ...s.workers.map((w) => h('div', { class: `tb-stat basket p${w.i}` }, h('b', {}, `${fmt(w.carry)}/${fmt(s.basket())}`), h('small', {}, t('hud.basket')))));
+    el.streak.className = `streak ${s.streak >= 2 ? 'on' : ''} ${s.streak >= 5 ? 'hot' : ''}`;
+    el.streak.replaceChildren(h('b', {}, `×${s.mult().toFixed(1).replace('.0', '')}`), h('small', {}, t('hud.streak', { n: s.streak })));
   };
   const toast = (text, secs = 2, bad = false) => { el.toast.replaceChildren(...rich(text)); el.toast.className = `toast ${bad ? 'bad' : ''}`; toastUntil = app.time + secs; };
   const teach = (id) => { if (!taught.has(id) && !S.taught?.has(id)) { taught.add(id); lessons.push(id); (S.taught ??= new Set()).add(id); } };
@@ -192,6 +194,8 @@ export function day(app) {
     const f = h('span', { class: `float ${cls}`, style: { left: `${x}px`, top: `${y}px` } }, text);
     el.floats.append(f); setTimeout(() => f.remove(), 1400);
   };
+  let shake = 0;
+  const coinBurst = (x, y, n) => { for (let k = 0; k < n; k++) fx.push({ kind: 'dot', x, y, vx: (Math.random() - 0.5) * 220, vy: -120 - Math.random() * 160, life: 0.9, max: 0.9, size: 4, colour: '#f2c75a' }); };
   const sparkle = (x, y, n = 10) => { for (let k = 0; k < n; k++) fx.push({ kind: 'star', x, y, vx: (Math.random() - 0.5) * 80, vy: -40 - Math.random() * 60, life: 0.8, max: 0.8, size: 3 + Math.random() * 3, colour: '#ffffff' }); };
   teach('manantial'); teach('era');
 
@@ -202,12 +206,24 @@ export function day(app) {
       else if (e.type === 'close') sfx.move();
       else if (e.type === 'overflow') { sfx.miss(); float(bx, by - 30, t('call.overflow'), 'bad'); }
       else if (e.type === 'ready') { sfx.ding(); float(bx, by - 30, t('call.ready')); teach('salmuera'); }
-      else if (e.type === 'raked') { sfx.rake(); sparkle(bx, Y(b.y + b.h), e.white ? 14 : 4); float(bx, by - 30, e.white ? t('call.white') : t('call.grey'), e.white ? 'good' : 'bad'); teach('rasero'); }
+      else if (e.type === 'raked') {
+        sfx.rake(); sparkle(bx, Y(b.y + b.h), e.flor ? 30 : e.white ? 14 : 4); teach('rasero');
+        if (e.flor) { sfx.flor(); float(bx, by - 34, t('call.flor'), 'gold'); teach('flor'); shake = 0.25; }
+        else float(bx, by - 30, e.white ? t('call.white') : t('call.grey'), e.white ? 'good' : 'bad');
+        if (e.streak >= 2) { sfx.streak(e.streak); float(bx, by - 6, `×${e.mult.toFixed(1).replace('.0', '')}`, 'streakpop'); }
+      } else if (e.type === 'streakLost') { sfx.miss(); toast(t('call.streakLost'), 1.6, true); }
+      else if (e.type === 'cart') { sfx.bell(); toast(t('call.cart', { kg: e.want }), 3); teach('arriero'); }
+      else if (e.type === 'cartLoad') { sfx.pick(); }
+      else if (e.type === 'cartDone') { sfx.cash(); coinBurst(X(s.L.cart.x) + 10, Y(s.L.cart.y) - 60, 18); float(X(s.L.cart.x) + 10, Y(s.L.cart.y) - 110, `+${e.coins}`, 'gold'); }
+      else if (e.type === 'cartGone') { sfx.miss(); toast(t('call.cartGone'), 2, true); }
+      else if (e.type === 'goat') { sfx.bleat(); toast(t('call.goat'), 2.2); teach('cabra'); }
+      else if (e.type === 'shoo') { sfx.shoo(); float(X(e.x), Y(e.y) - 40, t('call.shoo'), 'good'); }
+      else if (e.type === 'trample') { sfx.bleat(); float(bx, by - 30, t('call.trample'), 'bad'); }
       else if (e.type === 'pickup') sfx.pick();
-      else if (e.type === 'unload') { sfx.coin(); float(X(s.store.x), Y(s.store.y) - 60, `+${t('kg', { n: fmt(e.kg) })}`, 'good'); }
+      else if (e.type === 'unload') { sfx.coin(); float(X(s.store.x), Y(s.store.y) - 60, `+${t('kg', { n: fmt(e.kg) })}`, 'good'); coinBurst(X(s.store.x), Y(s.store.y) - 30, 6); }
       else if (e.type === 'donkey') sfx.pick();
       else if (e.type === 'clouds') { sfx.thunder(0.3); toast(t('call.clouds'), 3); }
-      else if (e.type === 'rain') { sfx.thunder(1); toast(t('call.rain'), 3, true); }
+      else if (e.type === 'rain') { sfx.thunder(1); toast(t('call.rain'), 3, true); shake = 0.4; }
       else if (e.type === 'clear') toast(t('call.clear'), 2);
     }
     // A full sluice reminder, once per bed fill.
@@ -235,7 +251,13 @@ export function day(app) {
       handle();
       renderTop();
     },
-    draw(g) { drawScene(g, s, app.time, fx); finish(g); },
+    draw(g) {
+      g.save();
+      if (shake > 0) { g.translate((Math.random() - 0.5) * shake * 12, (Math.random() - 0.5) * shake * 8); shake = Math.max(0, shake - 1 / 60); }
+      drawScene(g, s, app.time, fx);
+      g.restore();
+      finish(g);
+    },
   };
 }
 
@@ -285,6 +307,9 @@ export function final(app) {
     h('h2', {}, t('final.title')),
     row(t('final.kg'), t('kg', { n: fmt(st.kg) })),
     row(t('final.white'), t('kg', { n: fmt(st.white) })),
+    row(t('final.flor'), t('kg', { n: fmt(st.flor) })),
+    row(t('final.orders'), String(st.orders)),
+    row(t('final.best'), `${st.best}`),
     row(t('final.washed'), t('kg', { n: fmt(st.washed) })),
     row(t('final.coins'), fmt(st.coins)),
     h('div', { class: 'res-total' }, h('span', {}, t('final.score')), h('b', {}, String(score))),

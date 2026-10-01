@@ -248,3 +248,12 @@ kbd {
 .play-help .who.red { background: #b3261e; }
 .play-help .who.blue { background: #245a8a; }
 .play-help .aim { opacity: .9; }
+
+/* ---- streak meter and gold calls ---- */
+.streak { position: absolute; top: 62px; right: 16px; display: flex; align-items: baseline; gap: 6px; padding: 4px 14px; border-radius: 16px; background: rgba(40, 28, 16, .7); color: #fff4d6; font-family: var(--sans); opacity: 0; transform: scale(.8); transition: opacity .2s, transform .2s; }
+.streak.on { opacity: 1; transform: scale(1); }
+.streak.hot { background: linear-gradient(90deg, #c0392b, #e8902a); animation: hot .6s ease-in-out infinite alternate; }
+@keyframes hot { to { transform: scale(1.08); } }
+.streak b { font: bold 24px var(--serif); } .streak small { font-size: 12px; opacity: .85; }
+.float.gold { color: #ffd65a; font-size: 26px; text-shadow: 0 2px 0 #7a4a10, 0 0 14px rgba(255, 200, 80, .8); }
+.float.streakpop { color: #ffb070; font-size: 22px; }
