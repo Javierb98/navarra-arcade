@@ -96,4 +96,4 @@ The game folders must sit next to this one, as they do in `~/Documents/GitHub`.
 
 ## Credits
 
-Titles and names are set in **BilboINC**, a typeface based on Basque vernacular lettering by Hélène Marian Srodogora, published by [Velvetyne](https://github.com/velvetyne/BilboINC) under CC BY-NC-SA (licence in `assets/fonts/BilboINC-licence.txt`). The arcade is free and non-commercial; the font file is never sold.
+The arcade's name is set in **BilboINC**, a typeface based on Basque vernacular lettering by Hélène Marian Srodogora, published by [Velvetyne](https://github.com/velvetyne/BilboINC) under CC BY-NC-SA (licence in `assets/fonts/BilboINC-licence.txt`). The arcade is free and non-commercial; the font file is never sold.

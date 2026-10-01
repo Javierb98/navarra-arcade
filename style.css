@@ -1,7 +1,7 @@
 /* The menu shares the games' look: a 480x270 stage scaled up whole, pixel
    art kept crisp, Okabe-Ito colours. Everything moves slowly (pans, slides,
    glows): nothing flashes. */
-/* Basque lettering for titles and names: BilboINC by Hélène Marian
+/* Basque lettering for the arcade's name: BilboINC by Hélène Marian
    Srodogora (Velvetyne), CC BY-NC-SA; see assets/fonts/BilboINC-licence.txt. */
 @font-face { font-family: "BilboINC"; src: url("assets/fonts/BilboINC.woff2") format("woff2"); font-display: block; }
 :root {
@@ -253,32 +253,32 @@ body.tall .thanks.solo .sponsor.big { min-width: 0; width: 90%; }
 .medal img { width: 13px; height: 13px; object-fit: contain; }
 .credit-name { display: inline-flex; align-items: baseline; }
 .credit-name b {
-  font-family: var(--display); font-weight: normal; font-size: 13px; letter-spacing: 1px; line-height: 1;
+  font-family: var(--font); font-weight: bold; font-size: 11px; letter-spacing: .2px; line-height: 1;
   background: linear-gradient(100deg, #e6c36a 35%, #fff4cf 50%, #e6c36a 65%) 0 0 / 300% 100%;
   -webkit-background-clip: text; background-clip: text; color: transparent;
   animation: shine 7s linear infinite;
 }
-.credit-name small { font-family: var(--display); font-size: 8px; letter-spacing: .5px; color: var(--muted); margin-left: 1px; }
+.credit-name small { font-size: 8px; color: var(--muted); margin-left: 1px; }
 body.tall .medal { width: 18px; height: 18px; }
 body.tall .medal img { width: 12px; height: 12px; }
 
 /* ---- one type scale ----
    Five sizes, each with one job. Basque lettering (BilboINC) only for the
-   big names; everything people read in sentences is the plain face, bright
-   and with room between lines. Phones and tablets keep the same scale. */
+   arcade's name, gently spaced; game names and everything people read are
+   the plain face, bright and with room between lines. Phones and tablets keep the same scale. */
 #stage {
   --t-hero: 20px;   /* the arcade's name */
-  --t-title: 15px;  /* the featured game's name */
-  --t-name: 10px;   /* names on the cards */
+  --t-title: 13px;  /* the featured game's name */
+  --t-name: 8.5px;  /* names on the cards */
   --t-body: 8.5px;  /* sentences: blurb, lesson, help */
   --t-small: 7px;   /* labels, tags, chips */
 }
-body.tall #stage { --t-hero: 17px; --t-title: 14px; --t-name: 9px; --t-body: 8.5px; --t-small: 7px; }
+body.tall #stage { --t-hero: 17px; --t-title: 12.5px; --t-name: 8px; --t-body: 8.5px; --t-small: 7px; }
 
-h1 { font-family: var(--display); font-weight: normal; font-size: var(--t-hero); line-height: 1.05; letter-spacing: 1.5px; }
-.info h2, .thanks h2 { font-family: var(--display); font-weight: normal; font-size: var(--t-title); letter-spacing: .6px; line-height: 1.1; }
-.card .name { font-family: var(--display); font-weight: normal; font-size: var(--t-name); letter-spacing: .4px; }
-.play { font-family: var(--display) !important; font-weight: normal !important; letter-spacing: 2px !important; }
+h1 { font-family: var(--display); font-weight: normal; font-size: var(--t-hero); line-height: 1.05; letter-spacing: .5px; }
+.info h2, .thanks h2 { font-family: var(--font); font-weight: bold; font-size: var(--t-title); letter-spacing: 0; line-height: 1.15; }
+.card .name { font-family: var(--font); font-weight: bold; font-size: var(--t-name); letter-spacing: 0; }
+.play { font-family: var(--font) !important; font-weight: bold !important; letter-spacing: .5px !important; }
 
 .info .blurb, .info .lesson, .hint { font-size: var(--t-body); line-height: 1.35; font-weight: normal; }
 .info .blurb { color: #e2d9c4; margin: 2px 0 1px; }
