@@ -66,12 +66,13 @@ h1 {
 .preview.soon .pan { filter: grayscale(0.5) brightness(0.85); }
 .preview .badge { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); }
 
-.info { flex: 1; min-width: 0; display: flex; flex-direction: column; font-weight: normal; }
+.info { flex: 1; min-width: 0; display: flex; flex-direction: column; font-weight: normal; overflow: hidden; }
+.info-body { display: flex; flex-direction: column; }
 .info h2 { margin: 0; font-size: 13px; font-weight: bold; color: var(--rope); }
 .info .blurb { margin: 1px 0 1px; font-size: 8px; color: var(--muted); }
 .info h3 { margin: 0; font-size: 7.5px; text-transform: uppercase; letter-spacing: 1px; color: var(--sel); }
 .info .lesson { margin: 1px 0 0; font-size: 8px; line-height: 1.25; }
-.chips { margin-top: auto; display: flex; flex-wrap: wrap; gap: 2px 3px; }
+.chips { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 2px 3px; }
 .chip { font-size: 7px; font-weight: normal; background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line); border-radius: 3px; padding: 1px 4px; color: var(--muted); }
 .chip b { color: var(--text); }
 
@@ -84,7 +85,7 @@ h1 {
 .card .thumb { height: 26px; border-radius: 3px; background-size: cover; background-position: center; image-rendering: pixelated; }
 .card .thumb.blank { background: repeating-linear-gradient(45deg, #3a3342 0 4px, #2f2937 4px 8px); color: var(--muted); font-size: 10px; display: flex; align-items: center; justify-content: center; }
 .card.soon .thumb { filter: grayscale(0.5) brightness(0.8); }
-.card .name { display: block; margin-top: 2px; font-size: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card .name { display: block; margin-top: 2px; padding: 0 5px; font-size: 8px; white-space: nowrap; overflow: hidden; }
 .card.sel { border-color: var(--sel); transform: translateY(-3px); animation: glow 2.4s ease-in-out infinite; }
 @keyframes glow { 50% { box-shadow: 0 0 10px 1px rgba(230, 159, 0, 0.55); } }
 /* A slow band of light passing over the selected card. */
@@ -123,7 +124,7 @@ footer {
 .thanks h2 { margin: 0; font-size: 13px; color: var(--rope); }
 .sponsor-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
 footer p { margin: 0; }
-.hint { color: var(--text); font-size: 8.5px; font-weight: normal; }
+.hint { color: var(--text); font-size: 8.5px; font-weight: normal; white-space: nowrap; overflow: hidden; }
 .hint.small { color: var(--muted); font-size: 7px; }
 .btn { display: inline-block; min-width: 12px; height: 12px; padding: 0 3px; border-radius: 6px; font-size: 7.5px; line-height: 12px; text-align: center; background: #eee; color: #111; margin: 0 1px; vertical-align: 1px; }
 .btn-a { background: #f0e442; }
@@ -138,12 +139,12 @@ footer p { margin: 0; }
 
 /* How long a game takes: green and round for quick, blue and square for long
    (shape as well as colour, for colour-blind players). */
-.card .pace { position: absolute; top: 5px; left: 5px; font-size: 6.5px; padding: 0 4px; line-height: 11px; color: #fff; }
+.card .pace { position: absolute; top: 5px; left: 5px; max-width: calc(100% - 10px); font-size: 6.5px; padding: 0 4px; line-height: 11px; color: #fff; white-space: nowrap; overflow: hidden; }
 .pace.quick, .pace-tag.quick { background: #009e73; border-radius: 6px; }
 .pace.long { background: #0072b2; border-radius: 1px; }
 .title-row { display: flex; align-items: center; gap: 6px; }
 .best { margin: 0 0 3px; font-size: 7.5px; color: var(--rope); }
-.pace-tag { display: inline-block; flex: none; font-size: 7px; padding: 0 4px; line-height: 11px; color: #fff; }
+.pace-tag { display: inline-block; flex: none; max-width: 100%; font-size: 7px; padding: 0 4px; line-height: 11px; color: #fff; white-space: nowrap; overflow: hidden; }
 .pace-tag.long { background: #0072b2; border-radius: 1px; }
 .sponsor.dark { background: #0f3d2e; color: #fff; }
 .sponsor.big.tall { height: 72px; }
@@ -203,7 +204,7 @@ body.tall .card .name { font-size: 7.5px; margin-top: 1px; }
 body.tall .card .pace { display: none; }
 
 /* The featured game takes what's left; its text scrolls inside if it must. */
-body.tall .feature { flex: 0 1 auto; height: auto; min-height: 0; display: flex; }
+body.tall #menu > .feature { flex: 0 1 auto; height: auto; min-height: 0; display: flex; }
 body.tall .feature-inner { position: relative; inset: auto; flex: 1 1 auto; min-height: 0; }
 body.tall .feature-inner { flex-direction: column; gap: 4px; padding: 5px; }
 body.tall .preview { flex: none; width: var(--preview-w, 100%); height: auto; aspect-ratio: 16 / 9; align-self: center; }

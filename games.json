@@ -251,13 +251,13 @@
       "thumb": "assets/previews/minas.jpg",
       "preview": "assets/previews/minas.webm",
       "poster": "assets/previews/minas.jpg",
-      "players": "1-2",
-      "minutes": "6",
+      "players": "1",
+      "minutes": "20-30",
       "pace": "long",
       "bestFor": {
-        "es": "Para quien tenga un rato: un turno entero bajo tierra, solo o en pareja",
-        "eu": "Denbora duenarentzat: txanda oso bat lur azpian, bakarrik edo bikoteka",
-        "en": "For someone with time: a whole shift underground, alone or in pairs"
+        "es": "Para quien tenga tiempo: una partida larga, sin reloj, para un jugador",
+        "eu": "Denbora duenarentzat: partida luzea, erlojurik gabe, jokalari batentzat",
+        "en": "For someone with time: a long game with no clock, for one player"
       },
       "title": {
         "es": "Los Hombres Verdes",

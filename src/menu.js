@@ -21,7 +21,14 @@ const store = {
 
 let games = [];
 let strings = {};
-let lang = store.get('lang', 'es');
+// The language someone picked here before; otherwise the browser's own, when
+// it's Spanish, Basque or English; otherwise Spanish.
+function browserLang() {
+  const list = navigator.languages?.length ? navigator.languages : [navigator.language ?? ''];
+  for (const l of list) { const code = String(l).toLowerCase().split('-')[0]; if (LANGS.includes(code)) return code; }
+  return 'es';
+}
+let lang = store.get('lang', null) ?? browserLang();
 let sel = 0;
 let input = null;
 let idle = 0;
@@ -179,7 +186,7 @@ function render(dir = 0) {
       g.preview ? h('video', { class: 'clip', src: g.preview, poster: g.poster ?? '', muted: true, autoplay: true, loop: true, playsinline: true, preload: 'auto' })
         : g.thumb ? h('div', { class: 'pan', style: { backgroundImage: `url(${g.thumb})` } }) : h('div', { class: 'pan blank' }, L(g.title)),
       g.status === 'soon' ? h('span', { class: 'badge' }, t('soon')) : null),
-    h('div', { class: 'info' },
+    h('div', { class: 'info' }, h('div', { class: 'info-body' },
       h('div', { class: 'title-row' }, h('h2', {}, L(g.title)), h('span', { class: `pace-tag ${g.pace}` }, `${t(g.pace)} · ${t('min', { n: g.minutes })}`)),
       h('p', { class: 'blurb' }, L(g.blurb)),
       h('p', { class: `best ${g.pace}` }, L(g.bestFor)),
@@ -187,8 +194,12 @@ function render(dir = 0) {
       h('p', { class: 'lesson' }, L(g.lesson)),
       h('div', { class: 'chips' },
         h('span', { class: 'chip' }, h('b', {}, t('when')), ' ', L(g.era), ' · ', h('b', {}, t('where')), ' ', L(g.place)),
-        h('span', { class: 'chip' }, players, ...(isTouch || document.body.classList.contains('tall') ? [] : [' · ', L(g.controls)])))));
+        h('span', { class: 'chip' }, players, ...(isTouch || document.body.classList.contains('tall') ? [] : [' · ', L(g.controls)]))))));
   el.feature.replaceChildren(panel);
+  fitText();
+  // Once the layout has settled (fonts, the new panel sliding in), fit again.
+  requestAnimationFrame(() => requestAnimationFrame(fitText));
+  setTimeout(fitText, 400);
   const clip = panel.querySelector('video');
   if (clip) { clip.muted = true; clip.play().catch(() => {}); } // muted, so browsers let it autoplay
 
@@ -198,6 +209,7 @@ function render(dir = 0) {
   // On a touch screen there's no stick to describe: say what to tap instead.
   el.hint.replaceChildren(...rich(t(isTouch ? 'hintTouch' : focus === 'lang' ? 'hintLang' : 'hint')));
   el.exit.replaceChildren(...rich(t(isTouch ? 'exitHintTouch' : 'exitHint')));
+  fitText();
   el.play.textContent = g.status === 'ready' ? `▶ ${t('play')}` : t('soon');
   el.play.disabled = g.status !== 'ready';
   // Upright, the button gets its own row; on a wide screen it sits on the
@@ -211,6 +223,31 @@ function render(dir = 0) {
     el.cards.scrollTo({ left: c.offsetLeft - el.cards.offsetLeft - (el.cards.clientWidth - c.offsetWidth) / 2, behavior: dir ? 'smooth' : 'auto' });
   }
 }
+
+// ---- keeping text inside its box, in every language ---------------------------
+
+// The featured game's text shrinks a little when a description runs long,
+// and long names on the cards shrink to fit their card, so nothing ever
+// spills out, whatever the language.
+function fitText() {
+  const info = el.feature.querySelector('.info'), body = info?.querySelector('.info-body');
+  if (body) {
+    body.style.zoom = '';
+    const room = info.getBoundingClientRect().height;
+    for (let z = 1; z >= 0.62 && body.getBoundingClientRect().height > room + 0.5; z -= 0.04) body.style.zoom = String(z);
+  }
+  for (const c of el.cardEls) for (const n of c.querySelectorAll('.name, .pace')) shrink(n);
+  for (const n of [el.hint, el.exit, ...el.feature.querySelectorAll('.pace-tag')]) shrink(n);
+}
+// One line of text, made smaller until it fits its box.
+function shrink(n) {
+  n.style.fontSize = '';
+  if (!n.clientWidth) return;
+  let size = parseFloat(getComputedStyle(n).fontSize);
+  while (n.scrollWidth > n.clientWidth + 0.5 && size > 4.5) { size -= 0.25; n.style.fontSize = `${size}px`; }
+}
+addEventListener('resize', () => el && fitText());
+document.fonts?.ready.then(() => el && fitText());
 
 // ---- sponsors -----------------------------------------------------------------
 
