@@ -243,6 +243,54 @@
       }
     },
     {
+      "id": "minas",
+      "folder": "../navarra-minas",
+      "port": 8780,
+      "url": "games/minas/",
+      "status": "ready",
+      "thumb": "assets/previews/minas.jpg",
+      "preview": "assets/previews/minas.webm",
+      "poster": "assets/previews/minas.jpg",
+      "players": "1-2",
+      "minutes": "6",
+      "pace": "long",
+      "bestFor": {
+        "es": "Para quien tenga un rato: un turno entero bajo tierra, solo o en pareja",
+        "eu": "Denbora duenarentzat: txanda oso bat lur azpian, bakarrik edo bikoteka",
+        "en": "For someone with time: a whole shift underground, alone or in pairs"
+      },
+      "title": {
+        "es": "Minas de Navarra",
+        "eu": "Nafarroako meategiak",
+        "en": "Mines of Navarre"
+      },
+      "blurb": {
+        "es": "Baja con una perforadora de vapor por las capas de la tierra: saca sal, potasa, magnesita y hierro, véndelos y mejora la máquina.",
+        "eu": "Jaitsi lurrun-zulagailu batekin lurraren geruzetan behera: atera gatza, potasa, magnesita eta burdina, saldu eta hobetu makina.",
+        "en": "Ride a steam drill down through the layers of the earth: dig salt, potash, magnesite and iron, sell them and improve the machine."
+      },
+      "lesson": {
+        "es": "Qué hay bajo Navarra y para qué se sacaba: la sal de mares antiguos, la potasa para abonos, la magnesita de Zubiri y el hierro de las ferrerías.",
+        "eu": "Zer dagoen Nafarroaren azpian eta zertarako ateratzen zen: itsaso zaharretako gatza, ongarrietarako potasa, Zubiriko magnesita eta burdinoletako burdina.",
+        "en": "What lies under Navarre and why it was dug: salt from ancient seas, potash for fertiliser, Zubiri's magnesite and the iron of the old ironworks."
+      },
+      "era": {
+        "es": "De la Edad Media al siglo XX",
+        "eu": "Erdi Arotik XX. mendera",
+        "en": "From the Middle Ages to the 20th century"
+      },
+      "place": {
+        "es": "Bajo toda Navarra",
+        "eu": "Nafarroa osoaren azpian",
+        "en": "Under all of Navarre"
+      },
+      "controls": {
+        "es": "Joystick y botones",
+        "eu": "Joystick-a eta botoiak",
+        "en": "Stick and buttons"
+      }
+    },
+    {
       "id": "espadas",
       "folder": "../navarra-1212/mountain-kings",
       "port": 8740,

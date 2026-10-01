@@ -89,6 +89,31 @@ const GAMES = {
       for (let k = 0; Date.now() < end; k++) { await tap(page, k % 2 ? 'KeyX' : 'KeyZ'); await wait(page, 60); await tap(page, k % 2 ? 'KeyR' : 'KeyE'); await wait(page, 120); }
     },
   },
+  minas: {
+    async setup(page) {
+      await page.goto('http://localhost:8780/?debug&lang=es'); await wait(page, 2000);
+      for (let k = 0; k < 10 && !(await page.evaluate(() => !!window.mine)); k++) { await tap(page, k < 3 ? 'Digit1' : 'KeyZ'); await wait(page, 600); }
+      // Fast-forward: the game's helper digs for a while, so the clip opens
+      // mid-shift among tunnels, then plays on through the keys.
+      await page.evaluate(async () => {
+        const { Helper } = await import('/src/core/minas.js');
+        const m = window.mine; window.helper = new Helper(m, 0);
+        for (let k = 0; k < 30 * 70; k++) { m.step([window.helper.input()], 1 / 30); }
+        if (window.helper.mode !== 'down') { m.pods[0].fuel = m.stat('tank'); window.helper.mode = 'down'; }
+      });
+      await this.act(page, 3);
+    },
+    async act(page, secs) {
+      const end = Date.now() + secs * 1000, held = new Set();
+      const set = async (k, on) => { if (on && !held.has(k)) { held.add(k); await page.keyboard.down(k); } else if (!on && held.has(k)) { held.delete(k); await page.keyboard.up(k); } };
+      while (Date.now() < end) {
+        const inp = await page.evaluate(() => window.helper.input());
+        await set('ArrowLeft', inp.x < -0.3); await set('ArrowRight', inp.x > 0.3); await set('ArrowUp', inp.y < -0.3); await set('ArrowDown', inp.y > 0.3);
+        await wait(page, 40);
+      }
+      for (const k of held) await page.keyboard.up(k);
+    },
+  },
   salinas: {
     async setup(page) {
       await page.goto('http://localhost:8770/?debug&lang=es'); await wait(page, 2000);
