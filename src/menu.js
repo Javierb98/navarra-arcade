@@ -53,14 +53,47 @@ function rich(text) {
 // CSS zoom (not a transform) so the browser lays the menu out at full screen
 // size: text is drawn sharp at the real resolution instead of being drawn
 // small and stretched. The pixel-art backdrop canvas stays crisp on its own.
+//
+// Upright screens (phones, iPads held tall) get their own layout instead of a
+// tiny letterboxed 16:9 strip: the stage keeps the screen's shape, a narrow
+// width (so text reads at a comfortable size) and stacks everything in a column.
+const coarse = matchMedia('(pointer: coarse)');
 function fit() {
-  const k = Math.min(innerWidth / 480, innerHeight / 270);
-  stage.style.zoom = k;
-  // With zoom, left/top are in zoomed units too.
-  stage.style.left = `${(innerWidth - 480 * k) / 2 / k}px`;
-  stage.style.top = `${(innerHeight - 270 * k) / 2 / k}px`;
+  // clientWidth, not innerWidth: a phone widens innerWidth to fit whatever
+  // overflowed last time, so sizing from it would feed on itself.
+  const W = document.documentElement.clientWidth, H = document.documentElement.clientHeight;
+  const tall = H > W * 0.9;
+  const touch = coarse.matches || navigator.maxTouchPoints > 0;
+  document.body.classList.toggle('tall', tall);
+  document.body.classList.toggle('touch', touch);
+  if (tall) {
+    const w = Math.round(Math.max(240, Math.min(420, W / 1.6)));
+    const k = W / w;
+    stage.style.zoom = k;
+    stage.style.width = `${w}px`;
+    stage.style.height = `${H / k}px`;
+    stage.style.left = stage.style.top = '0px';
+    // The preview may not eat more than ~40% of the screen's height.
+    stage.style.setProperty('--preview-w', `${Math.min(w - 30, (H / k) * 0.42 * 16 / 9)}px`);
+  } else {
+    const k = Math.min(W / 480, H / 270);
+    stage.style.zoom = k;
+    stage.style.width = '480px';
+    stage.style.height = '270px';
+    // With zoom, left/top are in zoomed units too.
+    stage.style.left = `${(W - 480 * k) / 2 / k}px`;
+    stage.style.top = `${(H - 270 * k) / 2 / k}px`;
+  }
+  const shape = `${tall}/${touch}`;
+  isTouch = touch;
+  if (el && shape !== lastShape) render();
+  lastShape = shape;
 }
+let isTouch = false, lastShape = '';
 addEventListener('resize', fit);
+coarse.addEventListener?.('change', fit);
+// A tap or a swipe counts as someone being here, like a button press.
+for (const ev of ['pointerdown', 'wheel', 'touchmove']) addEventListener(ev, () => { idle = 0; }, { passive: true });
 
 // Run locally (fire-up-arcade), every game has its own port on this machine.
 // In the online site (build-site.py marks it) the games sit under games/<id>/.
@@ -83,6 +116,7 @@ function build() {
     langs: h('div', { class: 'langs' }),
     feature: h('div', { class: 'feature' }),
     cards: h('div', { class: 'cards' }),
+    play: h('button', { class: 'play', onClick: () => launch() }),
     hint: h('p', { class: 'hint' }),
     exit: h('p', { class: 'hint small' }),
     sponsor: h('div', { class: 'sponsor-plate' }),
@@ -91,6 +125,7 @@ function build() {
   root.replaceChildren(
     h('header', {}, el.title, el.langs),
     el.feature,
+    el.play,
     el.cards,
     h('footer', {}, el.sponsor, h('div', { class: 'hints' }, el.hint, el.exit), el.credit),
   );
@@ -151,7 +186,7 @@ function render(dir = 0) {
       h('p', { class: 'lesson' }, L(g.lesson)),
       h('div', { class: 'chips' },
         h('span', { class: 'chip' }, h('b', {}, t('when')), ' ', L(g.era), ' · ', h('b', {}, t('where')), ' ', L(g.place)),
-        h('span', { class: 'chip' }, players, ' · ', L(g.controls)))));
+        h('span', { class: 'chip' }, players, ...(isTouch ? [] : [' · ', L(g.controls)])))));
   el.feature.replaceChildren(panel);
   const clip = panel.querySelector('video');
   if (clip) { clip.muted = true; clip.play().catch(() => {}); } // muted, so browsers let it autoplay
@@ -159,8 +194,21 @@ function render(dir = 0) {
   renderSponsor();
   el.credit.replaceChildren(...(credits ? [h('span', { class: 'sponsor-label' }, S(credits.label)),
     h('span', { class: 'credit-mark' }, credits.logo ? h('img', { src: credits.logo, alt: '' }) : null, credits.name)] : []));
-  el.hint.replaceChildren(...rich(t(focus === 'lang' ? 'hintLang' : 'hint')));
-  el.exit.replaceChildren(...rich(t('exitHint')));
+  // On a touch screen there's no stick to describe: say what to tap instead.
+  el.hint.replaceChildren(...rich(t(isTouch ? 'hintTouch' : focus === 'lang' ? 'hintLang' : 'hint')));
+  el.exit.replaceChildren(...rich(t(isTouch ? 'exitHintTouch' : 'exitHint')));
+  el.play.textContent = g.status === 'ready' ? `▶ ${t('play')}` : t('soon');
+  el.play.disabled = g.status !== 'ready';
+  // Upright, the button gets its own row; on a wide screen it sits on the
+  // preview's corner so the 16:9 layout keeps its room.
+  if (document.body.classList.contains('tall')) el.feature.after(el.play);
+  else panel.querySelector('.preview').append(el.play);
+  // Keep the chosen card in view in the swipeable strip.
+  // (Scrolling the strip itself, so the page doesn't jump down to it.)
+  if (document.body.classList.contains('tall')) {
+    const c = el.cardEls[sel];
+    el.cards.scrollTo({ left: c.offsetLeft - el.cards.offsetLeft - (el.cards.clientWidth - c.offsetWidth) / 2, behavior: dir ? 'smooth' : 'auto' });
+  }
 }
 
 // ---- sponsors -----------------------------------------------------------------
