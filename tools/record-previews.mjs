@@ -52,13 +52,13 @@ const GAMES = {
   },
   'pax-avant': {
     async setup(page) {
-      await page.goto('http://localhost:8720/'); await wait(page, 2500);
+      // Mid-summer (the computer plays the first weeks): the pass flag, open
+      // land, the tribute cows and the hail on Barétous's grass.
+      await page.goto('http://localhost:8720/?week=3'); await wait(page, 2500);
       for (let k = 0; k < 5; k++) await tap(page, 'Digit1');
-      await tap(page, 'KeyZ'); await wait(page, 2500);
+      await tap(page, 'KeyZ'); await wait(page, 4500);
     },
     async act(page, secs) {
-      // Both shepherds open their pens and start the flocks up the paths.
-      await tap(page, 'KeyC'); await tap(page, 'KeyQ');
       const moves = [['ArrowUp', 'KeyW', 1400], ['ArrowRight', 'KeyA', 700], ['ArrowUp', 'KeyW', 1600], ['KeyC', 'KeyQ', 200], ['ArrowUp', 'KeyW', 1500], ['ArrowRight', 'KeyA', 600], ['ArrowUp', 'KeyW', 2000]];
       const end = Date.now() + secs * 1000;
       for (let k = 0; Date.now() < end; k++) {
