@@ -61,9 +61,9 @@
       "minutes": "5",
       "pace": "quick",
       "bestFor": {
-        "es": "Una temporada de 5 minutos, mejor en pareja",
-        "eu": "5 minutuko denboraldia, bikotean hobe",
-        "en": "A 5-minute season, best with two"
+        "es": "Para dos: cada uno por su valle, pero la paz es de los dos",
+        "eu": "Birentzat: bakoitza bere ibarraren alde, baina bakea biona da",
+        "en": "For two: each for their own valley, but the peace belongs to both"
       },
       "title": {
         "es": "Pax Avant",
@@ -71,14 +71,14 @@
         "en": "Pax Avant"
       },
       "blurb": {
-        "es": "Pastores de Roncal y Baretous comparten los pastos: el Tributo de las Tres Vacas.",
-        "eu": "Erronkari eta Baretoko artzainek larreak partekatzen dituzte: Hiru Behien Zerga.",
-        "en": "Shepherds of Roncal and Barétous share the pastures: the Tribute of the Three Cows."
+        "es": "Pastores de Roncal y Barétous compiten por su valle en los pastos de la frontera… sin romper la paz de 1375.",
+        "eu": "Erronkari eta Baretouseko artzainak beren ibarraren alde lehiatzen dira mugako larreetan… 1375eko bakea hautsi gabe.",
+        "en": "Shepherds of Roncal and Barétous compete for their valleys on the border pastures… without breaking the peace of 1375."
       },
       "lesson": {
-        "es": "Por qué Roncal y Baretous hicieron las paces por los pastos y el agua, y cómo aún lo celebran cada 13 de julio en la Piedra de San Martín.",
-        "eu": "Zergatik egin zituzten bakeak Erronkarik eta Baretok larre eta uragatik, eta nola ospatzen duten oraindik uztailaren 13an San Martin Harrian.",
-        "en": "Why Roncal and Barétous made peace over pastures and water, and how they still celebrate it every 13 July at the San Martín stone."
+        "es": "Cómo dos valles enfrentados por la hierba y el agua firmaron en 1375 turnos y un tributo de tres vacas, y por qué esa paz aún se celebra cada 13 de julio.",
+        "eu": "Belarra eta urarengatik aurrez aurre zeuden bi ibarrek nola sinatu zituzten 1375ean txandak eta hiru behiko zerga, eta zergatik ospatzen den oraindik bake hori uztailaren 13an.",
+        "en": "How two valleys at odds over grass and water agreed turns and a tribute of three cows in 1375, and why that peace is still celebrated every 13 July."
       },
       "era": {
         "es": "Tratado de 1375 (se cuenta) · hoy",

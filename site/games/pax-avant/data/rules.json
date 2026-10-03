@@ -61,16 +61,20 @@
     "overgrazed": 0.2
   },
   "trust": {
-    "start": 50,
+    "start": 60,
     "strayHelp": 6,
     "lambHelp": 12,
     "wolfHelp": 6,
     "waterShare": 0.5,
-    "hog": 0.3,
-    "trespass": 0.25,
+    "hog": 0.12,
+    "trespass": 1.8,
     "sharedShelterAt": 60,
     "earlyWarningAt": 70,
-    "kindAt": 40
+    "kindAt": 45,
+    "_note": "trust is the Peace both valleys share (0..100). Below `quarrelAt` the valleys are quarrelling; at the end, below `ceremonyAt` there is no ceremony at the stone.",
+    "guest": 0.25,
+    "quarrelAt": 25,
+    "ceremonyAt": 50
   },
   "wolf": {
     "speed": 30,
@@ -111,16 +115,46 @@
     }
   },
   "score": {
-    "sheepHome": 40,
-    "condition": 400,
-    "health": 4,
-    "trust": 4,
-    "star": 100,
-    "lamb": 100
+    "cheese": 10,
+    "sheepHome": 30,
+    "star": 60,
+    "peace": 4,
+    "honour": 1
   },
   "ceremony": [
     40,
     58,
     75
-  ]
+  ],
+  "honour": {
+    "_note": "Points a valley earns for giving: help in trouble, and every bite or sip the neighbours take on land it opened to them.",
+    "stray": 15,
+    "lamb": 40,
+    "wolf": 20,
+    "water": 30,
+    "guestBite": 12
+  },
+  "cheese": {
+    "_note": "Each well-fed sheep makes milk; `rate` is wheels of cheese per sheep per second at full condition (food and water above `above`).",
+    "rate": 0.012,
+    "above": 0.5
+  },
+  "cows": {
+    "count": 3,
+    "side": 1,
+    "radius": 5,
+    "hunger": 0.9,
+    "eat": 2.2,
+    "speedK": 0.8
+  },
+  "tribute": {
+    "_note": "At the stone, Barétous hands three cows to Roncal. Healthy cows score for Roncal; if they are too thin the tribute falls short and the peace suffers.",
+    "perCow": 120,
+    "minCondition": 0.45,
+    "shortPeace": 15
+  },
+  "hail": {
+    "_note": "Hail flattens a valley's own pastures to this share of their grass.",
+    "keep": 0.3
+  }
 }

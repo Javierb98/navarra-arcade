@@ -1,5 +1,5 @@
 {
-  "_note": "One grazing season, week by week. `length` is in seconds. Event `t` is seconds into the week. Storm warnings arrive `rules.weather.warn` seconds ahead (more with high Trust), so keep a storm's `t` above `warnEarly`. Wolf `target` is the valley (0 Roncal, 1 Barétous) it heads for; wolves are only ever scared off.",
+  "_note": "One grazing season, week by week. `length` is in seconds. Event `t` is seconds into the week. Storm warnings arrive `rules.weather.warn` seconds ahead (more with high Trust), so keep a storm's `t` above `warnEarly`. Wolf `target` is the valley (0 Roncal, 1 Barétous) it heads for; wolves are only ever scared off. `pass` is whose turn it is on the high pass and its spring (the 1375 sentence gave Barétous the first weeks of summer and Roncal the later ones); null means both may use it.",
   "weeks": [
     {
       "id": "w1",
@@ -24,7 +24,8 @@
           "key": "tip.up"
         }
       ],
-      "events": []
+      "events": [],
+      "pass": null
     },
     {
       "id": "w2",
@@ -34,18 +35,29 @@
       "prompts": [
         {
           "t": 1,
-          "key": "tip.grass"
+          "key": "tip.pass"
         },
         {
-          "t": 12,
-          "key": "tip.share"
+          "t": 9,
+          "key": "tip.compete"
         },
         {
-          "t": 24,
-          "key": "tip.trust"
+          "t": 18,
+          "key": "tip.open"
+        },
+        {
+          "t": 27,
+          "key": "tip.cows"
         }
       ],
-      "events": []
+      "events": [
+        {
+          "t": 2,
+          "type": "dry",
+          "spring": "roncal"
+        }
+      ],
+      "pass": 1
     },
     {
       "id": "w3",
@@ -63,8 +75,14 @@
           "t": 20,
           "type": "storm",
           "dur": 12
+        },
+        {
+          "t": 24,
+          "type": "hail",
+          "side": 1
         }
-      ]
+      ],
+      "pass": 1
     },
     {
       "id": "w4",
@@ -104,7 +122,8 @@
           },
           "target": 1
         }
-      ]
+      ],
+      "pass": 0
     },
     {
       "id": "w5",
@@ -119,21 +138,17 @@
       ],
       "events": [
         {
-          "t": 0,
-          "type": "dry",
-          "spring": "roncal"
+          "t": 14,
+          "type": "fog",
+          "dur": 14
         },
         {
           "t": 0,
           "type": "dry",
           "spring": "baretous"
-        },
-        {
-          "t": 14,
-          "type": "fog",
-          "dur": 14
         }
-      ]
+      ],
+      "pass": 0
     },
     {
       "id": "w6",
@@ -155,7 +170,8 @@
           "t": 32,
           "type": "snow"
         }
-      ]
+      ],
+      "pass": null
     }
   ]
 }

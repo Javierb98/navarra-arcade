@@ -14,8 +14,15 @@
 //     it can follow),
 //   C does whatever is at hand (gate, trough, fire, lost lamb).
 //
-// The idea the rules carry: grass and water are shared, and a pasture that
-// one flock eats bare stays bare for everyone.
+// The idea the rules carry, from the 1375 treaty: the mountain can't feed
+// both valleys at once, so they take turns on the pass, each lacks what the
+// other has (Roncal has grass but a weak spring, Barétous water but thin
+// grass), and both compete for their own valley (cheese, stars, sheep home,
+// honour) while sharing one Peace. Take what isn't yours and the Peace
+// suffers; open your land to the neighbours and you earn honour. If the Peace
+// breaks, there is no ceremony at the stone and nobody gets its bonus.
+// Barétous keeps three cows to hand over at the stone; healthy cows score
+// for Roncal, so Roncal has its own reason to share its grass.
 
 import { makeRng } from './rng.js';
 import { clamp, closestOnSeg, inRect } from './geom.js';
@@ -68,25 +75,33 @@ export class Season {
       for (let k = 0; k < n; k++) this.addSheep(side, p.x + 10 + this.rng.next() * (p.w - 20), p.y + 10 + this.rng.next() * (p.h - 20));
     });
     this.flockSize = [n, n];
+    // Barétous's three cows, for the tribute at the stone.
+    const Cw = rules.cows, cp = map.valleys[Cw.side].pen;
+    for (let k = 0; k < Cw.count; k++) this.addSheep(Cw.side, cp.x + 20 + k * 22, cp.y + cp.h / 2, false, true);
 
     this.wolves = [];
     this.lamb = null;
     this.weather = { storm: 0, stormOn: false, fog: 0, fogOn: false, snow: false, night: 0 };
     this.storms = [];
-    this.trust = rules.trust.start;
+    this.trust = rules.trust.start; // the Peace both valleys share
+    this.quarrel = false;
+    this.welcome = [false, false]; // has this valley opened its land to the other?
+    this.cheese = [0, 0];
+    this.honour = [0, 0];
     this.shelterOpen = false;
-    this.stats = [0, 1].map(() => ({ strays: 0, lambs: 0, wolves: 0, water: 0, fills: 0, stars: 0, goals: [] }));
+    this.stats = [0, 1].map(() => ({ strays: 0, lambs: 0, wolves: 0, water: 0, fills: 0, stars: 0, goals: [], taken: 0, given: 0 }));
+    this._quarrelT = [0, 0];
     this.flocks = [this.flockInfo(0), this.flockInfo(1)];
     this._p = { x: 0, y: 0 };
     this._strayT = 0;
     this.startWeek(0);
   }
 
-  addSheep(side, x, y, lamb = false) {
+  addSheep(side, x, y, lamb = false, cow = false) {
     const N = this.rules.needs;
     this.sheep.push({
       id: this.sheep.length, side, x, y, vx: 0, vy: 0, wa: this.rng.next() * Math.PI * 2,
-      food: N.start, water: N.start, lamb, stray: false, herdedBy: -1, herdedT: -9,
+      food: N.start, water: N.start, lamb, cow, stray: false, herdedBy: -1, herdedT: -9,
       eating: false, drinking: false, fleeing: false, sheltered: false, wentUp: lamb,
     });
   }
@@ -94,6 +109,32 @@ export class Season {
   // ---- the calendar -------------------------------------------------------
 
   get weekDef() { return this.calendar.weeks[this.week]; }
+
+  // Whose turn it is on the high pass and its spring: 0, 1, or -1 for both.
+  get passOwner() { return this.weekDef.pass ?? -1; }
+
+  // Who a pasture belongs to right now (the pass changes hands by the week).
+  pastureOwner(pi) { const o = this.map.pastures[pi].owner; return o === -1 ? this.passOwner : o; }
+
+  // Who a trough belongs to right now: the shared spring's troughs go with the pass.
+  troughOwner(tr) { return this.springs[tr.spring].id === 'shared' ? this.passOwner : tr.side; }
+
+  // An animal of `side` eats or drinks `amount` on land owned by `owner`. On
+  // its own land, or open land: nothing. On the neighbours' land: if they
+  // opened it, they earn honour (they gave it up); if not, the Peace suffers.
+  useLand(s, owner, amount) {
+    if (owner < 0 || owner === s.side) return;
+    const T = this.rules.trust;
+    if (this.welcome[owner]) {
+      this.honour[owner] += this.rules.honour.guestBite * amount;
+      this.stats[owner].given += amount;
+      this.trust += T.guest * amount;
+    } else {
+      this.trust -= T.trespass * amount;
+      this.stats[s.side].taken += amount;
+      if (this.t - this._quarrelT[s.side] > 6) { this._quarrelT[s.side] = this.t; this.events.push({ type: 'trespass', side: s.side, x: s.x, y: s.y }); }
+    }
+  }
 
   startWeek(i) {
     this.week = i;
@@ -128,7 +169,7 @@ export class Season {
 
   // How far a valley is towards this week's goal, 0..1, and the bar to pass.
   goalProgress(side, goal = this.weekDef.goal) {
-    const own = this.sheep.filter((s) => s.side === side);
+    const own = this.sheep.filter((s) => s.side === side && !s.cow);
     const frac = (f) => own.filter(f).length / own.length;
     const G = this.rules.goals;
     switch (goal) {
@@ -184,6 +225,13 @@ export class Season {
         const s = this.springs.find((sp) => sp.id === e.spring);
         if (s) { s.dry = true; s.level = 0; }
         this.events.push({ type: 'dry', spring: e.spring });
+      } else if (e.type === 'hail') {
+        // Hail flattens one valley's own grass: now it needs the neighbours.
+        this.map.pastures.forEach((p, pi) => {
+          if (p.owner !== e.side) return;
+          for (const c of this.world.pastureCells[pi]) this.grass[c] *= this.rules.hail.keep;
+        });
+        this.events.push({ type: 'hail', side: e.side });
       } else if (e.type === 'snow') {
         this.weather.snow = true;
         this.events.push({ type: 'snow' });
@@ -219,6 +267,8 @@ export class Season {
     this.stepWater();
     if ((this._strayT += DT) >= 0.25) { this._strayT = 0; this.updateStrays(); }
     this.trust = clamp(this.trust, 0, 100);
+    const q = this.trust < this.rules.trust.quarrelAt;
+    if (q !== this.quarrel) { this.quarrel = q; this.events.push({ type: q ? 'quarrel' : 'reconcile' }); }
     if (!this.shelterOpen && this.trust >= this.rules.trust.sharedShelterAt) {
       this.shelterOpen = true;
       for (const g of this.gates) if (g.kind === 'shelter') g.open = true;
@@ -384,6 +434,9 @@ export class Season {
       this.events.push({ type: 'fire', side: i, x: f.x, y: f.y });
       return;
     }
+    // Nothing at hand: open your land to the neighbours, or close it again.
+    this.welcome[i] = !this.welcome[i];
+    this.events.push({ type: 'welcome', side: i, open: this.welcome[i], x: s.x, y: s.y });
   }
 
   // ---- sheep --------------------------------------------------------------
@@ -416,7 +469,7 @@ export class Season {
           const d = Math.sqrt(d2), k = S.sepForce * (1 - d / S.separation) / d;
           ax -= dx * k; ay -= dy * k;
         }
-        if (o.side === s.side && d2 < coh2) { cx += o.x; cy += o.y; avx += o.vx; avy += o.vy; n++; }
+        if (o.side === s.side && !o.cow === !s.cow && d2 < coh2) { cx += o.x; cy += o.y; avx += o.vx; avy += o.vy; n++; }
       }
       if (n) {
         const k = S.cohesion * diff.cohesion * fogK;
@@ -464,13 +517,20 @@ export class Season {
       if (!fear && !pulled) {
         let drew = false;
         if (s.water < N.thirstyBelow) {
-          let best = null, bd = N.seekWater;
+          let best = null, bd = s.cow ? N.seekWater * 3 : N.seekWater;
           for (const tr of this.troughs) {
             if (tr.water < 0.03) continue;
+            if (s.cow) { const o = this.troughOwner(tr); if (o >= 0 && o !== s.side && !this.welcome[o]) continue; }
             const dd = Math.hypot(tr.x - s.x, tr.y - s.y);
             if (dd < bd) { bd = dd; best = tr; }
           }
           if (best && bd > 6) { ax += (best.x - s.x) / bd * 22; ay += (best.y - s.y) / bd * 22; drew = true; }
+        }
+        if (!drew && s.cow) {
+          // Cows amble to the best grass they may use: their own, open
+          // land, or meadows the neighbours opened to them.
+          const g = this.cowGoal(s);
+          if (g) { const dx = g.x - s.x, dy = g.y - s.y, dd = Math.hypot(dx, dy); if (dd > 12) { ax += dx / dd * 12; ay += dy / dd * 12; drew = true; } }
         }
         if (!drew && s.food < 0.85) {
           const g = this.bestGrassNear(s.x, s.y);
@@ -487,13 +547,30 @@ export class Season {
       const damp = Math.exp(-S.damping * DT);
       s.vx *= damp; s.vy *= damp;
       const weak = Math.min(s.food, s.water) < 0.15 ? 0.6 : 1;
-      const cap = (fear ? S.maxSpeed : pulled ? S.bellSpeed : S.cruise) * weak;
+      const cap = (fear ? S.maxSpeed : pulled ? S.bellSpeed : S.cruise) * weak * (s.cow ? this.rules.cows.speedK : 1);
       const sp = Math.hypot(s.vx, s.vy);
       if (sp > cap) { s.vx *= cap / sp; s.vy *= cap / sp; }
       s.x += s.vx * DT; s.y += s.vy * DT;
-      this.collide(s, S.radius);
+      this.collide(s, s.cow ? this.rules.cows.radius : S.radius);
       this.feed(s, sp);
     }
+  }
+
+  // Where a cow is heading: the richest pasture it may use, near beats far.
+  // Rechosen every few seconds so the herd doesn't dither.
+  cowGoal(c) {
+    if (c.goalT > this.t) return c.goal;
+    c.goalT = this.t + 4;
+    const W = this.world;
+    let best = null, bv = -1;
+    this.map.pastures.forEach((p, pi) => {
+      const owner = this.pastureOwner(pi);
+      if (owner >= 0 && owner !== c.side && !this.welcome[owner]) return;
+      const v = this.meanGrass(W.pastureCells[pi]) - Math.hypot(p.x - c.x, p.y - c.y) / 900;
+      if (v > bv) { bv = v; best = p; }
+    });
+    c.goal = best ? { x: best.x, y: best.y } : null;
+    return c.goal;
   }
 
   // Which way the grass gets better, as a unit vector (or null if it doesn't).
@@ -520,8 +597,9 @@ export class Season {
   }
 
   feed(s, speed) {
-    const N = this.rules.needs, T = this.rules.trust, W = this.world;
-    s.food -= N.hunger * DT;
+    const N = this.rules.needs, T = this.rules.trust, W = this.world, Cw = this.rules.cows;
+    const big = s.cow ? Cw.hunger : 1, mouth = s.cow ? Cw.eat : 1;
+    s.food -= N.hunger * big * DT;
     s.water -= N.thirst * DT;
     if ((this.weather.storm > 0.5 && !s.sheltered) || (this.weather.snow && !this.inPen(s))) s.food -= N.cold * DT;
     s.eating = false;
@@ -530,13 +608,12 @@ export class Season {
     const pi = W.pastureOf[ci] ?? -1;
     if (pi >= 0 && this.map.pastures[pi].high) s.wentUp = true;
     if (pi >= 0 && speed < N.grazeSpeed && !s.fleeing) {
-      const owner = this.map.pastures[pi].owner;
-      if (owner === 1 - s.side) this.trust -= T.trespass * DT / this.flockSize[s.side];
       if (s.food < 0.98 && this.grass[ci] > 0.05) {
-        const bite = N.eat * DT;
-        s.food += bite;
+        const bite = N.eat * mouth * DT;
+        s.food += bite / big;
         this.grass[ci] = Math.max(0, this.grass[ci] - bite * N.grassPerFood * this.diff.grassUse);
         s.eating = true;
+        this.useLand(s, this.pastureOwner(pi), bite);
         if (this.grass[ci] < this.rules.grass.overgrazed) this.trust -= T.hog * DT / this.flockSize[s.side];
       }
     }
@@ -547,15 +624,22 @@ export class Season {
         s.water += sip;
         tr.water = Math.max(0, tr.water - sip * N.waterPerDrink);
         s.drinking = true;
+        this.useLand(s, this.troughOwner(tr), sip);
         if (tr.filledBy >= 0 && tr.filledBy !== s.side) {
           this.trust += T.waterShare * sip;
           this.stats[tr.filledBy].water += sip;
+          this.honour[tr.filledBy] += this.rules.honour.water * sip;
         }
         break;
       }
     }
     s.food = clamp(s.food, 0, 1);
     s.water = clamp(s.water, 0, 1);
+    // Well-fed, well-watered sheep give milk: cheese for their valley.
+    if (!s.cow) {
+      const C = this.rules.cheese, c = Math.min(s.food, s.water);
+      if (c > C.above) this.cheese[s.side] += C.rate * DT * (c - C.above) / (1 - C.above);
+    }
   }
 
   updateStrays() {
@@ -565,6 +649,7 @@ export class Season {
       const stray = Math.hypot(s.x - f.x, s.y - f.y) > d;
       if (s.stray && !stray && s.herdedBy >= 0 && s.herdedBy !== s.side && this.t - s.herdedT < 6) {
         this.trust += this.rules.trust.strayHelp;
+        this.honour[s.herdedBy] += this.rules.honour.stray;
         this.stats[s.herdedBy].strays++;
         this.events.push({ type: 'helpStray', side: s.herdedBy, x: s.x, y: s.y });
         s.herdedBy = -1;
@@ -589,7 +674,7 @@ export class Season {
         if (by >= 0) {
           w.mode = 'leave';
           this.stats[by].wolves++;
-          if (by !== w.target) this.trust += this.rules.trust.wolfHelp;
+          if (by !== w.target) { this.trust += this.rules.trust.wolfHelp; this.honour[by] += this.rules.honour.wolf; }
           this.events.push({ type: 'wolfScared', side: by, x: w.x, y: w.y, helped: by !== w.target });
         } else if (w.mode === 'prowl' && w.t > this.diff.wolfPatience) {
           w.mode = 'leave';
@@ -643,7 +728,7 @@ export class Season {
       this.addSheep(L.side, s.x, s.y + 6, true);
       this.flockSize[L.side]++;
       this.stats[L.by].lambs++;
-      if (L.by !== L.side) this.trust += this.rules.trust.lambHelp;
+      if (L.by !== L.side) { this.trust += this.rules.trust.lambHelp; this.honour[L.by] += this.rules.honour.lamb; }
       this.events.push({ type: 'lambHome', side: L.by, x: s.x, y: s.y, helped: L.by !== L.side });
     }
   }
@@ -730,25 +815,39 @@ export class Season {
 
   // ---- the end ------------------------------------------------------------
 
+  // The end of the summer, valley by valley: what each made for itself
+  // (cheese, sheep home, stars), what it gave (honour), the tribute (healthy
+  // cows score for Roncal), and the Peace, whose bonus both get only if the
+  // ceremony at the stone takes place.
   score() {
-    const S = this.rules.score;
-    const home = [0, 1].map((side) => this.sheep.filter((s) => s.side === side && this.isHome(s)).length);
-    const condition = this.sheep.reduce((a, s) => a + Math.min(s.food, s.water), 0) / this.sheep.length;
+    const S = this.rules.score, Tr = this.rules.tribute;
+    const sheepOf = (side) => this.sheep.filter((s) => s.side === side && !s.cow);
+    const home = [0, 1].map((side) => sheepOf(side).filter((s) => this.isHome(s)).length);
+    const flock = this.sheep.filter((s) => !s.cow);
+    const condition = flock.reduce((a, s) => a + Math.min(s.food, s.water), 0) / flock.length;
+    const cows = this.sheep.filter((s) => s.cow);
+    const cowCondition = cows.length ? cows.reduce((a, s) => a + Math.min(s.food, s.water), 0) / cows.length : 1;
+    const tributeOk = cowCondition >= Tr.minCondition;
+    const peace = Math.round(clamp(this.trust - (tributeOk ? 0 : Tr.shortPeace), 0, 100));
+    const ceremony = peace >= this.rules.trust.ceremonyAt;
     const health = this.health();
-    const stars = this.stats[0].stars + this.stats[1].stars;
-    const lambs = this.stats[0].lambs + this.stats[1].lambs;
-    const parts = {
-      home: (home[0] + home[1]) * S.sheepHome,
-      condition: Math.round(condition * S.condition),
-      health: health * S.health,
-      trust: Math.round(this.trust) * S.trust,
-      stars: stars * S.star,
-      lamb: lambs * S.lamb,
-    };
-    const total = Object.values(parts).reduce((a, b) => a + b, 0);
+    const valleys = [0, 1].map((i) => {
+      const parts = {
+        cheese: Math.round(this.cheese[i] * S.cheese),
+        home: home[i] * S.sheepHome,
+        stars: this.stats[i].stars * S.star,
+        honour: Math.round(this.honour[i] * S.honour),
+        tribute: i === 0 && tributeOk ? Math.round(cowCondition * cows.length * Tr.perCow) : 0,
+        peace: ceremony ? peace * S.peace : 0,
+      };
+      return { parts, total: Object.values(parts).reduce((a, b) => a + b, 0), cheese: Math.floor(this.cheese[i]) };
+    });
+    const gap = valleys[0].total - valleys[1].total;
+    const winner = Math.abs(gap) < 15 ? -1 : gap > 0 ? 0 : 1;
     const homeFrac = (home[0] + home[1]) / (this.flockSize[0] + this.flockSize[1]);
-    const together = (this.trust + health + condition * 100 + homeFrac * 100) / 4;
-    const tier = this.rules.ceremony.filter((c) => together >= c).length;
-    return { parts, total, home, condition, health, trust: Math.round(this.trust), stars, lambs, tier, together };
+    const together = (peace + health + condition * 100 + homeFrac * 100) / 4;
+    const tier = ceremony ? Math.max(1, this.rules.ceremony.filter((c) => together >= c).length) : 0;
+    const stars = this.stats[0].stars + this.stats[1].stars;
+    return { valleys, winner, home, condition, cowCondition, tributeOk, health, peace, ceremony, trust: peace, stars, tier, together };
   }
 }

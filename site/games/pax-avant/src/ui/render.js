@@ -322,6 +322,25 @@ function sheepSprite(side, pose, lamb = false, weak = false) {
   });
 }
 
+// One of Barétous's tribute cows: a wheat-coloured Pyrenean cow with pale
+// horns, bigger than a sheep. Thin cows look paler and bonier.
+function cowSprite(pose, weak = false) {
+  return sprite(`cow.${pose}.${weak}`, 16, 12, (bm) => {
+    const c0 = weak ? P.straw1 : P.cow0, c1 = weak ? P.straw2 : P.cow1;
+    bm.ellipse(8, 10, 6, 1.6, P.shadow);
+    const step = pose === 'walk1' ? 1 : 0;
+    for (const lx of [4, 6, 9, 11]) bm.rect(lx + (lx > 7 ? step : -step), 8, 1, 3, P.cow2);
+    bm.ellipse(7.5, 6, 5.5, 3.2, (x, y) => (y < -1 ? c0 : c1));
+    const hx = pose === 'eat' ? 12 : 12, hy = pose === 'eat' ? 7 : 4;
+    bm.rect(hx, hy, 3, 3, c0);
+    bm.set(hx + 2, hy + 2, P.face);
+    bm.set(hx, hy - 1, P.cowh); bm.set(hx + 2, hy - 1, P.cowh);
+    bm.set(2, 5, P.cow2); bm.set(1, 6, P.cow2);
+    // Barétous's mark: a small square.
+    bm.rect(6, 4, 2, 2, SIDE[1].main);
+  });
+}
+
 // A Roncal or Barétous shepherd, three-quarter view, crook in hand.
 function shepherdSprite(side, frame) {
   return sprite(`shep.${side}.${frame}`, 11, 16, (bm) => {
@@ -428,6 +447,7 @@ export function drawSeason(ctx, season, time, fx = {}) {
   drawGates(ctx, season);
   drawShelterHints(ctx, season, time);
   drawFires(ctx, season, time);
+  drawFlags(ctx, season, time);
   drawActors(ctx, season, time, fx);
   drawWeather(ctx, season, time);
   drawMarkers(ctx, season, time, fx);
@@ -554,6 +574,10 @@ function drawActors(ctx, s, time, fx) {
     if (it.kind === 'sheep') {
       const sp = Math.hypot(o.vx, o.vy);
       const pose = o.eating ? 'eat' : sp > 6 ? (Math.floor(time * 8 + o.id) % 2 ? 'walk1' : 'stand') : 'stand';
+      if (o.cow) {
+        drawFlip(ctx, cowSprite(pose, Math.min(o.food, o.water) < 0.3), o.x - 8, o.y - 9, o.vx < -0.5);
+        continue;
+      }
       const img = sheepSprite(o.side, pose, o.lamb, Math.min(o.food, o.water) < 0.15);
       drawFlip(ctx, img, o.x - 5, o.y - 6 + (o.fleeing && Math.floor(time * 10 + o.id) % 2 ? -1 : 0), o.vx < -0.5);
     } else if (it.kind === 'dog') {
@@ -571,6 +595,23 @@ function drawActors(ctx, s, time, fx) {
       if (o.bellT > 0) drawBell(ctx, o, time);
     }
   }
+}
+
+// Flags on the land: on the pass, a flag in the colour of the valley whose
+// turn it is; on each valley's pastures, a green flag when it has opened
+// them to the neighbours.
+function drawFlags(ctx, s, time) {
+  const wave = Math.sin(time * 4) > 0 ? 1 : 0;
+  const flag = (x, y, css) => {
+    x = Math.round(x); y = Math.round(y);
+    ctx.fillStyle = '#4e341f'; ctx.fillRect(x, y - 12, 1, 13);
+    ctx.fillStyle = css; ctx.fillRect(x + 1, y - 12, 6, 4); ctx.fillRect(x + 7, y - 11 + wave, 1, 2);
+  };
+  const shared = s.map.pastures.find((p) => p.owner === -1);
+  const o = s.passOwner;
+  if (shared) flag(shared.x - 3, shared.y - shared.ry + 4, o < 0 ? '#e8e0cc' : SIDE[o].css);
+  if (o < 0 && shared) flag(shared.x + 5, shared.y - shared.ry + 4, '#e8e0cc');
+  for (const p of s.map.pastures) if (p.owner >= 0 && s.welcome[p.owner]) flag(p.x, p.y - p.ry + 4, '#2fb36e');
 }
 
 function drawFlip(ctx, img, x, y, flip) {

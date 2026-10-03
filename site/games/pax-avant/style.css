@@ -98,8 +98,18 @@ h3 { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spa
 
 /* play */
 .play { justify-content: flex-start; padding: 0; }
-.hud { display: flex; gap: 8px; align-items: center; justify-content: space-between; width: 100%; background: rgba(12, 10, 8, 0.72); padding: 1px 6px; font-size: 10px; height: 16px; }
-.hud-item, .hud-side, .hud-mid { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
+.hud { display: flex; gap: 8px; align-items: center; justify-content: space-between; width: 100%; background: rgba(12, 10, 8, 0.72); padding: 1px 6px; font-size: 9px; height: 25px; }
+.hud-item, .hud-line { display: inline-flex; align-items: center; gap: 3px; white-space: nowrap; }
+.hud-side, .hud-mid { display: inline-flex; flex-direction: column; gap: 1px; white-space: nowrap; }
+.hud-mid { align-items: center; }
+.hud-side.side1 { align-items: flex-end; }
+.hud .icon { width: 10px; height: 10px; }
+.cheese, .honour, .pass, .cows { display: inline-flex; align-items: center; gap: 2px; }
+.cheese { color: #f2d06b; } .honour { color: #f08a8a; }
+.gate { display: inline-flex; color: var(--muted); } .gate.open { color: var(--good); }
+.cows.thin { color: var(--bad); } .cows .bar.thin { width: 22px; }
+.bar.trust.quarrel { border-color: var(--bad); }
+.bar.trust.quarrel i { background: var(--bad); }
 .hud .ptag { width: 11px; height: 11px; }
 .hud .num { min-width: 16px; text-align: right; font-size: 9px; color: var(--muted); }
 .stars { display: inline-flex; align-items: center; color: var(--rope); }
@@ -156,3 +166,21 @@ h3 { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spa
 .admin { background: rgba(0, 0, 0, 0.7); }
 .admin .row { display: flex; justify-content: space-between; gap: 30px; padding: 3px 6px; font-size: 12px; border: 1px solid transparent; }
 .admin .row.sel { border-color: var(--rope); }
+
+/* End of the summer: the two valleys side by side, the peace above them. */
+.results .card.wide { width: 452px; padding: 8px 12px; }
+.results .card.wide h2 { margin-bottom: 2px; }
+.res-peace { font-size: 10px; margin: 2px 0; display: flex; align-items: center; gap: 4px; justify-content: center; }
+.res-peace.ok { color: var(--good); } .res-peace.broken { color: var(--bad); }
+.res-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+.res-col { border: 1px solid var(--line); border-radius: 5px; padding: 3px 6px; }
+.res-col.win { border-color: var(--rope); box-shadow: 0 0 6px rgba(241, 226, 166, 0.35); }
+.res-col h3 { margin: 0 0 2px; font-size: 10px; display: flex; align-items: center; gap: 3px; }
+.res-col .crown { color: var(--rope); font-size: 8px; }
+.res-col .res-row { font-size: 8.5px; padding: 1px 0; gap: 3px; }
+.res-col .res-row .icon { width: 9px; height: 9px; }
+.res-col .res-total { font-size: 11px; margin-top: 2px; }
+.res-verdict { font-size: 11px; color: var(--rope); text-align: center; margin: 5px 0 0; }
+.res-col .res-row { grid-template-columns: 11px 1fr auto; }
+.res-col .res-total { display: flex; justify-content: space-between; }
+.res-col { min-width: 0; overflow: hidden; }
