@@ -1,14 +1,13 @@
-// The charge, fight and taunt minigames, after 1066. Each opens over the
+// The charge and fight minigames, after 1066. Each opens over the
 // battlefield view as a close side-on scene of the two companies, plays for a
 // few seconds, and resolves to a result the engine turns into damage or
 // morale (see Battle.minigameQuality). "Auto" resolves to null: average.
 
 import { h } from './dom.js';
-import { t, getLang } from './i18n.js';
+import { t } from './i18n.js';
 import { Scene } from './scene.js';
 import { viewUnit } from './board.js';
 import { unitLabel } from './playback.js';
-import { emblemSVG } from './emblems.js';
 
 // A close-up strip: attackers on the left, the defender on the right.
 function stage({ host, data, battle, attackers, defender, label, colour }) {
@@ -113,7 +112,7 @@ export function chargeGame({ host, data, battle, request, speed }) {
     const finish = (v) => { stop(); st.overlay.remove(); resolve(v); };
     auto.addEventListener('click', () => finish(null));
     st.overlay.addEventListener('keydown', (e) => {
-      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); bump(); }
+      if (arcadeKey(e) === 'a' || e.code === 'KeyC' || e.code === 'KeyQ') { e.preventDefault(); e.stopPropagation(); if (!e.repeat) bump(); }
       else if (e.key === 'Escape') finish(null);
     });
     st.scene.canvas.addEventListener('pointerdown', bump);
@@ -233,7 +232,8 @@ export function fightGame({ host, data, battle, request, speed }) {
     };
     const lunge = (v, dir) => { v.ox = 0.22 * dir; setTimeout(() => { v.ox = 0; }, 160); };
     st.overlay.addEventListener('keydown', (e) => {
-      if (KEYS.includes(e.key)) { e.preventDefault(); e.stopPropagation(); press(e.key); }
+      const ak = arcadeKey(e), map = { left: 'ArrowLeft', up: 'ArrowUp', down: 'ArrowDown', right: 'ArrowRight' };
+      if (map[ak]) { e.preventDefault(); e.stopPropagation(); if (!e.repeat) press(map[ak]); }
       else if (e.key === 'Escape') finish(null);
     });
     pads.addEventListener('pointerdown', (e) => { const k = e.target.closest('.pad')?.dataset.k; if (k) press(k); });
@@ -293,95 +293,15 @@ export function fightGame({ host, data, battle, request, speed }) {
   });
 }
 
-// ---------------------------------------------------------------------------
-// Taunt: type the insult before the moment passes.
-
-const norm = (ch) => ch.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-const typeable = (ch) => /[\p{L}\p{N}]/u.test(ch);
-
-export function tauntGame({ host, data, battle, request, speed }) {
-  const attacker = battle.byId(request.attacker);
-  const defender = battle.byId(request.defender);
-  const entry = data.taunts.find((x) => x.id === request.taunt);
-  const text = entry ? entry[getLang()] ?? entry.en : '…';
-  const st = stage({ host, data, battle, attackers: [attacker], defender, label: t('phase.taunt'), colour: '#8a6a1a' });
-  st.a[0].x = 0.8; st.d.x = 2.6;
-  const W = 1200, H = 360;
-  // 1066's taunt bar: a dark strip docked at the foot of the scene, the
-  // insult as rounded letter tiles, a round timer on the left and the enemy's
-  // emblem on the right.
-  const tiles = h('div', { class: 'taunt-tiles' }, [...text].map((ch) => h('span', { class: `tile ${ch === ' ' ? 'gap' : typeable(ch) ? '' : 'punct done'}` }, ch === ' ' ? '' : ch)));
-  const timerNum = h('span');
-  const timer = h('div', { class: 'taunt-clock' }, timerNum);
-  const foe = data.factions[defender.kind.faction];
-  const auto = h('button', { class: 'ghost dark' }, t('mini.auto'));
-  // A hidden field keeps phone keyboards up.
-  const field = h('input', { class: 'taunt-field', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', 'aria-label': t('mini.tauntTip') });
-  st.bar.append(h('p', { class: 'aim-tip' }, t('mini.tauntTip')), auto, field);
-  st.overlay.append(h('div', { class: 'taunt-dock' }, timer, tiles,
-    h('span', { class: 'taunt-foe', html: emblemSVG(foe.emblem, foe.emblemField ?? foe.color, 44) })));
-  field.focus();
-
-  const chars = [...text];
-  const need = chars.filter(typeable).length;
-  const LIMIT = 2500 + need * 380;
-  let pos = chars.findIndex(typeable);
-  if (pos >= 0) tiles.children[pos].classList.add('cur');
-  let typed = 0, errors = 0, t0 = null, done = null;
-
-  return new Promise((resolve) => {
-    let stop;
-    const finish = (v) => { stop(); st.overlay.remove(); resolve(v); };
-    auto.addEventListener('click', () => finish(null));
-    let started = false;
-    const key = (k) => {
-      if (!started || done || pos < 0 || k.length !== 1) return;
-      const want = norm(chars[pos]);
-      const got = norm(k);
-      const span = tiles.children[pos];
-      if (got === want || (want === 'n' && got === 'ñ')) {
-        span.classList.add('done');
-        span.classList.remove('cur');
-        typed++;
-        pos = chars.findIndex((c, i) => i > pos && typeable(c));
-        if (pos >= 0) tiles.children[pos].classList.add('cur');
-      } else {
-        errors++;
-        span.classList.remove('bad'); void span.offsetWidth; span.classList.add('bad');
-      }
-    };
-    const onKey = (e) => {
-      if (e.key === 'Escape') { finish(null); return; }
-      if (e.key.length === 1) { e.preventDefault(); e.stopPropagation(); key(e.key); }
-    };
-    st.overlay.addEventListener('keydown', onKey);
-    field.addEventListener('input', () => { for (const ch of field.value) key(ch); field.value = ''; });
-    st.scene.canvas.addEventListener('pointerdown', () => field.focus());
-
-    stop = run((now) => {
-      t0 ??= now;
-      started = now - t0 >= COUNTDOWN;
-      const left = Math.max(0, Math.min(1, 1 - (now - t0 - COUNTDOWN) / LIMIT));
-      const secs = started ? Math.ceil((left * LIMIT) / 1000) : Math.ceil(LIMIT / 1000);
-      timerNum.textContent = String(secs);
-      timer.style.setProperty('--left', `${left * 360}deg`);
-      if (!done && (pos < 0 || left <= 0)) {
-        const frac = typed / Math.max(1, need);
-        const score = Math.max(0, Math.min(1, frac * (0.65 + 0.35 * left) - errors * 0.03));
-        done = { score };
-        if (score > 0.5) st.scene.crowds.get(defender.id).hitT = now;
-        setTimeout(() => finish({ score }), speed() === 0 ? 400 : 1300);
-      }
-      st.scene.draw(st.units, [], now);
-      const g = st.scene.ctx;
-      // The words so far, in a speech bubble over the taunting company.
-      const said = chars.slice(0, pos < 0 ? chars.length : pos).join('');
-      if (said) st.scene.bubble(said, st.a[0], 0.5);
-      drawCountdown(g, W, H, now - t0);
-      if (done) {
-        const k = done.score > 0.75 ? 'mini.tauntGreat' : done.score > 0.4 ? 'mini.tauntGood' : 'mini.tauntWeak';
-        banner(g, W, H, t(k), null, done.score > 0.4 ? '#f1cf6a' : '#fbf3de', 0.5);
-      }
-    }, () => finish(null));
-  });
+// Which arcade button a key press is: arrows/WASD, A (Ctrl, Z, E, Space),
+// or null. Space counts as A here for keyboard players.
+export function arcadeKey(e) {
+  const c = e.code;
+  if (c === 'ArrowLeft' || c === 'KeyA') return 'left';
+  if (c === 'ArrowRight' || c === 'KeyD') return 'right';
+  if (c === 'ArrowUp' || c === 'KeyW') return 'up';
+  if (c === 'ArrowDown' || c === 'KeyS') return 'down';
+  if (c === 'ControlLeft' || c === 'KeyZ' || c === 'KeyE' || c === 'Space' || c === 'Enter') return 'a';
+  return null;
 }
+

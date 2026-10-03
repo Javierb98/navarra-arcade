@@ -2,9 +2,9 @@
   "id": "las_navas",
   "year": 1212,
   "epilogue": true,
-  "title": { "en": "Las Navas de Tolosa", "es": "Las Navas de Tolosa" },
-  "date": { "en": "16 July 1212", "es": "16 de julio de 1212" },
-  "place": { "en": "The Sierra Morena, below the caliph's camp", "es": "Sierra Morena, al pie del campamento del califa" },
+  "title": { "en": "Las Navas de Tolosa", "es": "Las Navas de Tolosa", "eu": "Las Navas de Tolosa" },
+  "date": { "en": "16 July 1212", "es": "16 de julio de 1212", "eu": "1212ko uztailaren 16a" },
+  "place": { "en": "The Sierra Morena, below the caliph's camp", "es": "Sierra Morena, al pie del campamento del califa", "eu": "Sierra Morena, kalifaren kanpalekuaren oinean" },
 
   "briefing": {
     "en": [
@@ -16,6 +16,11 @@
       "Verano de 1212. El año pasado el califa almohade Muhammad al-Nasir cruzó desde África con un gran ejército y tomó el castillo de Salvatierra. Ahora Alfonso VIII de Castilla ha reunido una coalición en Toledo: Pedro II de Aragón, cruzados de allende los Pirineos y, llegado tarde con una pequeña mesnada de caballeros, Sancho VII de Navarra, «el Fuerte».",
       "La mayoría de los cruzados se volvió tras el asedio de Calatrava. Los demás cruzaron Sierra Morena y encontraron al ejército almohade esperando en las laderas, delante del campamento del califa. El lunes 16 de julio atacaron los reyes: Castilla en el centro, Aragón a la izquierda, Navarra a la derecha.",
       "Tú mandas a los navarros del ala derecha. Rompe las primeras líneas, sube el cerro y entra en la empalizada que rodea la tienda del califa antes de que la jornada se vuelva contra la coalición."
+    ],
+    "eu": [
+      "1212ko uda. Iaz, Muhammad al-Nasir kalifa almohadeak itsasoa zeharkatu zuen Afrikatik armada handi batekin, eta Salvatierrako gaztelua hartu zuen. Orain Gaztelako Alfontso VIII.ak koalizio bat bildu du Toledon: Aragoiko Pedro II.a, Pirinioez haraindiko gurutzatuak eta, berandu iritsita zaldun-mesnada txiki batekin, Nafarroako Antso VII.a, «Azkarra».",
+      "Gurutzatu gehienak itzuli egin ziren Calatravako setioaren ondoren. Gainerakoek Sierra Morena zeharkatu zuten, eta armada almohadea maldetan zain aurkitu zuten, kalifaren kanpalekuaren aurrean. Uztailaren 16an, astelehena, erregeek eraso egin zuten: Gaztela erdian, Aragoi ezkerrean, Nafarroa eskuinean.",
+      "Zuk eskuineko hegaleko nafarrak gidatzen dituzu. Hautsi lehen lerroak, igo muinora eta sartu kalifaren denda inguratzen duen hesiaren barrura, jardunaldia koalizioaren aurka jarri aurretik."
     ]
   },
 
@@ -35,35 +40,38 @@
     "leaderFlight": true,
     "text": {
       "en": "Get a company inside the palisade into the caliph's camp, or drive the caliph from the field, or break his army. If the day ends first, the coalition's attack has stalled.",
-      "es": "Mete una compañía dentro de la empalizada, en el campamento del califa, o echa al califa del campo, o rompe su ejército. Si antes acaba la jornada, el ataque de la coalición se habrá estancado."
+      "es": "Mete una compañía dentro de la empalizada, en el campamento del califa, o echa al califa del campo, o rompe su ejército. Si antes acaba la jornada, el ataque de la coalición se habrá estancado.",
+      "eu": "Sartu konpainia bat hesiaren barruan, kalifaren kanpalekuan, edo bota kalifa zelaitik, edo hautsi haren armada. Jardunaldia lehenago amaitzen bada, koalizioaren erasoa geldirik geratuko da."
     }
   },
 
   "results": {
     "seized": {
-      "won": { "en": "Navarrese companies are inside the palisade. The caliph's camp is broken, and al-Nasir is in flight.", "es": "Hay compañías navarras dentro de la empalizada. El campamento del califa está roto y al-Nasir huye." }
+      "won": { "en": "Navarrese companies are inside the palisade. The caliph's camp is broken, and al-Nasir is in flight.", "es": "Hay compañías navarras dentro de la empalizada. El campamento del califa está roto y al-Nasir huye.", "eu": "Konpainia nafarrak hesiaren barruan daude. Kalifaren kanpalekua hautsita dago, eta al-Nasir ihesi doa." }
     },
     "held": {
-      "lost": { "en": "The palisade held. The attack on the right has stalled, and the day is slipping away from the coalition.", "es": "La empalizada ha aguantado. El ataque por la derecha se ha estancado y la jornada se le escapa a la coalición." }
+      "lost": { "en": "The palisade held. The attack on the right has stalled, and the day is slipping away from the coalition.", "es": "La empalizada ha aguantado. El ataque por la derecha se ha estancado y la jornada se le escapa a la coalición.", "eu": "Hesiak eutsi dio. Eskuineko erasoa geldirik geratu da, eta jardunaldia koalizioari ihes egiten ari zaio." }
     }
   },
 
   "historicalNote": {
     "en": "On 16 July 1212 the coalition of Alfonso VIII of Castile, Pedro II of Aragon and Sancho VII of Navarre broke the army of the Almohad caliph Muhammad al-Nasir in the Sierra Morena. Rodrigo Jiménez de Rada, archbishop of Toledo, rode with the army and wrote the fullest account. The Christian lines came under heavy pressure before a final advance by the kings broke into the caliph's camp; al-Nasir fled, and died in Marrakesh the following year. Almohad power in the peninsula never recovered: within forty years Córdoba and Seville had fallen to Castile.",
-    "es": "El 16 de julio de 1212 la coalición de Alfonso VIII de Castilla, Pedro II de Aragón y Sancho VII de Navarra deshizo al ejército del califa almohade Muhammad al-Nasir en Sierra Morena. Rodrigo Jiménez de Rada, arzobispo de Toledo, iba con el ejército y dejó el relato más completo. Las líneas cristianas pasaron por graves apuros antes de que un último avance de los reyes irrumpiera en el campamento del califa; al-Nasir huyó y murió en Marrakech al año siguiente. El poder almohade en la península no se recuperó: en cuarenta años Córdoba y Sevilla habían caído en manos de Castilla."
+    "es": "El 16 de julio de 1212 la coalición de Alfonso VIII de Castilla, Pedro II de Aragón y Sancho VII de Navarra deshizo al ejército del califa almohade Muhammad al-Nasir en Sierra Morena. Rodrigo Jiménez de Rada, arzobispo de Toledo, iba con el ejército y dejó el relato más completo. Las líneas cristianas pasaron por graves apuros antes de que un último avance de los reyes irrumpiera en el campamento del califa; al-Nasir huyó y murió en Marrakech al año siguiente. El poder almohade en la península no se recuperó: en cuarenta años Córdoba y Sevilla habían caído en manos de Castilla.",
+    "eu": "1212ko uztailaren 16an, Gaztelako Alfontso VIII.aren, Aragoiko Pedro II.aren eta Nafarroako Antso VII.aren koalizioak Muhammad al-Nasir kalifa almohadearen armada desegin zuen Sierra Morenan. Rodrigo Jiménez de Rada, Toledoko artzapezpikua, armadarekin zihoan eta kontakizunik osoena utzi zuen. Lerro kristauak estu ibili ziren, harik eta erregeen azken aurrerakada batek kalifaren kanpalekua hautsi zuen arte; al-Nasirrek ihes egin zuen eta hurrengo urtean hil zen Marrakexen. Botere almohadea ez zen inoiz berriro sendotu penintsulan: berrogei urtean, Kordoba eta Sevilla Gaztelaren esku zeuden."
   },
 
   "legendNote": {
     "en": "Where legend takes over. Tradition says the caliph's guard stood chained together around his tent, that Sancho VII broke through the chains, and that the chains in Navarre's coat of arms come from that day. The chains are documented as Navarre's arms only well after 1212, and heraldists generally derive them from an earlier device of radiating bars (an escarbuncle) that the battle was later used to explain. Sancho was there and he charged; the rest is tradition. The emblem used in this battle, the eagle, is the one on Sancho VII's own seal. The story of the shepherd who showed the army a way through the mountains is also later tradition, and is left out here.",
-    "es": "Donde empieza la leyenda. La tradición cuenta que la guardia del califa estaba encadenada alrededor de su tienda, que Sancho VII rompió las cadenas y que de aquel día vienen las cadenas del escudo de Navarra. Las cadenas solo se documentan como armas de Navarra bastante después de 1212, y los heraldistas suelen derivarlas de una figura anterior de barras radiantes (un carbunclo) a la que más tarde se buscó explicación en la batalla. Sancho estuvo allí y cargó; lo demás es tradición. La enseña de esta batalla, el águila, es la del sello del propio Sancho VII. La historia del pastor que mostró al ejército un paso por la sierra también es tradición posterior, y aquí no se usa."
+    "es": "Donde empieza la leyenda. La tradición cuenta que la guardia del califa estaba encadenada alrededor de su tienda, que Sancho VII rompió las cadenas y que de aquel día vienen las cadenas del escudo de Navarra. Las cadenas solo se documentan como armas de Navarra bastante después de 1212, y los heraldistas suelen derivarlas de una figura anterior de barras radiantes (un carbunclo) a la que más tarde se buscó explicación en la batalla. Sancho estuvo allí y cargó; lo demás es tradición. La enseña de esta batalla, el águila, es la del sello del propio Sancho VII. La historia del pastor que mostró al ejército un paso por la sierra también es tradición posterior, y aquí no se usa.",
+    "eu": "Hemen hasten da kondaira. Tradizioak dio kalifaren guardia haren dendaren inguruan kateatuta zegoela, Antso VII.ak kateak hautsi zituela, eta egun hartatik datozela Nafarroako armarriko kateak. Kateak 1212tik dezente geroago baino ez dira dokumentatzen Nafarroako arma gisa, eta heraldistek, oro har, barra erradiatuzko irudi zaharrago batetik (karbunkulu bat) eratortzen dituzte, gerora gudu honekin azaldu nahi izan zena. Antso han izan zen eta oldartu egin zen; gainerakoa tradizioa da. Gudu honetako ikurra, arranoa, Antso VII.aren beraren zigilukoa da. Armadari mendian zehar bide bat erakutsi zion artzainaren istorioa ere geroagoko tradizioa da, eta hemen ez da erabiltzen."
   },
 
   "sources": [
-    { "en": "Rodrigo Jiménez de Rada, De rebus Hispaniae, book VIII (eyewitness)", "es": "Rodrigo Jiménez de Rada, De rebus Hispaniae, libro VIII (testigo presencial)" },
-    { "en": "Letter of Alfonso VIII to Pope Innocent III, 1212", "es": "Carta de Alfonso VIII al papa Inocencio III, 1212" },
-    { "en": "Ibn Idhari, al-Bayan al-Mughrib", "es": "Ibn Idari, al-Bayan al-Mugrib" },
-    { "en": "Ibn Abi Zar, Rawd al-Qirtas", "es": "Ibn Abi Zar, Rawd al-Qirtas" },
-    { "en": "Martín Alvira Cabrer, Las Navas de Tolosa 1212: idea, liturgia y memoria de la batalla", "es": "Martín Alvira Cabrer, Las Navas de Tolosa 1212: idea, liturgia y memoria de la batalla" }
+    { "en": "Rodrigo Jiménez de Rada, De rebus Hispaniae, book VIII (eyewitness)", "es": "Rodrigo Jiménez de Rada, De rebus Hispaniae, libro VIII (testigo presencial)", "eu": "Rodrigo Jiménez de Rada, De rebus Hispaniae, VIII. liburua (lekuko zuzena)" },
+    { "en": "Letter of Alfonso VIII to Pope Innocent III, 1212", "es": "Carta de Alfonso VIII al papa Inocencio III, 1212", "eu": "Alfontso VIII.aren gutuna Inozentzio III.a aita santuari, 1212" },
+    { "en": "Ibn Idhari, al-Bayan al-Mughrib", "es": "Ibn Idari, al-Bayan al-Mugrib", "eu": "Ibn Idari, al-Bayan al-Mugrib" },
+    { "en": "Ibn Abi Zar, Rawd al-Qirtas", "es": "Ibn Abi Zar, Rawd al-Qirtas", "eu": "Ibn Abi Zar, Rawd al-Qirtas" },
+    { "en": "Martín Alvira Cabrer, Las Navas de Tolosa 1212: idea, liturgia y memoria de la batalla", "es": "Martín Alvira Cabrer, Las Navas de Tolosa 1212: idea, liturgia y memoria de la batalla", "eu": "Martín Alvira Cabrer, Las Navas de Tolosa 1212: idea, liturgia y memoria de la batalla" }
   ],
 
   "turnLimit": 14,
@@ -85,7 +93,7 @@
       "faction": "navarra",
       "budget": 900,
       "maxUnits": 10,
-      "leader": { "type": "nav_sancho", "name": { "en": "Sancho VII 'the Strong'", "es": "Sancho VII «el Fuerte»" } },
+      "leader": { "type": "nav_sancho", "name": { "en": "Sancho VII 'the Strong'", "es": "Sancho VII «el Fuerte»", "eu": "Antso VII.a «Azkarra»" } },
       "ambush": false,
       "rocks": 0,
       "facing": 1,
@@ -114,7 +122,7 @@
         { "type": "alm_infantry", "x": 14, "y": 3 },
         { "type": "alm_guard", "x": 17, "y": 2 },
         { "type": "alm_guard", "x": 17, "y": 3 },
-        { "type": "alm_caliph", "x": 18, "y": 2, "name": { "en": "Muhammad al-Nasir", "es": "Muhammad al-Nasir" } }
+        { "type": "alm_caliph", "x": 18, "y": 2, "name": { "en": "Muhammad al-Nasir", "es": "Muhammad al-Nasir", "eu": "Muhammad al-Nasir" } }
       ]
     }
   }

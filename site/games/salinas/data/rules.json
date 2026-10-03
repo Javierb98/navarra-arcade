@@ -1,7 +1,7 @@
 {
   "_note": "Seconds, metres, kilos. Run npm test and node tools/sim.js after changing anything.",
   "season": {
-    "days": 8,
+    "days": 10,
     "dayLength": 40
   },
   "start": {
@@ -16,7 +16,7 @@
   "walk": 4.6,
   "flow": {
     "base": 0.3,
-    "perLevel": 0.35
+    "perLevel": 0.45
   },
   "evap": 0.15,
   "sun": {
@@ -33,11 +33,11 @@
   },
   "rake": {
     "base": 0.85,
-    "perLevel": 0.4
+    "perLevel": 0.55
   },
   "basket": {
     "base": 15,
-    "perLevel": 10,
+    "perLevel": 12,
     "slow": 0.25
   },
   "price": {
@@ -64,17 +64,20 @@
     "rasero": [
       50,
       110,
-      220
+      220,
+      380
     ],
     "cesto": [
       40,
       100,
-      200
+      200,
+      340
     ],
     "canal": [
       60,
       130,
-      260
+      260,
+      420
     ],
     "burro": [
       160,

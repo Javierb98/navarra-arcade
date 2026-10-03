@@ -228,9 +228,9 @@ export async function playEvents(events, ctx) {
         const u = vu(e.a);
         if (!u) break;
         phase('phase.taunt', '#8a6a1a');
-        const entry = ctx.data.taunts.find((x) => x.id === e.taunt);
-        const text = entry ? entry[getLang()] ?? entry.en : '…';
-        const dur = ms(Math.min(3200, 1200 + text.length * 28));
+        // A war cry, not an insult: horns and a shout of "Forward!".
+        const text = t('cry.bubble');
+        const dur = ms(1800);
         board.addFx({ kind: 'bubble', id: u.id, text, ms: dur });
         if (e.d) say('log.taunt', { a: tag(e.a), d: tag(e.d), text }); else say('log.tauntAll', { a: tag(e.a), text });
         await board.animate(dur * 0.85, () => {});

@@ -36,11 +36,11 @@
   "title.press": "Press [START]",
   "title.players": "1 or 2 players, working together",
   "menu.easy.note": "More sun and shorter storms.",
-  "menu.normal.note": "A real summer: eight days to make as much salt as you can.",
+  "menu.normal.note": "A real summer: ten days to make as much salt as you can.",
   "menu.go": "To the salt beds!",
   "intro.1": "In Salinas de Oro a spring of very salty water rises from the ground. Salt is thought to have been made from it for centuries.",
   "intro.2": "The water runs down wooden channels to the eras, shallow beds where the sun evaporates it and leaves the salt behind.",
-  "intro.3": "It's summer. You have eight days to fill the beds, rake the white salt and carry it to the store. Watch out for storms!",
+  "intro.3": "It's summer. You have ten days to fill the beds, rake the white salt and carry it to the store. Watch out for storms!",
   "howto.title": "How to play",
   "howto.move": "Stick: walk between the beds",
   "howto.b": "[B] open or close a bed's sluice: close it when it's full",
@@ -123,5 +123,11 @@
   "gl.cabra.text": "Goats love licking salt… and trampling it!",
   "final.flor": "Flor de sal",
   "final.orders": "Muleteers' orders",
-  "final.best": "Best streak"
+  "final.best": "Best streak",
+  "new.era": "A new bed!",
+  "new.rasero": "A new rake!",
+  "new.cesto": "A bigger basket!",
+  "new.canal": "A new channel!",
+  "new.burro": "A donkey!",
+  "new.toldo": "New awnings!"
 }

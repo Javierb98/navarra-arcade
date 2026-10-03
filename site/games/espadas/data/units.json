@@ -4,7 +4,8 @@
     "asturleonese": {
       "name": {
         "en": "Astur-Leonese",
-        "es": "Astur-leoneses"
+        "es": "Astur-leoneses",
+        "eu": "Asturleondarrak"
       },
       "color": "#4a8a3c",
       "emblem": "peaks",
@@ -14,11 +15,13 @@
       "traits": [],
       "blurb": {
         "en": "Hard to shift from high ground and harder to frighten.",
-        "es": "Difíciles de desalojar de una altura y más aún de asustar."
+        "es": "Difíciles de desalojar de una altura y más aún de asustar.",
+        "eu": "Zailak dira garaiera batetik botatzen, eta are zailagoak ikaratzen."
       },
       "emblemNote": {
         "en": "The three peaks are an invented device. The lion of León is a 12th-century emblem.",
-        "es": "Los tres picos son una enseña inventada. El león de León es un emblema del siglo XII."
+        "es": "Los tres picos son una enseña inventada. El león de León es un emblema del siglo XII.",
+        "eu": "Hiru gailurrak asmatutako ikurra dira. Leongo lehoia XII. mendeko ikurra da."
       },
       "look": {
         "head": "hood",
@@ -36,7 +39,8 @@
     "vascones": {
       "name": {
         "en": "Vascones / Pamplona",
-        "es": "Vascones / Pamplona"
+        "es": "Vascones / Pamplona",
+        "eu": "Baskoiak / Iruñea"
       },
       "color": "#c23b22",
       "emblem": "rosette",
@@ -49,11 +53,13 @@
       ],
       "blurb": {
         "en": "Lightly armed, fast on any slope, deadly when they choose the ground, and used to fighting in their own valley bands without waiting for orders.",
-        "es": "Armados a la ligera, rápidos en cualquier cuesta, letales cuando eligen el terreno y acostumbrados a pelear en sus propias bandas de valle sin esperar órdenes."
+        "es": "Armados a la ligera, rápidos en cualquier cuesta, letales cuando eligen el terreno y acostumbrados a pelear en sus propias bandas de valle sin esperar órdenes.",
+        "eu": "Arin armatuak, azkarrak edozein maldatan, hilgarriak lurra beraiek aukeratzen dutenean, eta beren haranetako taldeetan borrokatzera ohituak, aginduen zain egon gabe."
       },
       "emblemNote": {
         "en": "The rosette is carved on Roman-era funerary stelae from this region, such as those from Gastiáin in Navarre. Nobody recorded what the Vascones of 778 fought under, if anything.",
-        "es": "La roseta aparece tallada en estelas funerarias de época romana de esta región, como las de Gastiáin (Navarra). Nadie dejó escrito bajo qué enseña luchaban los vascones de 778, si es que tenían alguna."
+        "es": "La roseta aparece tallada en estelas funerarias de época romana de esta región, como las de Gastiáin (Navarra). Nadie dejó escrito bajo qué enseña luchaban los vascones de 778, si es que tenían alguna.",
+        "eu": "Errosetoia eskualde honetako erromatar garaiko hilarrietan dago zizelkatuta, Gastiaingoetan (Nafarroa) adibidez. Inork ez zuen idatzi 778ko baskoiek zein ikurren azpian borrokatu zuten, baldin eta ikurrik bazuten."
       },
       "look": {
         "head": "bare",
@@ -71,7 +77,8 @@
     "franks": {
       "name": {
         "en": "Franks",
-        "es": "Francos"
+        "es": "Francos",
+        "eu": "Frankoak"
       },
       "color": "#3d64b0",
       "emblem": "spearhead",
@@ -83,11 +90,13 @@
       ],
       "blurb": {
         "en": "Well armed and well mounted, and slow wherever the road stops.",
-        "es": "Bien armados y bien montados, y lentos en cuanto se acaba el camino."
+        "es": "Bien armados y bien montados, y lentos en cuanto se acaba el camino.",
+        "eu": "Ondo armatuak eta ondo zaldiztatuak, eta motelak bidea amaitzen den tokitik aurrera."
       },
       "emblemNote": {
         "en": "The winged spear is a real Carolingian weapon type. The fleur-de-lis arms of the French kings came four centuries later.",
-        "es": "La lanza de aletas es un tipo real de arma carolingia. Las armas de flores de lis de los reyes de Francia llegaron cuatro siglos después."
+        "es": "La lanza de aletas es un tipo real de arma carolingia. Las armas de flores de lis de los reyes de Francia llegaron cuatro siglos después.",
+        "eu": "Hegodun lantza benetako arma karolingiar mota bat da. Frantziako erregeen lirio-lorezko armak lau mende geroago iritsi ziren."
       },
       "look": {
         "head": "nasal",
@@ -105,7 +114,8 @@
     "cordoba": {
       "name": {
         "en": "Umayyads of Córdoba",
-        "es": "Omeyas de Córdoba"
+        "es": "Omeyas de Córdoba",
+        "eu": "Kordobako omeiarrak"
       },
       "color": "#ece4d2",
       "emblem": "arch",
@@ -115,12 +125,14 @@
       "traits": [],
       "blurb": {
         "en": "The most varied army in the peninsula: fast horse, heavy horse, bows and a trained guard.",
-        "es": "El ejército más variado de la península: caballería ligera y pesada, arcos y una guardia entrenada."
+        "es": "El ejército más variado de la península: caballería ligera y pesada, arcos y una guardia entrenada.",
+        "eu": "Penintsulako armadarik askotarikoena: zalditeria arina eta astuna, arkuak eta guardia trebatua."
       },
       "ink": "#2a2118",
       "emblemNote": {
         "en": "The horseshoe arch with banded voussoirs is the signature of Andalusi building. Umayyad banners are recorded as white; this is a device, not a flag.",
-        "es": "El arco de herradura con dovelas alternas es la firma de la arquitectura andalusí. Las banderas omeyas se describen blancas; esto es una enseña, no una bandera."
+        "es": "El arco de herradura con dovelas alternas es la firma de la arquitectura andalusí. Las banderas omeyas se describen blancas; esto es una enseña, no una bandera.",
+        "eu": "Ferra-arkua, dobela txandakatuekin, arkitektura andalusiarraren ezaugarria da. Bandera omeiarrak zuriak zirela esaten da; hau ikurra da, ez bandera."
       },
       "look": {
         "head": "turban",
@@ -140,7 +152,8 @@
     "navarra": {
       "name": {
         "en": "Kingdom of Navarre",
-        "es": "Reino de Navarra"
+        "es": "Reino de Navarra",
+        "eu": "Nafarroako Erresuma"
       },
       "color": "#9e1f2e",
       "emblem": "eagle",
@@ -150,11 +163,13 @@
       "traits": [],
       "blurb": {
         "en": "A small kingdom with hard-hitting knights, and mountain men who still fight the old way.",
-        "es": "Un reino pequeño con caballeros que golpean duro y montañeses que aún pelean a la antigua."
+        "es": "Un reino pequeño con caballeros que golpean duro y montañeses que aún pelean a la antigua.",
+        "eu": "Erresuma txiki bat, gogor jotzen duten zaldunekin eta oraindik antzinako eran borrokatzen diren mendiko gizonekin."
       },
       "emblemNote": {
         "en": "The eagle is the figure on Sancho VII's own seal. Seals carry no colour, so black on red is a later attribution, not something recorded. The chains that are Navarre's arms today are documented only well after 1212.",
-        "es": "El águila es la figura del sello del propio Sancho VII. Los sellos no tienen color, así que el negro sobre rojo es una atribución posterior, no algo documentado. Las cadenas, hoy escudo de Navarra, solo se documentan bastante después de 1212."
+        "es": "El águila es la figura del sello del propio Sancho VII. Los sellos no tienen color, así que el negro sobre rojo es una atribución posterior, no algo documentado. Las cadenas, hoy escudo de Navarra, solo se documentan bastante después de 1212.",
+        "eu": "Arranoa Antso VII.aren beraren zigiluko irudia da. Zigiluek ez dute kolorerik; beraz, gorriaren gaineko beltza geroagoko egozpena da, ez dokumentatutako zerbait. Kateak, gaur Nafarroako armarria, 1212tik dezente geroago baino ez dira dokumentatzen."
       },
       "emblemField": "#c0262d",
       "look": {
@@ -174,7 +189,8 @@
     "almohads": {
       "name": {
         "en": "Almohad Caliphate",
-        "es": "Califato almohade"
+        "es": "Califato almohade",
+        "eu": "Kalifa-herri almohadea"
       },
       "color": "#f3efe4",
       "ink": "#2a2118",
@@ -185,11 +201,13 @@
       "traits": [],
       "blurb": {
         "en": "A great army from both shores of the Strait: volunteers and tribal levies in front, archers behind, and the caliph's guard around his tent.",
-        "es": "Un gran ejército de las dos orillas del Estrecho: voluntarios y levas tribales delante, arqueros detrás y la guardia del califa alrededor de su tienda."
+        "es": "Un gran ejército de las dos orillas del Estrecho: voluntarios y levas tribales delante, arqueros detrás y la guardia del califa alrededor de su tienda.",
+        "eu": "Itsasarteko bi ertzetako armada handia: boluntarioak eta tribuetako errekrutak aurrean, arkulariak atzean, eta kalifaren guardia haren dendaren inguruan."
       },
       "emblemNote": {
         "en": "The star comes from the central medallion of the Almohad banner kept at the monastery of Las Huelgas in Burgos, traditionally said to have been taken at Las Navas; some historians have questioned whether it came from this battle. Its inscriptions, from the Qur'an, are not reproduced. Almohad war banners are also described as white, which is why their shields are white here.",
-        "es": "La estrella procede del medallón central del pendón almohade que se guarda en el monasterio de Las Huelgas (Burgos), tradicionalmente tomado en las Navas; algunos historiadores han puesto en duda que proceda de esta batalla. Sus inscripciones, coránicas, no se reproducen. Las banderas de guerra almohades también se describen blancas, y por eso aquí llevan escudos blancos."
+        "es": "La estrella procede del medallón central del pendón almohade que se guarda en el monasterio de Las Huelgas (Burgos), tradicionalmente tomado en las Navas; algunos historiadores han puesto en duda que proceda de esta batalla. Sus inscripciones, coránicas, no se reproducen. Las banderas de guerra almohades también se describen blancas, y por eso aquí llevan escudos blancos.",
+        "eu": "Izarra Las Huelgasko monasterioan (Burgos) gordetzen den pendoi almohadearen erdiko medailoitik dator; tradizioz, Navasen hartu zela esaten da, baina historialari batzuek zalantzan jarri dute gudu honetakoa den. Haren inskripzioak, Koranekoak, ez dira erreproduzitzen. Gerra-bandera almohadeak ere zuriak zirela esaten da, eta horregatik daramatzate hemen ezkutu zuriak."
       },
       "emblemField": "#a8322a",
       "look": {
@@ -214,7 +232,8 @@
       "role": "leader",
       "name": {
         "en": "Leader",
-        "es": "Caudillo"
+        "es": "Caudillo",
+        "eu": "Buruzagia"
       },
       "attack": 6,
       "defence": 5,
@@ -227,7 +246,8 @@
       ],
       "desc": {
         "en": "The war-leader of the mountain kingdom, who fights in the front rank. If they fall, the whole army loses heart.",
-        "es": "El caudillo del reino de la montaña, que pelea en primera fila. Si cae, todo el ejército se desanima."
+        "es": "El caudillo del reino de la montaña, que pelea en primera fila. Si cae, todo el ejército se desanima.",
+        "eu": "Mendiko erresumaren buruzagia, lehen lerroan borrokatzen dena. Erortzen bada, armada osoak kemena galtzen du."
       },
       "look": {
         "head": "nasal",
@@ -239,7 +259,8 @@
       "role": "cavalry",
       "name": {
         "en": "Noble horsemen",
-        "es": "Jinetes nobles"
+        "es": "Jinetes nobles",
+        "eu": "Zaldun nobleak"
       },
       "attack": 7,
       "defence": 5,
@@ -252,7 +273,8 @@
       ],
       "desc": {
         "en": "The king's mounted companions, with mail, lance and sword. Too few to win a battle alone, and too valuable to lose.",
-        "es": "Los compañeros a caballo del rey, con loriga, lanza y espada. Demasiado pocos para ganar solos una batalla, y demasiado valiosos para perderlos."
+        "es": "Los compañeros a caballo del rey, con loriga, lanza y espada. Demasiado pocos para ganar solos una batalla, y demasiado valiosos para perderlos.",
+        "eu": "Erregearen zaldizko lagunak, burdin sareko jaka, lantza eta ezpatarekin. Gutxiegi gudu bat beraiek bakarrik irabazteko, eta baliotsuegiak galtzeko."
       },
       "look": {
         "head": "nasal",
@@ -265,7 +287,8 @@
       "role": "infantry",
       "name": {
         "en": "Mountain spearmen",
-        "es": "Lanceros montañeses"
+        "es": "Lanceros montañeses",
+        "eu": "Mendiko lantzariak"
       },
       "attack": 5,
       "defence": 5,
@@ -278,7 +301,8 @@
       ],
       "desc": {
         "en": "Men of the valleys with spear and round shield. Slow to shift and slower to run, and very hard to move off high ground.",
-        "es": "Hombres de los valles con lanza y escudo redondo. Lentos en moverse y más aún en huir, y muy difíciles de desalojar de una altura."
+        "es": "Hombres de los valles con lanza y escudo redondo. Lentos en moverse y más aún en huir, y muy difíciles de desalojar de una altura.",
+        "eu": "Haranetako gizonak, lantza eta ezkutu biribilarekin. Motelak mugitzeko eta are motelagoak ihes egiteko, eta oso zailak garaiera batetik botatzeko."
       }
     },
     "ast_slingers": {
@@ -286,7 +310,8 @@
       "role": "ranged",
       "name": {
         "en": "Slingers",
-        "es": "Honderos"
+        "es": "Honderos",
+        "eu": "Habailariak"
       },
       "attack": 2,
       "defence": 2,
@@ -297,7 +322,8 @@
       "tags": [],
       "desc": {
         "en": "Shepherds' weapons turned to war. They hurt at range and melt away when anyone gets close.",
-        "es": "Armas de pastor convertidas en armas de guerra. Hieren a distancia y se esfuman cuando alguien se acerca."
+        "es": "Armas de pastor convertidas en armas de guerra. Hieren a distancia y se esfuman cuando alguien se acerca.",
+        "eu": "Artzainen armak, gerrarako bihurtuak. Urrunetik zauritzen dute, eta norbait hurbiltzen denean desagertu egiten dira."
       },
       "missile": 5,
       "weapon": "sling",
@@ -312,7 +338,8 @@
       "role": "leader",
       "name": {
         "en": "Chieftain",
-        "es": "Jefe"
+        "es": "Jefe",
+        "eu": "Taldeburua"
       },
       "attack": 6,
       "defence": 4,
@@ -325,7 +352,8 @@
       ],
       "desc": {
         "en": "A chief of the mountain valleys. The sources do not name the man who led the ambush of 778.",
-        "es": "Un jefe de los valles de la montaña. Las fuentes no dan el nombre de quien dirigió la emboscada de 778."
+        "es": "Un jefe de los valles de la montaña. Las fuentes no dan el nombre de quien dirigió la emboscada de 778.",
+        "eu": "Mendiko haranetako buruzagi bat. Iturriek ez dute 778ko segada zuzendu zuenaren izena ematen."
       },
       "look": {
         "head": "cap",
@@ -337,7 +365,8 @@
       "role": "infantry",
       "name": {
         "en": "Short-spear warriors",
-        "es": "Guerreros de lanza corta"
+        "es": "Guerreros de lanza corta",
+        "eu": "Lantza laburreko gudariak"
       },
       "attack": 6,
       "defence": 3,
@@ -350,7 +379,8 @@
       ],
       "desc": {
         "en": "Lightly armoured fighters with short spears and small shields. Einhard puts the Basque success down to their light arms. Deadly charging downhill, fragile on the flat.",
-        "es": "Luchadores con poca armadura, lanza corta y escudo pequeño. Eginardo atribuye el éxito vasco a la ligereza de sus armas. Letales cargando cuesta abajo, frágiles en el llano."
+        "es": "Luchadores con poca armadura, lanza corta y escudo pequeño. Eginardo atribuye el éxito vasco a la ligereza de sus armas. Letales cargando cuesta abajo, frágiles en el llano.",
+        "eu": "Armadura gutxiko borrokalariak, lantza labur eta ezkutu txikiarekin. Einharden arabera, baskoien arrakasta beren arma arinei zor zitzaien. Hilgarriak maldan behera oldartzean, ahulak lautadan."
       }
     },
     "vas_skirmishers": {
@@ -358,7 +388,8 @@
       "role": "skirmisher",
       "name": {
         "en": "Javelin skirmishers",
-        "es": "Escaramuzadores de venablo"
+        "es": "Escaramuzadores de venablo",
+        "eu": "Azkon-liskarlariak"
       },
       "attack": 4,
       "defence": 2,
@@ -371,7 +402,8 @@
       ],
       "desc": {
         "en": "Javelin men who know every goat track. They move up, throw, and are gone before the enemy can close; hand to hand they are weak. A reconstruction: for 778 Einhard says only that the Basques had the advantage of light arms. That they fought with javelins is recorded later, in the 12th-century Pilgrim's Guide, which describes them carrying two or three javelins called 'auconas'.",
-        "es": "Lanzadores de venablos que conocen cada senda de cabras. Se adelantan, lanzan y desaparecen antes de que el enemigo llegue; cuerpo a cuerpo son flojos. Es una reconstrucción: para 778 Eginardo solo dice que los vascones tenían la ventaja de sus armas ligeras. Que peleaban con venablos consta más tarde, en la Guía del Peregrino del siglo XII, que los describe con dos o tres dardos llamados «auconas»."
+        "es": "Lanzadores de venablos que conocen cada senda de cabras. Se adelantan, lanzan y desaparecen antes de que el enemigo llegue; cuerpo a cuerpo son flojos. Es una reconstrucción: para 778 Eginardo solo dice que los vascones tenían la ventaja de sus armas ligeras. Que peleaban con venablos consta más tarde, en la Guía del Peregrino del siglo XII, que los describe con dos o tres dardos llamados «auconas».",
+        "eu": "Ahuntz-bide guztiak ezagutzen dituzten azkon-jaurtitzaileak. Aurreratu, jaurti eta desagertu egiten dira etsaia iritsi aurretik; gorputzez gorputz ahulak dira. Berreraikuntza bat da: 778rako, Einhardek baskoiek arma arinen abantaila zutela baino ez du esaten. Azkonekin borrokatzen zirela geroago jasotzen da, XII. mendeko Erromesaren Gidan, bi edo hiru azkon («auconas») zeramatzatela deskribatzen baitu."
       },
       "missile": 5,
       "look": {
@@ -384,7 +416,8 @@
       "role": "cavalry",
       "name": {
         "en": "Light horse",
-        "es": "Caballería ligera"
+        "es": "Caballería ligera",
+        "eu": "Zalditeria arina"
       },
       "attack": 5,
       "defence": 3,
@@ -398,7 +431,8 @@
       ],
       "desc": {
         "en": "Riders on small, sure-footed mountain horses. Too light to stand in a melee, fast enough never to need to.",
-        "es": "Jinetes en caballos de montaña pequeños y seguros. Demasiado ligeros para aguantar un cuerpo a cuerpo, y lo bastante rápidos para no tener que hacerlo."
+        "es": "Jinetes en caballos de montaña pequeños y seguros. Demasiado ligeros para aguantar un cuerpo a cuerpo, y lo bastante rápidos para no tener que hacerlo.",
+        "eu": "Mendiko zaldi txiki eta oinsenduen gaineko zaldunak. Arinegiak gorputzez gorputz eusteko, eta nahikoa azkarrak horren beharrik ez izateko."
       },
       "look": {
         "head": "cap",
@@ -410,7 +444,8 @@
       "role": "leader",
       "name": {
         "en": "Commander",
-        "es": "Comandante"
+        "es": "Comandante",
+        "eu": "Komandantea"
       },
       "attack": 7,
       "defence": 6,
@@ -424,7 +459,8 @@
       ],
       "desc": {
         "en": "Hruodland (Roland), prefect of the Breton March, one of the three dead Einhard names. The poem makes him Charlemagne's nephew; the chronicle does not.",
-        "es": "Hruodlando (Roldán), prefecto de la Marca de Bretaña, uno de los tres muertos que nombra Eginardo. El poema lo hace sobrino de Carlomagno; la crónica, no."
+        "es": "Hruodlando (Roldán), prefecto de la Marca de Bretaña, uno de los tres muertos que nombra Eginardo. El poema lo hace sobrino de Carlomagno; la crónica, no.",
+        "eu": "Hruodland (Errolan), Bretainiako Markako prefektua, Einhardek aipatzen dituen hiru hildakoetako bat. Poemak Karlomagnoren iloba egiten du; kronikak, ez."
       },
       "look": {
         "cloak": "wool",
@@ -436,7 +472,8 @@
       "role": "cavalry",
       "name": {
         "en": "Armoured horsemen",
-        "es": "Jinetes acorazados"
+        "es": "Jinetes acorazados",
+        "eu": "Zaldun blindatuak"
       },
       "attack": 8,
       "defence": 6,
@@ -449,7 +486,8 @@
       ],
       "desc": {
         "en": "The Frankish king's armoured riders, with mail shirt, helmet, lance and sword. Terrible on open ground, and wasted on a mountainside.",
-        "es": "Los jinetes acorazados del rey franco, con loriga, yelmo, lanza y espada. Terribles en campo abierto, y desperdiciados en una ladera."
+        "es": "Los jinetes acorazados del rey franco, con loriga, yelmo, lanza y espada. Terribles en campo abierto, y desperdiciados en una ladera.",
+        "eu": "Errege frankoaren zaldun blindatuak, burdin sareko jaka, kasko, lantza eta ezpatarekin. Ikaragarriak zelai irekian, eta alferrik galduak mendi-hegal batean."
       },
       "look": {
         "cloak": "wool"
@@ -460,7 +498,8 @@
       "role": "infantry",
       "name": {
         "en": "Spearmen",
-        "es": "Lanceros"
+        "es": "Lanceros",
+        "eu": "Lantzariak"
       },
       "attack": 5,
       "defence": 5,
@@ -473,7 +512,8 @@
       ],
       "desc": {
         "en": "Well-equipped foot soldiers with spear and round shield. Three stacked together make a shield wall that is very hard to break.",
-        "es": "Infantes bien equipados con lanza y escudo redondo. Tres juntos, uno sobre otro, forman un muro de escudos muy difícil de romper."
+        "es": "Infantes bien equipados con lanza y escudo redondo. Tres juntos, uno sobre otro, forman un muro de escudos muy difícil de romper.",
+        "eu": "Ondo hornitutako oinezkoak, lantza eta ezkutu biribilarekin. Hiru elkarren gainean jarrita, hausteko oso zaila den ezkutu-horma osatzen dute."
       },
       "look": {
         "cloak": null
@@ -484,7 +524,8 @@
       "role": "wagon",
       "name": {
         "en": "Baggage train",
-        "es": "Bagaje"
+        "es": "Bagaje",
+        "eu": "Zama-gurdiak"
       },
       "attack": 0,
       "defence": 4,
@@ -497,7 +538,8 @@
       ],
       "desc": {
         "en": "Carts carrying the army's supplies and whatever came back from Zaragoza. The Vascones plundered it; the Franks cannot afford to lose it.",
-        "es": "Carros con los pertrechos del ejército y lo que se trajo de Zaragoza. Los vascones lo saquearon; los francos no pueden permitirse perderlo."
+        "es": "Carros con los pertrechos del ejército y lo que se trajo de Zaragoza. Los vascones lo saquearon; los francos no pueden permitirse perderlo.",
+        "eu": "Armadaren hornidurak eta Zaragozatik ekarritakoa daramatzaten gurdiak. Baskoiek arpilatu zituzten; frankoek ezin dute galtzerik onartu."
       }
     },
     "cor_leader": {
@@ -505,7 +547,8 @@
       "role": "leader",
       "name": {
         "en": "General",
-        "es": "General"
+        "es": "General",
+        "eu": "Jenerala"
       },
       "attack": 6,
       "defence": 5,
@@ -519,7 +562,8 @@
       ],
       "desc": {
         "en": "A general of the Umayyad state, commanding a professional army of many origins.",
-        "es": "Un general del Estado omeya, al mando de un ejército profesional de muchos orígenes."
+        "es": "Un general del Estado omeya, al mando de un ejército profesional de muchos orígenes.",
+        "eu": "Estatu omeiarreko jeneral bat, jatorri askotako armada profesional baten buru."
       },
       "look": {
         "head": "turbanHelm",
@@ -533,7 +577,8 @@
       "role": "cavalry",
       "name": {
         "en": "Berber light horse",
-        "es": "Caballería ligera bereber"
+        "es": "Caballería ligera bereber",
+        "eu": "Zalditeria arin berebere"
       },
       "attack": 5,
       "defence": 3,
@@ -547,7 +592,8 @@
       ],
       "desc": {
         "en": "Light horse from North Africa, masters of the charge that isn't: strike, wheel away, strike again.",
-        "es": "Caballería ligera del norte de África, maestra de la carga fingida: golpear, dar la vuelta y golpear otra vez."
+        "es": "Caballería ligera del norte de África, maestra de la carga fingida: golpear, dar la vuelta y golpear otra vez.",
+        "eu": "Ipar Afrikako zalditeria arina, itxurazko oldarraren maisua: jo, buelta eman eta berriro jo."
       },
       "look": {
         "head": "turban",
@@ -562,7 +608,8 @@
       "role": "cavalry",
       "name": {
         "en": "Andalusi heavy horse",
-        "es": "Caballería pesada andalusí"
+        "es": "Caballería pesada andalusí",
+        "eu": "Zalditeria astun andalusiarra"
       },
       "attack": 8,
       "defence": 5,
@@ -575,7 +622,8 @@
       ],
       "desc": {
         "en": "Andalusi horsemen in mail. The hammer of the Córdoban army.",
-        "es": "Jinetes andalusíes con loriga. El martillo del ejército cordobés."
+        "es": "Jinetes andalusíes con loriga. El martillo del ejército cordobés.",
+        "eu": "Zaldun andalusiarrak, burdin sareko jakarekin. Kordobako armadaren mailua."
       },
       "look": {
         "head": "turbanHelm",
@@ -588,7 +636,8 @@
       "role": "infantry",
       "name": {
         "en": "Line infantry",
-        "es": "Infantería de línea"
+        "es": "Infantería de línea",
+        "eu": "Lerroko infanteria"
       },
       "attack": 5,
       "defence": 5,
@@ -601,7 +650,8 @@
       ],
       "desc": {
         "en": "Trained, paid foot soldiers who hold their ranks.",
-        "es": "Infantes entrenados y a sueldo que mantienen la formación."
+        "es": "Infantes entrenados y a sueldo que mantienen la formación.",
+        "eu": "Formazioari eusten dioten oinezko trebatu eta soldatapekoak."
       },
       "look": {
         "head": "turbanHelm"
@@ -612,7 +662,8 @@
       "role": "ranged",
       "name": {
         "en": "Archers",
-        "es": "Arqueros"
+        "es": "Arqueros",
+        "eu": "Arkulariak"
       },
       "attack": 2,
       "defence": 2,
@@ -623,7 +674,8 @@
       "tags": [],
       "desc": {
         "en": "Archers who can empty a saddle at long range. Keep them out of reach of the enemy's horse.",
-        "es": "Arqueros capaces de vaciar una silla a gran distancia. Mantenlos fuera del alcance de la caballería enemiga."
+        "es": "Arqueros capaces de vaciar una silla a gran distancia. Mantenlos fuera del alcance de la caballería enemiga.",
+        "eu": "Urrunetik zaldun bat zalditik bota dezaketen arkulariak. Eutsi etsaiaren zalditeriaren irismenetik kanpo."
       },
       "missile": 6,
       "weapon": "bow",
@@ -637,7 +689,8 @@
       "role": "infantry",
       "name": {
         "en": "Palace guard",
-        "es": "Guardia palatina"
+        "es": "Guardia palatina",
+        "eu": "Jauregiko guardia"
       },
       "attack": 7,
       "defence": 7,
@@ -652,7 +705,8 @@
       "moraleBonus": 10,
       "desc": {
         "en": "The ruler's own guard, the best armed men in the peninsula. Expensive, and worth it.",
-        "es": "La guardia del propio soberano, los hombres mejor armados de la península. Caros, y lo valen."
+        "es": "La guardia del propio soberano, los hombres mejor armados de la península. Caros, y lo valen.",
+        "eu": "Agintariaren beraren guardia, penintsulako gizonik ondoen armatuak. Garestiak, eta merezi dute."
       },
       "look": {
         "head": "turbanHelm",
@@ -667,7 +721,8 @@
       "role": "leader",
       "name": {
         "en": "King",
-        "es": "Rey"
+        "es": "Rey",
+        "eu": "Erregea"
       },
       "attack": 8,
       "defence": 7,
@@ -681,7 +736,8 @@
       ],
       "desc": {
         "en": "Sancho VII of Navarre, 'the Strong', who brought his knights south to join Castile and Aragon. If he falls, Navarre's line breaks with him.",
-        "es": "Sancho VII de Navarra, «el Fuerte», que llevó a sus caballeros al sur para unirse a Castilla y Aragón. Si cae, la línea navarra se rompe con él."
+        "es": "Sancho VII de Navarra, «el Fuerte», que llevó a sus caballeros al sur para unirse a Castilla y Aragón. Si cae, la línea navarra se rompe con él.",
+        "eu": "Nafarroako Antso VII.a, «Azkarra», bere zaldunak hegoaldera eraman zituena Gaztelarekin eta Aragoirekin bat egiteko. Erortzen bada, lerro nafarra berarekin hautsiko da."
       },
       "look": {
         "head": "greathelm",
@@ -695,7 +751,8 @@
       "role": "cavalry",
       "name": {
         "en": "Navarrese knights",
-        "es": "Caballeros navarros"
+        "es": "Caballeros navarros",
+        "eu": "Zaldun nafarrak"
       },
       "attack": 8,
       "defence": 6,
@@ -708,7 +765,8 @@
       ],
       "desc": {
         "en": "Mailed knights with lance and sword, the king's own following. Devastating on open ground; slowed by a palisade like anyone else.",
-        "es": "Caballeros con loriga, lanza y espada, la mesnada del propio rey. Devastadores en campo abierto; una empalizada los frena como a cualquiera."
+        "es": "Caballeros con loriga, lanza y espada, la mesnada del propio rey. Devastadores en campo abierto; una empalizada los frena como a cualquiera.",
+        "eu": "Burdin sareko jaka, lantza eta ezpata daramatzaten zaldunak, erregearen beraren mesnada. Suntsitzaileak zelai irekian; hesi batek beste edonor bezala geldiarazten ditu."
       },
       "look": {
         "head": "greathelm",
@@ -722,7 +780,8 @@
       "role": "infantry",
       "name": {
         "en": "Town militia",
-        "es": "Peones de las villas"
+        "es": "Peones de las villas",
+        "eu": "Hiribilduetako oinezkoak"
       },
       "attack": 5,
       "defence": 5,
@@ -735,7 +794,8 @@
       ],
       "desc": {
         "en": "Spearmen from the towns of the kingdom. Three stacked make a shield wall.",
-        "es": "Lanceros de las villas del reino. Tres en columna forman un muro de escudos."
+        "es": "Lanceros de las villas del reino. Tres en columna forman un muro de escudos.",
+        "eu": "Erresumako hiribilduetako lantzariak. Hiru zutabean jarrita, ezkutu-horma osatzen dute."
       },
       "look": {
         "head": "kettle",
@@ -748,7 +808,8 @@
       "role": "ranged",
       "name": {
         "en": "Crossbowmen",
-        "es": "Ballesteros"
+        "es": "Ballesteros",
+        "eu": "Baleztariak"
       },
       "attack": 2,
       "defence": 3,
@@ -760,7 +821,8 @@
       "missile": 7,
       "desc": {
         "en": "Crossbows hit hard and far; the men who carry them do not want to be in a melee.",
-        "es": "Las ballestas pegan fuerte y lejos; los que las cargan no quieren verse en un cuerpo a cuerpo."
+        "es": "Las ballestas pegan fuerte y lejos; los que las cargan no quieren verse en un cuerpo a cuerpo.",
+        "eu": "Baleztek gogor eta urrun jotzen dute; daramatzatenek ez dute gorputzez gorputzeko borrokan ibili nahi."
       },
       "weapon": "crossbow",
       "look": {
@@ -775,7 +837,8 @@
       "role": "skirmisher",
       "name": {
         "en": "Mountain javelinmen",
-        "es": "Montañeses de venablo"
+        "es": "Montañeses de venablo",
+        "eu": "Mendiko azkonlariak"
       },
       "attack": 4,
       "defence": 2,
@@ -789,7 +852,8 @@
       "missile": 5,
       "desc": {
         "en": "Men of the Pyrenean valleys with two or three javelins each, just as the Pilgrim's Guide describes the Navarrese of this century.",
-        "es": "Hombres de los valles pirenaicos con dos o tres venablos cada uno, tal como la Guía del Peregrino describe a los navarros de este siglo."
+        "es": "Hombres de los valles pirenaicos con dos o tres venablos cada uno, tal como la Guía del Peregrino describe a los navarros de este siglo.",
+        "eu": "Pirinioetako haranetako gizonak, bakoitza bi edo hiru azkonekin, Erromesaren Gidak mende honetako nafarrak deskribatzen dituen bezala."
       },
       "look": {
         "head": "cap",
@@ -806,7 +870,8 @@
       "role": "leader",
       "name": {
         "en": "Caliph",
-        "es": "Califa"
+        "es": "Califa",
+        "eu": "Kalifa"
       },
       "attack": 5,
       "defence": 7,
@@ -820,7 +885,8 @@
       ],
       "desc": {
         "en": "Muhammad al-Nasir, fourth Almohad caliph, in his camp on the hill. The sources agree he fled when the camp broke.",
-        "es": "Muhammad al-Nasir, cuarto califa almohade, en su campamento del cerro. Las fuentes coinciden en que huyó cuando se rompió el campamento."
+        "es": "Muhammad al-Nasir, cuarto califa almohade, en su campamento del cerro. Las fuentes coinciden en que huyó cuando se rompió el campamento.",
+        "eu": "Muhammad al-Nasir, laugarren kalifa almohadea, muinoko bere kanpalekuan. Iturriak bat datoz: kanpalekua hautsi zenean, ihes egin zuen."
       },
       "look": {
         "head": "turban",
@@ -833,7 +899,8 @@
       "role": "infantry",
       "name": {
         "en": "Caliph's guard",
-        "es": "Guardia del califa"
+        "es": "Guardia del califa",
+        "eu": "Kalifaren guardia"
       },
       "attack": 7,
       "defence": 6,
@@ -849,7 +916,8 @@
       "moraleBonus": 15,
       "desc": {
         "en": "The picked men around the caliph's tent, behind the palisade. They hold their post; getting them out of it is the whole battle.",
-        "es": "Los hombres escogidos alrededor de la tienda del califa, tras la empalizada. No abandonan su puesto; sacarlos de ahí es toda la batalla."
+        "es": "Los hombres escogidos alrededor de la tienda del califa, tras la empalizada. No abandonan su puesto; sacarlos de ahí es toda la batalla.",
+        "eu": "Kalifaren dendaren inguruko gizon hautatuak, hesiaren atzean. Ez dute beren postua uzten; handik ateratzea da gudu osoa."
       },
       "look": {
         "head": "turbanHelm",
@@ -862,7 +930,8 @@
       "role": "infantry",
       "name": {
         "en": "Almohad infantry",
-        "es": "Infantería almohade"
+        "es": "Infantería almohade",
+        "eu": "Infanteria almohadea"
       },
       "attack": 5,
       "defence": 5,
@@ -875,7 +944,8 @@
       ],
       "desc": {
         "en": "The regular foot of the Almohad army, drawn up on the crest in front of the camp.",
-        "es": "La infantería regular del ejército almohade, formada en la cresta delante del campamento."
+        "es": "La infantería regular del ejército almohade, formada en la cresta delante del campamento.",
+        "eu": "Armada almohadearen infanteria erregularra, kanpalekuaren aurreko gailurrean lerrokatua."
       },
       "look": {
         "head": "turbanHelm"
@@ -886,7 +956,8 @@
       "role": "infantry",
       "name": {
         "en": "Volunteers",
-        "es": "Voluntarios"
+        "es": "Voluntarios",
+        "eu": "Boluntarioak"
       },
       "attack": 5,
       "defence": 3,
@@ -898,7 +969,8 @@
       "moraleBonus": 10,
       "desc": {
         "en": "Volunteers who came to fight in the front line: brave, numerous, and lightly equipped.",
-        "es": "Voluntarios venidos a luchar en primera línea: valientes, numerosos y con poco equipo."
+        "es": "Voluntarios venidos a luchar en primera línea: valientes, numerosos y con poco equipo.",
+        "eu": "Lehen lerroan borrokatzera etorritako boluntarioak: ausartak, ugariak eta ekipamendu gutxikoak."
       },
       "look": {
         "head": "turban",
@@ -912,7 +984,8 @@
       "role": "ranged",
       "name": {
         "en": "Archers",
-        "es": "Arqueros"
+        "es": "Arqueros",
+        "eu": "Arkulariak"
       },
       "attack": 2,
       "defence": 2,
@@ -924,7 +997,8 @@
       "missile": 6,
       "desc": {
         "en": "Archers behind the forward line, shooting over it.",
-        "es": "Arqueros tras la primera línea, tirando por encima de ella."
+        "es": "Arqueros tras la primera línea, tirando por encima de ella.",
+        "eu": "Lehen lerroaren atzeko arkulariak, haren gainetik tiro egiten."
       },
       "weapon": "bow",
       "look": {
@@ -937,7 +1011,8 @@
       "role": "cavalry",
       "name": {
         "en": "Light horse",
-        "es": "Caballería ligera"
+        "es": "Caballería ligera",
+        "eu": "Zalditeria arina"
       },
       "attack": 6,
       "defence": 4,
@@ -951,7 +1026,8 @@
       ],
       "desc": {
         "en": "Fast horsemen on the flanks, who strike and wheel away.",
-        "es": "Jinetes rápidos en los flancos, que golpean y se retiran."
+        "es": "Jinetes rápidos en los flancos, que golpean y se retiran.",
+        "eu": "Hegaletako zaldun azkarrak, jo eta erretiratu egiten direnak."
       },
       "look": {
         "head": "turban",

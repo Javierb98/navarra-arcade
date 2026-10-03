@@ -1,3 +1,4 @@
+import { arcadeKey } from './minigames.js';
 // The volley minigame, after 1066's archery. A side view along the line of
 // fire: your company on the left, whoever stands in the way beyond. Drag back
 // to draw: the angle sets the arc, the length of the pull the power. Release
@@ -138,6 +139,7 @@ export function aimVolley({ host, data, battle, request, speed }) {
     const finish = (value) => {
       if (!running) return;
       running = false;
+      stopHeld?.();
       overlay.remove();
       resolve(value);
     };
@@ -158,12 +160,17 @@ export function aimVolley({ host, data, battle, request, speed }) {
       power = Math.max(0.05, Math.min(1, len / 260));
     });
     canvas.addEventListener('pointerup', () => { if (drag && !missiles) loose(); drag = null; });
+    const held = { up: false, down: false, left: false, right: false };
+    const release = (e) => { const k = arcadeKey(e); if (k in held) held[k] = false; };
+    addEventListener('keyup', release);
+    const stopHeld = () => removeEventListener('keyup', release);
     overlay.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowUp') angle = Math.min(80, angle + 2);
-      else if (e.key === 'ArrowDown') angle = Math.max(5, angle - 2);
-      else if (e.key === 'ArrowRight') power = Math.min(1, power + 0.03);
-      else if (e.key === 'ArrowLeft') power = Math.max(0.05, power - 0.03);
-      else if (e.key === ' ' || e.key === 'Enter') loose();
+      // Stick to aim, A (or Space/Enter) to loose: arcade cabinet buttons.
+      // Holding the stick turns the aim smoothly (see the frame loop), so it
+      // works the same on a cabinet, a keyboard or the on-screen pad.
+      const k = arcadeKey(e);
+      if (k === 'up' || k === 'down' || k === 'left' || k === 'right') held[k] = true;
+      else if (k === 'a') { if (!e.repeat && !missiles && ready()) loose(); }
       else if (e.key === 'Escape') finish(null);
       else return;
       e.preventDefault();
@@ -196,6 +203,11 @@ export function aimVolley({ host, data, battle, request, speed }) {
     };
     const frame = (now) => {
       const dt = Math.min(0.033, (now - last) / 1000);
+      if (!missiles) {
+        // Stick held: up/down raise and lower the arc, right/left pull harder or ease off.
+        angle = Math.max(5, Math.min(80, angle + ((held.up ? 1 : 0) - (held.down ? 1 : 0)) * 38 * dt));
+        power = Math.max(0.05, Math.min(1, power + ((held.right ? 1 : 0) - (held.left ? 1 : 0)) * 0.55 * dt));
+      }
       last = now;
       scene.draw(units, [], now);
       const g = scene.ctx;

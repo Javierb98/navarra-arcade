@@ -52,6 +52,7 @@ export class Board {
     this.onRight = null;
     this.canvas.addEventListener('click', (e) => { const c = this.cellAt(e); if (c && this.onCell) this.onCell(c, e); });
     this.canvas.addEventListener('mousemove', (e) => {
+      this.cursorOn = false;
       const c = this.cellAt(e);
       const k = c ? `${c.x},${c.y}` : null;
       if (k !== this.hoverKey) { this.hoverKey = k; this.overlay.hover = c; if (this.onHover) this.onHover(c); }
@@ -69,6 +70,25 @@ export class Board {
   }
 
   destroy() { this.running = false; }
+
+  // The arcade cursor: a square the stick moves around the grid, standing in
+  // for the mouse. A presses the square (like a click), B is a right-click.
+  moveCursor(dx, dy) {
+    const c = this.cursor ?? { x: Math.floor(this.grid.w / 2), y: Math.floor(this.grid.h / 2) };
+    const x = Math.max(0, Math.min(this.grid.w - 1, c.x + dx)), y = Math.max(0, Math.min(this.grid.h - 1, c.y + dy));
+    this.setCursor({ x, y });
+  }
+  setCursor(c) {
+    this.cursor = c;
+    this.cursorOn = true;
+    this.hoverKey = `${c.x},${c.y}`;
+    this.overlay.hover = c;
+    if (this.onHover) this.onHover(c);
+  }
+  pressCursor() {
+    if (!this.cursor) { this.moveCursor(0, 0); return; }
+    if (this.onCell) this.onCell({ ...this.cursor }, { shiftKey: false });
+  }
 
   cellAt(e) {
     const r = this.canvas.getBoundingClientRect();
@@ -256,9 +276,12 @@ export class Board {
     }
 
     if (o.hover) {
-      g.strokeStyle = 'rgba(230,181,52,0.8)';
-      g.lineWidth = 2;
-      g.strokeRect(o.hover.x * cell + 1.5, o.hover.y * cell + 1.5, cell - 3, cell - 3);
+      // The arcade cursor glows and pulses so it can be found at a glance.
+      const pad = this.cursorOn && this.cursor && o.hover.x === this.cursor.x && o.hover.y === this.cursor.y;
+      g.strokeStyle = pad ? `rgba(255,214,90,${0.75 + 0.25 * Math.sin(now / 160)})` : 'rgba(230,181,52,0.8)';
+      g.lineWidth = pad ? 4 : 2;
+      g.strokeRect(o.hover.x * cell + 2, o.hover.y * cell + 2, cell - 4, cell - 4);
+      if (pad) { g.strokeStyle = 'rgba(12,9,6,0.7)'; g.lineWidth = 1; g.strokeRect(o.hover.x * cell + 4.5, o.hover.y * cell + 4.5, cell - 9, cell - 9); }
     }
 
     for (const f of this.fx) this.drawFx(f, now);

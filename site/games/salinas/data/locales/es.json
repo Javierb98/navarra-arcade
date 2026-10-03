@@ -36,11 +36,11 @@
   "title.press": "Pulsa [START]",
   "title.players": "1 o 2 jugadores, juntos",
   "menu.easy.note": "Más sol y tormentas más cortas.",
-  "menu.normal.note": "Un verano de verdad: ocho días para sacar toda la sal que podáis.",
+  "menu.normal.note": "Un verano de verdad: diez días para sacar toda la sal que podáis.",
   "menu.go": "¡A las eras!",
   "intro.1": "En Salinas de Oro brota del suelo un manantial de agua muy salada. Se cree que de ella se saca sal desde hace siglos.",
   "intro.2": "El agua corre por canales de madera hasta las eras, balsas poco profundas donde el sol la evapora y deja la sal.",
-  "intro.3": "Es verano. Tenéis ocho días para llenar las eras, rastrillar la sal blanca y llevarla al almacén. ¡Ojo con las tormentas!",
+  "intro.3": "Es verano. Tenéis diez días para llenar las eras, rastrillar la sal blanca y llevarla al almacén. ¡Ojo con las tormentas!",
   "howto.title": "Cómo se juega",
   "howto.move": "Joystick: caminar entre las eras",
   "howto.b": "[B] abrir o cerrar la compuerta de una era: ciérrala cuando esté llena",
@@ -123,5 +123,11 @@
   "gl.cabra.text": "A las cabras les encanta lamer la sal… ¡y pisarla!",
   "final.flor": "Flor de sal",
   "final.orders": "Encargos de arrieros",
-  "final.best": "Mejor racha"
+  "final.best": "Mejor racha",
+  "new.era": "¡Era nueva!",
+  "new.rasero": "¡Rasero nuevo!",
+  "new.cesto": "¡Cesto más grande!",
+  "new.canal": "¡Canal nuevo!",
+  "new.burro": "¡Un burro!",
+  "new.toldo": "¡Toldos nuevos!"
 }

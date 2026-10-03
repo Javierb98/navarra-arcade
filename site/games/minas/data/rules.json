@@ -139,49 +139,49 @@
       "from": 5,
       "to": 20,
       "chance": 0.048,
-      "value": 4
+      "value": 6
     },
     "potasa": {
       "from": 6,
       "to": 22,
       "chance": 0.072,
-      "value": 10
+      "value": 14
     },
     "hierro": {
       "from": 20,
       "to": 40,
       "chance": 0.064,
-      "value": 19
+      "value": 25
     },
     "magnesita": {
       "from": 22,
       "to": 40,
       "chance": 0.04,
-      "value": 24
+      "value": 31
     },
     "cobre": {
       "from": 38,
       "to": 58,
       "chance": 0.064,
-      "value": 30
+      "value": 39
     },
     "plata": {
       "from": 42,
       "to": 74,
       "chance": 0.032,
-      "value": 51
+      "value": 64
     },
     "galena": {
       "from": 56,
       "to": 76,
       "chance": 0.056,
-      "value": 34
+      "value": 44
     },
     "malaquita": {
       "from": 72,
       "to": 95,
       "chance": 0.064,
-      "value": 42
+      "value": 54
     }
   },
   "vein": 0.5,

@@ -36,11 +36,11 @@
   "title.press": "Sakatu [START]",
   "title.players": "1 edo 2 jokalari, elkarrekin",
   "menu.easy.note": "Eguzki gehiago eta ekaitz laburragoak.",
-  "menu.normal.note": "Benetako uda: zortzi egun ahal duzuen gatz guztia ateratzeko.",
+  "menu.normal.note": "Benetako uda: hamar egun ahal duzuen gatz guztia ateratzeko.",
   "menu.go": "Larrainetara!",
   "intro.1": "Salinas de Oron ur oso gazia duen iturburu bat dago. Uste da mendeetan zehar gatza atera dela bertatik.",
   "intro.2": "Ura zurezko kanaletan barrena doa larrainetaraino, sakonera gutxiko putzuak, non eguzkiak lurruntzen duen eta gatza uzten duen.",
-  "intro.3": "Uda da. Zortzi egun dituzue larrainak betetzeko, gatz zuria arrastelatzeko eta biltegira eramateko. Kontuz ekaitzekin!",
+  "intro.3": "Uda da. Hamar egun dituzue larrainak betetzeko, gatz zuria arrastelatzeko eta biltegira eramateko. Kontuz ekaitzekin!",
   "howto.title": "Nola jokatzen da",
   "howto.move": "Joystick-a: larrainen artean ibili",
   "howto.b": "[B] larrain baten konporta ireki edo itxi: itxi beteta dagoenean",
@@ -123,5 +123,11 @@
   "gl.cabra.text": "Ahuntzei gatza miazkatzea asko gustatzen zaie… eta zapaltzea!",
   "final.flor": "Gatz-lorea",
   "final.orders": "Arrieroen eskaerak",
-  "final.best": "Bolada onena"
+  "final.best": "Bolada onena",
+  "new.era": "Larrain berria!",
+  "new.rasero": "Arrastel berria!",
+  "new.cesto": "Saski handiagoa!",
+  "new.canal": "Ubide berria!",
+  "new.burro": "Asto bat!",
+  "new.toldo": "Oihal berriak!"
 }
