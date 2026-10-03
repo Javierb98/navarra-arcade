@@ -47,6 +47,11 @@ const ICON = {
   home: '<svg viewBox="0 0 16 16"><path d="M1 8 L8 2 L15 8 L13 8 L13 15 L3 15 L3 8 Z"/></svg>',
   lamb: '<svg viewBox="0 0 16 16"><ellipse cx="7" cy="9" rx="4.5" ry="3.5"/><rect x="10.5" y="6" width="3.5" height="4" rx="1.5"/><rect x="4" y="11" width="1.6" height="4"/><rect x="8" y="11" width="1.6" height="4"/></svg>',
   up: '<svg viewBox="0 0 16 16"><path d="M8 1 L15 9 L10.5 9 L10.5 15 L5.5 15 L5.5 9 L1 9 Z"/></svg>',
+  cheese: '<svg viewBox="0 0 16 16"><path d="M1 7 L15 4 L15 12 L1 13 Z"/><circle cx="6" cy="9.5" r="1.3" fill="#000" opacity=".35"/><circle cx="11" cy="8" r="1" fill="#000" opacity=".35"/></svg>',
+  heart: '<svg viewBox="0 0 16 16"><path d="M8 14 C2 10 1 7 1 5 A3.5 3.5 0 0 1 8 4 A3.5 3.5 0 0 1 15 5 C15 7 14 10 8 14 Z"/></svg>',
+  open: '<svg viewBox="0 0 16 16"><rect x="2" y="1" width="1.6" height="14"/><path d="M3.6 2 H13 L11 5 L13 8 H3.6 Z"/></svg>',
+  shut: '<svg viewBox="0 0 16 16"><rect x="1" y="7" width="14" height="2"/><rect x="1" y="11" width="14" height="2"/><rect x="2" y="5" width="2" height="10"/><rect x="12" y="5" width="2" height="10"/></svg>',
+  cow: '<svg viewBox="0 0 18 16"><ellipse cx="8" cy="9" rx="6.5" ry="4"/><rect x="13" y="5" width="4" height="5" rx="1.5"/><rect x="3" y="12" width="2" height="4"/><rect x="10" y="12" width="2" height="4"/><path d="M13 5 L12 2 M17 5 L18 2" stroke="currentColor" stroke-width="1.2"/></svg>',
 };
 const icon = (name) => h('span', { class: 'icon', html: ICON[name] });
 const GOAL_ICON = { moveUp: 'up', graze: 'sheep', storm: 'storm', night: 'moon', drought: 'drop', moveDown: 'home' };
@@ -255,19 +260,26 @@ export function play(app) {
 
   const el = {
     sheep: [h('span', {}), h('span', {})], stars: [h('span', { class: 'stars' }), h('span', { class: 'stars' })],
+    cheese: [h('span', { class: 'cheese' }), h('span', { class: 'cheese' })], honour: [h('span', { class: 'honour' }), h('span', { class: 'honour' })],
+    gate: [h('span', { class: 'gate' }), h('span', { class: 'gate' })], pass: h('span', { class: 'pass' }), cows: h('span', { class: 'cows' }),
     week: h('span', { class: 'week' }), weekBar: h('span', { class: 'bar thin' }, h('i')),
     health: h('span', { class: 'bar' }, h('i')), healthN: h('span', { class: 'num' }),
     trust: h('span', { class: 'bar trust' }, h('i')), trustN: h('span', { class: 'num' }),
     goal: h('div', { class: 'goal' }), banner: h('div', { class: 'banner hidden' }),
     prompt: h('div', { class: 'prompt hidden' }), big: h('div', { class: 'big' }), floats: h('div', { class: 'floats' }),
   };
-  const side = (i) => h('span', { class: `hud-side side${i}` }, tag(i), ' ', icon('sheep'), el.sheep[i], ' ', el.stars[i]);
+  // Each valley's own race (sheep, stars, cheese, honour, its land open or
+  // shut) on its side; in the middle the week, the pass, and the Peace.
+  const line = (...kids) => h('span', { class: 'hud-line' }, ...kids);
+  const side = (i) => h('span', { class: `hud-side side${i}` },
+    line(tag(i), icon('sheep'), el.sheep[i], el.stars[i]),
+    line(el.cheese[i], el.honour[i], el.gate[i]));
   app.ui.replaceChildren(h('div', { class: 'overlay play' },
     h('div', { class: 'hud' },
       side(0),
-      h('span', { class: 'hud-mid' }, el.week, el.weekBar),
-      h('span', { class: 'hud-item' }, icon('mountain'), el.health, el.healthN),
-      h('span', { class: 'hud-item' }, icon('hands'), el.trust, el.trustN),
+      h('span', { class: 'hud-mid' },
+        line(el.week, el.weekBar, el.pass),
+        line(h('span', { class: 'hud-item peace' }, icon('hands'), el.trust, el.trustN), el.cows)),
       side(1)),
     el.goal, el.floats, el.big, el.banner, el.prompt));
 
@@ -294,6 +306,7 @@ export function play(app) {
       h('h3', {}, icon(SEASON_ICON[w.season]), ' ', t('week.label', { n: s.week + 1, of: s.calendar.weeks.length }), ' · ', t(`season.${w.season}`)),
       h('h2', {}, icon(GOAL_ICON[w.goal]), ' ', t(`goal.${w.goal}.title`)),
       h('p', {}, rich(t(`goal.${w.goal}.text`))),
+      h('p', { class: 'small passline' }, s.passOwner < 0 ? t('week.passBoth') : t('week.pass', { valley: t(s.passOwner === 0 ? 'valley.roncal' : 'valley.baretous') })),
       lastGoals ? h('p', { class: 'small last' }, t('week.last'), ' ', tag(0), ...starIcons([lastGoals[0]]), '  ', tag(1), ...starIcons([lastGoals[1]])) : null));
     el.banner.classList.remove('hidden');
   };
@@ -304,16 +317,20 @@ export function play(app) {
   const bar = (b, v) => { b.firstChild.style.width = `${Math.round(v)}%`; b.classList.toggle('low', v < 35); };
   const updateHud = () => {
     for (const i of [0, 1]) {
-      const own = s.sheep.filter((sh) => sh.side === i);
+      set(`cheese${i}`, Math.floor(s.cheese[i]), (v) => el.cheese[i].replaceChildren(icon('cheese'), String(v)));
+      set(`honour${i}`, Math.floor(s.honour[i] / 10), () => el.honour[i].replaceChildren(icon('heart'), String(Math.floor(s.honour[i]))));
+      set(`gate${i}`, s.welcome[i], (v) => { el.gate[i].className = `gate ${v ? 'open' : ''}`; el.gate[i].replaceChildren(icon(v ? 'open' : 'shut')); });
+      const own = s.sheep.filter((sh) => sh.side === i && !sh.cow);
       set(`sheep${i}`, `${own.filter((sh) => !sh.stray).length}/${own.length}`, (v) => { el.sheep[i].textContent = v; });
       set(`stars${i}`, s.stats[i].goals.join(), () => el.stars[i].replaceChildren(icon('star'), String(s.stats[i].stars)));
     }
     const w = s.weekDef;
     set('week', `${s.week}.${getLang()}`, () => el.week.replaceChildren(icon(SEASON_ICON[w.season]), ' ', t('week.short', { n: s.week + 1 })));
     set('weekBar', Math.round(100 * Math.min(1, s.weekT / w.length)), (v) => { el.weekBar.firstChild.style.width = `${v}%`; });
-    const health = s.health();
-    set('health', health, (v) => { bar(el.health, v); el.healthN.textContent = v; });
-    set('trust', Math.round(s.trust), (v) => { bar(el.trust, v); el.trustN.textContent = v; });
+    set('pass', `${s.passOwner}.${getLang()}`, () => el.pass.replaceChildren(t('hud.pass'), ' ', s.passOwner < 0 ? t('hud.passBoth') : tag(s.passOwner)));
+    set('trust', Math.round(s.trust), (v) => { bar(el.trust, v); el.trustN.textContent = v; el.trust.classList.toggle('quarrel', s.quarrel); });
+    const cows = s.sheep.filter((c) => c.cow), cc = cows.reduce((a, c) => a + Math.min(c.food, c.water), 0) / cows.length;
+    set('cows', Math.round(cc * 10), () => { el.cows.className = `cows ${cc < s.rules.tribute.minCondition ? 'thin' : ''}`; el.cows.replaceChildren(icon('cow'), h('span', { class: 'bar thin' }, h('i', { style: { width: `${Math.round(cc * 100)}%` } }))); });
     // This week's goal: a bar per valley with a notch at the target.
     const g = [0, 1].map((i) => s.goalProgress(i));
     const key = `${s.week}.${g.map((x) => Math.round(x.v * 20)).join()}.${getLang()}`;
@@ -346,7 +363,12 @@ export function play(app) {
       case 'lambUp': sfx.ok(); break;
       case 'lambHome': sfx.help(); float(t(e.helped ? 'msg.lambHelped' : 'msg.lambHome'), e.x, e.y, 'good'); break;
       case 'helpStray': sfx.help(); float(t('msg.thanks'), e.x, e.y, 'good'); break;
-      case 'dry': if (!hud.dry) { hud.dry = true; prompt(t('msg.dry'), 7, 'drop'); } break;
+      case 'dry': prompt(t(`msg.dry.${e.spring}`), 8, 'drop'); break;
+      case 'hail': sfx.thunder(); shake = 2; prompt(t('msg.hail', { valley: who(e.side) }), 8, 'storm'); break;
+      case 'welcome': sfx.gate(); float(t(e.open ? 'msg.open' : 'msg.shut', { valley: who(1 - e.side) }), e.x, e.y, e.open ? 'good' : ''); if (e.open) prompt(t('msg.openText'), 6, 'open'); break;
+      case 'trespass': sfx.empty(); float(t('msg.trespass'), e.x, e.y, 'bad'); break;
+      case 'quarrel': sfx.warn(); big(t('msg.quarrel')); prompt(t('msg.quarrelText'), 7, 'hands'); break;
+      case 'reconcile': sfx.shelter(); prompt(t('msg.reconcile'), 5, 'hands'); break;
       case 'fog': prompt(t('msg.fog'), 6); break;
       case 'snow': prompt(t('msg.snow'), 6); break;
       case 'shelterOpen': sfx.shelter(); big(t('msg.shelterOpen')); prompt(t('msg.shelterOpenText'), 6, 'hands'); break;
@@ -386,49 +408,57 @@ export function play(app) {
 export function results(app, { season: s }) {
   const sc = s.score();
   let t0 = 0;
-  const row = (ic, label, detail, pts) => h('div', { class: 'res-row' },
-    icon(ic), h('span', { class: 'res-label' }, label), h('span', { class: 'res-detail' }, detail), h('span', { class: 'res-pts' }, `+${pts}`));
-  const pct = (v) => `${Math.round(v)}%`;
+  const two = app.session.players === 2;
+  const col = (i) => {
+    const v = sc.valleys[i], P = v.parts;
+    const row = (ic, label, pts) => h('div', { class: 'res-row' }, icon(ic), h('span', { class: 'res-label' }, label), h('span', { class: 'res-pts' }, pts ? `+${pts}` : '—'));
+    return h('div', { class: `res-col side${i} ${sc.winner === i ? 'win' : ''}` },
+      h('h3', {}, tag(i), ' ', t(i === 0 ? 'valley.roncal' : 'valley.baretous'), sc.winner === i ? h('span', { class: 'crown' }, ` ${t('results.ahead')}`) : null),
+      row('cheese', t('results.cheese', { n: v.cheese }), P.cheese),
+      row('home', t('results.home', { n: sc.home[i], of: s.flockSize[i] }), P.home),
+      row('star', t('results.stars', { n: s.stats[i].stars }), P.stars),
+      row('heart', t('results.honour'), P.honour),
+      i === 0 ? row('cow', t('results.tribute'), P.tribute) : null,
+      row('hands', t('results.peace'), P.peace),
+      h('div', { class: 'res-total' }, h('span', {}, t('results.total')), h('span', {}, String(v.total))));
+  };
   app.ui.replaceChildren(h('div', { class: 'overlay results' },
-    h('div', { class: 'card' },
+    h('div', { class: 'card wide' },
       h('h2', {}, t('results.title')),
-      row('home', t('results.home'), h('span', {}, tag(0), ` ${sc.home[0]}/${s.flockSize[0]}  `, tag(1), ` ${sc.home[1]}/${s.flockSize[1]}`), sc.parts.home),
-      row('sheep', t('results.condition'), pct(sc.condition * 100), sc.parts.condition),
-      row('mountain', t('results.health'), pct(sc.health), sc.parts.health),
-      row('hands', t('results.trust'), pct(sc.trust), sc.parts.trust),
-      row('star', t('results.stars'), `${sc.stars} / ${s.calendar.weeks.length * 2}`, sc.parts.stars),
-      sc.lambs ? row('lamb', t('results.lamb'), String(sc.lambs), sc.parts.lamb) : null,
-      h('div', { class: 'res-total' }, h('span', {}, t('results.total')), h('span', {}, String(sc.total))),
+      h('p', { class: `res-peace ${sc.ceremony ? 'ok' : 'broken'}` }, icon('hands'), ' ', t(sc.ceremony ? 'results.peaceKept' : 'results.peaceBroken', { n: sc.peace })),
+      h('p', { class: 'small' }, icon('cow'), ' ', t(sc.tributeOk ? 'results.cowsOk' : 'results.cowsThin')),
+      h('div', { class: 'res-cols' }, col(0), col(1)),
+      h('p', { class: 'res-verdict' }, t(sc.winner < 0 ? 'results.tie' : two ? 'results.winner' : sc.winner === 0 ? 'results.youWin' : 'results.theyWin', { valley: t(sc.winner === 0 ? 'valley.roncal' : 'valley.baretous') })),
       h('p', { class: 'hint' }, rich(t('ui.next'))))));
   return {
     update(dt) {
       t0 += dt;
-      if ((t0 > 1 && (app.input.any('a') || app.input.any('start'))) || t0 > 25) { sfx.ok(); app.go('ceremony', { score: sc }); }
+      if ((t0 > 1 && (app.input.any('a') || app.input.any('start'))) || t0 > 30) { sfx.ok(); app.go('ceremony', { score: sc, board: two ? sc.valleys[0].total + sc.valleys[1].total : sc.valleys[0].total }); }
     },
-    draw(ctx) { drawSeason(ctx, s, app.time); ctx.fillStyle = 'rgba(0,0,0,0.5)'; ctx.fillRect(0, 0, W, H); },
+    draw(ctx) { drawSeason(ctx, s, app.time); ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(0, 0, W, H); },
   };
 }
 
 // ---- the 13 July ceremony --------------------------------------------------------
 
-export function ceremony(app, { score }) {
+export function ceremony(app, { score, board }) {
   const tier = score.tier;
   let t0 = 0, popped = false;
   app.ui.replaceChildren(h('div', { class: 'overlay story ceremony' },
     h('div', { class: 'big pax' }),
     h('div', { class: 'caption' },
       h('p', {}, t(`ceremony.${tier}`)),
-      h('p', { class: 'small' }, t('ceremony.cows')),
+      score.ceremony ? h('p', { class: 'small' }, t(score.tributeOk ? 'ceremony.cows' : 'ceremony.cowsThin')) : null,
       h('p', { class: 'hint' }, rich(t('ui.next'))))));
   const pax = app.ui.querySelector('.pax');
   sfx.ceremony(tier);
   return {
     update(dt) {
       t0 += dt;
-      if (!popped && t0 > 1.2) { popped = true; pax.replaceChildren(h('span', {}, t('ceremony.pax'))); pax.classList.add('stay'); }
+      if (!popped && t0 > 1.2 && score.ceremony) { popped = true; pax.replaceChildren(h('span', {}, t('ceremony.pax'))); pax.classList.add('stay'); }
       if ((t0 > 2 && (app.input.any('a') || app.input.any('start'))) || t0 > 14) {
         const { difficulty } = app.session;
-        if (qualifies(BOARD, difficulty, score.total)) app.go('initials', { score: score.total });
+        if (qualifies(BOARD, difficulty, board)) app.go('initials', { score: board });
         else app.go('fact');
       }
     },

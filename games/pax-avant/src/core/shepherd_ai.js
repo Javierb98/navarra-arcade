@@ -4,19 +4,31 @@
 // and buttons, so it can't do anything a child can't.
 //
 // It leads with the bell (walk slowly, ring, the flock follows) and fetches
-// strays. When the valleys trust each other it also helps the neighbours:
-// returns their strays, carries their lamb home, tops up their trough and
-// sees off wolves heading for their flock. When trust is low it minds its own
-// flock and its own side. A `greedy` shepherd never helps and grazes wherever
-// the grass is best until it is gone; the tests use it to show why the treaty
-// was needed.
+// strays. It remembers how the other valley treats it (`regard`, 0..1):
+// honour given to it raises it, grass and water taken without leave lower
+// it. With good regard it helps the neighbours (strays, the lamb, their
+// trough, wolves), opens its land to them and keeps to the treaty's turns;
+// with poor regard it minds its own flock, and with very poor regard it
+// takes what it wants. A `greedy` shepherd never helps and grazes wherever
+// the grass is best; the tests use it to show why the treaty was needed.
 
 import { pointSegDist } from './geom.js';
 
 const DT = 1 / 60;
 
 export function newShepherd(opts = {}) {
-  return { greedy: false, kind: null, pasture: null, cool: 0, helpT: 0, thirsty: false, ...opts };
+  return { greedy: false, kind: null, pasture: null, cool: 0, helpT: 0, thirsty: false, regard: 0.6, seen: null, ...opts };
+}
+
+// What the neighbours did since last time: giving (honour they earned from
+// us) raises regard, taking without leave lowers it.
+function remember(season, i, brain) {
+  const o = 1 - i, now = { honour: season.honour[o], taken: season.stats[o].taken };
+  if (brain.seen) {
+    const gave = now.honour - brain.seen.honour, took = now.taken - brain.seen.taken;
+    brain.regard = Math.max(0, Math.min(1, brain.regard + gave * 0.004 - took * 0.05));
+  }
+  brain.seen = now;
 }
 
 export function shepherdInput(season, i, brain) {
@@ -26,7 +38,13 @@ export function shepherdInput(season, i, brain) {
   const flock = season.flocks[i], other = season.flocks[1 - i];
   const own = season.sheep.filter((s) => s.side === i);
   const week = season.weekDef;
-  const kind = brain.kind ?? (!brain.greedy && (season.diff.alwaysKind || season.trust >= R.trust.kindAt));
+  remember(season, i, brain);
+  const kind = brain.kind ?? (!brain.greedy && (season.diff.alwaysKind || (brain.regard >= 0.45 && season.trust >= R.trust.kindAt)));
+  // May my flock use this land or trough? Its own, open land, land the owner
+  // opened to us; a greedy or badly treated shepherd doesn't ask.
+  const bold = brain.greedy || brain.regard < 0.2;
+  const mayUse = (owner) => owner < 0 || owner === i || season.welcome[owner] || bold;
+  brain.mayUse = mayUse;
   brain.cool = Math.max(0, brain.cool - DT);
   brain.helpT = Math.max(0, brain.helpT - DT);
 
@@ -124,7 +142,7 @@ export function shepherdInput(season, i, brain) {
   const homeward = week.goal === 'moveDown' && season.weekT > week.length - 24;
   if (brain.thirsty && !storming && week.goal !== 'moveUp' && !homeward) {
     const tr = season.troughs
-      .filter((t) => usable(t) && (brain.greedy || kind || t.side === i))
+      .filter((t) => usable(t) && mayUse(season.troughOwner(t)))
       .sort((a, b) => d(a, flock) - d(b, flock))[0];
     if (tr) {
       if (tr.water < 0.5 && season.springs[tr.spring].level > 0.1) {
@@ -170,6 +188,13 @@ export function shepherdInput(season, i, brain) {
       return out;
     }
   }
+
+  // ---- open or close our land to the neighbours -------------------------------
+  const want = !brain.greedy && (season.diff.alwaysKind || brain.regard >= 0.5);
+  const busy = season.gates.some((g) => Math.hypot((g.x1 + g.x2) / 2 - me.x, (g.y1 + g.y2) / 2 - me.y) < R.shepherd.reach + 6)
+    || season.troughs.some((t) => d(t) < R.shepherd.reach + 6) || season.fires.some((f) => d(f) < R.shepherd.reach + 6)
+    || (L && L.state === 'lost' && d(L) < R.shepherd.reach + 6);
+  if (season.welcome[i] !== want && !busy && brain.cool <= 0) press('c');
 
   // ---- graze --------------------------------------------------------------------
   if (inPen > 0.5 && week.goal !== 'moveDown') { lead(gx, pen.y - 30); return out; }
@@ -220,7 +245,9 @@ function choosePasture(season, i, brain, kind) {
     const p = pastures[idx];
     let v = season.meanGrass(W.pastureCells[idx]);
     if (kind && inside(p, other, 1.2)) v -= 0.35;
-    if (!brain.greedy && p.owner === 1 - i) v -= 1;
+    const owner = season.pastureOwner(idx);
+    if (!brain.mayUse(owner)) v -= 1;
+    else if (owner === 1 - i && !brain.greedy) v -= 0.15; // a guest prefers its own grass when it's good
     v -= Math.hypot(p.x - flock.x, p.y - flock.y) / 1000;
     return v;
   };

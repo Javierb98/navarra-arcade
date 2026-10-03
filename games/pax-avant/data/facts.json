@@ -6,7 +6,7 @@
       "text_key": "fact.treaty",
       "image": "assets/facts/treaty.png",
       "scene": "treaty",
-      "source": null,
+      "source": "https://www.portalinmaterial.cultura.gob.es/pci-ccaa/navarra/tres-vacas.html",
       "review_status": "draft"
     },
     {
@@ -14,7 +14,7 @@
       "text_key": "fact.arbiters",
       "image": "assets/facts/arbiters.png",
       "scene": "dispute",
-      "source": null,
+      "source": "https://www.portalinmaterial.cultura.gob.es/pci-ccaa/navarra/tres-vacas.html",
       "review_status": "draft"
     },
     {
@@ -30,7 +30,7 @@
       "text_key": "fact.gesture",
       "image": "assets/facts/gesture.png",
       "scene": "ceremony1",
-      "source": null,
+      "source": "https://www.portalinmaterial.cultura.gob.es/pci-ccaa/navarra/tres-vacas.html",
       "review_status": "draft"
     },
     {
@@ -38,7 +38,7 @@
       "text_key": "fact.cows",
       "image": "assets/facts/cows.png",
       "scene": "ceremony2",
-      "source": null,
+      "source": "https://www.portalinmaterial.cultura.gob.es/pci-ccaa/navarra/tres-vacas.html",
       "review_status": "draft"
     },
     {
@@ -88,6 +88,46 @@
       "scene": "pastures",
       "source": null,
       "review_status": "draft"
+    },
+    {
+      "id": "paxavant.turns",
+      "text_key": "fact.turns",
+      "scene": "pastures",
+      "source": "https://www.agrodigital.com/2026/06/22/tributo-tres-vacas-roncal-baretous-unesco/",
+      "review_status": "draft",
+      "image": null
+    },
+    {
+      "id": "paxavant.question",
+      "text_key": "fact.question",
+      "scene": "ceremony2",
+      "source": "https://www.portalinmaterial.cultura.gob.es/pci-ccaa/navarra/tres-vacas.html",
+      "review_status": "draft",
+      "image": null
+    },
+    {
+      "id": "paxavant.justice",
+      "text_key": "fact.justice",
+      "scene": "ceremony1",
+      "source": "https://www.portalinmaterial.cultura.gob.es/pci-ccaa/navarra/tres-vacas.html",
+      "review_status": "draft",
+      "image": null
+    },
+    {
+      "id": "paxavant.quarrels",
+      "text_key": "fact.quarrels",
+      "scene": "pastures",
+      "source": "https://www.agrodigital.com/2026/06/22/tributo-tres-vacas-roncal-baretous-unesco/",
+      "review_status": "draft",
+      "image": null
+    },
+    {
+      "id": "paxavant.selection",
+      "text_key": "fact.selection",
+      "scene": "ceremony2",
+      "source": "https://www.portalinmaterial.cultura.gob.es/pci-ccaa/navarra/tres-vacas.html",
+      "review_status": "draft",
+      "image": null
     }
   ]
 }

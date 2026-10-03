@@ -1,5 +1,5 @@
 {
-  "_note": "Coordinates are pixels on the 480x270 map. Roncal (player 1) is the left half, Barétous (player 2) the right; the border runs down x = 240 and the San Martín stone sits on the pass at the top. `owner` is 0 for Roncal, 1 for Barétous, -1 for shared. Gates are [x1, x2] along the top fence of a pen.",
+  "_note": "Coordinates are pixels on the 480x270 map. Roncal (player 1) is the left half, Barétous (player 2) the right; the border runs down x = 240 and the San Martín stone sits on the pass at the top. `owner` is 0 for Roncal, 1 for Barétous, -1 for shared. Gates are [x1, x2] along the top fence of a pen. Roncal has good grass but a weak spring; Barétous a strong spring but thin grass: each valley lacks what the other has.",
   "w": 480,
   "h": 270,
   "border": 240,
@@ -117,7 +117,7 @@
       "rx": 50,
       "ry": 30,
       "high": true,
-      "start": 0.9
+      "start": 0.5
     },
     {
       "id": "baretous_low",
@@ -127,7 +127,7 @@
       "rx": 52,
       "ry": 26,
       "high": false,
-      "start": 0.9
+      "start": 0.5
     }
   ],
   "springs": [
@@ -135,8 +135,8 @@
       "id": "roncal",
       "x": 66,
       "y": 138,
-      "cap": 3,
-      "regen": 0.02,
+      "cap": 1.2,
+      "regen": 0.006,
       "troughs": [
         {
           "x": 80,
@@ -168,8 +168,8 @@
       "id": "baretous",
       "x": 414,
       "y": 138,
-      "cap": 3,
-      "regen": 0.02,
+      "cap": 4,
+      "regen": 0.04,
       "troughs": [
         {
           "x": 400,
