@@ -469,3 +469,10 @@ button.execute:disabled { color: rgba(240, 225, 190, 0.3); opacity: 1; }
 .arcade-dialog > div { background: var(--panel); border: 1px solid var(--panel-line); padding: 18px 24px; text-align: center; }
 .arcade-dialog p { font-family: var(--caps); font-size: 1.2rem; margin: 0 0 12px; }
 .arcade-dialog button { margin: 0 6px; }
+
+/* Arcade stick focus: a clear gold ring on whatever the stick is on, and a
+   glow around the panel when the stick is in it instead of on the field. */
+.pad-focus:focus, button:focus-visible, [tabindex]:focus-visible { outline: 3px solid #ffd65a; outline-offset: 2px; box-shadow: 0 0 12px rgba(255, 214, 90, .55); }
+tr.pad-focus:focus { outline-offset: -3px; }
+aside.panel.pad-zone { box-shadow: inset 0 0 0 3px rgba(255, 214, 90, .65); }
+.pads .pad-a { background: #f0e442; color: #111; font-weight: bold; }

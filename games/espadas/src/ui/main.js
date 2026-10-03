@@ -2,6 +2,7 @@
 
 import { initI18n, t } from './i18n.js';
 import { installArcadeLink } from './arcade.js';
+import { padButton, navigate } from './padnav.js';
 import { titleScreen, cutsceneScreen, armiesScreen, musterScreen, resultsScreen, helpDialog, customScreen, homageScreen } from './screens.js';
 import { deployScreen, battleScreen, newBattle } from './battle_screen.js';
 
@@ -46,10 +47,19 @@ const flow = {
   results: () => show(() => resultsScreen(app, S, { onAgain: flow.muster, onTitle: flow.title, rerender })),
 };
 
+// Keys: an arcade button first (the battle board and deployment take the
+// stick themselves; everywhere else it walks the screen's buttons), then the
+// screen's own keyboard shortcuts. Minigames listen for themselves.
 document.addEventListener('keydown', (e) => {
-  if (document.querySelector('dialog[open]')) return;
-  if (e.target instanceof HTMLInputElement) return;
+  if (document.querySelector('.aim-overlay') || document.querySelector('.arcade-dialog')) return;
+  if (e.target instanceof HTMLInputElement && e.target.type !== 'range' && e.target.type !== 'checkbox') return;
+  const b = padButton(e);
+  const dialog = document.querySelector('dialog[open]');
+  if (b && dialog) { e.preventDefault(); if (b === 'b' || (b === 'start' && !navigate(dialog, 'start'))) dialog.querySelector('[data-back], button')?.click(); else navigate(dialog, b); return; }
+  if (dialog) return;
+  if (b && current?.handle?.onPad?.(b, e)) { e.preventDefault(); return; }
   current?.handle?.onKey?.(e);
+  if (b && !e.defaultPrevented && navigate(app, b)) e.preventDefault();
 });
 
 async function boot() {
@@ -59,13 +69,13 @@ async function boot() {
     return r.json();
   };
   try {
-    const [rules, units, taunts, strings, ...battles] = await Promise.all([
-      get('data/rules.json'), get('data/units.json'), get('data/taunts.json'), get('data/strings.json'),
+    const [rules, units, strings, ...battles] = await Promise.all([
+      get('data/rules.json'), get('data/units.json'), get('data/strings.json'),
       ...BATTLES.map((id) => get(`data/battles/${id}.json`)),
     ]);
     initI18n(strings);
     installArcadeLink(); // only does anything when opened from the arcade menu
-    S.data = { rules, factions: units.factions, units: units.units, taunts: taunts.taunts };
+    S.data = { rules, factions: units.factions, units: units.units };
     for (const b of battles) S.scenarios[b.id] = b;
     document.title = t('title.name');
     flow.title();

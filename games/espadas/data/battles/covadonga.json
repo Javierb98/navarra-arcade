@@ -1,9 +1,9 @@
 {
   "id": "covadonga",
   "year": 722,
-  "title": { "en": "Covadonga", "es": "Covadonga" },
-  "date": { "en": "c. 722", "es": "h. 722" },
-  "place": { "en": "The valley below Mount Auseva, in the Picos de Europa", "es": "El valle bajo el monte Auseva, en los Picos de Europa" },
+  "title": { "en": "Covadonga", "es": "Covadonga", "eu": "Covadonga" },
+  "date": { "en": "c. 722", "es": "h. 722", "eu": "722 inguru" },
+  "place": { "en": "The valley below Mount Auseva, in the Picos de Europa", "es": "El valle bajo el monte Auseva, en los Picos de Europa", "eu": "Auseva mendiaren azpiko harana, Picos de Europan" },
 
   "briefing": {
     "en": [
@@ -15,6 +15,11 @@
       "Pocos años después de la caída del reino visigodo, los astures de las montañas del norte han elegido un caudillo: Pelayo, que sirvió en la casa real de Toledo. No pagan tributo al gobernador de Gijón.",
       "Una expedición al mando de Alqama ha subido por el valle del Deva para acabar con ellos. Las crónicas dicen que la acompañaba el obispo Oppa, para convencer a Pelayo de que se rindiera.",
       "Tú eres Pelayo. Tu gente ocupa la cueva de la peña, al fondo del valle, y las laderas que dominan el camino. Deja entrar a la columna en la garganta, golpea desde las alturas y aguanta en la cueva hasta que anochezca."
+    ],
+    "eu": [
+      "Visigodoen erresuma erori eta urte gutxira, iparraldeko mendietako asturrek buruzagi bat hautatu dute: Pelaio, Toledoko errege-etxean zerbitzatu zuena. Ez diote zergarik ordaintzen Gijongo gobernariari.",
+      "Alqamak gidatutako espedizio bat Deva ibaiaren haranean gora igo da haiekin amaitzeko. Kronikek diote Oppa apezpikua zihoala harekin, Pelaio errenditzeko konbentzitzera.",
+      "Zu Pelaio zara. Zure jendeak haranaren hondoko harkaitzeko haitzuloa eta bidea menderatzen duten maldak hartu ditu. Utzi zutabea arroilan sartzen, jo garaieretatik eta eutsi haitzuloan gaua iritsi arte."
     ]
   },
 
@@ -33,34 +38,37 @@
     "cells": [[21, 2], [21, 3]],
     "text": {
       "en": "Hold the cave until nightfall, or break the expedition. If the enemy stands in the cave at the end of a turn, it has fallen.",
-      "es": "Defiende la cueva hasta que anochezca, o rompe la expedición. Si el enemigo ocupa la cueva al final de un turno, la cueva ha caído."
+      "es": "Defiende la cueva hasta que anochezca, o rompe la expedición. Si el enemigo ocupa la cueva al final de un turno, la cueva ha caído.",
+      "eu": "Defendatu haitzuloa gaua iritsi arte, edo hautsi espedizioa. Txanda baten amaieran etsaia haitzuloan badago, haitzuloa erori da."
     }
   },
 
   "results": {
     "held": {
-      "won": { "en": "Night falls and the cave still holds. The expedition turns back down the valley.", "es": "Anochece y la cueva sigue en pie. La expedición se vuelve valle abajo." }
+      "won": { "en": "Night falls and the cave still holds. The expedition turns back down the valley.", "es": "Anochece y la cueva sigue en pie. La expedición se vuelve valle abajo.", "eu": "Gaua iritsi da, eta haitzuloak eusten dio oraindik. Espedizioa haranean behera itzuli da." }
     },
     "seized": {
-      "lost": { "en": "The cave has fallen, and with it the Astures' refuge.", "es": "La cueva ha caído, y con ella el refugio de los astures." }
+      "lost": { "en": "The cave has fallen, and with it the Astures' refuge.", "es": "La cueva ha caído, y con ella el refugio de los astures.", "eu": "Haitzuloa erori da, eta harekin asturren babeslekua." }
     }
   },
 
   "historicalNote": {
     "en": "The fullest account comes from the Asturian chronicles written for Alfonso III in the 880s, some 160 years after the event. They tell how Pelayo, chosen as leader by the Astures, withdrew with his followers to a cave on Mount Auseva; how a Muslim force under Alqama came to take him, bringing Bishop Oppa to urge surrender; how the attackers were routed in the valley and Alqama killed, and how the survivors fleeing along the Deva were buried by a landslide. Arabic writers mention the episode only briefly and much later: Pelayo held out among the rocks with a handful of followers, living on wild honey, and the governors judged them not worth the trouble. The date is usually given as 722, though 718 is also argued. What is certain is that a small Christian lordship survived in Asturias and grew into a kingdom.",
-    "es": "El relato más completo procede de las crónicas asturianas escritas para Alfonso III hacia 880, unos 160 años después de los hechos. Cuentan cómo Pelayo, elegido caudillo por los astures, se retiró con los suyos a una cueva del monte Auseva; cómo llegó a tomarla una fuerza musulmana mandada por Alqama, con el obispo Oppa para pedir la rendición; cómo los atacantes fueron derrotados en el valle y Alqama murió, y cómo los que huían por el Deva quedaron sepultados por un desprendimiento. Los autores árabes mencionan el episodio de pasada y mucho después: Pelayo resistía entre las peñas con un puñado de seguidores, alimentándose de miel silvestre, y los gobernadores pensaron que no merecía la pena. La fecha suele darse como 722, aunque también se defiende 718. Lo que es seguro es que un pequeño señorío cristiano sobrevivió en Asturias y llegó a ser un reino."
+    "es": "El relato más completo procede de las crónicas asturianas escritas para Alfonso III hacia 880, unos 160 años después de los hechos. Cuentan cómo Pelayo, elegido caudillo por los astures, se retiró con los suyos a una cueva del monte Auseva; cómo llegó a tomarla una fuerza musulmana mandada por Alqama, con el obispo Oppa para pedir la rendición; cómo los atacantes fueron derrotados en el valle y Alqama murió, y cómo los que huían por el Deva quedaron sepultados por un desprendimiento. Los autores árabes mencionan el episodio de pasada y mucho después: Pelayo resistía entre las peñas con un puñado de seguidores, alimentándose de miel silvestre, y los gobernadores pensaron que no merecía la pena. La fecha suele darse como 722, aunque también se defiende 718. Lo que es seguro es que un pequeño señorío cristiano sobrevivió en Asturias y llegó a ser un reino.",
+    "eu": "Kontakizunik osoena Alfontso III.arentzat 880 inguruan idatzitako kronika asturiarretatik dator, gertaerak gertatu eta 160 bat urtera. Kontatzen dute nola Pelaio, asturrek buruzagi hautatua, bereekin Auseva mendiko haitzulo batera erretiratu zen; nola Alqamak gidatutako indar musulman bat hura hartzera iritsi zen, Oppa apezpikua errendizioa eskatzera zekarrela; nola erasotzaileak haranean garaituak izan ziren eta Alqama hil zen, eta nola Deva ibaian zehar ihesi zihoazenak lur-jausi batek ehortzi zituen. Egile arabiarrek pasadan aipatzen dute gertakaria, eta askoz geroago: Pelaio harkaitzen artean eusten ari zen jarraitzaile gutxi batzuekin, basa-eztiz elikatuz, eta gobernariek ez zuela merezi pentsatu zuten. Data 722 izaten da normalean, nahiz eta 718 ere defendatzen den. Ziurra dena da kristau jaurerri txiki batek iraun zuela Asturiasen eta erresuma bihurtu zela."
   },
 
   "legendNote": {
     "en": "Where legend takes over. The chronicles say the stones and arrows shot at the cave turned back on the attackers by a miracle of the Virgin, and put the enemy dead at 124,000. That is devotion, not record; no army of that size could fit in the valley. Later centuries made Covadonga the beginning of the 'Reconquista', but that word and that idea belong to much later writers, not to Pelayo's time. The rockfalls in this battle are a game mechanic, not the miracle.",
-    "es": "Donde empieza la leyenda. Las crónicas dicen que las piedras y flechas lanzadas contra la cueva se volvieron contra los atacantes por un milagro de la Virgen, y cifran los muertos enemigos en 124.000. Eso es devoción, no crónica; un ejército así no cabría en el valle. Siglos después se hizo de Covadonga el comienzo de la «Reconquista», pero esa palabra y esa idea pertenecen a autores muy posteriores, no a la época de Pelayo. Los desprendimientos de esta batalla son una mecánica de juego, no el milagro."
+    "es": "Donde empieza la leyenda. Las crónicas dicen que las piedras y flechas lanzadas contra la cueva se volvieron contra los atacantes por un milagro de la Virgen, y cifran los muertos enemigos en 124.000. Eso es devoción, no crónica; un ejército así no cabría en el valle. Siglos después se hizo de Covadonga el comienzo de la «Reconquista», pero esa palabra y esa idea pertenecen a autores muy posteriores, no a la época de Pelayo. Los desprendimientos de esta batalla son una mecánica de juego, no el milagro.",
+    "eu": "Hemen hasten da kondaira. Kronikek diote haitzuloaren kontra botatako harriak eta geziak erasotzaileen aurka itzuli zirela Ama Birjinaren mirari baten ondorioz, eta etsaien hildakoak 124.000 izan zirela. Hori debozioa da, ez kronika; horrelako armada bat ez litzateke haranean sartuko. Mende batzuk geroago, Covadonga «Errekonkistaren» hasiera bihurtu zuten, baina hitz eta ideia hori askoz geroagoko egileenak dira, ez Pelaioren garaikoak. Gudu honetako harri-jausiak joko-mekanika bat dira, ez miraria."
   },
 
   "sources": [
-    { "en": "Chronicle of Alfonso III, Rotense and Ad Sebastianum versions (c. 883)", "es": "Crónica de Alfonso III, versiones Rotense y A Sebastián (h. 883)" },
-    { "en": "Chronicle of Albelda (c. 881)", "es": "Crónica Albeldense (h. 881)" },
-    { "en": "al-Maqqari, Nafh al-Tib (17th century, quoting earlier writers)", "es": "al-Maqqari, Nafh al-Tib (siglo XVII, citando a autores anteriores)" },
-    { "en": "Roger Collins, The Arab Conquest of Spain, 710–797", "es": "Roger Collins, La conquista árabe, 710-797" }
+    { "en": "Chronicle of Alfonso III, Rotense and Ad Sebastianum versions (c. 883)", "es": "Crónica de Alfonso III, versiones Rotense y A Sebastián (h. 883)", "eu": "Alfontso III.aren Kronika, Rotense eta Ad Sebastianum bertsioak (883 inguru)" },
+    { "en": "Chronicle of Albelda (c. 881)", "es": "Crónica Albeldense (h. 881)", "eu": "Albeldako Kronika (881 inguru)" },
+    { "en": "al-Maqqari, Nafh al-Tib (17th century, quoting earlier writers)", "es": "al-Maqqari, Nafh al-Tib (siglo XVII, citando a autores anteriores)", "eu": "al-Maqqari, Nafh al-Tib (XVII. mendea, lehenagoko egileak aipatuz)" },
+    { "en": "Roger Collins, The Arab Conquest of Spain, 710–797", "es": "Roger Collins, La conquista árabe, 710-797", "eu": "Roger Collins, La conquista árabe, 710-797" }
   ],
 
   "turnLimit": 14,
@@ -82,7 +90,7 @@
       "faction": "asturleonese",
       "budget": 520,
       "maxUnits": 8,
-      "leader": { "type": "ast_leader", "name": { "en": "Pelayo", "es": "Pelayo" } },
+      "leader": { "type": "ast_leader", "name": { "en": "Pelayo", "es": "Pelayo", "eu": "Pelaio" } },
       "ambush": true,
       "rocks": 3,
       "facing": -1,
@@ -110,7 +118,7 @@
         { "type": "cor_archers", "x": 7, "y": 2 },
         { "type": "cor_archers", "x": 7, "y": 3 },
         { "type": "cor_infantry", "x": 6, "y": 2 },
-        { "type": "cor_leader", "x": 6, "y": 3, "name": { "en": "Alqama", "es": "Alqama" } },
+        { "type": "cor_leader", "x": 6, "y": 3, "name": { "en": "Alqama", "es": "Alqama", "eu": "Alqama" } },
         { "type": "cor_infantry", "x": 5, "y": 3 },
         { "type": "cor_infantry", "x": 4, "y": 2 },
         { "type": "cor_heavy", "x": 4, "y": 3 }

@@ -144,7 +144,7 @@ export function cutsceneScreen(app, S, { onBack, onNext, rerender }) {
       // The map and the marching column share a box, so on a phone the
       // caption can drop below both without the column covering it.
       h('div', { class: 'cut-map' }, map.canvas, h('div', { class: 'cut-fg' }, fg.canvas)),
-      h('div', { class: 'hero-over' }, h('div', { class: 'row spread' }, h('button', { class: 'ghost dark', onclick: onBack }, t('ui.back')), langToggle(rerender))),
+      h('div', { class: 'hero-over' }, h('div', { class: 'row spread' }, h('button', { class: 'ghost dark', 'data-back': true, onclick: onBack }, t('ui.back')), langToggle(rerender))),
       h('div', { class: 'caption' },
         h('div', { class: 'caption-date' }, `${L(sc.date)} · ${L(sc.place)}`),
         caption,
@@ -191,7 +191,7 @@ export function armiesScreen(app, S, { onBack, onNext, rerender }) {
       h('div', { class: 'dark-panel objective-box' }, h('h3', {}, t('brief.objective')), h('p', {}, L(sc.objective.text)), h('p', { class: 'muted small' }, t('brief.turns', { n: sc.turnLimit }))),
       sc.legendNote ? h('details', { class: 'dark-panel legend' }, h('summary', {}, t('brief.legend')), h('p', {}, L(sc.legendNote))) : null,
       h('div', { class: 'row spread' },
-        h('button', { class: 'ghost dark', onclick: onBack }, t('ui.back')),
+        h('button', { class: 'ghost dark', 'data-back': true, onclick: onBack }, t('ui.back')),
         h('button', { class: 'go-btn', onclick: onNext }, `${t('ui.continue')} ›`)))));
   return { destroy: top.stop };
 }
@@ -254,12 +254,17 @@ export function musterScreen(app, S, { onBack, onNext, rerender }) {
   }
 
   function paint() {
+    // Keep the stick's place when the rows are redrawn.
+    const keep = rows.contains(document.activeElement) ? focus : null;
     const spent = rosterCost(d, S.counts);
     const leader = d.units[side.leader.type];
     rows.replaceChildren(
       h('tr', { class: `fixed ${focus === side.leader.type ? 'focus' : ''}`, onmouseenter: () => { focus = side.leader.type; paintDetail(); } },
         h('td', {}, L(side.leader.name)), h('td', {}, 'n/a'), h('td', { class: 'count' }, '1'), h('td', {}, 'n/a')),
-      ...types.map((k) => h('tr', { class: focus === k.id ? 'focus' : '', onmouseenter: () => { focus = k.id; paintDetail(); }, onclick: () => { focus = k.id; paint(); } },
+      ...types.map((k) => h('tr', { class: focus === k.id ? 'focus' : '', tabindex: '0', 'data-pad': '', 'data-id': k.id,
+        onfocus: () => { if (focus !== k.id) { focus = k.id; paintDetail(); } },
+        onpad: (e) => bump(k.id, e.detail === 'left' ? -1 : 1),
+        onmouseenter: () => { focus = k.id; paintDetail(); }, onclick: () => { focus = k.id; paint(); } },
         h('td', {}, L(k.name),
           h('div', { class: 'muted small cost-inline' }, `${k.cost} ${t('muster.pts')}`),
           k.faction !== side.faction ? h('div', { class: 'muted small' }, t('muster.ally', { f: L(d.factions[k.faction].name) })) : null),
@@ -279,6 +284,7 @@ export function musterScreen(app, S, { onBack, onNext, rerender }) {
     errEl.textContent = err ? t(`muster.err.${err}`) : '';
     refreshTroops();
     paintDetail();
+    if (keep) { const el = rows.querySelector(`[data-id="${keep}"]`); if (el) { el.classList.add('pad-focus'); el.focus(); } }
   }
 
   app.replaceChildren(h('div', { class: 'screen frame' },
@@ -294,7 +300,7 @@ export function musterScreen(app, S, { onBack, onNext, rerender }) {
             h('tfoot', {}, totalEl)),
           errEl)),
       h('div', { class: 'row spread' },
-        h('button', { class: 'ghost dark', onclick: onBack }, t('ui.back')),
+        h('button', { class: 'ghost dark', 'data-back': true, onclick: onBack }, t('ui.back')),
         h('div', { class: 'row' },
           h('button', { class: 'ghost dark', onclick: () => { S.counts = { ...side.suggested }; S.placements = null; paint(); } }, t('muster.suggested')),
           next)))));
@@ -412,7 +418,7 @@ export function helpDialog() {
     sections.map((s) => h('section', {}, h('h4', {}, t(`help.${s}.h`)), h('p', {}, t(`help.${s}.p`)))),
     h('h4', {}, t('help.keys.h')),
     h('p', { class: 'small' }, t('help.keys.p')),
-    h('div', { class: 'row end' }, h('button', { class: 'go-btn', onclick: () => dlg.close() }, t('ui.close'))));
+    h('div', { class: 'row end' }, h('button', { class: 'go-btn', 'data-back': true, onclick: () => dlg.close() }, t('ui.close'))));
   dlg.addEventListener('close', () => dlg.remove());
   document.body.append(dlg);
   dlg.showModal();
@@ -459,7 +465,7 @@ export function customScreen(app, S, { onBack, onNext, rerender }) {
           h('input', { type: 'checkbox', checked: c.hidden, onchange: (e) => { c.hidden = e.target.checked; } }),
           ' ', t('custom.hidden'))),
       h('div', { class: 'row spread' },
-        h('button', { class: 'ghost dark', onclick: onBack }, t('ui.back')),
+        h('button', { class: 'ghost dark', 'data-back': true, onclick: onBack }, t('ui.back')),
         h('button', { class: 'go-btn', onclick: go }, `${t('ui.continue')} ›`)));
   }
   let chest;
@@ -503,6 +509,6 @@ export function homageScreen(app, S, { onBack, rerender }) {
         h('ul', {}, points.map((k) => h('li', {}, h('b', {}, t(`homage.${k}.h`)), ' ', t(`homage.${k}.p`)))),
         h('p', {}, t('homage.own')),
         h('p', { class: 'muted' }, t('homage.thanks'))),
-      h('div', { class: 'row' }, h('button', { class: 'ghost dark', onclick: onBack }, t('ui.back'))))));
+      h('div', { class: 'row' }, h('button', { class: 'ghost dark', 'data-back': true, onclick: onBack }, t('ui.back'))))));
   return { destroy: top.stop };
 }

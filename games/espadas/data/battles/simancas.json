@@ -1,9 +1,9 @@
 {
   "id": "simancas",
   "year": 939,
-  "title": { "en": "Simancas", "es": "Simancas" },
-  "date": { "en": "Summer 939", "es": "Verano de 939" },
-  "place": { "en": "Simancas, on the Pisuerga near the Duero", "es": "Simancas, junto al Pisuerga cerca del Duero" },
+  "title": { "en": "Simancas", "es": "Simancas", "eu": "Simancas" },
+  "date": { "en": "Summer 939", "es": "Verano de 939", "eu": "939ko uda" },
+  "place": { "en": "Simancas, on the Pisuerga near the Duero", "es": "Simancas, junto al Pisuerga cerca del Duero", "eu": "Simancas, Pisuerga ibaiaren ondoan, Duerotik gertu" },
 
   "briefing": {
     "en": [
@@ -15,6 +15,11 @@
       "Verano de 939. Abd al-Rahman III, que tomó el título de califa hace diez años, lleva un gran ejército al norte contra Ramiro II de León. Su corte la llama la campaña del poder supremo.",
       "Ramiro ha reunido a sus leoneses, a los castellanos del conde Fernán González y tropas de Pamplona enviadas por la reina Toda. El 19 de julio el sol se oscureció a mediodía. Los dos ejércitos lo tomaron por un presagio.",
       "Tú eres Ramiro II. Recibe al ejército del califa donde tiene que cruzar el río para llegar a ti, defiende los puentes y rómpelo antes de que anochezca."
+    ],
+    "eu": [
+      "939ko uda. Abd al-Rahman III.ak, duela hamar urte kalifa titulua hartu zuenak, armada handi bat darama iparraldera, Leongo Ramiro II.aren aurka. Haren gorteak botere gorenaren kanpaina deitzen dio.",
+      "Ramirok bere leondarrak bildu ditu, Fernán González kondearen gaztelarrak eta Toda erreginak bidalitako Iruñeko tropak. Uztailaren 19an eguzkia ilundu egin zen eguerdian. Bi armadek seinale bat zela pentsatu zuten.",
+      "Zu Ramiro II.a zara. Hartu kalifaren armada zuregana iristeko ibaia zeharkatu behar duen tokian, defendatu zubiak eta hautsi gaua iritsi aurretik."
     ]
   },
 
@@ -33,25 +38,28 @@
     "type": "field",
     "text": {
       "en": "Break the caliph's army, or hold the field in better shape than his at nightfall. The eclipse has shaken both armies: a leader's rally will steady the companies around him.",
-      "es": "Rompe el ejército del califa, o termina la jornada en mejor estado que él. El eclipse ha sacudido a los dos ejércitos: una arenga del caudillo calmará a las compañías que tenga cerca."
+      "es": "Rompe el ejército del califa, o termina la jornada en mejor estado que él. El eclipse ha sacudido a los dos ejércitos: una arenga del caudillo calmará a las compañías que tenga cerca.",
+      "eu": "Hautsi kalifaren armada, edo amaitu jardunaldia hura baino egoera hobean. Eklipseak bi armadak astindu ditu: buruzagiaren hitzaldi batek inguruko konpainiak lasaituko ditu."
     }
   },
 
   "historicalNote": {
     "en": "In the summer of 939 the caliph Abd al-Rahman III led a great expedition north against Ramiro II of León; his chroniclers called it the campaign of omnipotence. Ramiro met him near Simancas, on the Pisuerga close to where it joins the Duero, with the Leonese, the Castilians of Count Fernán González, and troops from Pamplona sent by Queen Toda. Christian and Arabic writers both record the solar eclipse of 19 July 939, a few weeks before the battle. The fighting in early August went against the caliph, and as his army withdrew it was caught again in a ravine at Alhandega. Abd al-Rahman is said to have lost his own copy of the Qur'an and his coat of mail, and he never again led a campaign in person.",
-    "es": "En el verano de 939 el califa Abd al-Rahman III dirigió una gran expedición al norte contra Ramiro II de León; sus cronistas la llamaron la campaña del poder supremo. Ramiro le salió al paso cerca de Simancas, junto al Pisuerga no lejos de su confluencia con el Duero, con los leoneses, los castellanos del conde Fernán González y tropas de Pamplona enviadas por la reina Toda. Autores cristianos y árabes registran el eclipse de sol del 19 de julio de 939, unas semanas antes de la batalla. Los combates de principios de agosto le fueron adversos al califa, y en la retirada su ejército volvió a ser sorprendido en un barranco, en Alhandega. Se cuenta que Abd al-Rahman perdió su propio Corán y su cota de malla, y nunca volvió a dirigir una campaña en persona."
+    "es": "En el verano de 939 el califa Abd al-Rahman III dirigió una gran expedición al norte contra Ramiro II de León; sus cronistas la llamaron la campaña del poder supremo. Ramiro le salió al paso cerca de Simancas, junto al Pisuerga no lejos de su confluencia con el Duero, con los leoneses, los castellanos del conde Fernán González y tropas de Pamplona enviadas por la reina Toda. Autores cristianos y árabes registran el eclipse de sol del 19 de julio de 939, unas semanas antes de la batalla. Los combates de principios de agosto le fueron adversos al califa, y en la retirada su ejército volvió a ser sorprendido en un barranco, en Alhandega. Se cuenta que Abd al-Rahman perdió su propio Corán y su cota de malla, y nunca volvió a dirigir una campaña en persona.",
+    "eu": "939ko udan, Abd al-Rahman III.a kalifak espedizio handi bat zuzendu zuen iparraldera, Leongo Ramiro II.aren aurka; haren kronikagileek botere gorenaren kanpaina deitu zioten. Ramirok Simancasen ondoan egin zion aurre, Pisuerga ibaiaren ertzean, Dueroarekin bat egiten duen tokitik ez urrun, leondarrekin, Fernán González kondearen gaztelarrekin eta Toda erreginak bidalitako Iruñeko tropekin. Egile kristauek eta arabiarrek 939ko uztailaren 19ko eguzki-eklipsea jaso zuten, gudua baino aste batzuk lehenago. Abuztu hasierako borrokak kalifaren aurka atera ziren, eta erretiratzean haren armada berriro harrapatu zuten sakan batean, Alhandegan. Abd al-Rahmanek bere Korana eta burdin sareko jaka galdu omen zituen, eta ez zuen inoiz gehiago kanpainarik zuzendu bertan."
   },
 
   "legendNote": {
     "en": "Where legend takes over. Castilian tradition later credited the victory to Saint Millán and Saint James appearing in the sky, and a document called the Votos de San Millán, supposedly granted by Fernán González in thanks, claimed dues from Castilian towns on that basis. It is a twelfth-century forgery. The chronicles' figures of a hundred thousand men and more should not be trusted either.",
-    "es": "Donde empieza la leyenda. La tradición castellana atribuyó después la victoria a san Millán y Santiago, aparecidos en el cielo, y un documento llamado los Votos de San Millán, supuestamente otorgado por Fernán González en agradecimiento, reclamaba por ello tributos a las villas castellanas. Es una falsificación del siglo XII. Tampoco hay que fiarse de las cifras de las crónicas, de cien mil hombres y más."
+    "es": "Donde empieza la leyenda. La tradición castellana atribuyó después la victoria a san Millán y Santiago, aparecidos en el cielo, y un documento llamado los Votos de San Millán, supuestamente otorgado por Fernán González en agradecimiento, reclamaba por ello tributos a las villas castellanas. Es una falsificación del siglo XII. Tampoco hay que fiarse de las cifras de las crónicas, de cien mil hombres y más.",
+    "eu": "Hemen hasten da kondaira. Gaztelako tradizioak, geroago, garaipena zeruan agertutako San Millani eta Santiagori egotzi zien, eta San Millanen Botoak izeneko dokumentu batek (Fernán Gonzálezek eskerrak emateko emana omen) zergak eskatzen zizkien horregatik Gaztelako hiribilduei. XII. mendeko faltsifikazioa da. Kroniken zifretaz ere, ehun mila gizon eta gehiago, ez da fidatu behar."
   },
 
   "sources": [
-    { "en": "Ibn Hayyan, al-Muqtabis V", "es": "Ibn Hayyan, al-Muqtabis V" },
-    { "en": "Chronicle of Sampiro", "es": "Crónica de Sampiro" },
-    { "en": "Annales Castellani Antiquiores", "es": "Anales castellanos primeros" },
-    { "en": "Hugh Kennedy, Muslim Spain and Portugal: A Political History of al-Andalus", "es": "Hugh Kennedy, Los musulmanes en la Península Ibérica: historia política de al-Andalus" }
+    { "en": "Ibn Hayyan, al-Muqtabis V", "es": "Ibn Hayyan, al-Muqtabis V", "eu": "Ibn Hayyan, al-Muqtabis V" },
+    { "en": "Chronicle of Sampiro", "es": "Crónica de Sampiro", "eu": "Sampiroren Kronika" },
+    { "en": "Annales Castellani Antiquiores", "es": "Anales castellanos primeros", "eu": "Gaztelako lehen urtekariak" },
+    { "en": "Hugh Kennedy, Muslim Spain and Portugal: A Political History of al-Andalus", "es": "Hugh Kennedy, Los musulmanes en la Península Ibérica: historia política de al-Andalus", "eu": "Hugh Kennedy, Los musulmanes en la Península Ibérica: historia política de al-Andalus" }
   ],
 
   "turnLimit": 12,
@@ -74,7 +82,7 @@
       "allies": ["vascones"],
       "budget": 960,
       "maxUnits": 11,
-      "leader": { "type": "ast_leader", "name": { "en": "Ramiro II", "es": "Ramiro II" } },
+      "leader": { "type": "ast_leader", "name": { "en": "Ramiro II", "es": "Ramiro II", "eu": "Ramiro II.a" } },
       "ambush": false,
       "rocks": 0,
       "facing": 1,
@@ -101,7 +109,7 @@
         { "type": "cor_heavy", "x": 18, "y": 2 },
         { "type": "cor_infantry", "x": 18, "y": 4 },
         { "type": "cor_guard", "x": 19, "y": 2 },
-        { "type": "cor_leader", "x": 20, "y": 3, "name": { "en": "Abd al-Rahman III", "es": "Abd al-Rahman III" } }
+        { "type": "cor_leader", "x": 20, "y": 3, "name": { "en": "Abd al-Rahman III", "es": "Abd al-Rahman III", "eu": "Abd al-Rahman III.a" } }
       ]
     }
   }

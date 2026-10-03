@@ -3,7 +3,8 @@
 // own, the game ignores all of this.
 //
 // Esc already means "cancel" inside the game, so leaving takes a deliberate
-// act: hold Esc (or 1, the cabinet's START) for two seconds, or click the
+// act: hold Esc (or 1, the cabinet's START) for two seconds (then A to
+// leave, B to stay), or click the
 // "back to the menu" button in the corner. A game left alone for a few
 // minutes also goes back to the menu, ready for the next player.
 
@@ -16,15 +17,16 @@ const IDLE = 4 * 60 * 1000; // turn-based: give people time to think
 
 const TEXT = {
   es: { back: '← Menú de juegos', ask: '¿Salir al menú de juegos?', yes: 'Salir', no: 'Seguir jugando' },
+  eu: { back: '← Joko-menua', ask: 'Joko-menura irten?', yes: 'Irten', no: 'Jolasten jarraitu' },
   en: { back: '← Game menu', ask: 'Exit to the game menu?', yes: 'Exit', no: 'Keep playing' },
 };
 const tr = () => TEXT[getLang()] ?? TEXT.es;
 
 export function installArcadeLink() {
   if (!menuUrl) return;
-  // The menu's language, as far as this game can follow it (no Basque yet).
+  // The menu's language.
   const lang = params.get('lang');
-  setLang(lang === 'en' ? 'en' : 'es');
+  setLang(['es', 'eu', 'en'].includes(lang) ? lang : 'es');
 
   const back = () => { location.href = menuUrl; };
 
@@ -55,8 +57,9 @@ export function installArcadeLink() {
   let holdTimer = null;
   addEventListener('keydown', (e) => {
     if (dialog) {
-      if (e.key === 'Enter') back();
-      else if (e.key === 'Escape') close();
+      // A or START: leave; B or Esc: keep playing (the cabinet's buttons).
+      if (e.key === 'Enter' || ['ControlLeft', 'KeyZ', 'KeyE', 'Digit1'].includes(e.code)) back();
+      else if (e.key === 'Escape' || ['AltLeft', 'KeyX', 'KeyR'].includes(e.code)) close();
       e.stopPropagation();
       return;
     }

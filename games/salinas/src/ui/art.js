@@ -78,11 +78,15 @@ function tree(g, x, y, s, rng) {
 function channel(g, s, t) {
   const top = Y(1.3), sp = s.L.spring;
   const flowing = s.beds.some((b) => b.sluice);
-  const plank = (x0, y0, x1, y1, w) => {
+  // A better channel is wider and runs faster; the best has iron bands.
+  const lv = s.levels.canal, widen = lv * 2, speed = 40 * (1 + lv * 0.7);
+  const plank = (x0, y0, x1, y1, w0) => {
+    const w = w0 + widen;
     g.strokeStyle = '#7a5530'; g.lineWidth = w + 4; g.lineCap = 'round'; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
     g.strokeStyle = '#9a7040'; g.lineWidth = w; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
     g.strokeStyle = flowing ? '#6aa6b4' : '#8aa0a0'; g.lineWidth = w - 4; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
-    if (flowing) { g.strokeStyle = 'rgba(255,255,255,0.5)'; g.lineWidth = 1.5; g.setLineDash([5, 9]); g.lineDashOffset = -t * 40; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); g.setLineDash([]); }
+    if (lv >= 2) { g.strokeStyle = '#3a3a40'; g.lineWidth = w + 5; g.setLineDash([2, 26]); g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); g.setLineDash([]); }
+    if (flowing) { g.strokeStyle = 'rgba(255,255,255,0.5)'; g.lineWidth = 1.5; g.setLineDash([5, 9]); g.lineDashOffset = -t * speed; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); g.setLineDash([]); }
   };
   plank(X(sp.x) + 20, Y(sp.y), X(15), top, 10);
   // Down the side to the lower terraces.
@@ -166,6 +170,20 @@ function bed(g, s, b, t) {
     hg.addColorStop(0, '#ffffff'); hg.addColorStop(1, mix(hc, '#8a8678', 0.25));
     g.fillStyle = hg; g.beginPath(); g.moveTo(hx - r, hy); g.quadraticCurveTo(hx, hy - r * 1.1, hx + r, hy); g.closePath(); g.fill();
   }
+  // Toldos: rolled canvas on poles at the top edge; in the rain they're
+  // pulled over the bed (more of it with each level).
+  if (s.levels.toldo > 0) {
+    const cover = s.weather.rain ? Math.min(0.9, s.levels.toldo * s.R.storm.coverPerLevel) : 0;
+    g.fillStyle = '#6a4a2a'; g.fillRect(x - 6, y - 10, 3, 14); g.fillRect(x + w + 3, y - 10, 3, 14);
+    if (cover > 0) {
+      g.fillStyle = 'rgba(232,224,204,0.88)'; g.fillRect(x - 2, y - 2, w + 4, (h + 4) * cover);
+      g.strokeStyle = 'rgba(180,90,60,0.7)'; g.lineWidth = 3;
+      for (let k = 0; k < 4; k++) { g.beginPath(); g.moveTo(x + (k + 0.5) * w / 4, y - 2); g.lineTo(x + (k + 0.5) * w / 4, y - 2 + (h + 4) * cover); g.stroke(); }
+    } else {
+      g.fillStyle = '#e8e0cc'; g.beginPath(); g.roundRect(x - 2, y - 9, w + 4, 6, 3); g.fill();
+      g.strokeStyle = 'rgba(180,90,60,0.7)'; g.lineWidth = 1.5; for (let k = 0; k < 6; k++) { g.beginPath(); g.moveTo(x + k * w / 5, y - 9); g.lineTo(x + k * w / 5, y - 3); g.stroke(); }
+    }
+  }
   // The sluice: a little wooden board at the top, lifted when open.
   const sx = X(b.x + b.w / 2), sy = y - 2;
   g.fillStyle = '#5a3c20'; g.fillRect(sx - 9, sy - 9, 3, 12); g.fillRect(sx + 6, sy - 9, 3, 12);
@@ -240,7 +258,9 @@ function worker(g, s, w, t) {
   if (raking) {
     // The wooden rasero: a long handle and a wide flat head.
     g.strokeStyle = '#8a6036'; g.lineWidth = 2.5; g.beginPath(); g.moveTo(sw, -18); g.lineTo(sw + 4, 10); g.stroke();
-    g.fillStyle = '#9a7040'; g.fillRect(sw - 9, 9, 26, 4);
+    const rl = s.levels.rasero, rw = 26 + rl * 6;
+    g.fillStyle = '#9a7040'; g.fillRect(sw - 9 - rl * 3, 9, rw, 4);
+    if (rl >= 2) { g.fillStyle = '#b8c0c8'; g.fillRect(sw - 9 - rl * 3, 12, rw, 2); }
   }
   // Head and hair; a txapela or a scarf.
   g.fillStyle = L.skin; g.beginPath(); g.arc(0, -43, 8, 0, Math.PI * 2); g.fill();
@@ -250,10 +270,13 @@ function worker(g, s, w, t) {
   g.fillStyle = '#2a1a10'; g.beginPath(); g.arc(-3, -43, 1.2, 0, Math.PI * 2); g.arc(3, -43, 1.2, 0, Math.PI * 2); g.fill();
   // A wicker basket on the hip, heaped with salt as it fills.
   const load = Math.min(1, w.carry / s.basket());
+  // A bigger basket each level.
+  g.save(); const bk = 1 + s.levels.cesto * 0.18; g.translate(16, -19); g.scale(bk, bk); g.translate(-16, 19);
   g.fillStyle = '#a07a46'; g.beginPath(); g.moveTo(9, -26); g.lineTo(23, -26); g.lineTo(21, -12); g.lineTo(11, -12); g.closePath(); g.fill();
   g.strokeStyle = 'rgba(80,50,20,0.6)'; g.lineWidth = 1; for (let k = 0; k < 3; k++) { g.beginPath(); g.moveTo(10 + k * 0.4, -23 + k * 4); g.lineTo(22 - k * 0.4, -23 + k * 4); g.stroke(); }
   g.strokeStyle = '#7a5530'; g.lineWidth = 1.5; g.beginPath(); g.arc(16, -26, 6, Math.PI, 0); g.stroke();
   if (load > 0) { g.fillStyle = '#fbfaf4'; g.beginPath(); g.moveTo(9, -26); g.quadraticCurveTo(16, -26 - 10 * load, 23, -26); g.fill(); }
+  g.restore();
   g.restore();
 }
 

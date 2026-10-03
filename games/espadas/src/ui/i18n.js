@@ -1,12 +1,12 @@
 // UI strings live in data/strings.json. Scenario prose carries its own
-// { en, es } objects, read with L().
+// { en, es, eu } objects, read with L(). Missing text falls back to Spanish,
+// then English. The Basque is machine-drafted: have it checked.
 
-export const LANGS = ['en', 'es'];
-// The browser's language if it's English or Spanish; Spanish otherwise
-// (including Basque, which this game doesn't have yet).
+export const LANGS = ['es', 'eu', 'en'];
+// The browser's language if it's one of ours; Spanish otherwise.
 const browser = (navigator.languages?.length ? navigator.languages : [navigator.language ?? '']).map((l) => String(l).toLowerCase().split('-')[0]);
 let lang = browser.find((l) => LANGS.includes(l)) ?? 'es';
-let strings = { en: {}, es: {} };
+let strings = { es: {}, eu: {}, en: {} };
 
 export function initI18n(table) {
   strings = table;
@@ -27,7 +27,7 @@ export function setLang(l) {
 }
 
 function raw(key) {
-  const s = strings[lang]?.[key] ?? strings.en?.[key];
+  const s = strings[lang]?.[key] ?? strings.es?.[key] ?? strings.en?.[key];
   if (s == null) console.warn(`missing string: ${key}`);
   return s ?? key;
 }
@@ -54,5 +54,5 @@ export function tn(key, vars = {}) {
 export function L(v) {
   if (v == null) return '';
   if (typeof v === 'string') return v;
-  return v[lang] ?? v.en ?? '';
+  return v[lang] ?? v.es ?? v.en ?? '';
 }

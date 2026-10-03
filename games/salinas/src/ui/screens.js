@@ -164,7 +164,7 @@ export function day(app) {
   const taught = new Set(), lessons = [];
   let cardUntil = 0, toastUntil = 0, endT = 0;
   const el = {
-    top: h('div', { class: 'topbar' }), toast: h('div', { class: 'toast hidden' }), card: h('div', { class: 'gloss parchment hidden' }),
+    top: h('div', { class: 'topbar' }), toast: h('div', { class: 'toast hidden' }), card: h('div', { class: 'gloss parchment empty' }, h('p', { class: 'kicker' }, t('gl.title'))),
     help: h('p', { class: 'play-help' }, rich(t('help.play'))), floats: h('div', { class: 'floats' }), streak: h('div', { class: 'streak' }),
   };
   app.ui.replaceChildren(h('div', { class: 'overlay play' }, el.top, el.streak, el.floats, el.toast, el.card, el.help));
@@ -186,8 +186,8 @@ export function day(app) {
   const nextLesson = () => {
     if (cardUntil || !lessons.length) return;
     const id = lessons.shift();
-    el.card.replaceChildren(h('p', { class: 'kicker' }, t('gl.title')), h('b', {}, t(`gl.${id}.name`)), h('p', {}, t(`gl.${id}.text`)));
-    el.card.className = 'gloss parchment'; cardUntil = app.time + 6;
+    el.card.replaceChildren(h('p', { class: 'kicker' }, t('gl.title')), h('b', {}, t(`gl.${id}.name`)), h('p', { class: 'gl-text' }, t(`gl.${id}.text`)));
+    el.card.className = 'gloss parchment fresh'; cardUntil = app.time + 9;
   };
   // A word floating up from where something happened.
   const float = (x, y, text, cls = '') => {
@@ -198,6 +198,22 @@ export function day(app) {
   const coinBurst = (x, y, n) => { for (let k = 0; k < n; k++) fx.push({ kind: 'dot', x, y, vx: (Math.random() - 0.5) * 220, vy: -120 - Math.random() * 160, life: 0.9, max: 0.9, size: 4, colour: '#f2c75a' }); };
   const sparkle = (x, y, n = 10) => { for (let k = 0; k < n; k++) fx.push({ kind: 'star', x, y, vx: (Math.random() - 0.5) * 80, vy: -40 - Math.random() * 60, life: 0.8, max: 0.8, size: 3 + Math.random() * 3, colour: '#ffffff' }); };
   teach('manantial'); teach('era');
+  // The morning after shopping: each new thing announces itself where it is.
+  if (S.bought?.size) {
+    const where = (u) => {
+      const w = s.workers[0];
+      if (u === 'cesto' || u === 'rasero') return [X(w.x), Y(w.y) - 70];
+      if (u === 'burro') return [X(s.donkey.x), Y(s.donkey.y) - 50];
+      if (u === 'canal') return [X(15.2), Y(1.3) - 20];
+      if (u === 'era') { const b = s.beds[s.levels.era - 1]; return [X(b.x + b.w / 2), Y(b.y) - 20]; }
+      const b = s.beds.find((x) => x.open); return [X(b.x + b.w / 2), Y(b.y) - 24];
+    };
+    [...S.bought].forEach((u, k) => setTimeout(() => {
+      const [x, y] = where(u);
+      float(x, y, t('new.' + u), 'gold'); sparkle(x, y + 20, 26); sfx.flor();
+    }, 400 + k * 700));
+    S.bought.clear();
+  }
 
   const handle = () => {
     for (const e of s.events) {
@@ -242,7 +258,7 @@ export function day(app) {
   return {
     update(dt) {
       if (toastUntil && app.time > toastUntil) { el.toast.className = 'toast hidden'; toastUntil = 0; }
-      if (cardUntil && app.time > cardUntil) { el.card.className = 'gloss parchment hidden'; cardUntil = 0; }
+      if (cardUntil && app.time > cardUntil) { el.card.className = 'gloss parchment'; cardUntil = 0; }
       nextLesson();
       for (const p of fx) { p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 120 * dt; }
       for (let k = fx.length - 1; k >= 0; k--) if (fx[k].life <= 0) fx.splice(k, 1);
@@ -264,19 +280,32 @@ export function day(app) {
 // ---- evening: the salt is sold, and upgrades for tomorrow ------------------------------------------------
 
 export function evening(app) {
-  const s = app.session.season, sold = s.stats.sold.at(-1);
-  let sel = 0, t0 = 0;
-  const show = () => app.ui.replaceChildren(h('div', { class: 'overlay evening' }, h('div', { class: 'parchment shop-card' },
+  const s = app.session.season, sold = s.stats.sold.at(-1), R = s.R;
+  let sel = 0, t0 = 0, popped = null, gone = false; // gone: the day has started, so never redraw the shop
+  // What each upgrade does at a level, so a card can say "now → next".
+  const value = (u, lv) => ({
+    era: lv,
+    rasero: `×${(1 + lv * R.rake.perLevel).toFixed(1).replace('.0', '')}`,
+    cesto: t('kg', { n: R.basket.base + lv * R.basket.perLevel }),
+    canal: `×${(1 + lv * R.flow.perLevel).toFixed(1).replace('.0', '')}`,
+    burro: lv ? t('kg', { n: R.donkey.carry * lv }) : '—',
+    toldo: `${Math.round(Math.min(0.9, lv * R.storm.coverPerLevel) * 100)}%`,
+  })[u];
+  const levelOf = (u) => (u === 'era' ? s.levels.era : s.levels[u]);
+  const show = () => !gone && app.ui.replaceChildren(h('div', { class: 'overlay evening' }, h('div', { class: 'parchment shop-card' },
     h('p', { class: 'kicker' }, t('hud.day', { n: s.day, total: s.days })),
     h('h2', {}, t('evening.title')),
     h('p', { class: 'sold' }, t('evening.sold', { kg: fmt(sold.kg), coins: fmt(sold.coins) })),
     h('p', { class: 'purse' }, h('span', { class: 'coin' }), h('b', {}, fmt(s.coins)), ` ${t('hud.coins')}`),
     h('h3', {}, t('evening.shop')),
     h('div', { class: 'shop' }, UPGRADES.map((u, i) => {
-      const c = s.cost(u), level = u === 'era' ? s.levels.era : s.levels[u];
-      return h('div', { class: `item ${i === sel ? 'sel' : ''} ${c == null ? 'max' : c > s.coins ? 'dear' : ''}` },
+      const c = s.cost(u), level = levelOf(u);
+      const top = u === 'era' ? s.beds.length : (R.costs[u].length ?? 0);
+      return h('div', { class: `item ${i === sel ? 'sel' : ''} ${c == null ? 'max' : c > s.coins ? 'dear' : ''} ${popped === u ? 'pop' : ''}` },
         h('div', { class: `icon up-${u}` }), h('b', {}, t(`up.${u}.name`)), h('p', {}, t(`up.${u}.text`)),
-        h('span', { class: 'lvl' }, u === 'era' ? `${level}/${s.beds.length}` : '●'.repeat(level) + '○'.repeat(Math.max(0, (s.R.costs[u].length ?? 0) - level))),
+        // Now → next, in plain numbers.
+        h('p', { class: 'gain' }, c == null ? h('span', {}, value(u, level)) : [h('span', { class: 'now' }, value(u, level)), ' → ', h('b', {}, value(u, level + 1))]),
+        h('span', { class: 'lvl' }, u === 'era' ? `${level}/${top}` : Array.from({ length: top }, (_, k) => h('i', { class: k < level ? `on ${popped === u && k === level - 1 ? 'new' : ''}` : '' }))),
         h('span', { class: 'price' }, c == null ? t('evening.max') : h('span', {}, h('span', { class: 'coin' }), fmt(c))));
     })),
     h('p', { class: 'hint' }, rich(t('evening.hint')), '    ', rich(t('evening.next', { n: s.day + 1 }))))));
@@ -290,8 +319,16 @@ export function evening(app) {
       if (inp.any('right')) { sel = (sel + 1) % UPGRADES.length; sfx.move(); show(); }
       if (inp.any('up')) { sel = (sel + 3) % UPGRADES.length; sfx.move(); show(); }
       if (inp.any('down')) { sel = (sel + 3) % UPGRADES.length; sfx.move(); show(); }
-      if (t0 > 0.5 && inp.any('a')) { if (s.buy(UPGRADES[sel])) { sfx.buy(); show(); } else sfx.miss(); }
-      if (t0 > 0.5 && inp.any('start')) { sfx.ok(); s.nextDay(); app.go('day'); }
+      if (t0 > 0.5 && inp.any('a')) {
+        const u = UPGRADES[sel];
+        if (s.buy(u)) {
+          sfx.buy(); sfx.flor();
+          popped = u; show();
+          (app.session.bought ??= new Set()).add(u);
+          setTimeout(() => { if (popped === u) { popped = null; show(); } }, 900);
+        } else sfx.miss();
+      }
+      if (t0 > 0.5 && inp.any('start')) { sfx.ok(); gone = true; s.nextDay(); app.go('day'); }
     },
     draw(g) { drawScene(g, s, app.time); g.fillStyle = 'rgba(40,20,40,0.45)'; g.fillRect(0, 0, W, H); finish(g); },
   };

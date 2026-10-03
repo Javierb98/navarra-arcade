@@ -204,7 +204,7 @@
       "preview": "assets/previews/salinas.webm",
       "poster": "assets/previews/salinas.jpg",
       "players": "1-2",
-      "minutes": "6-7",
+      "minutes": "8-9",
       "pace": "long",
       "bestFor": {
         "es": "Para quien tenga un rato: una temporada entera de sal, sola o en pareja",
@@ -332,9 +332,9 @@
         "en": "The Iberian peninsula"
       },
       "controls": {
-        "es": "Se juega con ratón",
-        "eu": "Saguarekin jolasten da",
-        "en": "Played with a mouse"
+        "es": "Joystick y botones (o ratón)",
+        "eu": "Joystick-a eta botoiak (edo sagua)",
+        "en": "Stick and buttons (or mouse)"
       },
       "preview": "assets/previews/espadas.webm"
     }

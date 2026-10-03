@@ -257,3 +257,44 @@ kbd {
 .streak b { font: bold 24px var(--serif); } .streak small { font-size: 12px; opacity: .85; }
 .float.gold { color: #ffd65a; font-size: 26px; text-shadow: 0 2px 0 #7a4a10, 0 0 14px rgba(255, 200, 80, .8); }
 .float.streakpop { color: #ffb070; font-size: 22px; }
+
+/* The salt worker's word: a slim ribbon under the top bar, over the sky and
+   the village, so it never hides the beds, the store or the paths. */
+.gloss { left: 50%; right: auto; top: 54px; bottom: auto; transform: translateX(-50%); width: auto; max-width: 720px; padding: 5px 14px; display: flex; align-items: baseline; gap: 8px; border-radius: 14px; animation: ribbonIn .4s ease-out; }
+.gloss .kicker { font: bold 10px var(--sans); letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; }
+.gloss b { font-size: 15px; white-space: nowrap; }
+.gloss .gl-text { font-size: 13px; line-height: 1.25; }
+@keyframes ribbonIn { from { opacity: 0; transform: translate(-50%, -8px); } }
+.toast { top: 96px; }
+
+/* The shop: now → next, filled pips, and a pop when something is bought. */
+.item .gain { font: 13px var(--sans); margin-top: 4px; color: var(--ink); }
+.item .gain .now { color: var(--ink-soft); }
+.item .gain b { color: var(--good); font-size: 15px; }
+.item .lvl { display: flex; gap: 3px; letter-spacing: 0; }
+.item .lvl i { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--parch-edge); }
+.item .lvl i.on { background: var(--gold); border-color: #a8741a; }
+.item .lvl i.new { animation: pipIn .6s ease-out; }
+@keyframes pipIn { 0% { transform: scale(2.4); box-shadow: 0 0 10px 4px rgba(255, 210, 80, .9); } 100% { transform: scale(1); } }
+.item.pop { animation: itemPop .7s ease-out; }
+@keyframes itemPop { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 210, 80, .9); } 30% { transform: scale(1.06); box-shadow: 0 0 22px 6px rgba(255, 210, 80, .7); } 100% { transform: scale(1); } }
+.item { padding-bottom: 28px; }
+.item .gain { display: flex; align-items: baseline; gap: 5px; white-space: nowrap; }
+.gloss { max-width: 780px; }
+
+/* The salt worker's word has its own board in the empty bottom-right plot:
+   always there, never over the beds, the paths or the store. A new word
+   arrives bright; older ones stay, dimmed, until the next. */
+.gloss, .two .gloss { left: auto; right: 12px; top: auto; bottom: 30px; transform: none; width: 236px; max-width: none; height: 104px;
+  display: block; padding: 7px 11px; border-radius: 9px; overflow: hidden; animation: none; opacity: .72; transition: opacity .4s; }
+.gloss.fresh { opacity: 1; animation: boardIn .45s ease-out; box-shadow: 0 0 0 2px var(--gold), 0 6px 18px rgba(0, 0, 0, .35); }
+.gloss.empty { opacity: .45; }
+.gloss .kicker { margin: 0; font: bold 9px var(--sans); letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-soft); }
+.gloss b { display: block; font-size: 16px; margin-top: 1px; }
+.gloss .gl-text { font-size: 12.5px; line-height: 1.28; margin-top: 2px; }
+@keyframes boardIn { from { transform: translateY(8px); opacity: .4; } }
+.toast { top: 58px; }
+.play-help { right: 260px; }
+.gloss, .two .gloss { width: 266px; height: 110px; bottom: 26px; }
+.gloss .gl-text { font-size: 12px; line-height: 1.25; }
+.play-help { right: 286px; }

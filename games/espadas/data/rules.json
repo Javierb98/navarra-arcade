@@ -72,6 +72,8 @@
   "leaderTauntFactor": 1.5,
   "tauntSelfMorale": 3,
   "tauntFarShare": 0.15,
+  "tauntFade": 0.8,
+  "tauntHigh": 1.4,
 
   "rangeFalloff": 0.6,
   "throwReachPerPower": 1.5,
@@ -85,7 +87,7 @@
   "rockDamage": 9,
   "rockShock": 8,
 
-  "minigames": { "chargeMin": 0.8, "chargeMax": 1.3, "meleeMin": 0.75, "meleeMax": 1.35, "tauntMin": 0.4, "tauntMax": 1.6 },
+  "minigames": { "chargeMin": 0.8, "chargeMax": 1.3, "meleeMin": 0.75, "meleeMax": 1.35 },
 
   "courage": { "flank": 8, "rear": 14, "outnumbered": 5, "heavyShare": 0.3, "heavyLosses": 12, "leaderSeen": 12, "leaderSeenRadius": 3, "woundedWaver": 30 },
 

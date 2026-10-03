@@ -7,7 +7,8 @@ import { Scene } from './scene.js';
 import { emblemSVG } from './emblems.js';
 import { MEN_PER_POINT } from './tableau.js';
 import { aimVolley } from './archery.js';
-import { chargeGame, fightGame, tauntGame } from './minigames.js';
+import { chargeGame, fightGame } from './minigames.js';
+import { navigate, mark } from './padnav.js';
 import { lighten } from './screens.js';
 import { playEvents, syncView, unitLabel, nameTag } from './playback.js';
 import { Grid, manhattan } from '../core/grid.js';
@@ -131,7 +132,7 @@ export function deployScreen(app, S, { onBack, onBegin }) {
     board.overlay.selected = selected >= 0 && placed[selected] ? `p${selected}` : null;
     listEl.replaceChildren(...roster.map((spec, i) => {
       const k = data.units[spec.type];
-      return h('li', { class: `${i === selected ? 'sel' : ''} ${placed[i] ? 'done' : ''}`, onclick: () => { selected = i; sync(); } },
+      return h('li', { class: `${i === selected ? 'sel' : ''} ${placed[i] ? 'done' : ''}`, tabindex: '0', onclick: () => { selected = i; sync(); } },
         h('span', { class: `glyph g-${k.role}` }),
         h('span', { class: 'rname' }, spec.name ? L(spec.name) : L(k.name)),
         h('span', { class: 'rstate' }, placed[i] ? '✓' : '—'));
@@ -183,7 +184,7 @@ export function deployScreen(app, S, { onBack, onBegin }) {
   app.replaceChildren(h('div', { class: 'screen battle-layout' },
     stage(board, scene, sb),
     h('aside', { class: 'panel' },
-      h('div', { class: 'row spread' }, h('h2', {}, t('deploy.title')), h('button', { class: 'ghost small', onclick: () => { board.destroy(); onBack(); } }, t('ui.back'))),
+      h('div', { class: 'row spread' }, h('h2', {}, t('deploy.title')), h('button', { class: 'ghost small', 'data-back': true, onclick: () => { board.destroy(); onBack(); } }, t('ui.back'))),
       h('p', {}, t('deploy.help')),
       h('p', { class: 'note' }, t('deploy.hiddenNote')),
       listEl,
@@ -194,9 +195,32 @@ export function deployScreen(app, S, { onBack, onBegin }) {
       beginBtn)));
   sync();
 
+  // Arcade: the stick moves the cursor on the field and A places the chosen
+  // company there; C goes to the panel (the roster, Auto, Clear, Begin) and
+  // back; START fills any gaps automatically and begins the battle.
+  let padZone = 'board';
+  const panelEl = () => app.querySelector('aside.panel');
+  const toBoard = () => { padZone = 'board'; panelEl()?.classList.remove('pad-zone'); document.activeElement?.blur?.(); if (!board.cursor) board.setCursor(zone0()); };
+  const zone0 = () => zone[Math.floor(zone.length / 2)] ?? { x: 0, y: 0 };
   return {
     destroy: () => board.destroy(),
     onKey(e) { if (e.key === 'Enter' && !beginBtn.disabled) begin(); },
+    onPad(b) {
+      if (b === 'start') { if (placed.some((p) => !p)) auto(); begin(); return true; }
+      if (padZone === 'panel') {
+        if (b === 'c' || b === 'b') { toBoard(); return true; }
+        const r = navigate(panelEl(), b);
+        if (b === 'a') toBoard();
+        return r;
+      }
+      if (b === 'c') { padZone = 'panel'; panelEl()?.classList.add('pad-zone'); navigate(panelEl(), 'down'); return true; }
+      if (!board.cursor) { board.setCursor(zone0()); if (b !== 'a') return true; }
+      const d = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[b];
+      if (d) { board.moveCursor(...d); return true; }
+      if (b === 'a') { board.pressCursor(); return true; }
+      if (b === 'b') { board.onRight(); return true; }
+      return false;
+    },
   };
 }
 
@@ -256,6 +280,7 @@ export function battleScreen(app, S, { onEnd, onHelp }) {
   // formation (the first is the lead, which goes where you click).
   let sel = [];
   let mode = null; // 'taunt' | 'rock' | 'raid' | 'wall' | 'vee'
+  let padZone = 'board'; // where the arcade stick is: the field or the orders panel
   let busy = false;
   let hover = null;
 
@@ -722,8 +747,8 @@ export function battleScreen(app, S, { onEnd, onHelp }) {
       },
       onChange: () => sb.update(board.units.values(), { turnText: t('battle.turn', { n: battle.turn, max: battle.turnLimit }) }),
     };
-    // The turn plays in chunks; each of our volleys, charges, fights and
-    // taunts pauses it for a minigame. Whatever goes wrong while it plays,
+    // The turn plays in chunks; each of our volleys, charges and fights
+    // pauses it for a minigame. Whatever goes wrong while it plays,
     // the turn is always finished in the engine and the board released, so
     // the game can never be left frozen; the error is reported on screen.
     const host = app.querySelector('.scene-wrap');
@@ -735,7 +760,7 @@ export function battleScreen(app, S, { onEnd, onHelp }) {
         await playEvents(r.value.events, ctx);
         if (r.done) break;
         const req = r.value.request;
-        const game = { aim: aimVolley, charge: chargeGame, melee: fightGame, taunt: tauntGame }[req.kind];
+        const game = { aim: aimVolley, charge: chargeGame, melee: fightGame }[req.kind];
         let answer = null;
         if (!S.autoAim && game) {
           try { answer = await game({ host, data, battle, request: req, speed: () => S.speed }); } catch (err) {
@@ -784,8 +809,40 @@ export function battleScreen(app, S, { onEnd, onHelp }) {
 
   return {
     destroy: () => board.destroy(),
+    // Arcade: the stick moves the cursor, A presses the square under it (pick
+    // a company, then where it goes or whom it attacks), B cancels, C goes to
+    // the orders panel (the stick picks an order, A gives it and returns to
+    // the field), START ends the turn.
+    onPad(b) {
+      if (busy) return b !== null;
+      const panel = app.querySelector('aside.panel');
+      if (b === 'start') { execute(); return true; }
+      if (padZone === 'panel') {
+        if (b === 'c' || b === 'b') { padZone = 'board'; panel?.classList.remove('pad-zone'); document.activeElement?.blur?.(); return true; }
+        const r = navigate(panel, b);
+        if (b === 'a') { padZone = 'board'; panel?.classList.remove('pad-zone'); }
+        return r;
+      }
+      if (b === 'c') {
+        // Into the panel, starting on the orders when a company is chosen.
+        padZone = 'panel'; panel?.classList.add('pad-zone');
+        const first = panel?.querySelector('.actions button:not([disabled])');
+        if (first) mark(first); else navigate(panel, 'down');
+        return true;
+      }
+      if (!board.cursor) {
+        const first = battle.units.find((x) => me(x) && battle.onBoard(x)) ?? { x: 0, y: 0 };
+        board.setCursor({ x: first.x, y: first.y });
+        if (b !== 'a') return true;
+      }
+      const d = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] }[b];
+      if (d) { board.moveCursor(...d); return true; }
+      if (b === 'a') { board.pressCursor(); return true; }
+      if (b === 'b') { board.onRight(); return true; }
+      return false;
+    },
     onKey(e) {
-      if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); execute(); }
+      if (e.key === 'Enter') { e.preventDefault(); execute(); }
       else if (e.key === 'Escape') { if (mode) mode = null; else sel = []; refresh(); }
       else if (e.key === 'Tab') { e.preventDefault(); nextUnit(); }
       else if (e.key === 'h') { for (const id of sel) battle.setOrder(id, { type: 'hold' }); refresh(); }

@@ -18,7 +18,7 @@ export const SIDES = ['player', 'enemy'];
 export const otherSide = (side) => (side === 'player' ? 'enemy' : 'player');
 
 export class Battle {
-  // data: { rules, factions, units, taunts }
+  // data: { rules, factions, units }
   // armies: { player: { faction, units: [{type, x, y, name?}] }, enemy: {...} }
   constructor({ data, scenario, armies, seed = 1 }) {
     this.data = data;
@@ -32,7 +32,6 @@ export class Battle {
     this.units = [];
     this.orders = new Map();
     this.result = null;
-    this.usedTaunts = new Set();
     this.ev = [];
     this.groupSeq = 0;
     this.pendingGroup = null;
@@ -52,6 +51,7 @@ export class Battle {
         ambush: !!sc.ambush,
         facing: sc.facing ?? (side === 'player' ? 1 : -1),
         convoy: { escaped: 0, captured: 0 },
+        cries: 0, // war cries so far: each one the enemy hears means less
       };
     }
     for (const side of SIDES) for (const spec of armies[side].units) this.addUnit(side, spec);
@@ -397,15 +397,6 @@ export class Battle {
     const u = live[0];
     const o = this.orders.get(u.id);
     if (ask && o.type === 'attack') { yield* this.fightSteps(u, o, flush); return; }
-    if (ask && o.type === 'taunt') {
-      const listener = this.nearestFoe(u);
-      if (listener) {
-        const taunt = this.pickTaunt(u);
-        const ans = yield { events: flush(), request: { kind: 'taunt', attacker: u.id, defender: listener.id, taunt: taunt?.id ?? null } };
-        this.doTaunt(u, this.minigameQuality('taunt', ans).attack, taunt);
-      }
-      return;
-    }
     if (o.type !== 'shoot') { this.act(u); return; }
     // Move up if ordered to, then throw from wherever the company ended up.
     if (o.path?.length) this.walk(u, o.path);
@@ -452,7 +443,6 @@ export class Battle {
     const clamp = (v) => Math.max(0, Math.min(1, v));
     if (kind === 'charge') { const p = clamp(ans.power); return { attack: R.chargeMin + (R.chargeMax - R.chargeMin) * p, counter: 1.1 - 0.3 * p }; }
     if (kind === 'melee') { const sc = clamp(ans.score); return { attack: R.meleeMin + (R.meleeMax - R.meleeMin) * sc, counter: 1.3 - 0.6 * sc }; }
-    if (kind === 'taunt') { const sc = clamp(ans.score); return { attack: R.tauntMin + (R.tauntMax - R.tauntMin) * sc, counter: 1 }; }
     return { attack: 1, counter: 1 };
   }
 
@@ -963,36 +953,28 @@ export class Battle {
     return best;
   }
 
-  // A taunt is shouted at the whole enemy army. Companies within earshot
-  // (tauntRange) take the full sting, the rest a share of it; the taunters'
-  // own spirits lift. `sting` scales it (the typing minigame).
-  doTaunt(u, sting = 1, picked = undefined) {
-    const R = this.rules;
+  // A war cry is a choice, not a skill test: the company spends its turn on
+  // it instead of fighting. It shakes the whole enemy army, those within
+  // earshot (tauntRange) most; it carries further and hits harder from high
+  // ground and from a leader; and every cry the army has already sounded this
+  // battle is worth less (the enemy gets used to the noise), so it pays to
+  // save it for the moment it can break someone.
+  doTaunt(u, sting = 1) {
+    const R = this.rules, side = this.sides[u.side];
     if (u.hidden) this.reveal(u, 'strikes');
-    const taunt = picked === undefined ? this.pickTaunt(u) : picked;
     const listener = this.nearestFoe(u);
-    this.ev.push({ t: 'taunt', a: u.id, d: listener?.id ?? null, taunt: taunt?.id ?? null });
-    const bite = (R.tauntBase + this.rng.int(R.tauntSpread + 1)) * (this.isLeader(u) ? R.leaderTauntFactor : 1) * sting;
+    const high = this.heightAt(u.x, u.y) > 0;
+    const fade = Math.pow(R.tauntFade, side.cries);
+    side.cries++;
+    this.ev.push({ t: 'taunt', a: u.id, d: listener?.id ?? null, high, fade });
+    const bite = (R.tauntBase + this.rng.int(R.tauntSpread + 1)) * (this.isLeader(u) ? R.leaderTauntFactor : 1) * (high ? R.tauntHigh : 1) * fade * sting;
+    const range = R.tauntRange + (high ? 1 : 0);
     for (const e of this.foesOf(u)) {
       if (e.status !== 'ok') continue;
-      const near = manhattan(u, e) <= R.tauntRange;
+      const near = manhattan(u, e) <= range;
       this.changeMorale(e, (-bite * (near ? 1 : R.tauntFarShare)) / this.courageOf(e), 'taunt');
     }
-    this.changeMorale(u, R.tauntSelfMorale, 'taunt');
-  }
-
-  pickTaunt(u) {
-    const flavour = u.kind.faction;
-    const all = this.data.taunts ?? [];
-    const own = all.filter((x) => x.flavour === flavour);
-    const any = all.filter((x) => x.flavour === 'any');
-    let pool = own.length && this.rng.chance(0.4) ? own : any;
-    const fresh = pool.filter((x) => !this.usedTaunts.has(x.id));
-    if (fresh.length) pool = fresh;
-    if (!pool.length) return null;
-    const pick = this.rng.pick(pool);
-    this.usedTaunts.add(pick.id);
-    return pick;
+    this.changeMorale(u, R.tauntSelfMorale * fade, 'taunt');
   }
 
   moralePhase() {

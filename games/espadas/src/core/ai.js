@@ -77,14 +77,15 @@ function chooseOrder(ctx, u) {
   for (const t of opts.rocks) consider(hereVal + attackValue(ctx, u, t, 'rock', here) + 1, { type: 'rock', targetId: t.id }, here);
 
   if (opts.taunt) {
-    // Worth it when many of the enemy are within earshot, or already shaky.
+    // Worth it when many of the enemy are within earshot, or already shaky;
+    // less so with every cry the army has already sounded.
     let bite = 0;
     for (const e of B.foesOf(u)) {
       if (e.status !== 'ok' || !B.visibleTo(u.side, e)) continue;
       const near = manhattan(u, e) <= B.rules.tauntRange;
       bite += (near ? 1 : B.rules.tauntFarShare) * (e.morale < 35 ? 1.6 : 0.6);
     }
-    bite = bite * (B.isLeader(u) ? 1.3 : 1) - (u.hidden ? 3 : 0) - 1;
+    bite = bite * (B.isLeader(u) ? 1.3 : 1) * Math.pow(B.rules.tauntFade, B.sides[u.side].cries) - (u.hidden ? 3 : 0) - 1;
     consider(hereVal + bite, { type: 'taunt' }, here);
   }
   if (opts.rally) {
