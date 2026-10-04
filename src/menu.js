@@ -142,7 +142,7 @@ function build() {
   el.cardEls = games.map((g, i) => {
     const row = g.pace === 'long' ? 1 : 0, c = col[g.pace === 'long' ? 'long' : 'quick']++;
     g.row = row; g.col = c;
-    const card = h('div', { class: `card ${g.status}`, style: { gridRow: String(row + 1), gridColumn: String(c + 1) }, onClick: () => (i === sel ? launch() : pick(i)) },
+    const card = h('div', { class: `card ${g.status} ${g.pace}`, style: { gridRow: String(row + 1), gridColumn: String(c + 1) }, onClick: () => (i === sel ? launch() : pick(i)) },
       // How long it takes sits above the picture, never over it.
       h('span', { class: `pace ${g.pace}` }),
       g.poster || g.thumb ? h('div', { class: 'thumb', style: { backgroundImage: `url(${g.poster ?? g.thumb})` } }) : h('div', { class: 'thumb blank' }),
