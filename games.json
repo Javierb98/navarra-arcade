@@ -215,9 +215,9 @@
         "en": "Jentilen Jokoak"
       },
       "blurb": {
-        "es": "Los seres de la mitología vasca y navarra se miden en los juegos de los jentiles.",
-        "eu": "Euskal eta nafar mitologiako izakiak jentilen jokoetan neurtzen dira.",
-        "en": "The creatures of Basque and Navarrese myth face off in the games of the jentilak."
+        "es": "Los seres de la mitología vasca y navarra se miden sobre las murallas de Olite: ¡échalos fuera del ring!",
+        "eu": "Euskal eta nafar mitologiako izakiak Erriberriko harresietan neurtzen dira: bota itzazu ringetik kanpora!",
+        "en": "The creatures of Basque and Navarrese myth face off on the walls of Olite: knock them out of the ring!"
       },
       "lesson": {
         "es": "Quiénes son Basajaun, las lamias, Tartalo, Gaueko o Akerbeltz, qué cuentan de ellos las leyendas y en qué lugares de Navarra y Euskal Herria se sitúan.",
@@ -235,9 +235,9 @@
         "en": "Navarre and the Basque Country"
       },
       "controls": {
-        "es": "Joystick y tres botones (A+B: súper)",
-        "eu": "Joystick-a eta hiru botoi (A+B: super)",
-        "en": "Stick and three buttons (A+B: super)"
+        "es": "Joystick (arriba: saltar) y tres botones (A+B: súper)",
+        "eu": "Joystick-a (gora: salto) eta hiru botoi (A+B: super)",
+        "en": "Stick (up to jump) and three buttons (A+B: super)"
       },
       "preview": "assets/previews/jentilak.webm",
       "poster": "assets/previews/jentilak.jpg"
