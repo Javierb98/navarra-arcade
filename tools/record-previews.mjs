@@ -104,9 +104,9 @@ const GAMES = {
       const p2 = ['ArrowLeft', 'KeyL', 'KeyK', 'KeyK', 'ArrowUp', 'KeyL', 'KeyK', 'Semicolon', 'ArrowDown', 'KeyL'];
       const end = Date.now() + secs * 1000;
       for (let k = 0; Date.now() < end; k++) {
-        if (k === 14 || k === 30) await page.evaluate((who) => { window.match.fighters[who].meter = 100; }, k === 14 ? 0 : 1);
-        if (k === 15) await tap(page, 'KeyR');
-        if (k === 31) await tap(page, 'KeyO');
+        if (k === 22 || k === 34) await page.evaluate((who) => { window.match.fighters[who].meter = 100; }, k === 22 ? 0 : 1);
+        if (k === 23) await tap(page, 'KeyR');
+        if (k === 35) await tap(page, 'KeyO');
         const a = p1[k % p1.length], b = p2[(k + 3) % p2.length];
         await page.keyboard.down(a); await page.keyboard.down(b); await wait(page, a.startsWith('Key') && a !== 'KeyD' && a !== 'KeyA' && a !== 'KeyW' ? 80 : 380);
         await page.keyboard.up(a); await page.keyboard.up(b); await wait(page, 120);
