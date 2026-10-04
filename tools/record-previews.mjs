@@ -89,6 +89,29 @@ const GAMES = {
       for (let k = 0; Date.now() < end; k++) { await tap(page, k % 2 ? 'KeyX' : 'KeyZ'); await wait(page, 60); await tap(page, k % 2 ? 'KeyR' : 'KeyE'); await wait(page, 120); }
     },
   },
+  jentilak: {
+    async setup(page) {
+      // Basajaun against Herensuge (no CPU yet, so the script plays both).
+      await page.goto('http://localhost:8790/?debug&lang=es&controls=keyboard'); await wait(page, 2000);
+      await tap(page, 'Enter', 70); await wait(page, 500);
+      for (let k = 0; k < 5; k++) await tap(page, 'ArrowRight');
+      await tap(page, 'KeyF'); await tap(page, 'KeyK'); await tap(page, 'Enter'); await wait(page, 2600);
+    },
+    async act(page, secs) {
+      // Close in and trade blows; specials now and then, and each super once.
+      const p1 = ['KeyD', 'KeyF', 'KeyF', 'KeyF', 'KeyH', 'KeyG', 'KeyA', 'KeyW', 'KeyF', 'KeyF'];
+      const p2 = ['ArrowLeft', 'KeyL', 'KeyK', 'KeyK', 'ArrowUp', 'KeyL', 'KeyK', 'Semicolon', 'ArrowDown', 'KeyL'];
+      const end = Date.now() + secs * 1000;
+      for (let k = 0; Date.now() < end; k++) {
+        if (k === 14 || k === 30) await page.evaluate((who) => { window.match.fighters[who].meter = 100; }, k === 14 ? 0 : 1);
+        if (k === 15) await tap(page, 'KeyR');
+        if (k === 31) await tap(page, 'KeyO');
+        const a = p1[k % p1.length], b = p2[(k + 3) % p2.length];
+        await page.keyboard.down(a); await page.keyboard.down(b); await wait(page, a.startsWith('Key') && a !== 'KeyD' && a !== 'KeyA' && a !== 'KeyW' ? 80 : 380);
+        await page.keyboard.up(a); await page.keyboard.up(b); await wait(page, 120);
+      }
+    },
+  },
   minas: {
     async setup(page) {
       await page.goto('http://localhost:8780/?debug&lang=es'); await wait(page, 2000);

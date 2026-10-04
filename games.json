@@ -195,6 +195,55 @@
       }
     },
     {
+      "id": "jentilak",
+      "folder": "../navarra-jentilak",
+      "port": 8790,
+      "url": "games/jentilak/",
+      "status": "ready",
+      "thumb": "assets/previews/jentilak.jpg",
+      "players": "2",
+      "minutes": "3–5",
+      "pace": "quick",
+      "bestFor": {
+        "es": "Combates cortos entre dos: elige criatura y al mejor de tres",
+        "eu": "Biren arteko borroka laburrak: aukeratu izakia, hirutik bi irabazi",
+        "en": "Short bouts for two: pick a creature, best of three"
+      },
+      "title": {
+        "es": "Jentilen Jokoak",
+        "eu": "Jentilen Jokoak",
+        "en": "Jentilen Jokoak"
+      },
+      "blurb": {
+        "es": "Los seres de la mitología vasca y navarra se miden en los juegos de los jentiles.",
+        "eu": "Euskal eta nafar mitologiako izakiak jentilen jokoetan neurtzen dira.",
+        "en": "The creatures of Basque and Navarrese myth face off in the games of the jentilak."
+      },
+      "lesson": {
+        "es": "Quiénes son Basajaun, las lamias, Tartalo, Gaueko o Akerbeltz, qué cuentan de ellos las leyendas y en qué lugares de Navarra y Euskal Herria se sitúan.",
+        "eu": "Nor diren Basajaun, lamiak, Tartalo, Gaueko edo Akerbeltz, zer kontatzen duten kondairek haiei buruz eta Nafarroako eta Euskal Herriko zein lekutan kokatzen diren.",
+        "en": "Who Basajaun, the lamiak, Tartalo, Gaueko and Akerbeltz are, what the legends tell about them, and where in Navarre and the Basque Country they are set."
+      },
+      "era": {
+        "es": "Mitología tradicional",
+        "eu": "Ohiko mitologia",
+        "en": "Traditional mythology"
+      },
+      "place": {
+        "es": "Navarra y Euskal Herria",
+        "eu": "Nafarroa eta Euskal Herria",
+        "en": "Navarre and the Basque Country"
+      },
+      "controls": {
+        "es": "Joystick y tres botones (A+B: súper)",
+        "eu": "Joystick-a eta hiru botoi (A+B: super)",
+        "en": "Stick and three buttons (A+B: super)"
+      },
+      "preview": "assets/previews/jentilak.webm",
+      "poster": "assets/previews/jentilak.jpg",
+      "_note": "Versus only for now: the CPU opponent and Arcade ladder come in Milestone 4, then players becomes 1-2."
+    },
+    {
       "id": "salinas",
       "folder": "../navarra-salinas",
       "port": 8770,
