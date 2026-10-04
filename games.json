@@ -205,14 +205,14 @@
       "minutes": "3–5",
       "pace": "quick",
       "bestFor": {
-        "es": "Combates cortos: contra el ordenador o entre dos, al mejor de tres",
-        "eu": "Borroka laburrak: ordenagailuaren aurka edo biren artean, hirutik bi irabazi",
-        "en": "Short bouts: against the computer or head to head, best of three"
+        "es": "Combates rápidos al estilo Smash: contra el ordenador o entre dos, tres vidas",
+        "eu": "Smash estiloko borroka azkarrak: ordenagailuaren aurka edo biren artean, hiru bizitza",
+        "en": "Quick Smash-style fights: against the computer or head to head, three lives"
       },
       "title": {
-        "es": "Jentilen Jokoak",
-        "eu": "Jentilen Jokoak",
-        "en": "Jentilen Jokoak"
+        "es": "Duelo de Mitos",
+        "eu": "Mitoen Borroka",
+        "en": "Myth Brawl"
       },
       "blurb": {
         "es": "Los seres de la mitología vasca y navarra se miden sobre las murallas de Olite: ¡échalos fuera del ring!",
