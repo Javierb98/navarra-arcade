@@ -298,3 +298,12 @@ h1 { font-family: var(--display); font-weight: normal; font-size: var(--t-hero);
 
 /* Card names: one size for all, up to two lines, centred. */
 .card .name { white-space: normal; overflow: hidden; line-height: 1.05; height: 2.1em; display: flex; align-items: center; justify-content: center; text-align: center; overflow-wrap: normal; word-break: keep-all; }
+
+/* The games as a 4 x 2 grid: quick games on top, long ones below. Each card
+   is a short row: picture, then the time tag and the name. */
+body:not(.tall) .cards { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 31px; gap: 4px 6px; }
+body:not(.tall) .card { display: grid; grid-template-columns: 38px 1fr; grid-template-rows: auto 1fr; column-gap: 5px; align-items: center; padding: 3px 4px; text-align: left; }
+body:not(.tall) .card .thumb { grid-row: 1 / 3; height: 23px; }
+body:not(.tall) .card .pace { margin: 0; justify-self: start; }
+body:not(.tall) .card .name { height: auto; justify-content: flex-start; text-align: left; padding: 0; margin: 0; line-height: 1.05; }
+body:not(.tall) .card.sel { transform: none; }

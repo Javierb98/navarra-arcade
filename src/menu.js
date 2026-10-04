@@ -136,8 +136,13 @@ function build() {
     el.cards,
     h('footer', {}, el.sponsor, h('div', { class: 'hints' }, el.hint, el.exit), el.credit),
   );
+  // Two rows: the quick games on top, the long ones below, in a grid of
+  // four columns. Each card knows its row and column for the stick.
+  const col = { quick: 0, long: 0 };
   el.cardEls = games.map((g, i) => {
-    const card = h('div', { class: `card ${g.status}`, onClick: () => (i === sel ? launch() : pick(i)) },
+    const row = g.pace === 'long' ? 1 : 0, c = col[g.pace === 'long' ? 'long' : 'quick']++;
+    g.row = row; g.col = c;
+    const card = h('div', { class: `card ${g.status}`, style: { gridRow: String(row + 1), gridColumn: String(c + 1) }, onClick: () => (i === sel ? launch() : pick(i)) },
       // How long it takes sits above the picture, never over it.
       h('span', { class: `pace ${g.pace}` }),
       g.poster || g.thumb ? h('div', { class: 'thumb', style: { backgroundImage: `url(${g.poster ?? g.thumb})` } }) : h('div', { class: 'thumb blank' }),
@@ -158,6 +163,16 @@ function pick(i) {
 
 function move(dir) {
   pick((sel + dir + games.length) % games.length);
+}
+
+// Up and down between the two rows, keeping to the nearest column.
+function moveRow(dir) {
+  const g = games[sel], row = g.row + dir;
+  const inRow = games.map((x, i) => ({ x, i })).filter(({ x }) => x.row === row);
+  if (!inRow.length) return false;
+  const best = inRow.reduce((a, b) => (Math.abs(b.x.col - g.col) < Math.abs(a.x.col - g.col) ? b : a));
+  pick(best.i);
+  return true;
 }
 
 function render(dir = 0) {
@@ -363,7 +378,8 @@ function update(dt) {
   } else {
     if (input.any('left')) move(-1);
     if (input.any('right')) move(1);
-    if (input.any('up')) { focus = 'lang'; beep(440, 0.04); render(); }
+    if (input.any('up') && !moveRow(-1)) { focus = 'lang'; beep(440, 0.04); render(); }
+    if (input.any('down')) moveRow(1);
     if (input.any('a') || input.any('start')) launch();
   }
   if (input.any('c')) cycle(1);
@@ -413,6 +429,7 @@ async function boot() {
     sponsors = sponsorList;
     credits = await fetch('data/credits.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
     games = config.games.filter((g) => g.status !== 'hidden');
+    games = [...games.filter((g) => g.pace !== 'long'), ...games.filter((g) => g.pace === 'long')];
     // "art:<name>" thumbnails are painted by the menu itself.
     for (const g of games) g.thumb = paintedThumb(g.thumb) ?? g.thumb;
     strings = table;
