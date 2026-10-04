@@ -235,9 +235,9 @@
         "en": "Navarre and the Basque Country"
       },
       "controls": {
-        "es": "Joystick (arriba: saltar) y tres botones (A+B: súper)",
-        "eu": "Joystick-a (gora: salto) eta hiru botoi (A+B: super)",
-        "en": "Stick (up to jump) and three buttons (A+B: super)"
+        "es": "Joystick (arriba: saltar), A golpe, B especial, C escudo (A+B: súper)",
+        "eu": "Joystick-a (gora: salto), A kolpea, B berezia, C ezkutua (A+B: super)",
+        "en": "Stick (up: jump), A attack, B special, C shield (A+B: super)"
       },
       "preview": "assets/previews/jentilak.webm",
       "poster": "assets/previews/jentilak.jpg"
