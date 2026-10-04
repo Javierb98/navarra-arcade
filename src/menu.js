@@ -136,13 +136,8 @@ function build() {
     el.cards,
     h('footer', {}, el.sponsor, h('div', { class: 'hints' }, el.hint, el.exit), el.credit),
   );
-  // Two rows: the quick games on top, the long ones below, in a grid of
-  // four columns. Each card knows its row and column for the stick.
-  const col = { quick: 0, long: 0 };
   el.cardEls = games.map((g, i) => {
-    const row = g.pace === 'long' ? 1 : 0, c = col[g.pace === 'long' ? 'long' : 'quick']++;
-    g.row = row; g.col = c;
-    const card = h('div', { class: `card ${g.status} ${g.pace}`, style: { gridRow: String(row + 1), gridColumn: String(c + 1) }, onClick: () => (i === sel ? launch() : pick(i)) },
+    const card = h('div', { class: `card ${g.status} ${g.pace}`, onClick: () => (i === sel ? launch() : pick(i)) },
       // How long it takes sits above the picture, never over it.
       h('span', { class: `pace ${g.pace}` }),
       g.poster || g.thumb ? h('div', { class: 'thumb', style: { backgroundImage: `url(${g.poster ?? g.thumb})` } }) : h('div', { class: 'thumb blank' }),
@@ -165,14 +160,23 @@ function move(dir) {
   pick((sel + dir + games.length) % games.length);
 }
 
-// Up and down between the two rows, keeping to the nearest column.
-function moveRow(dir) {
-  const g = games[sel], row = g.row + dir;
-  const inRow = games.map((x, i) => ({ x, i })).filter(({ x }) => x.row === row);
-  if (!inRow.length) return false;
-  const best = inRow.reduce((a, b) => (Math.abs(b.x.col - g.col) < Math.abs(a.x.col - g.col) ? b : a));
-  pick(best.i);
-  return true;
+
+// The revolving strip: each card sits at its distance from the chosen one,
+// counted round the circle, so the row wraps and runs off both edges. A card
+// that wraps from one end to the other jumps without sliding across.
+const STEP = 112;
+function placeCards() {
+  if (document.body.classList.contains('tall')) { for (const c of el.cardEls) { c.style.transform = ''; c.style.opacity = ''; } return; }
+  const n = games.length;
+  el.cardEls.forEach((c, i) => {
+    let d = (i - sel + n) % n;
+    if (d > n / 2) d -= n;
+    const prev = Number(c.dataset.d ?? d);
+    c.classList.toggle('jump', Math.abs(d - prev) > 1);
+    c.dataset.d = d;
+    c.style.transform = `translateX(${d * STEP}px) scale(${d === 0 ? 1.06 : 1})`;
+    c.style.opacity = Math.abs(d) > 3 ? '0' : '1';
+  });
 }
 
 function render(dir = 0) {
@@ -184,6 +188,7 @@ function render(dir = 0) {
     ...LANGS.map((l) => h('button', { class: `lang ${l === lang ? 'on' : ''}`, onClick: () => setLanguage(l) },
       h('span', { class: 'long' }, LANG_NAMES[l]), h('span', { class: 'short' }, l.toUpperCase()))));
   el.langs.classList.toggle('focus', focus === 'lang');
+  placeCards();
   el.cardEls.forEach((c, i) => {
     c.classList.toggle('sel', i === sel);
     c.querySelector('.name').textContent = games[i].title[lang] ?? games[i].title.es;
@@ -276,7 +281,7 @@ function shrink(n, twoLines = false) {
   const over = () => n.scrollWidth > n.clientWidth + 0.5 || (twoLines && n.scrollHeight > n.clientHeight + 0.5);
   while (over() && size > 4.5) { size -= 0.25; n.style.fontSize = `${size}px`; }
 }
-addEventListener('resize', () => el && fitText());
+addEventListener('resize', () => { if (el) { fitText(); placeCards(); } });
 document.fonts?.ready.then(() => el && fitText());
 
 // ---- sponsors -----------------------------------------------------------------
@@ -378,8 +383,7 @@ function update(dt) {
   } else {
     if (input.any('left')) move(-1);
     if (input.any('right')) move(1);
-    if (input.any('up') && !moveRow(-1)) { focus = 'lang'; beep(440, 0.04); render(); }
-    if (input.any('down')) moveRow(1);
+    if (input.any('up')) { focus = 'lang'; beep(440, 0.04); render(); }
     if (input.any('a') || input.any('start')) launch();
   }
   if (input.any('c')) cycle(1);
@@ -429,7 +433,6 @@ async function boot() {
     sponsors = sponsorList;
     credits = await fetch('data/credits.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
     games = config.games.filter((g) => g.status !== 'hidden');
-    games = [...games.filter((g) => g.pace !== 'long'), ...games.filter((g) => g.pace === 'long')];
     // "art:<name>" thumbnails are painted by the menu itself.
     for (const g of games) g.thumb = paintedThumb(g.thumb) ?? g.thumb;
     strings = table;
