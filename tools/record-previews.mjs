@@ -95,7 +95,8 @@ const GAMES = {
       // joins with their first press, then locks in.
       await page.goto('http://localhost:8790/?debug&lang=es&controls=keyboard'); await wait(page, 2000);
       await tap(page, 'Enter', 70); await wait(page, 500);
-      await tap(page, 'KeyF'); await tap(page, 'KeyK'); await tap(page, 'KeyK'); await tap(page, 'Enter'); await wait(page, 2600);
+      await tap(page, 'KeyF'); await tap(page, 'KeyK'); await tap(page, 'KeyK'); await tap(page, 'Enter'); await wait(page, 700);
+      await tap(page, 'KeyD'); await tap(page, 'KeyF'); await wait(page, 2600); // stage select: Irati Forest
       await page.evaluate(() => { const m = window.match; m.fighters[0].x = 200; m.fighters[1].x = 280; });
     },
     async act(page, secs) {
