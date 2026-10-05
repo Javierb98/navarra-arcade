@@ -1,0 +1,581 @@
+{
+  "_note": "Stages from DESIGN.md, seen from the side, each its own shape (like Super Smash Flash's Hyrule Castle). world: its size in stage pixels. solids: blocks you stand on and can't pass through (walls, towers, an arch you run under); `ledges` marks outer corners you can hang from; `part` says how to paint it. platforms: floating ones you jump up through and drop down through. blast: past these edges a fighter is out of the ring. starts, respawn, water (River-born), home (the fighter who lives there). hidden: not offered on the stage-select screen (the practice ground, used by the tests). deco: scenery painted like a block but not solid (the keep's pillars, the dolmen's uprights, the great beech).",
+  "arenas": [
+    {
+      "id": "olite",
+      "name": "olite",
+      "theme": "castle",
+      "hazards": [],
+      "world": {
+        "w": 700,
+        "h": 360
+      },
+      "solids": [
+        {
+          "x0": 40,
+          "x1": 660,
+          "top": 262,
+          "bottom": 350,
+          "ledges": [
+            "l",
+            "r"
+          ],
+          "part": "floor"
+        },
+        {
+          "x0": 40,
+          "x1": 150,
+          "top": 230,
+          "bottom": 262,
+          "ledges": [],
+          "part": "wall"
+        },
+        {
+          "x0": 272,
+          "x1": 428,
+          "top": 150,
+          "bottom": 170,
+          "ledges": [],
+          "part": "lintel",
+          "archTo": 262
+        },
+        {
+          "x0": 572,
+          "x1": 612,
+          "top": 200,
+          "bottom": 262,
+          "ledges": [],
+          "part": "tower"
+        }
+      ],
+      "platforms": [
+        {
+          "x0": 160,
+          "x1": 250,
+          "y": 200
+        },
+        {
+          "x0": 450,
+          "x1": 540,
+          "y": 200
+        },
+        {
+          "x0": 300,
+          "x1": 400,
+          "y": 104
+        },
+        {
+          "x0": 562,
+          "x1": 610,
+          "y": 98
+        }
+      ],
+      "blast": {
+        "x0": -75,
+        "x1": 775,
+        "y0": -18,
+        "y1": 410
+      },
+      "starts": [
+        {
+          "x": 220,
+          "y": 262
+        },
+        {
+          "x": 500,
+          "y": 262
+        }
+      ],
+      "respawn": {
+        "x": 350,
+        "y": 60
+      },
+      "water": [],
+      "home": null,
+      "deco": [
+        {
+          "x0": 280,
+          "x1": 312,
+          "top": 172,
+          "bottom": 262,
+          "part": "pillar"
+        },
+        {
+          "x0": 388,
+          "x1": 420,
+          "top": 172,
+          "bottom": 262,
+          "part": "pillar"
+        }
+      ]
+    },
+    {
+      "id": "irati",
+      "name": "irati",
+      "theme": "forest",
+      "hazards": [],
+      "world": {
+        "w": 660,
+        "h": 350
+      },
+      "solids": [
+        {
+          "x0": 40,
+          "x1": 320,
+          "top": 262,
+          "bottom": 340,
+          "ledges": [
+            "l"
+          ],
+          "part": "ground"
+        },
+        {
+          "x0": 320,
+          "x1": 620,
+          "top": 240,
+          "bottom": 340,
+          "ledges": [
+            "r"
+          ],
+          "part": "ground"
+        },
+        {
+          "x0": 392,
+          "x1": 452,
+          "top": 212,
+          "bottom": 240,
+          "ledges": [],
+          "part": "log"
+        }
+      ],
+      "platforms": [
+        {
+          "x0": 330,
+          "x1": 400,
+          "y": 180
+        },
+        {
+          "x0": 440,
+          "x1": 520,
+          "y": 160
+        },
+        {
+          "x0": 370,
+          "x1": 470,
+          "y": 92
+        },
+        {
+          "x0": 100,
+          "x1": 190,
+          "y": 208
+        },
+        {
+          "x0": 220,
+          "x1": 290,
+          "y": 170
+        }
+      ],
+      "blast": {
+        "x0": -75,
+        "x1": 735,
+        "y0": -40,
+        "y1": 400
+      },
+      "starts": [
+        {
+          "x": 180,
+          "y": 262
+        },
+        {
+          "x": 520,
+          "y": 240
+        }
+      ],
+      "respawn": {
+        "x": 330,
+        "y": 50
+      },
+      "water": [],
+      "home": "basajaun",
+      "deco": [
+        {
+          "x0": 470,
+          "x1": 510,
+          "top": 60,
+          "bottom": 240,
+          "part": "beech"
+        }
+      ]
+    },
+    {
+      "id": "bidasoa",
+      "name": "bidasoa",
+      "theme": "river",
+      "hazards": [],
+      "world": {
+        "w": 660,
+        "h": 350
+      },
+      "solids": [
+        {
+          "x0": 40,
+          "x1": 270,
+          "top": 250,
+          "bottom": 340,
+          "ledges": [
+            "l",
+            "r"
+          ],
+          "part": "bank"
+        },
+        {
+          "x0": 390,
+          "x1": 620,
+          "top": 250,
+          "bottom": 340,
+          "ledges": [
+            "l",
+            "r"
+          ],
+          "part": "bank"
+        }
+      ],
+      "platforms": [
+        {
+          "x0": 250,
+          "x1": 318,
+          "y": 212
+        },
+        {
+          "x0": 342,
+          "x1": 410,
+          "y": 212
+        },
+        {
+          "x0": 296,
+          "x1": 318,
+          "y": 276
+        },
+        {
+          "x0": 342,
+          "x1": 364,
+          "y": 276
+        }
+      ],
+      "blast": {
+        "x0": -75,
+        "x1": 735,
+        "y0": -30,
+        "y1": 400
+      },
+      "starts": [
+        {
+          "x": 170,
+          "y": 250
+        },
+        {
+          "x": 490,
+          "y": 250
+        }
+      ],
+      "respawn": {
+        "x": 330,
+        "y": 60
+      },
+      "water": [
+        {
+          "x0": 40,
+          "x1": 120,
+          "y0": 240,
+          "y1": 256
+        },
+        {
+          "x0": 540,
+          "x1": 620,
+          "y0": 240,
+          "y1": 256
+        }
+      ],
+      "home": "lamia"
+    },
+    {
+      "id": "bardenas",
+      "name": "bardenas",
+      "theme": "desert",
+      "hazards": [],
+      "world": {
+        "w": 700,
+        "h": 350
+      },
+      "solids": [
+        {
+          "x0": 60,
+          "x1": 640,
+          "top": 255,
+          "bottom": 345,
+          "ledges": [
+            "l",
+            "r"
+          ],
+          "part": "mesa"
+        },
+        {
+          "x0": 150,
+          "x1": 200,
+          "top": 207,
+          "bottom": 255,
+          "ledges": [],
+          "part": "tower"
+        },
+        {
+          "x0": 500,
+          "x1": 556,
+          "top": 187,
+          "bottom": 255,
+          "ledges": [],
+          "part": "tower"
+        }
+      ],
+      "platforms": [
+        {
+          "x0": 300,
+          "x1": 400,
+          "y": 175
+        }
+      ],
+      "blast": {
+        "x0": -55,
+        "x1": 755,
+        "y0": -25,
+        "y1": 400
+      },
+      "starts": [
+        {
+          "x": 250,
+          "y": 255
+        },
+        {
+          "x": 450,
+          "y": 255
+        }
+      ],
+      "respawn": {
+        "x": 350,
+        "y": 60
+      },
+      "water": [],
+      "home": "herensuge"
+    },
+    {
+      "id": "urbasa",
+      "name": "urbasa",
+      "theme": "night",
+      "hazards": [],
+      "world": {
+        "w": 560,
+        "h": 320
+      },
+      "solids": [
+        {
+          "x0": 80,
+          "x1": 480,
+          "top": 240,
+          "bottom": 320,
+          "ledges": [
+            "l",
+            "r"
+          ],
+          "part": "hill"
+        },
+        {
+          "x0": 190,
+          "x1": 370,
+          "top": 172,
+          "bottom": 190,
+          "ledges": [],
+          "part": "capstone"
+        }
+      ],
+      "platforms": [
+        {
+          "x0": 100,
+          "x1": 170,
+          "y": 190
+        },
+        {
+          "x0": 390,
+          "x1": 460,
+          "y": 190
+        }
+      ],
+      "blast": {
+        "x0": -35,
+        "x1": 595,
+        "y0": -40,
+        "y1": 370
+      },
+      "starts": [
+        {
+          "x": 150,
+          "y": 240
+        },
+        {
+          "x": 410,
+          "y": 240
+        }
+      ],
+      "respawn": {
+        "x": 280,
+        "y": 60
+      },
+      "water": [],
+      "home": "gaueko",
+      "deco": [
+        {
+          "x0": 200,
+          "x1": 224,
+          "top": 190,
+          "bottom": 240,
+          "part": "stone"
+        },
+        {
+          "x0": 336,
+          "x1": 360,
+          "top": 190,
+          "bottom": 240,
+          "part": "stone"
+        }
+      ]
+    },
+    {
+      "id": "roncesvalles",
+      "name": "roncesvalles",
+      "theme": "mountain",
+      "hazards": [],
+      "world": {
+        "w": 740,
+        "h": 380
+      },
+      "solids": [
+        {
+          "x0": 40,
+          "x1": 270,
+          "top": 290,
+          "bottom": 380,
+          "ledges": [
+            "l"
+          ],
+          "part": "rock"
+        },
+        {
+          "x0": 250,
+          "x1": 500,
+          "top": 250,
+          "bottom": 380,
+          "ledges": [],
+          "part": "rock"
+        },
+        {
+          "x0": 480,
+          "x1": 700,
+          "top": 210,
+          "bottom": 380,
+          "ledges": [
+            "r"
+          ],
+          "part": "rock"
+        }
+      ],
+      "platforms": [
+        {
+          "x0": 110,
+          "x1": 190,
+          "y": 236
+        },
+        {
+          "x0": 330,
+          "x1": 410,
+          "y": 190
+        },
+        {
+          "x0": 560,
+          "x1": 640,
+          "y": 150
+        }
+      ],
+      "blast": {
+        "x0": -75,
+        "x1": 815,
+        "y0": -70,
+        "y1": 430
+      },
+      "starts": [
+        {
+          "x": 160,
+          "y": 290
+        },
+        {
+          "x": 590,
+          "y": 210
+        }
+      ],
+      "respawn": {
+        "x": 380,
+        "y": 70
+      },
+      "water": [],
+      "home": null
+    },
+    {
+      "id": "practice",
+      "name": "practice",
+      "theme": "castle",
+      "hidden": true,
+      "hazards": [],
+      "main": {
+        "x0": 100,
+        "x1": 380,
+        "top": 196,
+        "bottom": 262
+      },
+      "platforms": [
+        {
+          "x0": 122,
+          "x1": 198,
+          "y": 150
+        },
+        {
+          "x0": 282,
+          "x1": 358,
+          "y": 150
+        },
+        {
+          "x0": 205,
+          "x1": 275,
+          "y": 106
+        }
+      ],
+      "blast": {
+        "x0": -50,
+        "x1": 530,
+        "y0": -80,
+        "y1": 320
+      },
+      "starts": [
+        {
+          "x": 170,
+          "y": 196
+        },
+        {
+          "x": 310,
+          "y": 196
+        }
+      ],
+      "respawn": {
+        "x": 240,
+        "y": 70
+      },
+      "water": []
+    }
+  ]
+}

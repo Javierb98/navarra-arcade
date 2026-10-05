@@ -298,3 +298,20 @@ h1 { font-family: var(--display); font-weight: normal; font-size: var(--t-hero);
 
 /* Card names: one size for all, up to two lines, centred. */
 .card .name { white-space: normal; overflow: hidden; line-height: 1.05; height: 2.1em; display: flex; align-items: center; justify-content: center; text-align: center; overflow-wrap: normal; word-break: keep-all; }
+
+.hints { min-width: 0; }
+
+/* The games as a revolving strip: one row of cards, the chosen one in the
+   middle, the rest running off both edges and wrapping round. JS places
+   each card (render() in src/menu.js); the edges fade out. */
+body:not(.tall) .cards { position: relative; display: block; height: 62px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%); }
+body:not(.tall) .card { position: absolute; top: 4px; left: 50%; width: 104px; margin-left: -52px;
+  transition: transform .35s cubic-bezier(.2, .8, .3, 1), opacity .35s, border-color .2s; }
+body:not(.tall) .card.jump { transition: none; }
+body:not(.tall) .card.sel { z-index: 2; }
+body:not(.tall) .feature { height: 116px; }
+body:not(.tall) .preview { flex-basis: 178px; height: 100px; }
+body:not(.tall) .cards { height: 70px; }
+body:not(.tall) .card { top: 5px; }

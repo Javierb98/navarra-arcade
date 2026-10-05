@@ -1,0 +1,157 @@
+{
+  "_note": "Key names are KeyboardEvent.code values. Two profiles: `keyboard` is the DESIGN.md layout (P1 W A S D + F light, G special, H dodge, R super; P2 arrows + K, L, ;, O, or numpad 1 2 3 0); `cabinet` is the Navarra arcade cabinet's layout (P1 arrows, P2 W A S D; A = Z/Left Ctrl or E, B = X/Left Alt or R, C = Space/C or Q; no super button, so super = A+B). Choose the profile in the settings menu (F2). Esc pauses (and offers to leave).",
+  "profile": "keyboard",
+  "keyboard": {
+    "p1": {
+      "left": [
+        "KeyA"
+      ],
+      "right": [
+        "KeyD"
+      ],
+      "up": [
+        "KeyW"
+      ],
+      "down": [
+        "KeyS"
+      ],
+      "a": [
+        "KeyF"
+      ],
+      "b": [
+        "KeyG"
+      ],
+      "c": [
+        "KeyH"
+      ],
+      "d": [
+        "KeyR"
+      ],
+      "start": [
+        "Enter",
+        "Digit1"
+      ]
+    },
+    "p2": {
+      "left": [
+        "ArrowLeft"
+      ],
+      "right": [
+        "ArrowRight"
+      ],
+      "up": [
+        "ArrowUp"
+      ],
+      "down": [
+        "ArrowDown"
+      ],
+      "a": [
+        "KeyK",
+        "Numpad1"
+      ],
+      "b": [
+        "KeyL",
+        "Numpad2"
+      ],
+      "c": [
+        "Semicolon",
+        "Numpad3"
+      ],
+      "d": [
+        "KeyO",
+        "Numpad0"
+      ],
+      "start": [
+        "Digit2"
+      ]
+    },
+    "admin": [
+      "F2",
+      "Digit9"
+    ],
+    "exit": [
+      "Escape"
+    ]
+  },
+  "cabinet": {
+    "p1": {
+      "left": [
+        "ArrowLeft"
+      ],
+      "right": [
+        "ArrowRight"
+      ],
+      "up": [
+        "ArrowUp"
+      ],
+      "down": [
+        "ArrowDown"
+      ],
+      "a": [
+        "ControlLeft",
+        "KeyZ"
+      ],
+      "b": [
+        "AltLeft",
+        "KeyX"
+      ],
+      "c": [
+        "Space",
+        "KeyC"
+      ],
+      "start": [
+        "Digit1",
+        "Enter"
+      ],
+      "d": []
+    },
+    "p2": {
+      "left": [
+        "KeyA"
+      ],
+      "right": [
+        "KeyD"
+      ],
+      "up": [
+        "KeyW"
+      ],
+      "down": [
+        "KeyS"
+      ],
+      "a": [
+        "KeyE"
+      ],
+      "b": [
+        "KeyR"
+      ],
+      "c": [
+        "KeyQ"
+      ],
+      "start": [
+        "Digit2"
+      ],
+      "d": []
+    },
+    "admin": [
+      "F2",
+      "Digit9"
+    ],
+    "exit": [
+      "Escape"
+    ]
+  },
+  "gamepad": {
+    "p1": 0,
+    "p2": 1,
+    "buttons": {
+      "a": 0,
+      "b": 2,
+      "c": 1,
+      "d": 3,
+      "start": 9,
+      "admin": 8
+    },
+    "deadzone": 0.35,
+    "_note": "Gamepad: A/Cross light, X/Square special, B/Circle dodge, Y/Triangle super, Start pause."
+  }
+}

@@ -14,9 +14,9 @@
   "menu.difficulty.easy": "Erraza",
   "menu.difficulty.normal": "Normala",
   "menu.easy.note": "Belarrak gehiago irauten du, artaldeak elkarrago doaz eta geziek galdutako ardiak erakusten dituzte.",
-  "menu.normal.note": "Egiazko mendia: ibar bakoitzak berea nahi du, baina bakerik gabe ez dago festarik.",
+  "menu.normal.note": "Egiazko mendia: belarra eta ura ez dira guztientzat iristen. Onena izateko, zure ibarrak ondo joan behar du… eta bakeak iraun.",
   "menu.solo.note": "Zu Erronkari zara. Ordenagailua Baretous da, eta gogoratzen du nola tratatzen duzun.",
-  "menu.duo.note": "1. jokalaria: Erronkari. 2. jokalaria: Baretous. Lehiatu zure ibarraren alde, baina zaindu bakea biok.",
+  "menu.duo.note": "1. jokalaria: Erronkari. 2. jokalaria: Baretous. Lehiatu zure ibarraren alde, baina bakea hausten bada, biok 0.",
   "menu.lang": "Hizkuntza",
   "menu.go": "[A] Mendira!",
   "menu.hint": "Joystick-a: aukeratu · [A] ados · [C] hizkuntza",
@@ -28,7 +28,7 @@
   "outro.1": "Zeremonia uztailaren 13an ospatzen da oraindik, eta alkateek «Pax avant» esaten dute oraindik: bakea aurrerantzean.",
   "outro.2": "Ikustera joan zaitezke San Martin harrira, Belaguako haranaren goialdera. Bizilagun onek partekatu egiten dute!",
   "brief.title": "Denboraldi bat mendian",
-  "brief.goal": "Ibar bakoitza bere alde lehiatzen da: gazta, etxeko ardiak, izarrak eta ohorea. Baina bakea bien da: hausten bada, ez dago zeremoniarik ez saririk inorentzat.",
+  "brief.goal": "Ibar bakoitza bere alde lehiatzen da: gazta, etxeko ardiak, izarrak eta ohorea. Baina bakerik gabe ezerk ez du balio: hausten bada, bi ibarrek 0 puntu dituzte.",
   "brief.p1": "1. jokalaria: Erronkariko artzaina (marka biribila)",
   "brief.p2": "2. jokalaria: Barétouseko artzaina (marka karratua)",
   "brief.cpu": "Barétous (marka karratua): ordenagailuak darama",
@@ -156,7 +156,7 @@
   "results.peace": "Bakearen saria",
   "results.ahead": "· aurretik!",
   "results.peaceKept": "Bakeak iraun du ({n}): zeremonia izango da harrian.",
-  "results.peaceBroken": "Bakea hautsi da ({n}): ez dago zeremoniarik, eta inork ez du saria irabazten.",
+  "results.peaceBroken": "Bakea hautsi da ({n}): ez dago zeremoniarik, eta bi ibarrek 0 puntu dituzte.",
   "results.cowsOk": "Hiru behiak osasuntsu iristen dira harrira.",
   "results.cowsThin": "Behiak argal iristen dira: zerga laburregi geratzen da eta bakeak nabaritzen du.",
   "results.tie": "Berdinketa! Bi ibarrak berdin ondo.",
@@ -168,5 +168,6 @@
   "fact.question": "Zeremonian, Izabako alkateak hiru aldiz galdetzen du «Bakea nahi duzue?», eta frantziarrek baietz erantzuten dute.",
   "fact.justice": "Amaieran, Izabako alkateak aurreko urteko itun-hausteak epaitzen ditu. Zaindariek eskua haren makilan jarrita zin egiten dute.",
   "fact.quarrels": "Itunaren aurretik iturriengatiko liskarrak egon ziren, eta bi ibarretako jendea hil zen. 1375eko bakeak amaiera eman zion horri.",
-  "fact.selection": "Albaitari batek Frantziatik ekarritako behiak aztertzen ditu eta hiru aukeratzen ditu Erronkarirentzat."
+  "fact.selection": "Albaitari batek Frantziatik ekarritako behiak aztertzen ditu eta hiru aukeratzen ditu Erronkarirentzat.",
+  "tip.peace": "Bakea bere kabuz hozten da: ibarrek elkarri laguntzen jarraitzen badiote bakarrik irauten du."
 }

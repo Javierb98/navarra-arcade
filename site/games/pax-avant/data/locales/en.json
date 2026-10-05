@@ -14,9 +14,9 @@
   "menu.difficulty.easy": "Easy",
   "menu.difficulty.normal": "Normal",
   "menu.easy.note": "Grass lasts longer, flocks stay closer and arrows point to lost sheep.",
-  "menu.normal.note": "The real mountain: each valley wants its own, but without peace there is no celebration.",
+  "menu.normal.note": "The real mountain: grass and water don’t stretch to everyone. To top the board your valley must do well… and the peace must hold.",
   "menu.solo.note": "You are Roncal. The computer is Barétous, and it remembers how you treat it.",
-  "menu.duo.note": "Player 1: Roncal. Player 2: Barétous. Compete for your valley, but look after the peace together.",
+  "menu.duo.note": "Player 1: Roncal. Player 2: Barétous. Compete for your valley, but if the peace breaks, you both score 0.",
   "menu.lang": "Language",
   "menu.go": "[A] Up the mountain!",
   "menu.hint": "Stick: choose · [A] OK · [C] language",
@@ -28,7 +28,7 @@
   "outro.1": "The ceremony still takes place every 13 July, and the mayors still say \"Pax avant\": peace from now on.",
   "outro.2": "You can go and see it at the San Martín stone, high above the Belagua valley. Good neighbours share!",
   "brief.title": "One season on the mountain",
-  "brief.goal": "Each valley competes for itself: cheese, sheep home, stars and honour. But the peace belongs to both: if it breaks, there is no ceremony and no prize for anyone.",
+  "brief.goal": "Each valley competes for itself: cheese, sheep home, stars and honour. But without peace nothing counts: if it breaks, both valleys score 0.",
   "brief.p1": "Player 1: Roncal shepherd (round mark)",
   "brief.p2": "Player 2: Barétous shepherd (square mark)",
   "brief.cpu": "Barétous (square mark): played by the computer",
@@ -156,7 +156,7 @@
   "results.peace": "Peace prize",
   "results.ahead": "· ahead!",
   "results.peaceKept": "The peace held ({n}): there will be a ceremony at the stone.",
-  "results.peaceBroken": "The peace broke ({n}): no ceremony, and nobody wins its prize.",
+  "results.peaceBroken": "The peace broke ({n}): no ceremony, and both valleys score 0.",
   "results.cowsOk": "The three cows reach the stone healthy.",
   "results.cowsThin": "The cows arrive thin: the tribute falls short and the peace suffers.",
   "results.tie": "A tie! Both valleys did equally well.",
@@ -168,5 +168,6 @@
   "fact.question": "At the ceremony the mayor of Isaba asks three times, \"Do you want peace?\", and the French answer yes.",
   "fact.justice": "At the end, the mayor of Isaba judges last year’s breaches of the treaty. The border guards swear with a hand on his staff.",
   "fact.quarrels": "Before the treaty there were fights over the springs in which people from both valleys died. The peace of 1375 ended that.",
-  "fact.selection": "A vet inspects the cows brought from France and chooses three for Roncal."
+  "fact.selection": "A vet inspects the cows brought from France and chooses three for Roncal.",
+  "tip.peace": "The peace cools on its own: it only holds if the valleys keep helping each other."
 }

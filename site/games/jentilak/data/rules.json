@@ -1,0 +1,166 @@
+{
+  "_note": "Engine tunables for the side-view platform fighter, from DESIGN.md where it gives numbers. Frames are 1/60 s; distances are stage pixels (480x270, y down). See BALANCE.md.",
+  "fps": 60,
+  "round": {
+    "time": 90,
+    "toWin": 2,
+    "maxRounds": 5,
+    "bowTime": 1.6,
+    "goCall": 0.8,
+    "endCall": 2.2
+  },
+  "bow": {
+    "_note": "Agurra: every round opens with a bow. A fighter who attacks before 'Hasi!' loses a slice of super meter (once per round).",
+    "foulMeter": 20
+  },
+  "meter": {
+    "max": 100,
+    "perDamageDealt": 1.0,
+    "perDamageTaken": 0.5,
+    "perfectDodge": 10
+  },
+  "dodge": {
+    "frames": 20,
+    "iframesFrom": 1,
+    "iframesTo": 15,
+    "perfectWindow": 5,
+    "speed": 3.0,
+    "airSpeed": 1.6,
+    "cooldown": 60
+  },
+  "hitstop": {
+    "base": 2,
+    "perSpeed": 0.5,
+    "max": 10
+  },
+  "super": {
+    "freeze": 30,
+    "lenience": 4
+  },
+  "stats": {
+    "_note": "Speed 1-5 -> run speed px/frame; Power 1-5 -> damage x (0.8 + 0.1 x Power); weight -> knockback taken and fall speed; toughness: knockback x the square root of (100 / toughness).",
+    "speedBase": 1.9,
+    "speedPer": 0.38,
+    "powerBase": 0.8,
+    "powerPer": 0.1,
+    "spread": 0.05,
+    "weight": {
+      "light": {
+        "knock": 1.1,
+        "grav": 0.9,
+        "mass": 0.7
+      },
+      "medium": {
+        "knock": 1.0,
+        "grav": 1.0,
+        "mass": 1.0
+      },
+      "heavy": {
+        "knock": 0.92,
+        "grav": 1.12,
+        "mass": 1.5
+      }
+    }
+  },
+  "elements": {
+    "_note": "Ura beats Sua, Sua beats Basoa, Basoa beats Harria, Harria beats Ura. Gaua is neutral (stronger in darkness, Milestone 3).",
+    "beats": {
+      "ura": "sua",
+      "sua": "basoa",
+      "basoa": "harria",
+      "harria": "ura"
+    },
+    "strong": 1.25,
+    "weak": 0.8
+  },
+  "cpu": {
+    "_note": "The computer opponent (src/core/cpu.js). react: frames before it reacts to a move or a shot, and between decisions. dodge: chance it rolls away from a threat it has seen. aggression: chance it attacks when in reach. combo: chance it finishes a combo. special/super: chance it uses them when they'd work.",
+    "default": "normal",
+    "levels": {
+      "easy": {
+        "react": 24,
+        "dodge": 0.12,
+        "aggression": 0.45,
+        "combo": 0.4,
+        "special": 0.35,
+        "super": 0.5
+      },
+      "normal": {
+        "react": 14,
+        "dodge": 0.3,
+        "aggression": 0.7,
+        "combo": 0.75,
+        "special": 0.6,
+        "super": 0.8
+      },
+      "hard": {
+        "react": 8,
+        "dodge": 0.55,
+        "aggression": 0.9,
+        "combo": 1,
+        "special": 0.85,
+        "super": 1
+      }
+    }
+  },
+  "combo": {
+    "window": 14
+  },
+  "physics": {
+    "_note": "Snappy movement in the manner of Super Smash Flash. Run speed comes from stats; `traction` is how fast you stop. Tap up for a short hop (`shortHop` x jump), hold up for a full hop; down in the air while falling is a fast fall. `jumpsquat` frames pass before leaving the ground: pressing A in them gives the up attack instead.",
+    "gravity": 0.56,
+    "fallMax": 5.6,
+    "fastFall": 8.4,
+    "jump": 8.0,
+    "shortHop": 0.62,
+    "airJump": 7.4,
+    "jumpsquat": 4,
+    "traction": 0.9,
+    "airAccel": 0.55,
+    "airMax": 0.85,
+    "drag": 0.97,
+    "hitstunPer": 3.2,
+    "hitstunMin": 8,
+    "hitstunMax": 60,
+    "tumble": 1.2,
+    "dropFrames": 12,
+    "landLag": 2,
+    "push": 1.0,
+    "smashWindow": 4,
+    "chargeMax": 60,
+    "chargeBonus": 0.4,
+    "stepUp": 24
+  },
+  "match": {
+    "_note": "Super Smash Flash style: stocks (lives) and a time limit. After a ring-out a fighter comes back after `respawn` frames on a floating stone, invincible for `invincible` frames.",
+    "stocks": 3,
+    "time": 180,
+    "respawn": 60,
+    "invincible": 120,
+    "endCall": 2.4
+  },
+  "shield": {
+    "_note": "Hold C on the ground. It shrinks while held and with every blow; at 0 it breaks and the fighter is dizzy.",
+    "max": 60,
+    "decay": 0.15,
+    "regen": 0.12,
+    "damageMult": 1.3,
+    "stunPer": 0.8,
+    "push": 1.5,
+    "dizzy": 180,
+    "afterBreak": 30
+  },
+  "grab": {
+    "_note": "C + A (or A while shielding). Pummel with A; throw with a direction. The held fighter breaks free after `hold` + `holdPer` x damage% frames.",
+    "hold": 70,
+    "holdPer": 0.3,
+    "pummelEvery": 12
+  },
+  "ledge": {
+    "_note": "Hanging on the corner of the main platform. Up jumps off, toward the stage climbs, A climbs with an attack, C rolls on, down or away lets go.",
+    "reach": 14,
+    "invincible": 40,
+    "max": 240,
+    "climb": 20
+  }
+}

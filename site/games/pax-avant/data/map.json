@@ -87,7 +87,7 @@
       "rx": 50,
       "ry": 30,
       "high": true,
-      "start": 0.9
+      "start": 0.72
     },
     {
       "id": "roncal_low",
@@ -97,7 +97,7 @@
       "rx": 52,
       "ry": 26,
       "high": false,
-      "start": 0.9
+      "start": 0.72
     },
     {
       "id": "shared_high",
@@ -107,7 +107,7 @@
       "rx": 62,
       "ry": 28,
       "high": true,
-      "start": 0.9
+      "start": 0.7
     },
     {
       "id": "baretous_high",
@@ -117,7 +117,7 @@
       "rx": 50,
       "ry": 30,
       "high": true,
-      "start": 0.5
+      "start": 0.42
     },
     {
       "id": "baretous_low",
@@ -127,7 +127,7 @@
       "rx": 52,
       "ry": 26,
       "high": false,
-      "start": 0.5
+      "start": 0.42
     }
   ],
   "springs": [
@@ -135,8 +135,8 @@
       "id": "roncal",
       "x": 66,
       "y": 138,
-      "cap": 1.2,
-      "regen": 0.006,
+      "cap": 1.0,
+      "regen": 0.005,
       "troughs": [
         {
           "x": 80,
@@ -149,8 +149,8 @@
       "id": "shared",
       "x": 240,
       "y": 170,
-      "cap": 4,
-      "regen": 0.035,
+      "cap": 3,
+      "regen": 0.022,
       "troughs": [
         {
           "x": 224,
@@ -168,8 +168,8 @@
       "id": "baretous",
       "x": 414,
       "y": 138,
-      "cap": 4,
-      "regen": 0.04,
+      "cap": 3.2,
+      "regen": 0.03,
       "troughs": [
         {
           "x": 400,

@@ -13,7 +13,7 @@ import { sfx } from './audio.js';
 import { langParam } from './arcade.js';
 import { settings, topScores, qualifies, addScore } from './store.js';
 
-const BOARD = 'season';
+const BOARD = 'valley'; // one entry per valley's player; a new table for the new scoring
 
 // "[A] whistle" -> button glyph + text, so non-readers can match the button.
 export function rich(text) {
@@ -420,7 +420,9 @@ export function results(app, { season: s }) {
       row('heart', t('results.honour'), P.honour),
       i === 0 ? row('cow', t('results.tribute'), P.tribute) : null,
       row('hands', t('results.peace'), P.peace),
-      h('div', { class: 'res-total' }, h('span', {}, t('results.total')), h('span', {}, String(v.total))));
+      // Without the peace the valley's work is shown crossed out, and it scores 0.
+      h('div', { class: 'res-total' }, h('span', {}, t('results.total')),
+        sc.ceremony ? h('span', {}, String(v.total)) : h('span', {}, h('s', { class: 'lost' }, String(v.earned)), ' 0')));
   };
   app.ui.replaceChildren(h('div', { class: 'overlay results' },
     h('div', { class: 'card wide' },
@@ -433,7 +435,13 @@ export function results(app, { season: s }) {
   return {
     update(dt) {
       t0 += dt;
-      if ((t0 > 1 && (app.input.any('a') || app.input.any('start'))) || t0 > 30) { sfx.ok(); app.go('ceremony', { score: sc, board: two ? sc.valleys[0].total + sc.valleys[1].total : sc.valleys[0].total }); }
+      if ((t0 > 1 && (app.input.any('a') || app.input.any('start'))) || t0 > 30) {
+        sfx.ok();
+        // The leaderboard is per valley: each player's own score, which is 0
+        // without the peace. (One player: only Roncal is yours.)
+        const entries = (two ? [0, 1] : [0]).map((i) => ({ side: i, score: sc.valleys[i].total }));
+        app.go('ceremony', { score: sc, entries });
+      }
     },
     draw(ctx) { drawSeason(ctx, s, app.time); ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(0, 0, W, H); },
   };
@@ -441,7 +449,7 @@ export function results(app, { season: s }) {
 
 // ---- the 13 July ceremony --------------------------------------------------------
 
-export function ceremony(app, { score, board }) {
+export function ceremony(app, { score, entries = [] }) {
   const tier = score.tier;
   let t0 = 0, popped = false;
   app.ui.replaceChildren(h('div', { class: 'overlay story ceremony' },
@@ -458,7 +466,8 @@ export function ceremony(app, { score, board }) {
       if (!popped && t0 > 1.2 && score.ceremony) { popped = true; pax.replaceChildren(h('span', {}, t('ceremony.pax'))); pax.classList.add('stay'); }
       if ((t0 > 2 && (app.input.any('a') || app.input.any('start'))) || t0 > 14) {
         const { difficulty } = app.session;
-        if (qualifies(BOARD, difficulty, board)) app.go('initials', { score: board });
+        const queue = entries.filter((e) => e.score > 0 && qualifies(BOARD, difficulty, e.score)).sort((a, b) => b.score - a.score);
+        if (queue.length) app.go('initials', { score: queue[0].score, side: queue[0].side, queue: queue.slice(1) });
         else app.go('fact');
       }
     },
@@ -477,7 +486,7 @@ export function ceremony(app, { score, board }) {
 
 const ALPHABET = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
 
-export function initials(app, { score }) {
+export function initials(app, { score, side = 0, queue = [] }) {
   const letters = [0, 0, 0];
   let slot = 0, saved = null, t0 = 0;
   const show = () => {
@@ -485,6 +494,7 @@ export function initials(app, { score }) {
       saved ? scoreTable()
         : h('div', { class: 'card' },
           h('h2', {}, t('scores.new')),
+          h('p', { class: 'small' }, tag(side), ' ', t(side === 0 ? 'valley.roncal' : 'valley.baretous')),
           h('p', { class: 'big-score' }, String(score)),
           h('div', { class: 'initials' }, letters.map((l, i) => h('span', { class: i === slot ? 'sel' : '' }, ALPHABET[l]))),
           h('p', { class: 'hint' }, rich(t('scores.hint'))))));
@@ -494,7 +504,12 @@ export function initials(app, { score }) {
     update(dt) {
       const inp = app.input;
       if (saved) {
-        if ((t0 += dt) > 6 || (t0 > 0.5 && (inp.any('a') || inp.any('start')))) app.go('fact');
+        if ((t0 += dt) > 6 || (t0 > 0.5 && (inp.any('a') || inp.any('start')))) {
+          // The other valley's player gets their turn too, if they made the board.
+          const next = queue.find((e) => qualifies(BOARD, app.session.difficulty, e.score));
+          if (next) app.go('initials', { score: next.score, side: next.side, queue: queue.filter((e) => e !== next) });
+          else app.go('fact');
+        }
         return;
       }
       if (inp.any('up')) { letters[slot] = (letters[slot] + 1) % ALPHABET.length; sfx.move(); show(); }

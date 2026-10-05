@@ -14,9 +14,9 @@
   "menu.difficulty.easy": "Fácil",
   "menu.difficulty.normal": "Normal",
   "menu.easy.note": "La hierba dura más, los rebaños van más juntos y unas flechas señalan las ovejas perdidas.",
-  "menu.normal.note": "La montaña de verdad: cada valle quiere lo suyo, pero sin paz no hay fiesta.",
+  "menu.normal.note": "La montaña de verdad: la hierba y el agua no llegan para todos. Para ser el mejor, tu valle tiene que ir bien… y la paz, aguantar.",
   "menu.solo.note": "Tú eres Roncal. El ordenador es Barétous, y se acuerda de cómo le tratas.",
-  "menu.duo.note": "Jugador 1: Roncal. Jugador 2: Barétous. Compite por tu valle, pero cuidad la paz entre los dos.",
+  "menu.duo.note": "Jugador 1: Roncal. Jugador 2: Barétous. Compite por tu valle, pero si la paz se rompe, los dos sacáis 0.",
   "menu.lang": "Idioma",
   "menu.go": "[A] ¡Al monte!",
   "menu.hint": "Joystick: elegir · [A] aceptar · [C] idioma",
@@ -28,7 +28,7 @@
   "outro.1": "La ceremonia se sigue celebrando cada 13 de julio, y los alcaldes siguen diciendo «Pax avant»: paz en adelante.",
   "outro.2": "Puedes ir a verla a la Piedra de San Martín, en lo alto del valle de Belagua. ¡Los buenos vecinos comparten!",
   "brief.title": "Una temporada en el puerto",
-  "brief.goal": "Cada valle compite por lo suyo: queso, ovejas en casa, estrellas y honor. Pero la paz es de los dos: si se rompe, no hay ceremonia ni premio para nadie.",
+  "brief.goal": "Cada valle compite por lo suyo: queso, ovejas en casa, estrellas y honor. Pero sin paz no cuenta nada: si se rompe, los dos valles se quedan con 0 puntos.",
   "brief.p1": "Jugador 1: pastor de Roncal (marca redonda)",
   "brief.p2": "Jugador 2: pastor de Barétous (marca cuadrada)",
   "brief.cpu": "Barétous (marca cuadrada): lo lleva el ordenador",
@@ -156,7 +156,7 @@
   "results.peace": "Premio de la paz",
   "results.ahead": "· ¡por delante!",
   "results.peaceKept": "La paz se ha mantenido ({n}): habrá ceremonia en la piedra.",
-  "results.peaceBroken": "La paz se ha roto ({n}): no hay ceremonia, y nadie gana su premio.",
+  "results.peaceBroken": "La paz se ha roto ({n}): no hay ceremonia, y los dos valles se quedan con 0 puntos.",
   "results.cowsOk": "Las tres vacas llegan sanas a la piedra.",
   "results.cowsThin": "Las vacas llegan flacas: el tributo se queda corto y la paz lo nota.",
   "results.tie": "¡Empate! Los dos valles igual de bien.",
@@ -168,5 +168,6 @@
   "fact.question": "En la ceremonia, el alcalde de Isaba pregunta tres veces «¿Queréis la paz?», y los franceses responden que sí.",
   "fact.justice": "Al final, el alcalde de Isaba juzga las faltas al tratado del año anterior. Los guardas juran con la mano en su vara.",
   "fact.quarrels": "Antes del tratado hubo peleas por las fuentes en las que murió gente de los dos valles. La paz de 1375 puso fin a eso.",
-  "fact.selection": "Un veterinario revisa las vacas que traen de Francia y elige tres para Roncal."
+  "fact.selection": "Un veterinario revisa las vacas que traen de Francia y elige tres para Roncal.",
+  "tip.peace": "La paz se va enfriando sola: solo aguanta si los valles se siguen ayudando."
 }

@@ -184,3 +184,4 @@ h3 { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spa
 .res-col .res-row { grid-template-columns: 11px 1fr auto; }
 .res-col .res-total { display: flex; justify-content: space-between; }
 .res-col { min-width: 0; overflow: hidden; }
+.res-total s.lost { color: var(--muted); font-size: .8em; margin-right: 4px; }

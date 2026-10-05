@@ -266,6 +266,9 @@ export class Season {
     this.stepGrass();
     this.stepWater();
     if ((this._strayT += DT) >= 0.25) { this._strayT = 0; this.updateStrays(); }
+    // Old grudges: left alone, the Peace slowly fades. It holds only if the
+    // valleys keep giving to each other.
+    this.trust -= (this.rules.trust.drift ?? 0) * DT;
     this.trust = clamp(this.trust, 0, 100);
     const q = this.trust < this.rules.trust.quarrelAt;
     if (q !== this.quarrel) { this.quarrel = q; this.events.push({ type: q ? 'quarrel' : 'reconcile' }); }
@@ -817,8 +820,9 @@ export class Season {
 
   // The end of the summer, valley by valley: what each made for itself
   // (cheese, sheep home, stars), what it gave (honour), the tribute (healthy
-  // cows score for Roncal), and the Peace, whose bonus both get only if the
-  // ceremony at the stone takes place.
+  // cows score for Roncal), and the Peace. If the Peace broke, there is no
+  // ceremony and both valleys score 0, however well they did on their own:
+  // the best score needs a strong valley AND a kept peace.
   score() {
     const S = this.rules.score, Tr = this.rules.tribute;
     const sheepOf = (side) => this.sheep.filter((s) => s.side === side && !s.cow);
@@ -840,9 +844,12 @@ export class Season {
         tribute: i === 0 && tributeOk ? Math.round(cowCondition * cows.length * Tr.perCow) : 0,
         peace: ceremony ? peace * S.peace : 0,
       };
-      return { parts, total: Object.values(parts).reduce((a, b) => a + b, 0), cheese: Math.floor(this.cheese[i]) };
+      // No peace, no score: a valley that won its own race but lost the
+      // peace has nothing to bring to the stone.
+      const earned = Object.values(parts).reduce((a, b) => a + b, 0);
+      return { parts, earned, total: ceremony ? earned : 0, cheese: Math.floor(this.cheese[i]) };
     });
-    const gap = valleys[0].total - valleys[1].total;
+    const gap = valleys[0].earned - valleys[1].earned;
     const winner = Math.abs(gap) < 15 ? -1 : gap > 0 ? 0 : 1;
     const homeFrac = (home[0] + home[1]) / (this.flockSize[0] + this.flockSize[1]);
     const together = (peace + health + condition * 100 + homeFrac * 100) / 4;

@@ -137,7 +137,7 @@ function build() {
     h('footer', {}, el.sponsor, h('div', { class: 'hints' }, el.hint, el.exit), el.credit),
   );
   el.cardEls = games.map((g, i) => {
-    const card = h('div', { class: `card ${g.status}`, onClick: () => (i === sel ? launch() : pick(i)) },
+    const card = h('div', { class: `card ${g.status} ${g.pace}`, onClick: () => (i === sel ? launch() : pick(i)) },
       // How long it takes sits above the picture, never over it.
       h('span', { class: `pace ${g.pace}` }),
       g.poster || g.thumb ? h('div', { class: 'thumb', style: { backgroundImage: `url(${g.poster ?? g.thumb})` } }) : h('div', { class: 'thumb blank' }),
@@ -153,22 +153,48 @@ function pick(i) {
   sel = i;
   store.set('last', games[sel].id);
   beep(520, 0.04);
-  render(dir);
+  // Scrolling only slides the strip (cheap, so the beep and the move are
+  // instant); the big preview follows once the player stops for a moment,
+  // so racing past games doesn't load a video for each one.
+  later(() => renderStrip());
+  clearTimeout(featureTimer);
+  featureTimer = setTimeout(() => renderFeature(dir), 140);
+}
+let featureTimer = 0;
+
+// One redraw per frame at most, after the sound has gone out.
+let pending = null;
+function later(fn) {
+  pending = fn;
+  requestAnimationFrame(() => { const f = pending; pending = null; f?.(); });
 }
 
 function move(dir) {
   pick((sel + dir + games.length) % games.length);
 }
 
-function render(dir = 0) {
-  document.documentElement.lang = lang;
-  document.title = t('title');
-  el.title.textContent = t('title');
-  el.langs.replaceChildren(
-    h('span', { class: 'lang-label' }, t('lang')),
-    ...LANGS.map((l) => h('button', { class: `lang ${l === lang ? 'on' : ''}`, onClick: () => setLanguage(l) },
-      h('span', { class: 'long' }, LANG_NAMES[l]), h('span', { class: 'short' }, l.toUpperCase()))));
-  el.langs.classList.toggle('focus', focus === 'lang');
+
+// The revolving strip: each card sits at its distance from the chosen one,
+// counted round the circle, so the row wraps and runs off both edges. A card
+// that wraps from one end to the other jumps without sliding across.
+const STEP = 112;
+function placeCards() {
+  if (document.body.classList.contains('tall')) { for (const c of el.cardEls) { c.style.transform = ''; c.style.opacity = ''; } return; }
+  const n = games.length;
+  el.cardEls.forEach((c, i) => {
+    let d = (i - sel + n) % n;
+    if (d > n / 2) d -= n;
+    const prev = Number(c.dataset.d ?? d);
+    c.classList.toggle('jump', Math.abs(d - prev) > 1);
+    c.dataset.d = d;
+    c.style.transform = `translateX(${d * STEP}px) scale(${d === 0 ? 1.06 : 1})`;
+    c.style.opacity = Math.abs(d) > 3 ? '0' : '1';
+  });
+}
+
+// The card strip: which game is picked, names and times.
+function renderStrip() {
+  placeCards();
   el.cardEls.forEach((c, i) => {
     c.classList.toggle('sel', i === sel);
     c.querySelector('.name').textContent = games[i].title[lang] ?? games[i].title.es;
@@ -178,6 +204,16 @@ function render(dir = 0) {
   });
   el.cards.classList.toggle('dim', focus === 'lang');
 
+  // Keep the chosen card in view in the swipeable strip.
+  // (Scrolling the strip itself, so the page doesn't jump down to it.)
+  if (document.body.classList.contains('tall')) {
+    const c = el.cardEls[sel];
+    el.cards.scrollTo({ left: c.offsetLeft - el.cards.offsetLeft - (el.cards.clientWidth - c.offsetWidth) / 2, behavior: 'smooth' });
+  }
+}
+
+// The big panel for the picked game: its moving preview and its story.
+function renderFeature(dir = 0) {
   // The featured game: big moving preview on the left, its story on the right.
   const g = games[sel], L = (o) => (o ? o[lang] ?? o.es : '');
   const players = g.players === '1' ? t('player1') : t('players', { n: g.players.replace('-', '–') });
@@ -204,6 +240,26 @@ function render(dir = 0) {
   const clip = panel.querySelector('video');
   if (clip) { clip.muted = true; clip.play().catch(() => {}); } // muted, so browsers let it autoplay
 
+  el.play.textContent = g.status === 'ready' ? `▶ ${t('play')}` : t('soon');
+  el.play.disabled = g.status !== 'ready';
+  // Upright, the button gets its own row; on a wide screen it sits on the
+  // preview's corner so the 16:9 layout keeps its room.
+  if (document.body.classList.contains('tall')) el.feature.after(el.play);
+  else panel.querySelector('.preview').append(el.play);
+}
+
+function render(dir = 0) {
+  document.documentElement.lang = lang;
+  document.title = t('title');
+  el.title.textContent = t('title');
+  el.langs.replaceChildren(
+    h('span', { class: 'lang-label' }, t('lang')),
+    ...LANGS.map((l) => h('button', { class: `lang ${l === lang ? 'on' : ''}`, onClick: () => setLanguage(l) },
+      h('span', { class: 'long' }, LANG_NAMES[l]), h('span', { class: 'short' }, l.toUpperCase()))));
+  el.langs.classList.toggle('focus', focus === 'lang');
+  renderStrip();
+  renderFeature(dir);
+
   renderSponsor();
   // The maker's mark: the logo in a gold-rimmed medallion, the name in
   // Basque lettering.
@@ -216,18 +272,6 @@ function render(dir = 0) {
   el.hint.replaceChildren(...rich(t(isTouch ? 'hintTouch' : focus === 'lang' ? 'hintLang' : 'hint')));
   el.exit.replaceChildren(...rich(t(isTouch ? 'exitHintTouch' : 'exitHint')));
   fitText();
-  el.play.textContent = g.status === 'ready' ? `▶ ${t('play')}` : t('soon');
-  el.play.disabled = g.status !== 'ready';
-  // Upright, the button gets its own row; on a wide screen it sits on the
-  // preview's corner so the 16:9 layout keeps its room.
-  if (document.body.classList.contains('tall')) el.feature.after(el.play);
-  else panel.querySelector('.preview').append(el.play);
-  // Keep the chosen card in view in the swipeable strip.
-  // (Scrolling the strip itself, so the page doesn't jump down to it.)
-  if (document.body.classList.contains('tall')) {
-    const c = el.cardEls[sel];
-    el.cards.scrollTo({ left: c.offsetLeft - el.cards.offsetLeft - (el.cards.clientWidth - c.offsetWidth) / 2, behavior: dir ? 'smooth' : 'auto' });
-  }
 }
 
 // ---- keeping text inside its box, in every language ---------------------------
@@ -261,7 +305,7 @@ function shrink(n, twoLines = false) {
   const over = () => n.scrollWidth > n.clientWidth + 0.5 || (twoLines && n.scrollHeight > n.clientHeight + 0.5);
   while (over() && size > 4.5) { size -= 0.25; n.style.fontSize = `${size}px`; }
 }
-addEventListener('resize', () => el && fitText());
+addEventListener('resize', () => { if (el) { fitText(); placeCards(); } });
 document.fonts?.ready.then(() => el && fitText());
 
 // ---- sponsors -----------------------------------------------------------------
@@ -316,7 +360,7 @@ function setLanguage(l) {
   lang = l;
   store.set('lang', lang);
   beep(520, 0.04);
-  render();
+  later(() => render());
 }
 
 async function launch() {
@@ -338,11 +382,17 @@ async function launch() {
   }
 }
 
-// Tiny synthesised beeps; no audio files needed.
+// Tiny synthesised beeps; no audio files needed. The audio is woken on the
+// first key or touch, so the first beep isn't late either.
 let actx = null;
+function wakeAudio() {
+  try { actx ??= new AudioContext({ latencyHint: 'interactive' }); if (actx.state === 'suspended') actx.resume(); } catch { /* no audio */ }
+}
+addEventListener('keydown', wakeAudio, { once: true });
+addEventListener('pointerdown', wakeAudio, { once: true });
 function beep(freq, dur, delay = 0) {
   try {
-    actx ??= new AudioContext();
+    wakeAudio();
     const o = actx.createOscillator(), g = actx.createGain(), t0 = actx.currentTime + delay;
     o.type = 'square'; o.frequency.value = freq;
     g.gain.setValueAtTime(0.08, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
@@ -358,12 +408,12 @@ function update(dt) {
   if (focus === 'lang') {
     if (input.any('left')) cycle(-1);
     if (input.any('right')) cycle(1);
-    if (input.any('down') || input.any('a') || input.any('b')) { focus = 'games'; beep(440, 0.04); render(); }
+    if (input.any('down') || input.any('a') || input.any('b')) { focus = 'games'; beep(440, 0.04); later(() => render()); }
     else if (input.any('start')) { focus = 'games'; launch(); }
   } else {
     if (input.any('left')) move(-1);
     if (input.any('right')) move(1);
-    if (input.any('up')) { focus = 'lang'; beep(440, 0.04); render(); }
+    if (input.any('up')) { focus = 'lang'; beep(440, 0.04); later(() => render()); }
     if (input.any('a') || input.any('start')) launch();
   }
   if (input.any('c')) cycle(1);
