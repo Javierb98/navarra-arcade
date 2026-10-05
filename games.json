@@ -58,8 +58,8 @@
       "status": "ready",
       "thumb": "assets/thumbs/pax-avant.png",
       "players": "1-2",
-      "minutes": "5",
-      "pace": "quick",
+      "minutes": "6-7",
+      "pace": "long",
       "bestFor": {
         "es": "Para dos: cada uno por su valle, pero la paz es de los dos",
         "eu": "Birentzat: bakoitza bere ibarraren alde, baina bakea biona da",
@@ -193,6 +193,54 @@
         "eu": "Bi botoi erritmoz eta joystick-a",
         "en": "Two buttons in rhythm, and the stick"
       }
+    },
+    {
+      "id": "jentilak",
+      "folder": "../navarra-jentilak",
+      "port": 8790,
+      "url": "games/jentilak/",
+      "status": "ready",
+      "thumb": "assets/previews/jentilak.jpg",
+      "players": "1-2",
+      "minutes": "3–5",
+      "pace": "quick",
+      "bestFor": {
+        "es": "Combates rápidos al estilo Smash: contra el ordenador o entre dos, tres vidas",
+        "eu": "Smash estiloko borroka azkarrak: ordenagailuaren aurka edo biren artean, hiru bizitza",
+        "en": "Quick Smash-style fights: against the computer or head to head, three lives"
+      },
+      "title": {
+        "es": "Duelo de Mitos",
+        "eu": "Mitoen Borroka",
+        "en": "Myth Brawl"
+      },
+      "blurb": {
+        "es": "Doce seres de las leyendas vascas y navarras se miden en Olite, Irati, las Bardenas y más: ¡échalos fuera del ring!",
+        "eu": "Euskal eta nafar kondairetako hamabi izaki Erriberrin, Iratin, Bardeetan eta beste lekuetan neurtzen dira: bota itzazu ringetik kanpora!",
+        "en": "Twelve creatures of Basque and Navarrese legend face off in Olite, Irati, the Bardenas and more: knock them out of the ring!"
+      },
+      "lesson": {
+        "es": "Quiénes son Basajaun, las lamias, Tartalo, el Aatxe, Eate o Ziripot del carnaval de Lantz, qué cuentan de ellos las leyendas y en qué lugares de Navarra se sitúan.",
+        "eu": "Nor diren Basajaun, lamiak, Tartalo, Aatxe, Eate edo Lantzeko inauterietako Ziripot, zer kontatzen duten kondairek haiei buruz eta Nafarroako zein lekutan kokatzen diren.",
+        "en": "Who Basajaun, the lamiak, Tartalo, Aatxe, Eate and Ziripot of the Lantz carnival are, what the legends tell about them, and where in Navarre they are set."
+      },
+      "era": {
+        "es": "Mitología tradicional",
+        "eu": "Ohiko mitologia",
+        "en": "Traditional mythology"
+      },
+      "place": {
+        "es": "Navarra y Euskal Herria",
+        "eu": "Nafarroa eta Euskal Herria",
+        "en": "Navarre and the Basque Country"
+      },
+      "controls": {
+        "es": "Joystick (arriba: saltar), A golpe, B especial, C escudo (A+B: súper)",
+        "eu": "Joystick-a (gora: salto), A kolpea, B berezia, C ezkutua (A+B: super)",
+        "en": "Stick (up: jump), A attack, B special, C shield (A+B: super)"
+      },
+      "preview": "assets/previews/jentilak.webm",
+      "poster": "assets/previews/jentilak.jpg"
     },
     {
       "id": "salinas",

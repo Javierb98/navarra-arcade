@@ -44,8 +44,8 @@
   },
   "needs": {
     "start": 0.8,
-    "hunger": 0.008,
-    "thirst": 0.007,
+    "hunger": 0.0075,
+    "thirst": 0.0068,
     "eat": 0.2,
     "grassPerFood": 2,
     "drink": 0.6,
@@ -56,7 +56,7 @@
     "grazeSpeed": 14
   },
   "grass": {
-    "regrow": 0.03,
+    "regrow": 0.018,
     "floor": 0.0005,
     "overgrazed": 0.2
   },
@@ -67,14 +67,15 @@
     "wolfHelp": 6,
     "waterShare": 0.5,
     "hog": 0.12,
-    "trespass": 1.8,
+    "trespass": 2.8,
     "sharedShelterAt": 60,
     "earlyWarningAt": 70,
     "kindAt": 45,
-    "_note": "trust is the Peace both valleys share (0..100). Below `quarrelAt` the valleys are quarrelling; at the end, below `ceremonyAt` there is no ceremony at the stone.",
+    "_note": "trust is the Peace both valleys share (0..100). Below `quarrelAt` the valleys are quarrelling; at the end, below `ceremonyAt` there is no ceremony at the stone. `drift` is how much the Peace fades each second on its own (old grudges): it only holds if the valleys keep giving.",
     "guest": 0.25,
     "quarrelAt": 25,
-    "ceremonyAt": 50
+    "ceremonyAt": 45,
+    "drift": 0.025
   },
   "wolf": {
     "speed": 30,
@@ -92,11 +93,11 @@
   },
   "weekBreak": 3.5,
   "goals": {
-    "moveUp": 0.75,
-    "graze": 0.6,
-    "storm": 0.75,
-    "drought": 0.5,
-    "moveDown": 0.75
+    "moveUp": 0.85,
+    "graze": 0.7,
+    "storm": 0.85,
+    "drought": 0.62,
+    "moveDown": 0.9
   },
   "difficulty": {
     "easy": {
@@ -143,7 +144,7 @@
     "count": 3,
     "side": 1,
     "radius": 5,
-    "hunger": 0.9,
+    "hunger": 0.8,
     "eat": 2.2,
     "speedK": 0.8
   },

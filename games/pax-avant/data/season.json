@@ -4,23 +4,23 @@
     {
       "id": "w1",
       "season": "spring",
-      "length": 42,
+      "length": 61,
       "goal": "moveUp",
       "prompts": [
         {
-          "t": 0.5,
+          "t": 0.7,
           "key": "tip.gate"
         },
         {
-          "t": 7,
+          "t": 10.2,
           "key": "tip.bell"
         },
         {
-          "t": 16,
+          "t": 23.2,
           "key": "tip.whistle"
         },
         {
-          "t": 27,
+          "t": 39.1,
           "key": "tip.up"
         }
       ],
@@ -30,29 +30,33 @@
     {
       "id": "w2",
       "season": "summer",
-      "length": 36,
+      "length": 52,
       "goal": "graze",
       "prompts": [
         {
-          "t": 1,
+          "t": 1.4,
           "key": "tip.pass"
         },
         {
-          "t": 9,
+          "t": 13.0,
           "key": "tip.compete"
         },
         {
-          "t": 18,
+          "t": 26.1,
           "key": "tip.open"
         },
         {
-          "t": 27,
+          "t": 39.1,
           "key": "tip.cows"
+        },
+        {
+          "t": 44.2,
+          "key": "tip.peace"
         }
       ],
       "events": [
         {
-          "t": 2,
+          "t": 2.9,
           "type": "dry",
           "spring": "roncal"
         }
@@ -62,22 +66,22 @@
     {
       "id": "w3",
       "season": "summer",
-      "length": 38,
+      "length": 55,
       "goal": "storm",
       "prompts": [
         {
-          "t": 1,
+          "t": 1.4,
           "key": "tip.water"
         }
       ],
       "events": [
         {
-          "t": 20,
+          "t": 29.0,
           "type": "storm",
-          "dur": 12
+          "dur": 14
         },
         {
-          "t": 24,
+          "t": 34.8,
           "type": "hail",
           "side": 1
         }
@@ -87,18 +91,18 @@
     {
       "id": "w4",
       "season": "summer",
-      "length": 38,
+      "length": 55,
       "goal": "night",
       "night": true,
       "prompts": [
         {
-          "t": 1,
+          "t": 1.4,
           "key": "tip.fire"
         }
       ],
       "events": [
         {
-          "t": 6,
+          "t": 8.7,
           "type": "wolf",
           "from": {
             "x": 150,
@@ -107,14 +111,14 @@
           "target": 0
         },
         {
-          "t": 12,
+          "t": 17.4,
           "type": "lamb",
           "x": 150,
           "y": 40,
           "side": 1
         },
         {
-          "t": 22,
+          "t": 31.9,
           "type": "wolf",
           "from": {
             "x": 330,
@@ -128,22 +132,22 @@
     {
       "id": "w5",
       "season": "summer",
-      "length": 38,
+      "length": 55,
       "goal": "drought",
       "prompts": [
         {
-          "t": 1,
+          "t": 1.4,
           "key": "tip.drought"
         }
       ],
       "events": [
         {
-          "t": 14,
+          "t": 20.3,
           "type": "fog",
-          "dur": 14
+          "dur": 17
         },
         {
-          "t": 0,
+          "t": 0.0,
           "type": "dry",
           "spring": "baretous"
         }
@@ -153,21 +157,21 @@
     {
       "id": "w6",
       "season": "autumn",
-      "length": 45,
+      "length": 65,
       "goal": "moveDown",
       "prompts": [
         {
-          "t": 0.5,
+          "t": 0.7,
           "key": "tip.down"
         },
         {
-          "t": 20,
+          "t": 29.0,
           "key": "tip.close"
         }
       ],
       "events": [
         {
-          "t": 32,
+          "t": 46.4,
           "type": "snow"
         }
       ],
