@@ -58,8 +58,8 @@ export function installArcadeLink() {
   addEventListener('keydown', (e) => {
     if (dialog) {
       // A or START: leave; B or Esc: keep playing (the cabinet's buttons).
-      if (e.key === 'Enter' || ['ControlLeft', 'KeyZ', 'KeyE', 'Digit1'].includes(e.code)) back();
-      else if (e.key === 'Escape' || ['AltLeft', 'KeyX', 'KeyR'].includes(e.code)) close();
+      if (e.key === 'Enter' || ['ControlLeft', 'KeyZ', 'KeyO', 'KeyR', 'Digit1'].includes(e.code)) back();
+      else if (e.key === 'Escape' || ['AltLeft', 'KeyX', 'KeyP', 'KeyT'].includes(e.code)) close();
       e.stopPropagation();
       return;
     }

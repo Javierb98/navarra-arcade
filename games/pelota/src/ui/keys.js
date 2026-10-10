@@ -1,5 +1,5 @@
 // Keyboard names for the cabinet buttons, from data/controls.json, so that at
-// a computer the screens show "Z" where the cabinet shows the A button.
+// a computer the screens show "O" where the cabinet shows the A button.
 
 import { device } from './device.js';
 

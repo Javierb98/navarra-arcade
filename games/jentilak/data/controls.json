@@ -1,5 +1,5 @@
 {
-  "_note": "Key names are KeyboardEvent.code values. Two profiles: `keyboard` is the DESIGN.md layout (P1 W A S D + F light, G special, H dodge, R super; P2 arrows + K, L, ;, O, or numpad 1 2 3 0); `cabinet` is the Navarra arcade cabinet's layout (P1 arrows, P2 W A S D; A = Z/Left Ctrl or E, B = X/Left Alt or R, C = Space/C or Q; no super button, so super = A+B). Choose the profile in the settings menu (F2). Esc pauses (and offers to leave).",
+  "_note": "Key names are KeyboardEvent.code values. Two profiles: `keyboard` is the DESIGN.md layout (P1 W A S D + F light, G special, H dodge, R super; P2 arrows + K, L, ;, O, or numpad 1 2 3 0); `cabinet` is the Navarra arcade cabinet's layout (P1 arrows, P2 W A S D; A = O/Left Ctrl or R, B = P/Left Alt or T, C = L/Space or F; no super button, so super = A+B). Choose the profile in the settings menu (F2). Esc pauses (and offers to leave).",
   "profile": "keyboard",
   "keyboard": {
     "p1": {
@@ -89,15 +89,15 @@
       ],
       "a": [
         "ControlLeft",
-        "KeyZ"
+        "KeyO"
       ],
       "b": [
         "AltLeft",
-        "KeyX"
+        "KeyP"
       ],
       "c": [
         "Space",
-        "KeyC"
+        "KeyL"
       ],
       "start": [
         "Digit1",
@@ -119,13 +119,13 @@
         "KeyS"
       ],
       "a": [
-        "KeyE"
-      ],
-      "b": [
         "KeyR"
       ],
+      "b": [
+        "KeyT"
+      ],
       "c": [
-        "KeyQ"
+        "KeyF"
       ],
       "start": [
         "Digit2"

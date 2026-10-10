@@ -22,7 +22,7 @@ const cap = (s) => s.replace(/^([¡¿]?)(\p{L})/u, (m, a, b) => a + b.toUpperCas
 // "[A] chop" -> button glyph + text, so non-readers can match the button
 // (on the cabinet, and the phone's on-screen buttons look the same). At a
 // computer it's player p's key instead ("Z chop"); p = null when the text is
-// for both players, and then both keys show ("Z/E").
+// for both players, and then both keys show ("O/R").
 export function rich(text, p = 0) {
   const parts = [];
   let last = 0;

@@ -1,5 +1,5 @@
 {
-  "_note": "Key names are KeyboardEvent.code values. One player; either set works: arrows or W A S D to walk, dig and climb, A (Z / Left Ctrl / E) for the workshop and buying, B (X / Left Alt / R) to place a ladder or leave the workshop. Change keys here, not in code.",
+  "_note": "One player; either set works: arrows or W A S D to walk, dig and climb, A (O / Left Ctrl / R) for the workshop and buying, B (P / Left Alt / T) to place a ladder or leave the workshop. Change keys here, not in code.",
   "keyboard": {
     "p1": {
       "left": [
@@ -16,15 +16,15 @@
       ],
       "a": [
         "ControlLeft",
-        "KeyZ"
+        "KeyO"
       ],
       "b": [
         "AltLeft",
-        "KeyX"
+        "KeyP"
       ],
       "c": [
         "Space",
-        "KeyC"
+        "KeyL"
       ],
       "start": [
         "Digit1",
@@ -45,13 +45,13 @@
         "KeyS"
       ],
       "a": [
-        "KeyE"
-      ],
-      "b": [
         "KeyR"
       ],
+      "b": [
+        "KeyT"
+      ],
       "c": [
-        "KeyQ"
+        "KeyF"
       ],
       "start": [
         "Digit2"
