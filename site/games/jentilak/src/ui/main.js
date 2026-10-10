@@ -231,7 +231,7 @@ async function boot() {
     initKeys(cfg);
     document.title = t('title.name');
     // From the arcade menu, skip the attract demo and go straight to setup.
-    app.go(menuUrl ? 'select' : 'attract');
+    app.go(menuUrl ? 'menu' : 'attract');
     requestAnimationFrame(frame);
   } catch (err) {
     console.error(err);

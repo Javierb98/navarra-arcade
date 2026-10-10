@@ -1,9 +1,9 @@
 // Every screen is a function (app, arg) -> { update(dt), draw(ctx) } that
 // builds its own DOM over the canvas and moves on with app.go(). Flow:
-// attract -> select -> match -> result -> select (or attract when idle).
+// attract -> menu -> select -> stage -> fight -> result -> select (or attract when idle).
 
 import { h } from './dom.js';
-import { t, getLang, nextLang } from './i18n.js';
+import { t, getLang, nextLang, LANGS } from './i18n.js';
 import { Match } from '../core/fight.js';
 import { Cpu } from '../core/cpu.js';
 import { drawMatch, drawHud, makeView, finish, portrait, stageThumb, PCOL, S, W, H } from './art.js';
@@ -88,9 +88,68 @@ export function attract(app) {
     attract: true,
     update(dt) {
       bg.update(dt);
-      if (app.input.any('start') || app.input.any('a')) { sfx.ok(); app.go('select'); }
+      if (app.input.any('start') || app.input.any('a')) { sfx.ok(); app.go('menu'); }
     },
     draw(g) { bg.draw(g); g.fillStyle = 'rgba(20,12,6,0.35)'; g.fillRect(0, 0, W, H); },
+  };
+}
+
+// ---- menu: players, difficulty, language, as in the other arcade games ----------------------------
+
+export function menu(app) {
+  const bg = backdrop(app);
+  const LEVELS = ['easy', 'normal', 'hard'];
+  // A phone's on-screen controls are player 1's only: there it's always one
+  // player against the computer.
+  const phone = device === 'phone';
+  const S = {
+    players: phone ? 1 : app.setup?.players ?? 1,
+    difficulty: app.setup?.difficulty ?? (LEVELS.includes(settings.difficulty) ? settings.difficulty : app.data.rules.cpu.default),
+  };
+  const rows = () => [...(phone ? [] : ['players']), ...(S.players === 1 ? ['difficulty'] : []), 'lang', 'go'];
+  let row = 0;
+  const value = (r) => {
+    if (r === 'go') return h('span', {}, rich(`[A] ${t('menu.go')}`));
+    if (r === 'lang') return h('span', { class: 'langs' }, LANGS.map((l) => h('span', { class: l === getLang() ? 'on' : '' }, t(`lang.${l}`))));
+    const v = r === 'players' ? t(`menu.players.${S.players}`) : t(`menu.difficulty.${S.difficulty}`);
+    return h('span', { class: 'value' }, h('span', { class: 'arrow' }, '‹'), h('span', {}, v), h('span', { class: 'arrow' }, '›'));
+  };
+  const show = () => {
+    const rs = rows();
+    row = Math.min(row, rs.length - 1);
+    app.ui.replaceChildren(h('div', { class: 'overlay menu' }, h('div', { class: 'parchment menu-card' },
+      h('h1', { class: 'logo small' }, t('title.name')),
+      h('div', { class: 'rows' }, rs.map((r, i) => h('div', { class: `row row-${r} ${i === row ? 'sel' : ''}` },
+        r !== 'go' ? h('span', { class: 'label' }, t(`menu.${r}`)) : null, value(r)))),
+      h('p', { class: 'note' }, t(`menu.note.${S.players}`)),
+      h('p', { class: 'hint' }, rich(t('menu.hint'))))));
+  };
+  show();
+  const change = (dir) => {
+    const r = rows()[row];
+    if (r === 'players') S.players = S.players === 1 ? 2 : 1;
+    else if (r === 'difficulty') S.difficulty = LEVELS[(LEVELS.indexOf(S.difficulty) + dir + LEVELS.length) % LEVELS.length];
+    else if (r === 'lang') nextLang(dir);
+    else return;
+    sfx.move(); show();
+  };
+  let t0 = 0;
+  return {
+    update(dt) {
+      bg.update(dt);
+      t0 += dt;
+      const inp = app.input, n = rows().length;
+      // Player 2 pressing START means two are here.
+      if (inp.players[1].pressed.start && S.players !== 2 && !phone) { S.players = 2; sfx.move(); show(); return; }
+      if (inp.any('up')) { row = (row + n - 1) % n; sfx.move(); show(); }
+      if (inp.any('down')) { row = (row + 1) % n; sfx.move(); show(); }
+      if (inp.any('left')) change(-1);
+      if (inp.any('right')) change(1);
+      if (inp.any('c')) { nextLang(1); sfx.move(); show(); }
+      if (t0 > 0.3 && (inp.any('start') || (inp.any('a') && rows()[row] === 'go'))) { sfx.ok(); app.setup = { ...S }; app.go('select'); }
+      else if (inp.any('a')) change(1);
+    },
+    draw(g) { bg.draw(g); g.fillStyle = 'rgba(20,12,6,0.45)'; g.fillRect(0, 0, W, H); },
   };
 }
 
@@ -101,11 +160,11 @@ export function select(app) {
   const list = app.data.fighters;
   const open = (n) => !list[n].unlock || isUnlocked(list[n].id);
   const pick = [0, Math.min(1, list.length - 1)], locked = [false, false];
-  // Player 2 is the computer until someone presses a button on the second
-  // controls. Playing alone, player 1 then also chooses the computer's fighter.
-  let human2 = false;
-  const LEVELS = ['easy', 'normal', 'hard'];
-  let level = LEVELS.includes(settings.difficulty) ? settings.difficulty : app.data.rules.cpu.default;
+  // Two players or one against the computer, as chosen in the menu. Playing
+  // alone, player 1 also chooses the computer's fighter.
+  const setup = app.setup ?? { players: 1, difficulty: app.data.rules.cpu.default };
+  const human2 = setup.players === 2;
+  const level = setup.difficulty;
   const cpuPicking = () => !human2 && locked[0] && !locked[1];
   const pips = (label, v) => h('div', { class: 'stat' }, h('span', {}, label), h('span', { class: 'pips5' }, Array.from({ length: 5 }, (_, n) => h('i', { class: n < v ? 'on' : '' }))));
   // The roster: a portrait for each fighter, each player's cursor on it.
@@ -121,8 +180,8 @@ export function select(app) {
     const cpu = i === 1 && !human2;
     const hint = locked[i] ? t('select.ready')
       : !cpu ? rich(t('select.lock'), i)
-      : cpuPicking() ? [...rich(t('select.lock'), 0), ' · ', ...rich(t('select.cpuLevel'), 0)]
-      : device === 'phone' ? t('select.cpuWait') : rich(t('select.join'), 1);
+      : cpuPicking() ? rich(t('select.lock'), 0)
+      : t('select.cpuWait');
     return h('div', { class: `pick p${i} ${locked[i] ? 'locked' : ''} ${cpu ? 'cpu' : ''} ${cpu && !locked[0] ? 'waiting' : ''}` },
       // A big portrait on the left, like the Smash select screen.
       h('div', { class: 'bigface' }, h('img', { src: portrait(k, 192), alt: '' })),
@@ -154,11 +213,6 @@ export function select(app) {
       bg.update(dt);
       t0 += dt;
       const inp = app.input;
-      const p2 = inp.players[1].pressed;
-      if (!human2 && device !== 'phone' && t0 > 0.3 && ['a', 'b', 'c', 'left', 'right', 'up', 'down'].some((b) => p2[b])) {
-        // Player 2 joins: the second card becomes theirs.
-        human2 = true; locked[1] = false; sfx.ok(); show(); return;
-      }
       for (const i of [0, 1]) {
         // Playing alone, player 1's controls choose the computer's fighter too.
         const who = !human2 && i === 1 ? 0 : i, p = inp.players[who];
@@ -169,10 +223,10 @@ export function select(app) {
           if (p.pressed.up || p.pressed.down) { step(i, p.pressed.up ? -6 : 6); sfx.move(); show(); }
           if (p.pressed.a && t0 > 0.3) { locked[i] = true; sfx.ok(); show(); return; }
           if (!human2 && i === 1 && p.pressed.b) { locked[0] = false; sfx.move(); show(); return; }
-          if (!human2 && i === 1 && p.pressed.c) { level = LEVELS[(LEVELS.indexOf(level) + 1) % 3]; sfx.move(); show(); }
         } else if (p.pressed.b) { locked[i] = false; sfx.move(); show(); return; }
       }
-      if (inp.any('c') && !locked.some(Boolean)) { nextLang(1); show(); }
+      // Back to the menu, from a player 1 who hasn't chosen yet.
+      if (!locked[0] && inp.players[0].pressed.b && t0 > 0.3) { sfx.move(); app.go('menu'); return; }
       if (locked.every(Boolean) && inp.any('start') && t0 > 0.5) {
         sfx.go();
         app.session = { fighters: pick.map((n) => list[n].id), cpu: human2 ? null : { i: 1, level } };

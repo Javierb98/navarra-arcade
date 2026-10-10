@@ -162,9 +162,7 @@
   "select.cycle": "Each element beats the next: 1.25× damage. Gaua is neutral.",
   "menu.difficulty.hard": "Hard",
   "select.cpu": "Computer",
-  "select.join": "Player 2: press [A] to join",
   "select.cpuPick": "Now choose the computer's fighter",
-  "select.cpuLevel": "[C] difficulty",
   "select.oneStart": "[START] to the palace!",
   "stat.toughness": "Toughness",
   "call.kanpora": "Kanpora!",
@@ -312,5 +310,16 @@
   "ctl.right": "right side",
   "select.cpuWait": "Then choose the computer's fighter",
   "title.players@phone": "1 player against the computer · stories from Navarre's mountains",
-  "touch.rotate": "Turn your phone sideways for a bigger game"
+  "touch.rotate": "Turn your phone sideways for a bigger game",
+  "menu.players": "Players",
+  "menu.players.1": "1 player against the computer",
+  "menu.players.2": "2 players, face to face",
+  "menu.difficulty": "Difficulty",
+  "menu.lang": "Language",
+  "menu.go": "To the fight!",
+  "menu.hint": "Stick: choose · [A] OK · [C] language",
+  "menu.hint@computer": "Arrows: choose · [A] OK · [C] language",
+  "menu.hint@phone": "Pad: choose · [A] OK · [C] language",
+  "menu.note.1": "Pick your fighter and the computer's, then the place. Two rounds win the duel.",
+  "menu.note.2": "Each player picks a fighter, then the place. Two rounds win the duel."
 }
