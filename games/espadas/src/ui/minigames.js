@@ -305,10 +305,17 @@ const BEATS = [600, 1300, 1950, 2550]; // ms after the count, quickening
 const SHOUT_FROM = 2950, SHOUT_FOR = 2300, FILL = 1100, CRACK = 260;
 const GOLD = [0.78, 0.95];
 
-// The arcade install names the cabinet's A, the website the space bar, a
-// touch screen the screen itself (build-site.py marks the online pages).
+// The arcade machine names the cabinet's A, a computer the space bar, a
+// touch screen the screen itself. The same check as the other arcade games:
+// ?device= (the arcade menu passes it), then the cabinet's mark (the arcade's
+// start.py adds it on the Raspberry Pi), or a browser on ARM Linux that
+// isn't Android; then touch means phone, anything else a computer.
 function cryDevice() {
-  if (!document.querySelector('meta[name="arcade-online"]')) return 'cabinet';
+  const asked = new URLSearchParams(location.search).get('device');
+  if (['cabinet', 'phone', 'computer'].includes(asked)) return asked;
+  if (document.querySelector('meta[name="arcade-device"]')?.content === 'cabinet') return 'cabinet';
+  const ua = navigator.userAgent;
+  if (/Linux/.test(ua) && /aarch64|armv7l|armv8l|arm64/i.test(ua) && !/Android/.test(ua)) return 'cabinet';
   return matchMedia('(pointer: coarse)').matches ? 'phone' : 'computer';
 }
 
