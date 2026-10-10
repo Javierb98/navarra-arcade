@@ -10,6 +10,7 @@ changing a game, then commit and push.
 """
 import json
 import os
+import re
 import shutil
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -27,19 +28,25 @@ def copy(src, dst):
         shutil.copy2(src, dst)
 
 
+def mark_online(index):
+    with open(index, encoding='utf-8') as f:
+        html = f.read()
+    marked = re.sub(r'(<meta charset="utf-8"\s*/?>)', r'\1\n  <meta name="arcade-online" content="1">', html, count=1, flags=re.I)
+    if marked == html:
+        raise SystemExit(f'{index}: no <meta charset="utf-8"> to put the online mark after')
+    with open(index, 'w', encoding='utf-8') as f:
+        f.write(marked)
+
+
 def main():
     with open(os.path.join(HERE, 'games.json'), encoding='utf-8') as f:
         config = json.load(f)
     shutil.rmtree(SITE, ignore_errors=True)
     for name in MENU_FILES:
         copy(os.path.join(HERE, name), os.path.join(SITE, name))
-    # Tell the menu it's online, so it links to games/<id>/ instead of local ports.
-    index = os.path.join(SITE, 'index.html')
-    with open(index, encoding='utf-8') as f:
-        html = f.read()
-    html = html.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n  <meta name="arcade-online" content="1">', 1)
-    with open(index, 'w', encoding='utf-8') as f:
-        f.write(html)
+    # Tell the menu it's online, so it links to games/<id>/ instead of local
+    # ports, and its hints name keys instead of the cabinet's buttons.
+    mark_online(os.path.join(SITE, 'index.html'))
     open(os.path.join(SITE, '.nojekyll'), 'w').close()
     # Belt and braces: test sponsors must never reach the website.
     for d, _, files in os.walk(SITE):
@@ -54,6 +61,8 @@ def main():
             raise SystemExit(f"{g['id']}: no index.html in {folder}")
         for name in GAME_FILES:
             copy(os.path.join(folder, name), os.path.join(SITE, 'games', g['id'], name))
+        # Online play: the game shows computer keys (or touch controls), not the cabinet's buttons.
+        mark_online(os.path.join(SITE, 'games', g['id'], 'index.html'))
         print(f"  {g['title']['es']:<22} -> site/games/{g['id']}/")
     size = sum(os.path.getsize(os.path.join(d, f)) for d, _, fs in os.walk(SITE) for f in fs)
     print(f'Built site/ ({size / 1e6:.1f} MB). Commit and push to publish it.')

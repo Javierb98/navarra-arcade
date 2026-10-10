@@ -46,14 +46,16 @@ const SHOWCASE_STEP = 7; // seconds per game in the idle showcase
 
 const t = (key, vars = {}) => (strings[lang]?.[key] ?? strings.es?.[key] ?? key).replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m);
 
-// Where the arcade is played: the cabinet (its kiosk opens the menu with
-// ?device=cabinet), a phone or tablet (a touch screen), or a computer
-// (anything else, the website included). Every game gets it too, so their
-// instructions name the stick and buttons, the on-screen pad, or the keys.
+// Two versions: the arcade install (fire-up-arcade on the cabinet) names the
+// stick and the A/B/C/START buttons; online play (the website, which
+// build-site.py marks) names a computer's keys, or on a touch screen the
+// on-screen controls. Every game is told which, so their instructions match.
+// ?device=cabinet|phone|computer overrides it, for testing.
+const ONLINE = !!document.querySelector('meta[name="arcade-online"]');
 const DEVICES = ['cabinet', 'phone', 'computer'];
 const askedDevice = new URLSearchParams(location.search).get('device');
 const touchScreen = matchMedia('(pointer: coarse)').matches || (navigator.maxTouchPoints > 0 && 'ontouchstart' in window);
-const device = DEVICES.includes(askedDevice) ? askedDevice : touchScreen ? 'phone' : 'computer';
+const device = DEVICES.includes(askedDevice) ? askedDevice : !ONLINE ? 'cabinet' : touchScreen ? 'phone' : 'computer';
 
 // "[A] play" -> the A button glyph; [ENTER] and [ESC] are computer keys.
 function rich(text) {
@@ -115,7 +117,6 @@ for (const ev of ['pointerdown', 'wheel', 'touchmove']) addEventListener(ev, () 
 
 // Run locally (fire-up-arcade), every game has its own port on this machine.
 // In the online site (build-site.py marks it) the games sit under games/<id>/.
-const ONLINE = !!document.querySelector('meta[name="arcade-online"]');
 
 function gameUrl(g) {
   const menu = `${location.origin}${location.pathname}${askedDevice ? `?device=${askedDevice}` : ''}`;
@@ -286,9 +287,9 @@ function render(dir = 0) {
       h('span', { class: 'credit-name' }, h('b', {}, maker), rest.length ? h('small', {}, `.${rest.join('.')}`) : null))] : []));
   // On a touch screen there's no stick to describe: say what to tap instead.
   // At a computer, the keys to press.
-  const pc = device === 'computer' && !isTouch ? 'Computer' : '';
-  el.hint.replaceChildren(...rich(t(isTouch ? 'hintTouch' : (focus === 'lang' ? 'hintLang' : 'hint') + pc)));
-  el.exit.replaceChildren(...rich(t(isTouch ? 'exitHintTouch' : `exitHint${pc}`)));
+  const pc = device === 'computer' ? 'Computer' : '';
+  el.hint.replaceChildren(...rich(t(isTouch && device !== 'cabinet' ? 'hintTouch' : (focus === 'lang' ? 'hintLang' : 'hint') + pc)));
+  el.exit.replaceChildren(...rich(t(isTouch && device !== 'cabinet' ? 'exitHintTouch' : `exitHint${pc}`)));
   fitText();
 }
 

@@ -1,12 +1,15 @@
 // Where the game is played, so every instruction names the controls in
-// front of the player: the cabinet's stick and A/B/C buttons, a phone's
-// on-screen pad and buttons, or a computer's keys. The arcade menu passes
-// ?device=; the cabinet's kiosk opens the menu with ?device=cabinet (see the
-// arcade's README). Opened on its own, a touch screen means a phone and
-// anything else a computer.
+// front of the player. Two versions:
+//   - the arcade install (fire-up-arcade on the cabinet): the stick and the
+//     A/B/C/START buttons;
+//   - online play (the website, built by the arcade's build-site.py, which
+//     marks each page with <meta name="arcade-online">): a computer's keys,
+//     or on a touch screen the on-screen pad and buttons.
+// ?device=cabinet|phone|computer overrides it, for testing.
 
 import { touchScreen } from './touch.js';
 
 export const DEVICES = ['cabinet', 'phone', 'computer'];
 const asked = new URLSearchParams(location.search).get('device');
-export const device = DEVICES.includes(asked) ? asked : touchScreen ? 'phone' : 'computer';
+const online = !!document.querySelector('meta[name="arcade-online"]');
+export const device = DEVICES.includes(asked) ? asked : !online ? 'cabinet' : touchScreen ? 'phone' : 'computer';
