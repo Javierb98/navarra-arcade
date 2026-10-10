@@ -88,15 +88,15 @@
       "timing": 0.13
     },
     "normal": {
-      "patience": 0.87,
-      "jitter": 0.15,
-      "slip": 0.06,
-      "mash": 0.12,
-      "react": 0.22,
+      "patience": 0.865,
+      "jitter": 0.16,
+      "slip": 0.07,
+      "mash": 0.1215,
+      "react": 0.235,
       "anticipate": 0.12,
       "dead": 0.07,
-      "pace": 1.12,
-      "timing": 0.095
+      "pace": 1.145,
+      "timing": 0.1
     }
   },
   "score": {
