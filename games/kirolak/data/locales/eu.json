@@ -35,7 +35,7 @@
   "menu.players": "Jokalariak",
   "menu.players.1": "Jokalari 1 makinaren aurka",
   "menu.players.2": "2 jokalari, gorria urdinaren aurka",
-  "menu.duo.note": "Lau proba, 40 segundo ingurukoak. Gehien irabazten duenak txapela eramango du.",
+  "menu.duo.note": "Lau proba, 25 segundo ingurukoak. Gehien irabazten duenak txapela eramango du.",
   "menu.easy.note": "Aurkari lasaiagoa, hasteko.",
   "menu.normal.note": "Benetako aurkaria. Erritmoa, ez indar hutsa.",
   "menu.go": "Plazara!",
@@ -128,5 +128,6 @@
   "title.players@phone": "Jokalari 1 · makinaren aurka",
   "keys.left": "ezkerraldea",
   "keys.right": "eskuinaldea",
-  "touch.rotate": "Biratu mugikorra jokoa handiago ikusteko"
+  "touch.rotate": "Biratu mugikorra jokoa handiago ikusteko",
+  "res.close": "Ile batengatik!"
 }

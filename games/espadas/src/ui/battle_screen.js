@@ -7,7 +7,7 @@ import { Scene } from './scene.js';
 import { emblemSVG } from './emblems.js';
 import { MEN_PER_POINT } from './tableau.js';
 import { aimVolley } from './archery.js';
-import { chargeGame, fightGame } from './minigames.js';
+import { chargeGame, fightGame, warCryGame } from './minigames.js';
 import { navigate, mark } from './padnav.js';
 import { lighten } from './screens.js';
 import { playEvents, syncView, unitLabel, nameTag } from './playback.js';
@@ -747,8 +747,8 @@ export function battleScreen(app, S, { onEnd, onHelp }) {
       },
       onChange: () => sb.update(board.units.values(), { turnText: t('battle.turn', { n: battle.turn, max: battle.turnLimit }) }),
     };
-    // The turn plays in chunks; each of our volleys, charges and fights
-    // pauses it for a minigame. Whatever goes wrong while it plays,
+    // The turn plays in chunks; each of our volleys, charges, fights and
+    // war cries pauses it for a minigame. Whatever goes wrong while it plays,
     // the turn is always finished in the engine and the board released, so
     // the game can never be left frozen; the error is reported on screen.
     const host = app.querySelector('.scene-wrap');
@@ -760,7 +760,7 @@ export function battleScreen(app, S, { onEnd, onHelp }) {
         await playEvents(r.value.events, ctx);
         if (r.done) break;
         const req = r.value.request;
-        const game = { aim: aimVolley, charge: chargeGame, melee: fightGame }[req.kind];
+        const game = { aim: aimVolley, charge: chargeGame, melee: fightGame, taunt: warCryGame }[req.kind];
         let answer = null;
         if (!S.autoAim && game) {
           try { answer = await game({ host, data, battle, request: req, speed: () => S.speed }); } catch (err) {

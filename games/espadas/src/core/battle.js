@@ -397,6 +397,14 @@ export class Battle {
     const u = live[0];
     const o = this.orders.get(u.id);
     if (ask && o.type === 'attack') { yield* this.fightSteps(u, o, flush); return; }
+    if (ask && o.type === 'taunt') {
+      // The player's war cry: drum the men up, then the shout (a minigame);
+      // how well it goes scales the cry, on top of the ground and the fade.
+      const listener = this.nearestFoe(u);
+      const ans = yield { events: flush(), request: { kind: 'taunt', attacker: u.id, defender: listener?.id ?? null } };
+      this.doTaunt(u, this.minigameQuality('taunt', ans).attack);
+      return;
+    }
     if (o.type !== 'shoot') { this.act(u); return; }
     // Move up if ordered to, then throw from wherever the company ended up.
     if (o.path?.length) this.walk(u, o.path);
@@ -443,6 +451,7 @@ export class Battle {
     const clamp = (v) => Math.max(0, Math.min(1, v));
     if (kind === 'charge') { const p = clamp(ans.power); return { attack: R.chargeMin + (R.chargeMax - R.chargeMin) * p, counter: 1.1 - 0.3 * p }; }
     if (kind === 'melee') { const sc = clamp(ans.score); return { attack: R.meleeMin + (R.meleeMax - R.meleeMin) * sc, counter: 1.3 - 0.6 * sc }; }
+    if (kind === 'taunt') { const sc = clamp(ans.score); return { attack: R.tauntMin + (R.tauntMax - R.tauntMin) * sc, counter: 1 }; }
     return { attack: 1, counter: 1 };
   }
 
@@ -953,12 +962,12 @@ export class Battle {
     return best;
   }
 
-  // A war cry is a choice, not a skill test: the company spends its turn on
-  // it instead of fighting. It shakes the whole enemy army, those within
+  // A war cry: the company spends its turn on it instead of fighting. It shakes the whole enemy army, those within
   // earshot (tauntRange) most; it carries further and hits harder from high
   // ground and from a leader; and every cry the army has already sounded this
   // battle is worth less (the enemy gets used to the noise), so it pays to
-  // save it for the moment it can break someone.
+  // save it for the moment it can break someone. `sting` is how well the
+  // player's drum and shout went (1 for the computer, or "let the captains decide").
   doTaunt(u, sting = 1) {
     const R = this.rules, side = this.sides[u.side];
     if (u.hidden) this.reveal(u, 'strikes');
@@ -966,7 +975,7 @@ export class Battle {
     const high = this.heightAt(u.x, u.y) > 0;
     const fade = Math.pow(R.tauntFade, side.cries);
     side.cries++;
-    this.ev.push({ t: 'taunt', a: u.id, d: listener?.id ?? null, high, fade });
+    this.ev.push({ t: 'taunt', a: u.id, d: listener?.id ?? null, high, fade, sting });
     const bite = (R.tauntBase + this.rng.int(R.tauntSpread + 1)) * (this.isLeader(u) ? R.leaderTauntFactor : 1) * (high ? R.tauntHigh : 1) * fade * sting;
     const range = R.tauntRange + (high ? 1 : 0);
     for (const e of this.foesOf(u)) {

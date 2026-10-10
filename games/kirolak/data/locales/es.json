@@ -35,7 +35,7 @@
   "menu.players": "Jugadores",
   "menu.players.1": "1 jugador contra la máquina",
   "menu.players.2": "2 jugadores, rojo contra azul",
-  "menu.duo.note": "Cuatro pruebas de unos 40 segundos. Quien gane más se lleva la txapela.",
+  "menu.duo.note": "Cuatro pruebas de unos 25 segundos. Quien gane más se lleva la txapela.",
   "menu.easy.note": "Un rival más tranquilo, para empezar.",
   "menu.normal.note": "Un rival de verdad. Ritmo, no fuerza bruta.",
   "menu.go": "¡A la plaza!",
@@ -128,5 +128,6 @@
   "title.players@phone": "1 jugador · contra la máquina",
   "keys.left": "izquierda",
   "keys.right": "derecha",
-  "touch.rotate": "Gira el móvil para ver el juego más grande"
+  "touch.rotate": "Gira el móvil para ver el juego más grande",
+  "res.close": "¡Por los pelos!"
 }

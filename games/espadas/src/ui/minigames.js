@@ -1,4 +1,4 @@
-// The charge and fight minigames, after 1066. Each opens over the
+// The charge, fight and war-cry minigames, after 1066. Each opens over the
 // battlefield view as a close side-on scene of the two companies, plays for a
 // few seconds, and resolves to a result the engine turns into damage or
 // morale (see Battle.minigameQuality). "Auto" resolves to null: average.
@@ -288,6 +288,175 @@ export function fightGame({ host, data, battle, request, speed }) {
       if (drawCountdown(g, W, H, el)) { /* waiting */ } else if (done) {
         const key = done.score > 0.6 ? 'mini.foughtBetter' : done.score < 0.4 ? 'mini.foughtWorse' : 'mini.foughtEven';
         banner(g, W, H, t(key), `${Math.round(done.acc * 100)}% · ${Math.round(done.foeAcc * 100)}%`);
+      }
+    }, () => finish(null));
+  });
+}
+
+// ---------------------------------------------------------------------------
+// War cry: the drum, then the shout. Four drum beats, quickening, each hit
+// as a ring closes on the drum; then the shout: hold A to fill the army's
+// lungs and let go in the gold. Hold too long and the voices crack. The
+// drum counts a little more than the shout; it resolves to { score } 0..1,
+// which the engine turns into the cry's sting (high ground and the fade
+// still apply on top).
+
+const BEATS = [600, 1300, 1950, 2550]; // ms after the count, quickening
+const SHOUT_FROM = 2950, SHOUT_FOR = 2300, FILL = 1100, CRACK = 260;
+const GOLD = [0.78, 0.95];
+
+// The arcade install names the cabinet's A, the website the space bar, a
+// touch screen the screen itself (build-site.py marks the online pages).
+function cryDevice() {
+  if (!document.querySelector('meta[name="arcade-online"]')) return 'cabinet';
+  return matchMedia('(pointer: coarse)').matches ? 'phone' : 'computer';
+}
+
+// A small drum and a crowd's roar, made on the spot (the game has no sound files).
+let audio = null;
+function sound(kind, k = 1) {
+  try {
+    audio ??= new (window.AudioContext || window.webkitAudioContext)();
+    if (audio.state === 'suspended') audio.resume();
+    const now = audio.currentTime, out = audio.createGain();
+    out.connect(audio.destination);
+    if (kind === 'drum') {
+      const o = audio.createOscillator();
+      o.frequency.setValueAtTime(140, now); o.frequency.exponentialRampToValueAtTime(48, now + 0.22);
+      out.gain.setValueAtTime(0.55 * k, now); out.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+      o.connect(out); o.start(now); o.stop(now + 0.35);
+    } else {
+      // The roar: filtered noise swelling and dying, louder the better the shout.
+      const len = 1.3, buf = audio.createBuffer(1, audio.sampleRate * len, audio.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      const n = audio.createBufferSource(); n.buffer = buf;
+      const f = audio.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 520 + 300 * k; f.Q.value = 0.8;
+      out.gain.setValueAtTime(0.001, now); out.gain.exponentialRampToValueAtTime(0.25 + 0.5 * k, now + 0.12); out.gain.exponentialRampToValueAtTime(0.001, now + len);
+      n.connect(f); f.connect(out); n.start(now);
+    }
+  } catch { /* no sound: fine */ }
+}
+
+export function warCryGame({ host, data, battle, request, speed }) {
+  const attacker = battle.byId(request.attacker);
+  const target = battle.byId(request.defender) ?? battle.units.find((u) => u.side !== attacker.side && battle.onBoard(u)) ?? attacker;
+  const st = stage({ host, data, battle, attackers: [attacker], defender: target, label: t('phase.taunt'), colour: '#8a6a1a' });
+  st.a[0].x = 0.8; st.d.x = 2.6;
+  const W = 1200, H = 360, DRUM = { x: 330, y: 92 };
+  const dev = cryDevice();
+  const a = t(`mini.cry.btn.${dev}`);
+  const auto = h('button', { class: 'ghost dark' }, t('mini.auto'));
+  st.bar.append(h('p', { class: 'aim-tip' }, dev === 'phone' ? t('mini.cry.tipTouch') : t('mini.cry.tip', { a })), auto);
+
+  const beats = BEATS.map((at) => ({ at, res: null }));
+  let extra = 0, holdFrom = null, fill = 0, fullAt = null, shout = null, t0 = null, done = null;
+  const flashes = [];
+  const team = battle.sides[attacker.side].faction.color;
+
+  return new Promise((resolve) => {
+    let stop;
+    const finish = (v) => { stop(); st.overlay.remove(); removeEventListener('keyup', onUp); resolve(v); };
+    auto.addEventListener('click', () => finish(null));
+    const el = () => performance.now() - t0 - COUNTDOWN;
+    const flash = (text, colour) => flashes.push({ text, colour, t0: performance.now() });
+    const hop = (v, k) => { v.ox = k; setTimeout(() => { v.ox = 0; }, 150); };
+    const down = () => {
+      if (!t0 || done || el() < 0) return;
+      const now = el();
+      if (now < SHOUT_FROM - 150) {
+        // The drum: the nearest beat not yet struck.
+        const b = beats.find((x) => !x.res && Math.abs(x.at - now) < 260);
+        if (!b) { extra++; flash(t('mini.miss'), '#e2694f'); return; }
+        const off = Math.abs(b.at - now);
+        b.res = off < 90 ? 'perfect' : off < 170 ? 'good' : 'miss';
+        flash(t(`mini.${b.res}`), b.res === 'miss' ? '#e2694f' : '#f1cf6a');
+        if (b.res !== 'miss') { sound('drum', b.res === 'perfect' ? 1 : 0.7); st.a.forEach((v) => hop(v, 0.08)); }
+      } else if (now >= SHOUT_FROM && shout == null && holdFrom == null) holdFrom = now;
+    };
+    const up = () => {
+      if (holdFrom == null || shout != null) return;
+      release(fill);
+    };
+    const release = (f, cracked = false) => {
+      shout = cracked ? 0.3 : f >= GOLD[0] && f <= GOLD[1] ? 1 : Math.max(0, 1 - Math.min(Math.abs(f - GOLD[0]), Math.abs(f - GOLD[1])) / 0.35);
+      const drum = Math.max(0, beats.reduce((s, b) => s + (b.res === 'perfect' ? 1 : b.res === 'good' ? 0.6 : 0), 0) / beats.length - extra * 0.1);
+      const score = Math.max(0, Math.min(1, drum * 0.55 + shout * 0.45));
+      done = { score, cracked, t: performance.now() };
+      sound('roar', score);
+      st.a.forEach((v) => hop(v, 0.18));
+      if (score >= 0.4 && target !== attacker) { st.scene.crowds.get(target.id).hitT = performance.now(); if (score >= 0.75) hop(st.d, -0.12); }
+      setTimeout(() => finish({ score }), speed() === 0 ? 450 : 1500);
+    };
+    const onUp = (e) => { if (arcadeKey(e) === 'a') up(); };
+    addEventListener('keyup', onUp);
+    st.overlay.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { finish(null); return; }
+      if (arcadeKey(e) === 'a') { e.preventDefault(); e.stopPropagation(); if (!e.repeat) down(); }
+    });
+    st.scene.canvas.addEventListener('pointerdown', down);
+    st.scene.canvas.addEventListener('pointerup', up);
+    st.scene.canvas.addEventListener('pointercancel', up);
+
+    stop = run((now) => {
+      t0 ??= now;
+      const e = now - t0 - COUNTDOWN;
+      for (const b of beats) if (!b.res && e > b.at + 260) { b.res = 'miss'; flash(t('mini.miss'), '#e2694f'); }
+      if (holdFrom != null && shout == null) {
+        fill = Math.min(1, (e - holdFrom) / FILL);
+        if (fill >= 1) { fullAt ??= e; if (e - fullAt > CRACK) release(1, true); }
+      }
+      if (shout == null && holdFrom == null && e > SHOUT_FROM + SHOUT_FOR) release(0);
+      st.scene.draw(st.units, [], now);
+      const g = st.scene.ctx;
+      g.save();
+      // The drum, with a ring closing on it toward the next beat.
+      const next = beats.find((b) => !b.res);
+      const since = Math.min(...beats.filter((b) => b.res && b.res !== 'miss').map((b) => e - b.at), 9999);
+      const thump = Math.max(0, 1 - since / 220);
+      if (next && e > next.at - 650) {
+        const k = Math.max(0, (next.at - e) / 650);
+        g.strokeStyle = `rgba(255,236,160,${0.9 - k * 0.6})`; g.lineWidth = 5;
+        g.beginPath(); g.arc(DRUM.x, DRUM.y, 34 + k * 70, 0, Math.PI * 2); g.stroke();
+      }
+      const skin = g.createRadialGradient(DRUM.x - 8, DRUM.y - 8, 4, DRUM.x, DRUM.y, 36);
+      skin.addColorStop(0, '#f6e2b8'); skin.addColorStop(1, '#b8864a');
+      g.fillStyle = skin; g.beginPath(); g.arc(DRUM.x, DRUM.y, 30 + thump * 6, 0, Math.PI * 2); g.fill();
+      g.strokeStyle = team; g.lineWidth = 5; g.stroke();
+      // Four marks under the drum: the beats struck so far.
+      beats.forEach((b, i) => {
+        g.fillStyle = b.res === 'perfect' ? '#f1cf6a' : b.res === 'good' ? '#c9a24a' : b.res === 'miss' ? 'rgba(226,105,79,0.8)' : 'rgba(251,246,234,0.25)';
+        g.beginPath(); g.arc(DRUM.x - 39 + i * 26, DRUM.y + 56, 8, 0, Math.PI * 2); g.fill();
+      });
+      // The shout: the army's breath, with the gold to let go in.
+      if (e >= SHOUT_FROM - 400) {
+        const bx = W / 2 - 220, by = H - 54, bw = 440;
+        g.fillStyle = 'rgba(12,9,6,0.85)'; g.fillRect(bx - 4, by - 4, bw + 8, 30);
+        g.fillStyle = 'rgba(230,181,52,0.45)'; g.fillRect(bx + GOLD[0] * bw, by - 4, (GOLD[1] - GOLD[0]) * bw, 30);
+        const grd = g.createLinearGradient(bx, 0, bx + bw, 0);
+        grd.addColorStop(0, '#8a6a1a'); grd.addColorStop(1, fullAt != null ? '#e2694f' : '#f1cf6a');
+        g.fillStyle = grd; g.fillRect(bx, by, bw * fill, 22);
+        g.strokeStyle = '#fbf3de'; g.lineWidth = 2; g.strokeRect(bx + GOLD[0] * bw, by - 4, (GOLD[1] - GOLD[0]) * bw, 30);
+      }
+      g.restore();
+      for (const f of flashes) {
+        const q = (now - f.t0) / 600;
+        if (q > 1) continue;
+        g.save(); g.globalAlpha = 1 - q; g.font = 'bold 20px Optima, serif'; g.textAlign = 'center';
+        g.fillStyle = f.colour; g.fillText(f.text, DRUM.x, DRUM.y - 60 - q * 20); g.restore();
+      }
+      if (drawCountdown(g, W, H, now - t0)) { /* waiting */ } else if (done) {
+        const key = done.cracked ? 'mini.cry.cracked' : done.score >= 0.75 ? 'mini.cry.thunder' : done.score >= 0.4 ? 'mini.cry.strong' : 'mini.cry.weak';
+        const pulse = done.score >= 0.75 ? 1 + Math.max(0, 1 - (now - done.t) / 400) * 0.15 : 1;
+        g.save(); g.translate(W / 2, H * 0.32); g.scale(pulse, pulse);
+        banner(g, 0, 0, t(key), t('mini.power', { n: Math.round(done.score * 100) }), done.score >= 0.4 ? '#f1cf6a' : '#e2694f', 0);
+        g.restore();
+      } else {
+        const shouting = e >= SHOUT_FROM;
+        const text = shouting ? (holdFrom != null ? t('mini.cry.letGo') : t(dev === 'phone' ? 'mini.cry.holdTouch' : 'mini.cry.hold', { a })) : t(dev === 'phone' ? 'mini.cry.drumTouch' : 'mini.cry.drum', { a });
+        const pulse = 1 + Math.sin(now / 70) * (shouting ? 0.06 : 0.02);
+        g.save(); g.translate(W / 2 + 120, H * 0.24); g.scale(pulse, pulse);
+        banner(g, 0, 0, text, null, '#fbf3de', 0);
+        g.restore();
       }
     }, () => finish(null));
   });

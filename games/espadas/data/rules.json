@@ -87,7 +87,7 @@
   "rockDamage": 9,
   "rockShock": 8,
 
-  "minigames": { "chargeMin": 0.8, "chargeMax": 1.3, "meleeMin": 0.75, "meleeMax": 1.35 },
+  "minigames": { "chargeMin": 0.8, "chargeMax": 1.3, "meleeMin": 0.75, "meleeMax": 1.35, "tauntMin": 0.5, "tauntMax": 1.5 },
 
   "courage": { "flank": 8, "rear": 14, "outnumbered": 5, "heavyShare": 0.3, "heavyLosses": 12, "leaderSeen": 12, "leaderSeenRadius": 3, "woundedWaver": 30 },
 
