@@ -46,16 +46,20 @@ const SHOWCASE_STEP = 7; // seconds per game in the idle showcase
 
 const t = (key, vars = {}) => (strings[lang]?.[key] ?? strings.es?.[key] ?? key).replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m);
 
-// Two versions: the arcade install (fire-up-arcade on the cabinet) names the
-// stick and the A/B/C/START buttons; online play (the website, which
-// build-site.py marks) names a computer's keys, or on a touch screen the
-// on-screen controls. Every game is told which, so their instructions match.
-// ?device=cabinet|phone|computer overrides it, for testing.
+// Where the arcade is being played, so every hint names the controls in
+// front of the player: the cabinet (the Raspberry Pi arcade machine:
+// start.py stamps its pages with <meta name="arcade-device"
+// content="cabinet">, or a browser on ARM Linux that isn't Android), a
+// phone or tablet (a touch screen), or a computer (anything else, local or
+// online). Every game is told which. ?device=cabinet|phone|computer
+// overrides it, for testing. (ONLINE only says where the games are.)
 const ONLINE = !!document.querySelector('meta[name="arcade-online"]');
 const DEVICES = ['cabinet', 'phone', 'computer'];
 const askedDevice = new URLSearchParams(location.search).get('device');
 const touchScreen = matchMedia('(pointer: coarse)').matches || (navigator.maxTouchPoints > 0 && 'ontouchstart' in window);
-const device = DEVICES.includes(askedDevice) ? askedDevice : !ONLINE ? 'cabinet' : touchScreen ? 'phone' : 'computer';
+const onPi = document.querySelector('meta[name="arcade-device"]')?.content === 'cabinet'
+  || (/Linux/.test(navigator.userAgent) && /aarch64|armv7l|armv8l|arm64/i.test(navigator.userAgent) && !/Android/.test(navigator.userAgent));
+const device = DEVICES.includes(askedDevice) ? askedDevice : onPi ? 'cabinet' : touchScreen ? 'phone' : 'computer';
 
 // "[A] play" -> the A button glyph; [ENTER] and [ESC] are computer keys.
 function rich(text) {
