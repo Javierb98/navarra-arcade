@@ -23,7 +23,7 @@
     "hintComputer": "← → elegir juego · [ENTER] jugar · ↑ idioma",
     "hintLangComputer": "← → elegir idioma · [ENTER] o ↓ volver a los juegos",
     "exitHintComputer": "Dentro del juego, pulsa [ESC] para volver aquí",
-    "keysTwo": "Teclado: jugador 1 flechas + Z X C, jugador 2 W A S D + E R Q"
+    "keysTwo": "Teclado: jugador 1 flechas + O P L, jugador 2 W A S D + R T F"
   },
   "eu": {
     "title": "Nafarroako Arcadea",
@@ -49,7 +49,7 @@
     "hintComputer": "← → jokoa aukeratu · [ENTER] jolastu · ↑ hizkuntza",
     "hintLangComputer": "← → hizkuntza aukeratu · [ENTER] edo ↓ jokoetara itzuli",
     "exitHintComputer": "Jokoan, sakatu [ESC] hona itzultzeko",
-    "keysTwo": "Teklatua: 1. jokalaria geziak + Z X C, 2. jokalaria W A S D + E R Q"
+    "keysTwo": "Teklatua: 1. jokalaria geziak + O P L, 2. jokalaria W A S D + R T F"
   },
   "en": {
     "title": "Navarra Arcade",
@@ -75,6 +75,6 @@
     "hintComputer": "← → choose a game · [ENTER] play · ↑ language",
     "hintLangComputer": "← → choose a language · [ENTER] or ↓ back to the games",
     "exitHintComputer": "In a game, press [ESC] to come back here",
-    "keysTwo": "Keyboard: player 1 arrows + Z X C, player 2 W A S D + E R Q"
+    "keysTwo": "Keyboard: player 1 arrows + O P L, player 2 W A S D + R T F"
   }
 }

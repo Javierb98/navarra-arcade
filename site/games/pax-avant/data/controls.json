@@ -1,5 +1,5 @@
 {
-  "_note": "Key names are KeyboardEvent.code values. Player 1 walks with the arrows; player 2 with W/A/S/D. If the cabinet's encoder sends MAME-style keys for player 2 (R F D G), change p2 here, not in code.",
+  "_note": "Key names are KeyboardEvent.code values. Player 1 walks with the arrows; player 2 with W A S D. Player 1 (red): arrows, A = O, B = P, C = L, START = Enter. Player 2 (blue): W A S D, A = R, B = T, C = F, START = 2. The cabinet's encoder sends Left Ctrl, Left Alt, Space and 1 for player 1's buttons; its player 2 buttons must send R, T and F. With one player, either set works. Change keys here, not in code.",
   "keyboard": {
     "p1": {
       "left": [
@@ -16,15 +16,15 @@
       ],
       "a": [
         "ControlLeft",
-        "KeyZ"
+        "KeyO"
       ],
       "b": [
         "AltLeft",
-        "KeyX"
+        "KeyP"
       ],
       "c": [
         "Space",
-        "KeyC"
+        "KeyL"
       ],
       "start": [
         "Digit1",
@@ -45,13 +45,13 @@
         "KeyS"
       ],
       "a": [
-        "KeyE"
-      ],
-      "b": [
         "KeyR"
       ],
+      "b": [
+        "KeyT"
+      ],
       "c": [
-        "KeyQ"
+        "KeyF"
       ],
       "start": [
         "Digit2"

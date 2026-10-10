@@ -20,7 +20,7 @@ const fmt = (n) => String(Math.round(n));
 // "[A] rake" -> button glyph + text, so non-readers can match the button
 // (on the cabinet, and the phone's on-screen buttons look the same). At a
 // computer it's the key instead ("Z rake"). {p} picks whose keys; 'both' shows
-// both players' keys ("Z/E") for prompts either of them can answer.
+// both players' keys ("O/R") for prompts either of them can answer.
 export function rich(text, p = 0) {
   const parts = [];
   let last = 0;

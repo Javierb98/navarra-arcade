@@ -16,15 +16,15 @@
       ],
       "a": [
         "ControlLeft",
-        "KeyZ"
+        "KeyO"
       ],
       "b": [
         "AltLeft",
-        "KeyX"
+        "KeyP"
       ],
       "c": [
         "Space",
-        "KeyC"
+        "KeyL"
       ],
       "start": [
         "Digit1",
@@ -45,13 +45,13 @@
         "KeyS"
       ],
       "a": [
-        "KeyE"
-      ],
-      "b": [
         "KeyR"
       ],
+      "b": [
+        "KeyT"
+      ],
       "c": [
-        "KeyQ"
+        "KeyF"
       ],
       "start": [
         "Digit2"

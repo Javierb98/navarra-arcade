@@ -1,5 +1,5 @@
 {
-  "_note": "Key names are KeyboardEvent.code values. Player 1 (red): arrows to run, A (Z / Left Ctrl) hard drive, B (X / Left Alt) soft dejada. Player 2 (blue): W A S D to run, E drive, R dejada. With one player, either set works. Change keys here, not in code.",
+  "_note": "Key names are KeyboardEvent.code values. Player 1 (red): arrows to run, A (O / Left Ctrl) hard drive, B (P / Left Alt) soft dejada. Player 2 (blue): W A S D to run, R drive, T dejada. With one player, either set works. Change keys here, not in code.",
   "keyboard": {
     "p1": {
       "left": [
@@ -16,15 +16,15 @@
       ],
       "a": [
         "ControlLeft",
-        "KeyZ"
+        "KeyO"
       ],
       "b": [
         "AltLeft",
-        "KeyX"
+        "KeyP"
       ],
       "c": [
         "Space",
-        "KeyC"
+        "KeyL"
       ],
       "start": [
         "Digit1",
@@ -45,13 +45,13 @@
         "KeyS"
       ],
       "a": [
-        "KeyE"
-      ],
-      "b": [
         "KeyR"
       ],
+      "b": [
+        "KeyT"
+      ],
       "c": [
-        "KeyQ"
+        "KeyF"
       ],
       "start": [
         "Digit2"
