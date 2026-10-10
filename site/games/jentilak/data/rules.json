@@ -107,14 +107,14 @@
     "window": 14
   },
   "physics": {
-    "_note": "Snappy movement in the manner of Super Smash Flash. Run speed comes from stats; `traction` is how fast you stop. Tap up for a short hop (`shortHop` x jump), hold up for a full hop; down in the air while falling is a fast fall. `jumpsquat` frames pass before leaving the ground: pressing A in them gives the up attack instead. A full hop rises about 2.5 body heights (Smash Flash), enough to reach the low platforms in one jump. Smashes: a direction pushed within `smashWindow` frames of A.",
-    "gravity": 0.62,
-    "fallMax": 6.2,
-    "fastFall": 9.4,
-    "jump": 10.6,
+    "_note": "Floaty movement in the manner of Super Smash Bros. Brawl: low gravity, slow falls, jumps that rise and hang. Run speed comes from stats; `traction` is how fast you stop. Tap up for a short hop (`shortHop` x jump), hold up for a full hop; down in the air while falling is a fast fall. `jumpsquat` frames pass before leaving the ground: pressing A in them gives the up attack instead. Launched fighters fall with `launchGravity` x gravity, so knockouts carry as far as they did. Smashes: a direction pushed within `smashWindow` frames of A.",
+    "gravity": 0.3,
+    "fallMax": 3.8,
+    "fastFall": 5.6,
+    "jump": 5.71,
     "shortHop": 0.58,
-    "airJump": 9.4,
-    "jumpsquat": 4,
+    "airJump": 5.06,
+    "jumpsquat": 5,
     "traction": 0.9,
     "airAccel": 0.55,
     "airMax": 0.85,
@@ -130,7 +130,7 @@
     "chargeMax": 60,
     "chargeBonus": 0.4,
     "stepUp": 24,
-    "launchGravity": 0.9
+    "launchGravity": 1.86
   },
   "match": {
     "_note": "Super Smash Flash style: stocks (lives) and a time limit. After a ring-out a fighter comes back after `respawn` frames on a floating stone, invincible for `invincible` frames.",
