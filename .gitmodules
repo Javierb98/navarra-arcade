@@ -1,0 +1,36 @@
+[submodule "games/almadia"]
+	path = games/almadia
+	url = https://github.com/Javierb98/navarra-almadia.git
+	branch = main
+[submodule "games/pax-avant"]
+	path = games/pax-avant
+	url = https://github.com/Javierb98/navarra-pax-avant.git
+	branch = main
+[submodule "games/pelota"]
+	path = games/pelota
+	url = https://github.com/Javierb98/navarra-pelota.git
+	branch = master
+[submodule "games/kirolak"]
+	path = games/kirolak
+	url = https://github.com/Javierb98/navarra-herri-kirolak.git
+	branch = master
+[submodule "games/jentilak"]
+	path = games/jentilak
+	url = https://github.com/Javierb98/navarra-jentilak.git
+	branch = master
+[submodule "games/salinas"]
+	path = games/salinas
+	url = https://github.com/Javierb98/navarra-salinas.git
+	branch = master
+[submodule "games/minas"]
+	path = games/minas
+	url = https://github.com/Javierb98/navarra-minas.git
+	branch = master
+[submodule "games/espadas"]
+	path = games/espadas
+	url = https://github.com/Javierb98/navarra-1212.git
+	branch = main
+[submodule "menu"]
+	path = menu
+	url = https://github.com/Javierb98/navarra-menu.git
+	branch = main

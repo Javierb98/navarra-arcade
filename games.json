@@ -1,0 +1,390 @@
+{
+  "_note": "The arcade menu. Each game is a folder (a git submodule under games/, its own repository) served on its own port; the menu lists them in this order. status: ready (playable), soon (shown greyed out), hidden (not shown or served). Ports 8000-8010 are off limits on the dev machine. lesson/era/place/controls fill the info panel; history text is a draft for a historian to check. url is the game's address inside the online site (built by build-site.py); run locally with fire-up-arcade, the menu uses the port instead. minutes/pace/bestFor tell players how long a game takes (quick games suit a queue; long ones someone with time).",
+  "menuPort": 8700,
+  "games": [
+    {
+      "id": "almadia",
+      "folder": "games/almadia",
+      "port": 8710,
+      "url": "games/almadia/",
+      "status": "ready",
+      "thumb": "assets/thumbs/almadia.png",
+      "players": "1-2",
+      "minutes": "3–5",
+      "pace": "quick",
+      "bestFor": {
+        "es": "Partidas cortas: ideal para turnarse o jugar en pareja",
+        "eu": "Partida laburrak: txandaka edo bikotean jolasteko aproposa",
+        "en": "Short runs: great for taking turns or playing in pairs"
+      },
+      "title": {
+        "es": "¡Almadía!",
+        "eu": "Almadia!",
+        "en": "Almadía!"
+      },
+      "blurb": {
+        "es": "Baja los ríos de Navarra en una balsa de troncos, del Pirineo al mar.",
+        "eu": "Jaitsi Nafarroako ibaiak enbor-almadia batean, Pirinioetatik itsasora.",
+        "en": "Ride a log raft down the rivers of Navarra, from the Pyrenees to the sea."
+      },
+      "lesson": {
+        "es": "Cómo viajaba la madera del Pirineo por los ríos hasta el mar, y por qué los almadieros tenían que trabajar en equipo para guiar sus balsas.",
+        "eu": "Nola bidaiatzen zuen Pirinioetako egurrak ibaietan behera itsasoraino, eta zergatik lan egin behar zuten almadiazainek taldean almadiak gidatzeko.",
+        "en": "How Pyrenean timber travelled down the rivers to the sea, and why the almadieros had to work as a team to steer their rafts."
+      },
+      "era": {
+        "es": "Oficio tradicional, hasta el siglo XX",
+        "eu": "Ohiko ofizioa, XX. mendera arte",
+        "en": "A traditional trade, into the 20th century"
+      },
+      "place": {
+        "es": "Ríos Esca, Salazar, Aragón y Ebro",
+        "eu": "Esca, Zaraitzu, Aragoi eta Ebro ibaiak",
+        "en": "The Esca, Salazar, Aragón and Ebro rivers"
+      },
+      "controls": {
+        "es": "Joystick y botones",
+        "eu": "Joystick-a eta botoiak",
+        "en": "Stick and buttons"
+      },
+      "preview": "assets/previews/almadia.webm",
+      "poster": "assets/previews/almadia.jpg"
+    },
+    {
+      "id": "pax-avant",
+      "folder": "games/pax-avant",
+      "port": 8720,
+      "url": "games/pax-avant/",
+      "status": "ready",
+      "thumb": "assets/thumbs/pax-avant.png",
+      "players": "1-2",
+      "minutes": "6-7",
+      "pace": "long",
+      "bestFor": {
+        "es": "Para dos: cada uno por su valle, pero la paz es de los dos",
+        "eu": "Birentzat: bakoitza bere ibarraren alde, baina bakea biona da",
+        "en": "For two: each for their own valley, but the peace belongs to both"
+      },
+      "title": {
+        "es": "Pax Avant",
+        "eu": "Pax Avant",
+        "en": "Pax Avant"
+      },
+      "blurb": {
+        "es": "Pastores de Roncal y Barétous compiten por su valle en los pastos de la frontera… sin romper la paz de 1375.",
+        "eu": "Erronkari eta Baretouseko artzainak beren ibarraren alde lehiatzen dira mugako larreetan… 1375eko bakea hautsi gabe.",
+        "en": "Shepherds of Roncal and Barétous compete for their valleys on the border pastures… without breaking the peace of 1375."
+      },
+      "lesson": {
+        "es": "Cómo dos valles enfrentados por la hierba y el agua firmaron en 1375 turnos y un tributo de tres vacas, y por qué esa paz aún se celebra cada 13 de julio.",
+        "eu": "Belarra eta urarengatik aurrez aurre zeuden bi ibarrek nola sinatu zituzten 1375ean txandak eta hiru behiko zerga, eta zergatik ospatzen den oraindik bake hori uztailaren 13an.",
+        "en": "How two valleys at odds over grass and water agreed turns and a tribute of three cows in 1375, and why that peace is still celebrated every 13 July."
+      },
+      "era": {
+        "es": "Tratado de 1375 (se cuenta) · hoy",
+        "eu": "1375eko ituna (diotenez) · gaur",
+        "en": "Treaty of 1375 (so it's said) · today"
+      },
+      "place": {
+        "es": "Piedra de San Martín, valle de Roncal",
+        "eu": "San Martin Harria, Erronkari ibarra",
+        "en": "San Martín stone, Roncal valley"
+      },
+      "controls": {
+        "es": "Joystick y botones",
+        "eu": "Joystick-a eta botoiak",
+        "en": "Stick and buttons"
+      },
+      "preview": "assets/previews/pax-avant.webm",
+      "poster": "assets/previews/pax-avant.jpg"
+    },
+    {
+      "id": "pelota",
+      "folder": "games/pelota",
+      "port": 8750,
+      "url": "games/pelota/",
+      "status": "ready",
+      "thumb": "assets/previews/pelota.jpg",
+      "preview": "assets/previews/pelota.webm",
+      "poster": "assets/previews/pelota.jpg",
+      "players": "2",
+      "minutes": "3-5",
+      "pace": "quick",
+      "bestFor": {
+        "es": "Un duelo rápido entre dos: ideal para retarse por turnos",
+        "eu": "Biren arteko norgehiagoka azkarra: txandaka elkarri erronka egiteko aproposa",
+        "en": "A quick duel for two: perfect for taking turns to challenge each other"
+      },
+      "title": {
+        "es": "¡Pelotari!",
+        "eu": "Pelotari!",
+        "en": "Pelotari!"
+      },
+      "blurb": {
+        "es": "Pelota a mano en el frontón del pueblo, en fiestas: rojo contra azul, a 7 tantos.",
+        "eu": "Esku pilota herriko frontoian, jaietan: gorria urdinaren aurka, 7 tantora.",
+        "en": "Hand pelota at the village frontón during the fiestas: red against blue, first to 7."
+      },
+      "lesson": {
+        "es": "Las reglas y las palabras de la pelota a mano (frontis, chapa, dejada, tanto) y por qué hay un frontón en casi cada pueblo.",
+        "eu": "Esku pilotaren arauak eta hitzak (frontisa, txapa, dejada, tantoa) eta zergatik dagoen frontoi bat ia herri guztietan.",
+        "en": "The rules and words of hand pelota (frontis, chapa, dejada, tanto) and why nearly every village has a frontón."
+      },
+      "era": {
+        "es": "Tradición viva",
+        "eu": "Tradizio bizia",
+        "en": "A living tradition"
+      },
+      "place": {
+        "es": "Los frontones de Navarra",
+        "eu": "Nafarroako frontoiak",
+        "en": "Navarre's frontones"
+      },
+      "controls": {
+        "es": "Joystick, golpe y dejada",
+        "eu": "Joystick-a, kolpea eta dejada",
+        "en": "Stick, drive and dejada"
+      }
+    },
+    {
+      "id": "kirolak",
+      "folder": "games/kirolak",
+      "port": 8760,
+      "url": "games/kirolak/",
+      "status": "ready",
+      "thumb": "assets/previews/kirolak.jpg",
+      "preview": "assets/previews/kirolak.webm",
+      "poster": "assets/previews/kirolak.jpg",
+      "players": "2",
+      "minutes": "4",
+      "pace": "quick",
+      "bestFor": {
+        "es": "Cara a cara entre dos: cuatro pruebas cortas y la txapela para quien gane",
+        "eu": "Biren arteko norgehiagoka: lau proba labur eta txapela irabazlearentzat",
+        "en": "Head to head for two: four short events and the txapela for the winner"
+      },
+      "title": {
+        "es": "Herri Kirolak",
+        "eu": "Herri Kirolak",
+        "en": "Herri Kirolak"
+      },
+      "blurb": {
+        "es": "Día de deporte rural vasco en la plaza: cortar troncos, levantar piedras, cargar pesos y tirar de la cuerda.",
+        "eu": "Herri kirol eguna plazan: aizkolaritza, harri-jasotzea, txingak eta sokatira.",
+        "en": "A day of Basque rural sports in the plaza: chopping logs, lifting stones, carrying weights and tug of war."
+      },
+      "lesson": {
+        "es": "Las pruebas del deporte rural vasco, sus nombres en euskera y cómo nacieron del trabajo del caserío.",
+        "eu": "Herri kirolen probak, haien izenak eta baserriko lanetik nola sortu ziren.",
+        "en": "The events of Basque rural sport, their Basque names, and how they grew out of farm work."
+      },
+      "era": {
+        "es": "Tradición viva",
+        "eu": "Tradizio bizia",
+        "en": "A living tradition"
+      },
+      "place": {
+        "es": "Las plazas de Navarra",
+        "eu": "Nafarroako plazak",
+        "en": "Navarre's village plazas"
+      },
+      "controls": {
+        "es": "Dos botones con ritmo y joystick",
+        "eu": "Bi botoi erritmoz eta joystick-a",
+        "en": "Two buttons in rhythm, and the stick"
+      }
+    },
+    {
+      "id": "jentilak",
+      "folder": "games/jentilak",
+      "port": 8790,
+      "url": "games/jentilak/",
+      "status": "ready",
+      "thumb": "assets/previews/jentilak.jpg",
+      "players": "1-2",
+      "minutes": "3–5",
+      "pace": "quick",
+      "bestFor": {
+        "es": "Combates rápidos al estilo Smash: contra el ordenador o entre dos, tres vidas",
+        "eu": "Smash estiloko borroka azkarrak: ordenagailuaren aurka edo biren artean, hiru bizitza",
+        "en": "Quick Smash-style fights: against the computer or head to head, three lives"
+      },
+      "title": {
+        "es": "Duelo de Mitos",
+        "eu": "Mitoen Borroka",
+        "en": "Myth Brawl"
+      },
+      "blurb": {
+        "es": "Doce seres de las leyendas vascas y navarras se miden en Olite, Irati, las Bardenas y más: ¡échalos fuera del ring!",
+        "eu": "Euskal eta nafar kondairetako hamabi izaki Erriberrin, Iratin, Bardeetan eta beste lekuetan neurtzen dira: bota itzazu ringetik kanpora!",
+        "en": "Twelve creatures of Basque and Navarrese legend face off in Olite, Irati, the Bardenas and more: knock them out of the ring!"
+      },
+      "lesson": {
+        "es": "Quiénes son Basajaun, las lamias, Tartalo, el Aatxe, Eate o Ziripot del carnaval de Lantz, qué cuentan de ellos las leyendas y en qué lugares de Navarra se sitúan.",
+        "eu": "Nor diren Basajaun, lamiak, Tartalo, Aatxe, Eate edo Lantzeko inauterietako Ziripot, zer kontatzen duten kondairek haiei buruz eta Nafarroako zein lekutan kokatzen diren.",
+        "en": "Who Basajaun, the lamiak, Tartalo, Aatxe, Eate and Ziripot of the Lantz carnival are, what the legends tell about them, and where in Navarre they are set."
+      },
+      "era": {
+        "es": "Mitología tradicional",
+        "eu": "Ohiko mitologia",
+        "en": "Traditional mythology"
+      },
+      "place": {
+        "es": "Navarra y Euskal Herria",
+        "eu": "Nafarroa eta Euskal Herria",
+        "en": "Navarre and the Basque Country"
+      },
+      "controls": {
+        "es": "Joystick (arriba: saltar), A golpe, B especial, C escudo (A+B: súper)",
+        "eu": "Joystick-a (gora: salto), A kolpea, B berezia, C ezkutua (A+B: super)",
+        "en": "Stick (up: jump), A attack, B special, C shield (A+B: super)"
+      },
+      "preview": "assets/previews/jentilak.webm",
+      "poster": "assets/previews/jentilak.jpg"
+    },
+    {
+      "id": "salinas",
+      "folder": "games/salinas",
+      "port": 8770,
+      "url": "games/salinas/",
+      "status": "ready",
+      "thumb": "assets/previews/salinas.jpg",
+      "preview": "assets/previews/salinas.webm",
+      "poster": "assets/previews/salinas.jpg",
+      "players": "1-2",
+      "minutes": "8-9",
+      "pace": "long",
+      "bestFor": {
+        "es": "Para quien tenga un rato: una temporada entera de sal, sola o en pareja",
+        "eu": "Denbora duenarentzat: gatz-denboraldi oso bat, bakarrik edo bikoteka",
+        "en": "For someone with time: a whole salt season, alone or in pairs"
+      },
+      "title": {
+        "es": "Salinas de Oro",
+        "eu": "Salinas de Oro",
+        "en": "Salinas de Oro"
+      },
+      "blurb": {
+        "es": "Un verano en las salinas: llena las eras, rastrilla la sal blanca, véndela y mejora tus herramientas.",
+        "eu": "Uda bat gatzagetan: bete larrainak, arrastelatu gatz zuria, saldu eta hobetu zure tresnak.",
+        "en": "A summer at the salt pans: fill the beds, rake the white salt, sell it and upgrade your tools."
+      },
+      "lesson": {
+        "es": "Cómo se saca la sal de un manantial de interior: eras, compuertas, el sol que evapora y por qué la sal era tan valiosa.",
+        "eu": "Nola ateratzen den gatza barnealdeko iturburu batetik: larrainak, konportak, lurruntzen duen eguzkia eta zergatik zen gatza hain baliotsua.",
+        "en": "How salt is made from an inland spring: beds, sluices, the evaporating sun, and why salt was so valuable."
+      },
+      "era": {
+        "es": "Tradición de siglos",
+        "eu": "Mendeetako tradizioa",
+        "en": "A centuries-old trade"
+      },
+      "place": {
+        "es": "Salinas de Oro",
+        "eu": "Salinas de Oro",
+        "en": "Salinas de Oro"
+      },
+      "controls": {
+        "es": "Joystick, rastrillar y compuerta",
+        "eu": "Joystick-a, arrastelatu eta konporta",
+        "en": "Stick, rake and sluice"
+      }
+    },
+    {
+      "id": "minas",
+      "folder": "games/minas",
+      "port": 8780,
+      "url": "games/minas/",
+      "status": "ready",
+      "thumb": "assets/previews/minas.jpg",
+      "preview": "assets/previews/minas.webm",
+      "poster": "assets/previews/minas.jpg",
+      "players": "1",
+      "minutes": "20-30",
+      "pace": "long",
+      "bestFor": {
+        "es": "Para quien tenga tiempo: una partida larga, sin reloj, para un jugador",
+        "eu": "Denbora duenarentzat: partida luzea, erlojurik gabe, jokalari batentzat",
+        "en": "For someone with time: a long game with no clock, for one player"
+      },
+      "title": {
+        "es": "Los Hombres Verdes",
+        "eu": "Gizon Berdeak",
+        "en": "The Green Men"
+      },
+      "blurb": {
+        "es": "Cava hacia abajo y viaja atrás en el tiempo: de la mina de potasa a las galerías romanas, hasta la cueva de los mineros más antiguos.",
+        "eu": "Zulatu behera eta bidaiatu atzera denboran: potasa-meategitik galeria erromatarretara, meatzaririk zaharrenen haitzuloraino.",
+        "en": "Dig down and travel back in time: from the potash mine to the Roman galleries, all the way to the cave of the oldest miners."
+      },
+      "lesson": {
+        "es": "Las minas de Navarra y su gente: Potasas en Beriáin, el hierro de Eugi y Orbaizeta, el cobre de Arce, los romanos y los Hombres Verdes de Urbiola.",
+        "eu": "Nafarroako meategiak eta haien jendea: Potasa Beriainen, Eugiko eta Orbaizetako burdina, Artzibarko kobrea, erromatarrak eta Urbiolako Gizon Berdeak.",
+        "en": "Navarre's mines and their people: the potash pits of Beriáin, the iron of Eugi and Orbaizeta, Arce's copper, the Romans, and the Green Men of Urbiola."
+      },
+      "era": {
+        "es": "De la Edad del Bronce al siglo XX",
+        "eu": "Brontze Arotik XX. mendera",
+        "en": "From the Bronze Age to the 20th century"
+      },
+      "place": {
+        "es": "Bajo toda Navarra",
+        "eu": "Nafarroa osoaren azpian",
+        "en": "Under all of Navarre"
+      },
+      "controls": {
+        "es": "Joystick y botones",
+        "eu": "Joystick-a eta botoiak",
+        "en": "Stick and buttons"
+      }
+    },
+    {
+      "id": "espadas",
+      "folder": "games/espadas/mountain-kings",
+      "port": 8740,
+      "url": "games/espadas/",
+      "status": "ready",
+      "thumb": "assets/thumbs/espadas.png",
+      "players": "1",
+      "minutes": "10–15",
+      "pace": "long",
+      "bestFor": {
+        "es": "Batallas por turnos para pensar con calma, de uno en uno",
+        "eu": "Txandakako guduak, lasai pentsatzeko, banaka",
+        "en": "Turn-based battles to think through, one player at a time"
+      },
+      "title": {
+        "es": "Espadas de Hispania",
+        "eu": "Espadas de Hispania",
+        "en": "Espadas de Hispania"
+      },
+      "blurb": {
+        "es": "Batallas de la España medieval, 722-1212.",
+        "eu": "Erdi Aroko Espainiako guduak, 722-1212.",
+        "en": "Battles of medieval Spain, 722-1212."
+      },
+      "_note": "Played with a mouse (or keyboard). Leave by holding Esc or 1 for two seconds, or the corner button. No Basque yet: Euskara opens it in Castellano.",
+      "lesson": {
+        "es": "Cuatro batallas de la península, de Covadonga a Las Navas de Tolosa, y cómo se luchaba de verdad: formaciones, moral y terreno. Separa la leyenda de lo documentado.",
+        "eu": "Penintsulako lau gudu, Covadongatik Navas de Tolosaraino, eta nola borrokatzen zen benetan: formazioak, morala eta lurra. Kondaira eta dokumentatutakoa bereizten ditu.",
+        "en": "Four battles of the peninsula, from Covadonga to Las Navas de Tolosa, and how fighting really worked: formations, morale and terrain. It separates legend from record."
+      },
+      "era": {
+        "es": "722–1212",
+        "eu": "722–1212",
+        "en": "722–1212"
+      },
+      "place": {
+        "es": "Península Ibérica",
+        "eu": "Iberiar penintsula",
+        "en": "The Iberian peninsula"
+      },
+      "controls": {
+        "es": "Joystick y botones (o ratón)",
+        "eu": "Joystick-a eta botoiak (edo sagua)",
+        "en": "Stick and buttons (or mouse)"
+      },
+      "preview": "assets/previews/espadas.webm"
+    }
+  ]
+}

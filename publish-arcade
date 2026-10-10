@@ -1,0 +1,30 @@
+#!/bin/sh
+# Rebuild the online arcade from the latest games and publish it to GitHub
+# Pages (https://javierb98.github.io/navarra-arcade/). Run from anywhere.
+set -e
+cd "$(dirname "$(readlink -f "$0" 2>/dev/null || realpath "$0")")"
+# Each game is its own repository (a submodule under games/). Its changes
+# must be committed, and GitHub must have them, before the arcade points at them.
+git submodule foreach --quiet '
+  if [ -n "$(git status --porcelain)" ]; then echo "$name: commit or discard its changes first"; exit 1; fi
+  if [ -n "$(git rev-parse --abbrev-ref HEAD@{u} 2>/dev/null)" ] && [ -n "$(git log --oneline @{u}..HEAD)" ]; then git push -q && echo "$name: pushed"; fi
+'
+npm test --silent
+python3 build-site.py
+# Record which version of the menu and of each game the arcade uses.
+git add menu games
+git diff --cached --quiet || git commit -q -m "Update the menu and games to their latest versions"
+git push -q origin main
+# The website (site/, not kept in the repository) becomes the gh-pages branch:
+# a single fresh commit each time, so no old copies pile up there.
+url=$(git remote get-url origin)
+cd site
+rm -rf .git
+git init -q
+git add -A
+git -c user.name="$(git -C .. config user.name)" -c user.email="$(git -C .. config user.email)" commit -q -m "The Navarra arcade website"
+git push -q -f "$url" HEAD:refs/heads/gh-pages
+rm -rf .git
+cd ..
+
+echo "Published: https://javierb98.github.io/navarra-arcade/ (live in a minute or two)"
