@@ -342,7 +342,7 @@ export function warCryGame({ host, data, battle, request, speed }) {
   const target = battle.byId(request.defender) ?? battle.units.find((u) => u.side !== attacker.side && battle.onBoard(u)) ?? attacker;
   const st = stage({ host, data, battle, attackers: [attacker], defender: target, label: t('phase.taunt'), colour: '#8a6a1a' });
   st.a[0].x = 0.8; st.d.x = 2.6;
-  const W = 1200, H = 360, DRUM = { x: 330, y: 92 };
+  const W = 1200, H = 360, DRUM = { x: 600, y: 168 }; // between the armies, below the tip bar
   const dev = cryDevice();
   const a = t(`mini.cry.btn.${dev}`);
   const auto = h('button', { class: 'ghost dark' }, t('mini.auto'));
@@ -368,7 +368,7 @@ export function warCryGame({ host, data, battle, request, speed }) {
         const b = beats.find((x) => !x.res && Math.abs(x.at - now) < 260);
         if (!b) { extra++; flash(t('mini.miss'), '#e2694f'); return; }
         const off = Math.abs(b.at - now);
-        b.res = off < 90 ? 'perfect' : off < 170 ? 'good' : 'miss';
+        b.res = off < 100 ? 'perfect' : off < 190 ? 'good' : 'miss';
         flash(t(`mini.${b.res}`), b.res === 'miss' ? '#e2694f' : '#f1cf6a');
         if (b.res !== 'miss') { sound('drum', b.res === 'perfect' ? 1 : 0.7); st.a.forEach((v) => hop(v, 0.08)); }
       } else if (now >= SHOUT_FROM && shout == null && holdFrom == null) holdFrom = now;
@@ -416,7 +416,7 @@ export function warCryGame({ host, data, battle, request, speed }) {
       if (next && e > next.at - 650) {
         const k = Math.max(0, (next.at - e) / 650);
         g.strokeStyle = `rgba(255,236,160,${0.9 - k * 0.6})`; g.lineWidth = 5;
-        g.beginPath(); g.arc(DRUM.x, DRUM.y, 34 + k * 70, 0, Math.PI * 2); g.stroke();
+        g.beginPath(); g.arc(DRUM.x, DRUM.y, 34 + k * 50, 0, Math.PI * 2); g.stroke();
       }
       const skin = g.createRadialGradient(DRUM.x - 8, DRUM.y - 8, 4, DRUM.x, DRUM.y, 36);
       skin.addColorStop(0, '#f6e2b8'); skin.addColorStop(1, '#b8864a');
@@ -425,7 +425,7 @@ export function warCryGame({ host, data, battle, request, speed }) {
       // Four marks under the drum: the beats struck so far.
       beats.forEach((b, i) => {
         g.fillStyle = b.res === 'perfect' ? '#f1cf6a' : b.res === 'good' ? '#c9a24a' : b.res === 'miss' ? 'rgba(226,105,79,0.8)' : 'rgba(251,246,234,0.25)';
-        g.beginPath(); g.arc(DRUM.x - 39 + i * 26, DRUM.y + 56, 8, 0, Math.PI * 2); g.fill();
+        g.beginPath(); g.arc(DRUM.x - 39 + i * 26, DRUM.y + 50, 8, 0, Math.PI * 2); g.fill();
       });
       // The shout: the army's breath, with the gold to let go in.
       if (e >= SHOUT_FROM - 400) {
@@ -441,20 +441,20 @@ export function warCryGame({ host, data, battle, request, speed }) {
       for (const f of flashes) {
         const q = (now - f.t0) / 600;
         if (q > 1) continue;
-        g.save(); g.globalAlpha = 1 - q; g.font = 'bold 20px Optima, serif'; g.textAlign = 'center';
-        g.fillStyle = f.colour; g.fillText(f.text, DRUM.x, DRUM.y - 60 - q * 20); g.restore();
+        g.save(); g.globalAlpha = 1 - q; g.font = 'bold 22px Optima, serif'; g.textAlign = 'center';
+        g.fillStyle = f.colour; g.fillText(f.text, DRUM.x + 110, DRUM.y + 6 - q * 20); g.restore();
       }
       if (drawCountdown(g, W, H, now - t0)) { /* waiting */ } else if (done) {
         const key = done.cracked ? 'mini.cry.cracked' : done.score >= 0.75 ? 'mini.cry.thunder' : done.score >= 0.4 ? 'mini.cry.strong' : 'mini.cry.weak';
         const pulse = done.score >= 0.75 ? 1 + Math.max(0, 1 - (now - done.t) / 400) * 0.15 : 1;
-        g.save(); g.translate(W / 2, H * 0.32); g.scale(pulse, pulse);
+        g.save(); g.translate(W / 2, H * 0.62); g.scale(pulse, pulse);
         banner(g, 0, 0, t(key), t('mini.power', { n: Math.round(done.score * 100) }), done.score >= 0.4 ? '#f1cf6a' : '#e2694f', 0);
         g.restore();
       } else {
         const shouting = e >= SHOUT_FROM;
         const text = shouting ? (holdFrom != null ? t('mini.cry.letGo') : t(dev === 'phone' ? 'mini.cry.holdTouch' : 'mini.cry.hold', { a })) : t(dev === 'phone' ? 'mini.cry.drumTouch' : 'mini.cry.drum', { a });
         const pulse = 1 + Math.sin(now / 70) * (shouting ? 0.06 : 0.02);
-        g.save(); g.translate(W / 2 + 120, H * 0.24); g.scale(pulse, pulse);
+        g.save(); g.translate(W / 2, H * 0.73); g.scale(pulse, pulse);
         banner(g, 0, 0, text, null, '#fbf3de', 0);
         g.restore();
       }
