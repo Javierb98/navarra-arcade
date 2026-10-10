@@ -32,7 +32,11 @@
   "brief.p1": "Player 1: Roncal shepherd (round mark)",
   "brief.p2": "Player 2: Barétous shepherd (square mark)",
   "brief.cpu": "Barétous (square mark): played by the computer",
-  "brief.buttons": "Stick: walk · [A] whistle the dog · [B] ring the bell · [C] gate, trough, fire, lamb… or open/close your land",
+  "brief.walk": "Stick: walk",
+  "keys.walk": "walk",
+  "brief.a": "[A] whistle the dog",
+  "brief.b": "[B] ring the bell",
+  "brief.c": "[C] gate, trough, fire, lamb… or open/close your land",
   "brief.health": "Mountain health",
   "brief.trust": "The peace between the valleys",
   "valley.roncal": "Roncal",
@@ -169,5 +173,13 @@
   "fact.justice": "At the end, the mayor of Isaba judges last year’s breaches of the treaty. The border guards swear with a hand on his staff.",
   "fact.quarrels": "Before the treaty there were fights over the springs in which people from both valleys died. The peace of 1375 ended that.",
   "fact.selection": "A vet inspects the cows brought from France and chooses three for Roncal.",
-  "tip.peace": "The peace cools on its own: it only holds if the valleys keep helping each other."
+  "tip.peace": "The peace cools on its own: it only holds if the valleys keep helping each other.",
+  "menu.hint@computer": "Arrows: choose · [A] OK · [C] language",
+  "menu.hint@phone": "Pad: choose · [A] OK · [C] language",
+  "brief.walk@phone": "Pad: walk",
+  "admin.hint@computer": "Arrows: choose and change · [A] OK",
+  "title.players@phone": "1 player: you are Roncal, the computer is Barétous",
+  "keys.left": "left side",
+  "keys.right": "right side",
+  "touch.rotate": "Turn your phone sideways for a bigger game"
 }

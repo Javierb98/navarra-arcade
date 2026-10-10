@@ -11,16 +11,19 @@ import { ELEMENT_ICON } from './icons.js';
 import { isUnlocked, settings } from './store.js';
 import { sfx } from './audio.js';
 import { keysOn, keyName } from './keys.js';
+import { device } from './device.js';
 
+// "[A] attack" -> button glyph + text, so non-readers can match the button
+// (on the cabinet, and the phone's on-screen buttons look the same). At a
+// computer it's the key instead ("Z attack"). {p} picks whose keys.
 export function rich(text, p = 0) {
   const parts = [];
   let last = 0;
-  for (const m of text.matchAll(/\[(A|B|C|S|START|↑|↓)\]/g)) {
-    // [S] is the super button (d in the key map); [↑] [↓] are the stick.
-    const stick = { '↑': 'up', '↓': 'down' }[m[1]];
+  for (const m of text.matchAll(/\[(A|B|C|S|START|↑|↓|←|→)\]/g)) {
+    // [S] is the super button (d in the key map); [↑] [↓] [←] [→] are the stick.
+    const stick = { '↑': 'up', '↓': 'down', '←': 'left', '→': 'right' }[m[1]];
     const b = stick ?? (m[1] === 'S' ? 'd' : m[1].toLowerCase());
-    parts.push(text.slice(last, m.index), h('span', { class: `btn btn-${stick ? 'stick' : b}` }, m[1]));
-    if (keysOn()) parts.push(h('kbd', {}, keyName(p, b)));
+    parts.push(text.slice(last, m.index), keysOn() ? h('kbd', {}, keyName(p, b)) : h('span', { class: `btn btn-${stick ? 'stick' : b}` }, m[1]));
     last = m.index + m[0].length;
   }
   parts.push(text.slice(last));
@@ -28,6 +31,24 @@ export function rich(text, p = 0) {
 }
 
 const tag = (i) => h('span', { class: `ptag p${i}` });
+
+// Arrows or W A S D (at a keyboard), in the order up, left, down, right.
+const runKeys = (p) => ['up', 'left', 'down', 'right'].map((d) => h('kbd', {}, keyName(p, d)));
+const superKey = (app) => t(app.profile === 'cabinet' ? 'ctl.superCabinet' : 'ctl.super');
+
+// Who plays with what: one column per player with their own stick and
+// buttons (and keys, at a keyboard), so two people sharing one keyboard
+// know which keys are theirs before the fight.
+function controlsCard(app, players) {
+  const col = (p) => h('div', { class: `keys-col p${p}` },
+    h('h3', {}, tag(p), ' ', t(`ctl.p${p + 1}`), players === 2 && device === 'cabinet' ? h('small', {}, ` · ${t(p ? 'ctl.right' : 'ctl.left')}`) : null),
+    h('p', {}, keysOn() ? [...runKeys(p), ' ', t('ctl.run')] : t('ctl.stick'), ' · ', ...rich(t('ctl.jump'), p)),
+    h('p', {}, rich(t('ctl.attack'), p)),
+    h('p', {}, rich(t('ctl.special'), p)),
+    h('p', {}, rich(t('ctl.shield'), p)),
+    h('p', {}, rich(superKey(app), p)));
+  return h('div', { class: `keys-card keys-${players}` }, players === 2 ? [col(0), col(1)] : col(0));
+}
 const elIcon = (el) => h('span', { class: `elicon el-${el}`, html: ELEMENT_ICON[el] });
 const seed = (app) => (app.time * 1000 + Date.now()) | 0;
 
@@ -101,7 +122,7 @@ export function select(app) {
     const hint = locked[i] ? t('select.ready')
       : !cpu ? rich(t('select.lock'), i)
       : cpuPicking() ? [...rich(t('select.lock'), 0), ' · ', ...rich(t('select.cpuLevel'), 0)]
-      : rich(t('select.join'), 1);
+      : device === 'phone' ? t('select.cpuWait') : rich(t('select.join'), 1);
     return h('div', { class: `pick p${i} ${locked[i] ? 'locked' : ''} ${cpu ? 'cpu' : ''} ${cpu && !locked[0] ? 'waiting' : ''}` },
       // A big portrait on the left, like the Smash select screen.
       h('div', { class: 'bigface' }, h('img', { src: portrait(k, 192), alt: '' })),
@@ -134,7 +155,7 @@ export function select(app) {
       t0 += dt;
       const inp = app.input;
       const p2 = inp.players[1].pressed;
-      if (!human2 && t0 > 0.3 && ['a', 'b', 'c', 'left', 'right', 'up', 'down'].some((b) => p2[b])) {
+      if (!human2 && device !== 'phone' && t0 > 0.3 && ['a', 'b', 'c', 'left', 'right', 'up', 'down'].some((b) => p2[b])) {
         // Player 2 joins: the second card becomes theirs.
         human2 = true; locked[1] = false; sfx.ok(); show(); return;
       }
@@ -179,6 +200,7 @@ export function stage(app) {
       h('h1', { class: 'logo small' }, t('stage.title')),
       h('div', { class: 'stage-grid' }, [...arenas, null].map(card)),
       h('p', { class: 'stage-fact' }, a ? t(`arena.${a.id}.fact`) : ''),
+      controlsCard(app, app.session.cpu ? 1 : 2),
       h('p', { class: 'hint big' }, rich(t('stage.pick')))));
   };
   show();
@@ -214,9 +236,12 @@ export function fight(app) {
   const fx = [], view = makeView();
   const names = m.fighters.map((f) => t(`fighter.${f.kind.id}.name`));
   const sub = h('div', { class: 'sub hidden' });
-  app.ui.replaceChildren(h('div', { class: 'overlay match' },
-    h('p', { class: 'match-help' }, rich(t(app.profile === 'cabinet' ? 'help.matchCabinet' : 'help.match'))),
-    sub));
+  // Two players: a short line each with their own keys; alone, the full list.
+  const help = app.session.cpu
+    ? h('p', { class: 'match-help' }, rich(t(app.profile === 'cabinet' ? 'help.matchCabinet' : 'help.match')))
+    : h('div', { class: 'match-help two' }, [0, 1].map((i) => h('p', {}, tag(i), ' ',
+      ...(keysOn() ? [...runKeys(i), ' · '] : []), ...rich(`${t('ctl.short')} · ${superKey(app)}`, i))));
+  app.ui.replaceChildren(h('div', { class: 'overlay match' }, help, sub));
   if (new URLSearchParams(location.search).has('debug')) window.view = view;
 
   let subUntil = 0;

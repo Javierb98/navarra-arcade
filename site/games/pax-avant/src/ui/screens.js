@@ -12,15 +12,25 @@ import { drawScene } from './art.js';
 import { sfx } from './audio.js';
 import { langParam } from './arcade.js';
 import { settings, topScores, qualifies, addScore } from './store.js';
+import { keysOn, keyName } from './keys.js';
+import { device } from './device.js';
 
 const BOARD = 'valley'; // one entry per valley's player; a new table for the new scoring
 
-// "[A] whistle" -> button glyph + text, so non-readers can match the button.
-export function rich(text) {
+// "[A] whistle" -> button glyph + text, so non-readers can match the button
+// (on the cabinet, and the phone's on-screen buttons look the same). At a
+// computer it's the key instead ("Z whistle"). {p} picks whose keys; 'both'
+// shows each player's key next to their mark, for prompts meant for either
+// shepherd in a two-player season.
+export function rich(text, p = 0) {
   const parts = [];
   let last = 0;
   for (const m of text.matchAll(/\[(A|B|C|START)\]/g)) {
-    parts.push(text.slice(last, m.index), h('span', { class: `btn btn-${m[1].toLowerCase()}` }, m[1]));
+    const b = m[1].toLowerCase();
+    parts.push(text.slice(last, m.index));
+    if (!keysOn()) parts.push(h('span', { class: `btn btn-${b}` }, m[1]));
+    else if (p === 'both') parts.push(h('span', { class: 'keypair' }, tag(0), h('kbd', {}, keyName(0, b)), tag(1), h('kbd', {}, keyName(1, b))));
+    else parts.push(h('kbd', {}, keyName(p, b)));
     last = m.index + m[0].length;
   }
   parts.push(text.slice(last));
@@ -57,6 +67,19 @@ const icon = (name) => h('span', { class: 'icon', html: ICON[name] });
 const GOAL_ICON = { moveUp: 'up', graze: 'sheep', storm: 'storm', night: 'moon', drought: 'drop', moveDown: 'home' };
 const SEASON_ICON = { spring: 'spring', summer: 'summer', autumn: 'autumn' };
 const tag = (side, extra = '') => h('span', { class: `ptag p${side + 1} ${extra}` });
+
+// Arrows or W A S D (at a keyboard), in the order up, left, down, right.
+const walkKeys = (p) => ['up', 'left', 'down', 'right'].map((d) => h('kbd', {}, keyName(p, d)));
+
+// One shepherd's controls: walk, then what A, B and C do, with that
+// player's own keys at a keyboard.
+const controlsCol = (p, head) => h('div', { class: `keys-col p${p + 1}` },
+  head,
+  h('p', {}, ...(keysOn() ? [...walkKeys(p), ' ', t('keys.walk')] : [t('brief.walk')])),
+  ['a', 'b', 'c'].map((b) => h('p', {}, rich(t(`brief.${b}`), p))));
+
+// On the cabinet, which side of the machine a player stands at.
+const side = (p) => (device === 'cabinet' ? h('small', {}, ` · ${t(p ? 'keys.right' : 'keys.left')}`) : null);
 
 const newSeason = (app, opts) => new Season({ rules: app.data.rules, map: app.data.map, calendar: app.data.calendar, ...opts });
 
@@ -129,8 +152,11 @@ function scoreTable() {
 // ---- menu -----------------------------------------------------------------
 
 export function menu(app, { players = 1 } = {}) {
-  const S = { players, difficulty: settings.difficulty };
-  const rows = ['players', 'difficulty', 'lang', 'go'];
+  // A phone's on-screen controls are player 1's only, so there the computer
+  // always takes Barétous.
+  const phone = device === 'phone';
+  const S = { players: phone ? 1 : players, difficulty: settings.difficulty };
+  const rows = phone ? ['difficulty', 'lang', 'go'] : ['players', 'difficulty', 'lang', 'go'];
   let row = 0;
 
   const value = (r) => {
@@ -166,7 +192,7 @@ export function menu(app, { players = 1 } = {}) {
   return {
     update() {
       const inp = app.input, p1 = inp.players[0];
-      if (inp.players[1].pressed.start && S.players !== 2) { S.players = 2; sfx.move(); show(); }
+      if (inp.players[1].pressed.start && S.players !== 2 && !phone) { S.players = 2; sfx.move(); show(); }
       if (inp.any('up')) { row = (row + rows.length - 1) % rows.length; sfx.move(); show(); }
       if (inp.any('down')) { row = (row + 1) % rows.length; sfx.move(); show(); }
       if (inp.any('left')) change(-1);
@@ -226,10 +252,15 @@ export function briefing(app) {
     h('div', { class: 'card' },
       h('h2', {}, t('brief.title')),
       h('p', {}, t('brief.goal')),
+      // Two players: one column each, so two people at one keyboard know
+      // which keys are theirs. One player: the computer takes Barétous.
       h('div', { class: 'controls' },
-        h('p', {}, tag(0), ' ', t('brief.p1')),
-        h('p', {}, tag(1), ' ', t(two ? 'brief.p2' : 'brief.cpu')),
-        h('p', { class: 'small' }, rich(t('brief.buttons'))),
+        two ? h('div', { class: 'keys-card' },
+          controlsCol(0, h('h4', {}, tag(0), ' ', t('brief.p1'), side(0))),
+          controlsCol(1, h('h4', {}, tag(1), ' ', t('brief.p2'), side(1))))
+          : [h('p', {}, tag(0), ' ', t('brief.p1')),
+            h('p', {}, tag(1), ' ', t('brief.cpu')),
+            h('div', { class: 'keys-card one' }, controlsCol(0, null))],
         h('p', { class: 'small' }, icon('mountain'), ' ', t('brief.health'), '  ', icon('hands'), ' ', t('brief.trust'))),
       h('p', { class: 'hint' }, rich(t('ui.next'))))));
   return {
@@ -293,7 +324,7 @@ export function play(app) {
     el.big.classList.remove('pop'); void el.big.offsetWidth; el.big.classList.add('pop');
   };
   const prompt = (text, secs = 6, ic = null) => {
-    el.prompt.replaceChildren(...(ic ? [icon(ic), ' '] : []), ...rich(text));
+    el.prompt.replaceChildren(...(ic ? [icon(ic), ' '] : []), ...rich(text, players === 2 ? 'both' : 0));
     el.prompt.classList.remove('hidden');
     promptT = secs;
   };
@@ -305,7 +336,7 @@ export function play(app) {
     el.banner.replaceChildren(h('div', { class: 'card' },
       h('h3', {}, icon(SEASON_ICON[w.season]), ' ', t('week.label', { n: s.week + 1, of: s.calendar.weeks.length }), ' · ', t(`season.${w.season}`)),
       h('h2', {}, icon(GOAL_ICON[w.goal]), ' ', t(`goal.${w.goal}.title`)),
-      h('p', {}, rich(t(`goal.${w.goal}.text`))),
+      h('p', {}, rich(t(`goal.${w.goal}.text`), players === 2 ? 'both' : 0)),
       h('p', { class: 'small passline' }, s.passOwner < 0 ? t('week.passBoth') : t('week.pass', { valley: t(s.passOwner === 0 ? 'valley.roncal' : 'valley.baretous') })),
       lastGoals ? h('p', { class: 'small last' }, t('week.last'), ' ', tag(0), ...starIcons([lastGoals[0]]), '  ', tag(1), ...starIcons([lastGoals[1]])) : null));
     el.banner.classList.remove('hidden');
@@ -388,7 +419,7 @@ export function play(app) {
       if (warnT > 0) {
         const before = Math.ceil(warnT);
         warnT -= dt;
-        if (Math.ceil(warnT) !== before && warnT > 0) { el.prompt.replaceChildren(icon('storm'), ' ', ...rich(t('msg.stormWarn', { n: Math.ceil(warnT) }))); sfx.move(); }
+        if (Math.ceil(warnT) !== before && warnT > 0) { el.prompt.replaceChildren(icon('storm'), ' ', ...rich(t('msg.stormWarn', { n: Math.ceil(warnT) }), players === 2 ? 'both' : 0)); sfx.move(); }
       }
       shake *= 0.9;
       if (promptT > 0 && (promptT -= dt) <= 0) el.prompt.classList.add('hidden');
@@ -497,7 +528,7 @@ export function initials(app, { score, side = 0, queue = [] }) {
           h('p', { class: 'small' }, tag(side), ' ', t(side === 0 ? 'valley.roncal' : 'valley.baretous')),
           h('p', { class: 'big-score' }, String(score)),
           h('div', { class: 'initials' }, letters.map((l, i) => h('span', { class: i === slot ? 'sel' : '' }, ALPHABET[l]))),
-          h('p', { class: 'hint' }, rich(t('scores.hint'))))));
+          h('p', { class: 'hint' }, keysOn() ? [h('kbd', {}, keyName(side, 'up')), h('kbd', {}, keyName(side, 'down')), ' '] : null, rich(t('scores.hint'), side)))));
   };
   show();
   return {

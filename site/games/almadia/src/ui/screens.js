@@ -13,17 +13,46 @@ import { drawScene, drawRouteMap } from './art.js';
 import { sfx } from './audio.js';
 import { langParam } from './arcade.js';
 import { settings, topScores, qualifies, addScore } from './store.js';
+import { keysOn, keyName } from './keys.js';
+import { device } from './device.js';
 
-// "[A] stroke" -> button glyph + text, so non-readers can match the button.
-export function rich(text) {
+// "[A] stroke" -> button glyph + text, so non-readers can match the button
+// (on the cabinet, and the phone's on-screen buttons look the same). At a
+// computer it's the key instead ("Z stroke"). {p} picks whose keys: a player
+// (0 or 1), or a list of them for a message both players read.
+export function rich(text, p = 0) {
   const parts = [];
   let last = 0;
   for (const m of text.matchAll(/\[(A|B|C|START)\]/g)) {
-    parts.push(text.slice(last, m.index), h('span', { class: `btn btn-${m[1].toLowerCase()}` }, m[1]));
+    const b = m[1].toLowerCase();
+    parts.push(text.slice(last, m.index));
+    if (keysOn()) parts.push(...[p].flat().flatMap((q, i) => [i ? '/' : '', h('kbd', { class: `k${q + 1}` }, keyName(q, b))]));
+    else parts.push(h('span', { class: `btn btn-${b}` }, m[1]));
     last = m.index + m[0].length;
   }
   parts.push(text.slice(last));
   return parts;
+}
+
+// One player's controls, button by button (with their keys at a keyboard), so
+// two people sharing one keyboard know which keys are theirs. {tag} heads it.
+function controlsCol(p, tag) {
+  const dir = (d, arrow) => (keysOn() ? h('kbd', { class: `k${p + 1}` }, keyName(p, d)) : arrow);
+  return h('div', { class: `keys-col k${p + 1}` },
+    tag,
+    h('p', {}, dir('left', '◀'), dir('right', '▶'), ` ${t('keys.steer')}`),
+    h('p', {}, dir('up', '↑'), ` ${t('keys.row')} · `, dir('down', '↓'), ` ${t('keys.brake')}`),
+    h('p', {}, rich(t('keys.stroke'), p)),
+    h('p', {}, rich(t('keys.brace'), p)),
+    h('p', {}, rich(t('keys.tie'), p)));
+}
+
+// During the race, at a keyboard: each player's keys in a corner, coloured
+// like the buttons they stand for.
+function keyStrip(p) {
+  const k = (b) => h('kbd', { class: `k${p + 1} kb-${b}` }, keyName(p, b));
+  return h('div', { class: `key-strip s${p + 1}` }, h('span', { class: `ptag p${p + 1}` }, String(p + 1)),
+    k('left'), k('right'), k('up'), k('down'), ' ', k('a'), k('b'), k('c'));
 }
 
 const clock = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
@@ -114,8 +143,10 @@ function scoreTable(course) {
 
 export function menu(app, { players = 1 } = {}) {
   const order = app.data.order;
-  const S = { players, difficulty: settings.difficulty, stretch: 0 };
-  const rows = ['players', 'stretch', 'difficulty', 'lang', 'go'];
+  // A phone's on-screen controls are player 1's only: there it's one player.
+  const phone = device === 'phone';
+  const S = { players: phone ? 1 : players, difficulty: settings.difficulty, stretch: 0 };
+  const rows = phone ? ['stretch', 'difficulty', 'lang', 'go'] : ['players', 'stretch', 'difficulty', 'lang', 'go'];
   let row = 0;
   const preview = () => new Race({ rules: app.data.rules, course: order[S.stretch], players: 2, seed: 7 });
   let race = preview(), cam = null;
@@ -156,7 +187,7 @@ export function menu(app, { players = 1 } = {}) {
       race.step(pilotInput(race));
       if (race.finished) { race = preview(); cam = null; }
       const inp = app.input, p1 = inp.players[0];
-      if (inp.players[1].pressed.start && S.players !== 2) { S.players = 2; sfx.move(); show(); }
+      if (inp.players[1].pressed.start && S.players !== 2 && !phone) { S.players = 2; sfx.move(); show(); }
       if (inp.any('up')) { row = (row + rows.length - 1) % rows.length; sfx.move(); show(); }
       if (inp.any('down')) { row = (row + 1) % rows.length; sfx.move(); show(); }
       if (inp.any('left')) change(-1);
@@ -227,11 +258,9 @@ export function briefing(app) {
       h('p', { class: 'places' }, icon('flag'), ' ', places.join(' · ')),
       two
         ? h('div', { class: 'controls' },
-          h('p', {}, h('span', { class: 'ptag p1' }, '1'), ' ', t('controls.p1')),
-          h('p', {}, h('span', { class: 'ptag p2' }, '2'), ' ', t('controls.p2')),
-          h('p', { class: 'small' }, t('controls.coop')),
-          h('p', { class: 'small' }, rich(t('controls.buttons'))))
-        : h('div', { class: 'controls' }, h('p', {}, rich(t('controls.solo')))),
+          h('div', { class: 'keys-card' }, [0, 1].map((p) => controlsCol(p, h('h4', {}, h('span', { class: `ptag p${p + 1}` }, String(p + 1)), ' ', t(`controls.p${p + 1}`), device === 'cabinet' ? h('small', {}, t(p ? 'keys.right' : 'keys.left')) : null)))),
+          h('p', { class: 'small' }, t('controls.coop')))
+        : h('div', { class: 'controls' }, h('div', { class: 'keys-card solo' }, controlsCol(0, null))),
       h('p', { class: 'hint' }, rich(t('ui.next'))))));
   return {
     update(dt) {
@@ -311,7 +340,9 @@ export function race(app) {
       h('span', { class: 'hud-item' }, icon('log'), el.logs),
       h('span', { class: 'hud-item' }, icon('rope'), el.rope),
       h('span', { class: 'hud-item' }, icon('flag'), el.orders)),
-    el.floats, el.place, el.big, el.prompt, el.lash));
+    el.floats, el.place, el.big, el.prompt, el.lash,
+    keysOn() ? h('div', { class: 'key-strips' }, Array.from({ length: players }, (_, p) => keyStrip(p))) : null));
+  const everyone = players === 2 ? [0, 1] : 0; // messages are for the whole crew
 
   const float = (text, x, y, cls = '') => {
     const f = h('span', { class: `float ${cls}`, style: { left: `${Math.round(x)}px`, top: `${Math.round(y - cam)}px` } }, text);
@@ -323,7 +354,7 @@ export function race(app) {
     el.big.classList.remove('pop'); void el.big.offsetWidth; el.big.classList.add('pop');
   };
   const prompt = (text, secs = 6) => {
-    el.prompt.replaceChildren(...rich(text));
+    el.prompt.replaceChildren(...rich(text, everyone));
     el.prompt.classList.remove('hidden');
     promptT = secs;
   };
@@ -331,7 +362,7 @@ export function race(app) {
     if (!r.lash.active) { el.lash.classList.add('hidden'); return; }
     el.lash.classList.remove('hidden');
     const who = Array.from({ length: players }, (_, i) => h('span', { class: `ptag p${i + 1} ${r.lash.pressed[i] === r.lashBeat() && r.lashBeat() > 0 ? 'done' : ''}` }, String(i + 1)));
-    el.lash.replaceChildren(h('p', {}, rich(t(players === 2 ? 'msg.lashTogether' : 'msg.lash'))), h('p', { class: 'small' }, who, '  ', rich(t('msg.lashHint'))));
+    el.lash.replaceChildren(h('p', {}, rich(t(players === 2 ? 'msg.lashTogether' : 'msg.lash'), everyone)), h('p', { class: 'small' }, who, '  ', rich(t('msg.lashHint'), everyone)));
   };
 
   const hudState = { time: '', logs: -1, rope: -1, orders: '' };

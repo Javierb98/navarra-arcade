@@ -298,3 +298,14 @@ kbd {
 .gloss, .two .gloss { width: 266px; height: 110px; bottom: 26px; }
 .gloss .gl-text { font-size: 12px; line-height: 1.25; }
 .play-help { right: 286px; }
+
+/* How to play: each player's own controls, side by side. */
+.keys-card { display: flex; gap: 14px; margin: 10px 0 4px; text-align: left; }
+.keys-col { flex: 1; padding: 8px 14px; border-radius: 10px; background: rgba(255, 255, 255, .35); border-left: 5px solid #b3261e; font-size: 16px; line-height: 1.5; }
+.keys-col.blue { border-color: #245a8a; }
+.keys-col h3 { margin: 0 0 2px; font-size: 20px; }
+.keys-col.red h3 { color: #b3261e; }
+.keys-col.blue h3 { color: #245a8a; }
+.keys-col p { margin: 0; }
+.keys-1 .keys-col { border-left: none; }
+.keys-col h3 small { font-size: 14px; font-weight: normal; color: var(--ink-soft); }

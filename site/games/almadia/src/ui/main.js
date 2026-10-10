@@ -11,6 +11,7 @@ import * as screens from './screens.js';
 import { initTouch, playArea } from './touch.js';
 import { menuUrl, langParam, backToMenu } from './arcade.js';
 import { setRoute } from './art.js';
+import { initKeys } from './keys.js';
 
 const FIXED = 1 / 60;
 const IDLE_AFTER = 60;
@@ -42,7 +43,9 @@ function fit() {
   // On a phone or tablet the on-screen controls take part of the screen.
   const a = playArea(W, H);
   const k = Math.min(a.w / W, a.h / H);
-  const scale = k >= 1 ? Math.floor(k) : k;
+  // Whole steps keep the pixels even, but only when that costs under a tenth
+  // of the size: a phone (1.4x) or a browser window (2.9x) would lose far more.
+  const scale = k >= 1 && Math.floor(k) >= k * 0.9 ? Math.floor(k) : k;
   stage.style.zoom = scale;
   stage.style.left = `${(a.x + (a.w - W * scale) / 2) / scale}px`;
   stage.style.top = `${(a.y + (a.h - H * scale) / 2) / scale}px`;
@@ -209,7 +212,8 @@ async function boot() {
     setVolume(settings.volume);
     app.data = { rules, facts: facts.facts, story, courses, route, order: route.courses.map((id) => courses[id]) };
     app.input = new Input(controls);
-    if (initTouch(controls, { onGesture: unlockAudio, onLayout: fit })) fit();
+    initKeys(controls);
+    if (initTouch(controls, { onGesture: unlockAudio, onLayout: fit, rotateHint: () => t('touch.rotate') })) fit();
     loadImages(facts.facts);
     document.title = t('title.name');
     // From the arcade menu, skip the attract demo and go straight to setup.

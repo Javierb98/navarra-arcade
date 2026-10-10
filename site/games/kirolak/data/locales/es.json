@@ -116,5 +116,17 @@
   "fact.stones": "Las piedras de harri-jasotzea pueden ser cilíndricas, cúbicas, rectangulares o esféricas.",
   "fact.sokatira": "En la sokatira, los equipos tiran al ritmo que marca su jefe, que es tan importante como la fuerza.",
   "fact.txapela": "En el deporte vasco, al ganador de un campeonato se le pone una txapela en vez de darle una copa.",
-  "fact.plaza": "Las pruebas suelen hacerse en la plaza del pueblo durante las fiestas, con todo el pueblo mirando."
+  "fact.plaza": "Las pruebas suelen hacerse en la plaza del pueblo durante las fiestas, con todo el pueblo mirando.",
+  "keys.aizkolaritza": "[A] y [B] alternos: cortar",
+  "keys.harri": "[A] y [B] alternos: subir la piedra",
+  "keys.txingak": "[A] y [B] alternos: dar pasos",
+  "keys.sokatira": "[A] al oír «¡Aupa!»: tirar",
+  "keys.balance": "{l} {r} mantener el equilibrio",
+  "menu.hint@computer": "Flechas: elegir · [A] aceptar · [C] idioma",
+  "menu.hint@phone": "Cruceta: elegir · [A] aceptar · [C] idioma",
+  "admin.hint@computer": "Flechas: elegir y cambiar · [A] aceptar",
+  "title.players@phone": "1 jugador · contra la máquina",
+  "keys.left": "izquierda",
+  "keys.right": "derecha",
+  "touch.rotate": "Gira el móvil para ver el juego más grande"
 }

@@ -9,7 +9,8 @@ import { settings, saveSettings, resetScores } from './store.js';
 import * as screens from './screens.js';
 import { initTouch, playArea } from './touch.js';
 import { menuUrl, langParam, backToMenu } from './arcade.js';
-import { initKeys, showKeys } from './keys.js';
+import { initKeys } from './keys.js';
+import { device } from './device.js';
 
 const FIXED = 1 / 60;
 const W = 960;
@@ -115,7 +116,7 @@ function updateAdmin() {
     if (admin.row === 0) { settings.volume = Math.max(0, Math.min(10, settings.volume + dir)); setVolume(settings.volume); sfx.move(); }
     if (admin.row === 1) { settings.lang = LANGS[(LANGS.indexOf(settings.lang) + dir + LANGS.length) % LANGS.length]; setLang(settings.lang); }
     if (admin.row === 2) { const L = ['easy', 'normal', 'hard']; settings.difficulty = L[(L.indexOf(settings.difficulty) + dir + 3) % 3]; }
-    if (admin.row === 3) {
+    if (admin.row === 3 && device === 'computer') { // the cabinet and phones keep the cabinet's layout
       app.profile = app.profile === 'keyboard' ? 'cabinet' : 'keyboard';
       settings.controls = app.profile;
       app.input.cfg = profileCfg();
@@ -175,7 +176,6 @@ function frame(now) {
       acc -= FIXED;
       app.time += FIXED;
       app.input.poll(FIXED);
-      showKeys(app.input.keyboard);
       if (app.input.activity) unlockAudio();
       if (exitBox) { updateExit(); continue; }
       if (wantsExit(FIXED)) { openExit(); continue; }
@@ -218,13 +218,16 @@ async function boot() {
     setVolume(settings.volume);
     app.data = { rules, fighters: fighters.fighters, arenas: arenas.arenas, passives: passives.passives };
     // Two key layouts: DESIGN.md's keyboard one, and the arcade cabinet's
-    // (3 buttons, super = A+B). ?controls=cabinet or the settings menu picks;
-    // opened from the arcade menu, the cabinet layout is the default.
+    // (3 buttons, super = A+B). The cabinet and a phone (whose on-screen
+    // controls have A, B and C only) always use the cabinet's. At a computer,
+    // ?controls=cabinet or the settings menu picks; opened from the arcade
+    // menu, the cabinet layout is the default.
     app.controls = controls;
-    app.profile = ['keyboard', 'cabinet'].includes(dev.get('controls')) ? dev.get('controls') : settings.controls ?? (menuUrl ? 'cabinet' : controls.profile);
+    const asked = ['keyboard', 'cabinet'].includes(dev.get('controls')) ? dev.get('controls') : null;
+    app.profile = device !== 'computer' ? 'cabinet' : asked ?? settings.controls ?? (menuUrl ? 'cabinet' : controls.profile);
     const cfg = profileCfg();
     app.input = new Input(cfg);
-    if (initTouch(cfg, { onGesture: unlockAudio, onLayout: fit })) fit();
+    if (initTouch(cfg, { onGesture: unlockAudio, onLayout: fit, rotateHint: () => t('touch.rotate') })) fit();
     initKeys(cfg);
     document.title = t('title.name');
     // From the arcade menu, skip the attract demo and go straight to setup.

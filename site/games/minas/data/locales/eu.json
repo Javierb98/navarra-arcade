@@ -226,5 +226,17 @@
   "fact.betelu": "XVI. eta XVII. mendeetan meategiak ireki ziren Betelun, Imizkotzen eta Urrobin, batez ere burdinazkoak.",
   "fact.gorramendi": "Gorramendin, Baztanen, erromatarrek urrea nola bilatzen zuten erakusten duten aztarnak daude.",
   "fact.arditurri": "Aiako Harriaren ondoko galeria erromatarrak erromatarren garaitik XX. mendearen amaierara arte landu ziren.",
-  "fact.azurita": "Urbiolako haitzuloan malakita eta azurita ateratzen ziren: kobre-mineral berdeak eta urdinak."
+  "fact.azurita": "Urbiolako haitzuloan malakita eta azurita ateratzen ziren: kobre-mineral berdeak eta urdinak.",
+  "menu.hint@computer": "Geziak: aukeratu · [A] ados · [C] hizkuntza",
+  "menu.hint@phone": "Gurutzea: aukeratu · [A] ados · [C] hizkuntza",
+  "admin.hint@computer": "Geziak: aukeratu eta aldatu · [A] ados",
+  "howto.walk@computer": "← → edo A D: ibili. Bultzatu harriaren kontra zulatzeko",
+  "howto.walk@phone": "Gurutzea ← →: ibili. Bultzatu harriaren kontra zulatzeko",
+  "howto.dig@computer": "↓ edo S: behera zulatu. Eskailerak uzten dituzu",
+  "howto.dig@phone": "Gurutzea ↓: behera zulatu. Eskailerak uzten dituzu",
+  "howto.ladders@computer": "↑ ↓ edo W S eskaileran: igo eta jaitsi. [B] eskailera bat jartzen du zauden lekuan",
+  "howto.ladders@phone": "Gurutzea ↑ ↓ eskaileran: igo eta jaitsi. [B] eskailera bat jartzen du zauden lekuan",
+  "help.play@computer": "Geziak edo W A S D: ibili, zulatu eta igo · [B] eskailera jarri · [A] tailerra",
+  "shop.hint@computer": "↑ ↓ edo W S aukeratu · [A] hurrengoa erosi · [B] irten",
+  "touch.rotate": "Biratu mugikorra jokoa handiago ikusteko"
 }

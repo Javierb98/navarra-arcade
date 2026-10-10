@@ -11,19 +11,20 @@ import { sfx } from './audio.js';
 import { settings, topScores, qualifies, addScore } from './store.js';
 import { langParam } from './arcade.js';
 import { keysOn, keyName } from './keys.js';
+import { device } from './device.js';
 
 const W = 960, H = 540;
 const COURSE = 'mano';
 
-// "[A] drive" -> button glyph + text, so non-readers can match the button.
-// At a computer keyboard the key is shown too ("A·Z"). {p} picks whose keys.
+// "[A] drive" -> button glyph + text, so non-readers can match the button
+// (on the cabinet, and the phone's on-screen buttons look the same). At a
+// computer it's the key instead ("Z drive"). {p} picks whose keys.
 export function rich(text, p = 0) {
   const parts = [];
   let last = 0;
   for (const m of text.matchAll(/\[(A|B|C|START)\]/g)) {
     const b = m[1].toLowerCase();
-    parts.push(text.slice(last, m.index), h('span', { class: `btn btn-${b}` }, m[1]));
-    if (keysOn()) parts.push(h('kbd', {}, keyName(p, b)));
+    parts.push(text.slice(last, m.index), keysOn() ? h('kbd', {}, keyName(p, b)) : h('span', { class: `btn btn-${b}` }, m[1]));
     last = m.index + m[0].length;
   }
   parts.push(text.slice(last));
@@ -134,8 +135,11 @@ export function attract(app) {
 // ---- menu -------------------------------------------------------------------------------------
 
 export function menu(app) {
-  const S = { players: 2, difficulty: settings.difficulty }; // made for two; one player gets the tournament
-  const rows = ['players', 'difficulty', 'lang', 'go'];
+  // Made for two; one player gets the tournament. A phone's on-screen
+  // controls are player 1's only, so there it's always the tournament.
+  const phone = device === 'phone';
+  const S = { players: phone ? 1 : 2, difficulty: settings.difficulty };
+  const rows = phone ? ['difficulty', 'lang', 'go'] : ['players', 'difficulty', 'lang', 'go'];
   let row = 0;
   const value = (r) => {
     if (r === 'go') return h('span', {}, rich(`[A] ${t('menu.go')}`));
@@ -160,7 +164,7 @@ export function menu(app) {
   return {
     update() {
       const inp = app.input;
-      if (inp.players[1].pressed.start && S.players !== 2) { S.players = 2; sfx.move(); show(); return; }
+      if (inp.players[1].pressed.start && S.players !== 2 && !phone) { S.players = 2; sfx.move(); show(); return; }
       if (inp.any('up')) { row = (row + rows.length - 1) % rows.length; sfx.move(); show(); }
       if (inp.any('down')) { row = (row + 1) % rows.length; sfx.move(); show(); }
       if (inp.any('left')) change(-1);
@@ -193,12 +197,36 @@ export function story(app) {
   };
 }
 
+// Arrows or W A S D (at a keyboard), in the order up, left, down, right.
+const runKeys = (p) => ['up', 'left', 'down', 'right'].map((d) => h('kbd', {}, keyName(p, d)));
+
+// "To aim, hold ← txoko…" with player p's own keys as key caps at a keyboard.
+function aimLine(p) {
+  const dirs = { l: 'left', r: 'right', d: 'down' }, plain = { l: '←', r: '→', d: '↓' };
+  return t('help.aim').split(/\{([lrd])\}/).map((part, i) => (i % 2 ? (keysOn() ? h('kbd', {}, keyName(p, dirs[part])) : plain[part]) : part));
+}
+
+// Who plays with what: one column per player with their own stick and
+// buttons (and keys, at a keyboard), so two people sharing one keyboard
+// know which keys are theirs before the first serve.
+function controlsCard(players) {
+  const col = (p) => h('div', { class: `keys-col ${p ? 'blue' : 'red'}` },
+    players === 2 ? h('h3', {}, t(p ? 'hud.blue' : 'hud.red'), device === 'cabinet' ? h('small', {}, ` · ${t(p ? 'keys.right' : 'keys.left')}`) : null) : null,
+    h('p', {}, keysOn() ? runKeys(p) : null, keysOn() ? ' ' : '', t(keysOn() ? 'keys.run' : 'howto.move')),
+    h('p', {}, rich(t('howto.a'), p)),
+    h('p', {}, rich(t('howto.b'), p)),
+    players === 2 ? h('p', { class: 'aim' }, aimLine(p)) : null);
+  return h('div', { class: `keys-card keys-${players}` }, players === 2 ? [col(0), col(1)] : col(0));
+}
+
 export function howto(app) {
   let t0 = 0;
+  const two = app.session.players === 2;
   app.ui.replaceChildren(h('div', { class: 'overlay howto' }, h('div', { class: 'parchment brief-card' },
     h('h2', {}, t('howto.title')),
-    h('ul', { class: 'howto-list' }, ['move', 'a', 'b', 'aim', 'txoko', 'ancho', 'globo', 'timing', 'turn'].map((k) => h('li', {}, rich(t(`howto.${k}`))))),
-    app.session.players === 2 ? h('p', { class: 'small' }, t('hud.to', { n: app.data.rules.match.to })) : null,
+    controlsCard(app.session.players),
+    h('ul', { class: 'howto-list' }, (two ? ['timing', 'turn'] : ['txoko', 'ancho', 'globo', 'timing', 'turn']).map((k) => h('li', {}, rich(t(`howto.${k}`))))),
+    two ? h('p', { class: 'small' }, t('hud.to', { n: app.data.rules.match.to })) : null,
     h('p', { class: 'hint' }, rich(`[A] ${t('menu.go')}`)))));
   return {
     update(dt) { t0 += dt; if ((t0 > 0.6 && (app.input.any('a') || app.input.any('start'))) || t0 > 25) { sfx.ok(); app.go(app.session.players === 1 ? 'rival' : 'play'); } },
@@ -271,7 +299,7 @@ export function play(app) {
     const txt = m.phase === 'serve' && !m.p[m.server].ai ? t('hud.serve', { who: who(m.server) }) : m.phase === 'rally' && m.rally > 2 ? t('hud.rally', { n: m.rally }) : '';
     if (txt === statusKey) return;
     statusKey = txt;
-    el.status.replaceChildren(...rich(txt));
+    el.status.replaceChildren(...rich(txt, m.server));
   };
   const call = (text, sub, secs = 2) => {
     el.call.replaceChildren(h('b', {}, text), sub ? h('span', {}, sub) : null);
@@ -327,11 +355,8 @@ export function play(app) {
     const key = `${keysOn()}|${getLang()}`;
     if (key === helpKey) return;
     helpKey = key;
-    const line = (p) => {
-      const arrows = keysOn() ? ['left', 'right', 'down'].map((d) => keyName(p, d)) : ['←', '→', '↓'];
-      return h('p', {}, S.players === 2 ? h('span', { class: `who ${p ? 'blue' : 'red'}` }, t(p ? 'hud.blue' : 'hud.red')) : null,
-        ...rich(t('help.hit'), p), ' · ', h('span', { class: 'aim' }, t('help.aim', { l: arrows[0], r: arrows[1], d: arrows[2] })));
-    };
+    const line = (p) => h('p', {}, S.players === 2 ? h('span', { class: `who ${p ? 'blue' : 'red'}` }, t(p ? 'hud.blue' : 'hud.red')) : null,
+      ...(keysOn() ? [...runKeys(p), ` ${t('keys.run')} · `] : []), ...rich(t('help.hit'), p), ' · ', h('span', { class: 'aim' }, aimLine(p)));
     el.help.replaceChildren(...(S.players === 2 ? [line(0), line(1)] : [line(0)]));
   };
   renderBoard(); renderStatus(); renderHelp();

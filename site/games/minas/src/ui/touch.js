@@ -4,18 +4,22 @@
 // The same file is shared by every Navarra arcade game; it only appears on a
 // touch screen, and playArea() tells main.js where the game may draw.
 //
-// Upright: the game sits at the top and the controls fill the space below.
-// On its side: the game is narrowed so the pad and buttons get the margins.
+// Upright: the game sits at the top and the controls fill the space below,
+// with a nudge to turn the phone. On its side: the game takes the whole
+// height and the pad and buttons sit over its edges, see-through. (A tablet
+// with room to spare below the game gets the upright layout either way.)
+// The first touch also asks for full screen, where the browser allows it.
 
-const SIDE = 150; // px kept free on each side for thumbs when held sideways
-const BAR = 46;   // px for START and exit above the controls when upright
+const SIDE = 150; // px kept free on each side for thumbs, when there's room
+const BELOW = 180; // px of controls below the game that make the upright layout worth it
 
 export const touchScreen = matchMedia('(pointer: coarse)').matches || (navigator.maxTouchPoints > 0 && 'ontouchstart' in window);
 
 let pad = null;
 
 const size = () => ({ w: document.documentElement.clientWidth, h: document.documentElement.clientHeight });
-const upright = () => { const { w, h } = size(); return h > w * 0.9; };
+const portrait = () => { const { w, h } = size(); return h > w * 0.9; };
+const upright = () => { const { w, h } = size(); return portrait() || h - w * 9 / 16 >= BELOW; };
 
 // The box (in CSS pixels) the game's stage should be fitted into.
 export function playArea(W = 960, H = 540) {
@@ -26,12 +30,22 @@ export function playArea(W = 960, H = 540) {
     const gh = Math.min(w * H / W, h - 230);
     return { x: 0, y: 0, w, h: gh };
   }
-  return { x: SIDE, y: 0, w: w - 2 * SIDE, h };
+  // Sideways: the full height. The margins keep the thumbs off the game
+  // only when they're wide enough; on a phone the controls go over its edges.
+  const side = Math.max(0, Math.min(SIDE, (w - h * W / H) / 2));
+  return { x: side, y: 0, w: w - 2 * side, h };
+}
+
+function fullScreen() {
+  const d = document.documentElement;
+  if (document.fullscreenElement || !d.requestFullscreen) return;
+  d.requestFullscreen({ navigationUI: 'hide' }).catch(() => {});
 }
 
 // Builds the controls (touch screens only). `onGesture` runs inside the first
 // real touch, so the game can start its sound there (iOS needs a gesture).
-export function initTouch(cfg, { onGesture, onLayout } = {}) {
+// `rotateHint()` gives the "turn your phone" text in the current language.
+export function initTouch(cfg, { onGesture, onLayout, rotateHint } = {}) {
   if (!touchScreen) return false;
   const keys = cfg.keyboard.p1;
   // Prefer the cabinet's codes (Ctrl, Alt, Space, 1) over letter keys, so
@@ -46,7 +60,7 @@ export function initTouch(cfg, { onGesture, onLayout } = {}) {
     if (!down && n <= 0) dispatchEvent(new KeyboardEvent('keyup', { code: c, key: c, bubbles: true }));
   };
   let woke = false;
-  const gesture = () => { if (!woke) { woke = true; onGesture?.(); } };
+  const gesture = () => { if (!woke) { woke = true; fullScreen(); onGesture?.(); } };
 
   const el = (tag, cls, text) => { const e = document.createElement(tag); e.className = cls; if (text) e.textContent = text; return e; };
   pad = el('div', 'touchpad');
@@ -104,7 +118,8 @@ export function initTouch(cfg, { onGesture, onLayout } = {}) {
   face.append(button('tp-c', 'C', code('c')), button('tp-b', 'B', code('b')), button('tp-a', 'A', code('a')));
   const bar = el('div', 'tp-bar');
   bar.append(button('tp-exit', '✕', exitCode), button('tp-start', 'START', code('start')));
-  pad.append(stick, face, bar);
+  const turn = el('div', 'tp-turn');
+  pad.append(stick, face, bar, turn);
   document.body.append(pad);
 
   // Fingers on the game itself shouldn't scroll, zoom or select anything.
@@ -120,9 +135,14 @@ export function initTouch(cfg, { onGesture, onLayout } = {}) {
       const a = playArea();
       pad.style.top = `${a.h}px`;
     } else pad.style.top = '0px';
+    const nudge = portrait() && rotateHint ? rotateHint() : '';
+    turn.textContent = nudge;
+    turn.hidden = !nudge;
     onLayout?.();
   };
   addEventListener('resize', layout);
+  // The nudge's text follows the language (the game sets <html lang>).
+  new MutationObserver(layout).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
   document.body.classList.add('has-touchpad');
   injectStyle();
   layout();
@@ -159,8 +179,10 @@ function injectStyle() {
 .touchpad.upright .tp-bar { left: 0; right: 0; top: 10px; justify-content: center; }
 /* Sideways: the same, in the margins beside the game, a little see-through. */
 .touchpad.sideways { top: 0; }
-.touchpad.sideways .tp-stick { left: max(4px, env(safe-area-inset-left)); bottom: 18px; width: 140px; height: 140px; opacity: 0.85; }
-.touchpad.sideways .tp-face { right: max(0px, env(safe-area-inset-right)); bottom: 14px; transform: scale(0.85); transform-origin: right bottom; opacity: 0.92; }
+.touchpad.sideways .tp-stick { left: max(4px, env(safe-area-inset-left)); bottom: 12px; width: 128px; height: 128px; opacity: 0.6; }
+.touchpad.sideways .tp-stick.active { opacity: 0.85; }
+.touchpad.sideways .tp-face { right: max(0px, env(safe-area-inset-right)); bottom: 8px; transform: scale(0.78); transform-origin: right bottom; opacity: 0.75; }
+.touchpad.sideways .tp-start { opacity: 0.8; }
 .touchpad.sideways .tp-bar { right: max(10px, env(safe-area-inset-right)); top: 10px; }
 .touchpad.sideways .tp-exit { position: fixed; left: max(10px, env(safe-area-inset-left)); top: 10px; }
 /* Tablets held upright: bigger controls, further in from the edges. */
@@ -173,6 +195,10 @@ function injectStyle() {
   .tp-stick { width: 128px; height: 128px; }
   .tp-face { transform: scale(0.88); transform-origin: right bottom; }
 }
+.tp-turn { position: absolute; left: 16px; right: 16px; top: 58px; text-align: center; color: #f1e2a6; font-size: 15px; pointer-events: none; }
+.tp-turn::before { content: ''; display: block; width: 18px; height: 30px; margin: 0 auto 6px; border: 2px solid #f1e2a6; border-radius: 4px; animation: tp-turn 2.4s ease-in-out infinite; }
+@keyframes tp-turn { 0%, 30% { transform: rotate(0); } 55%, 85% { transform: rotate(-90deg); } 100% { transform: rotate(0); } }
+.touchpad.sideways .tp-turn { display: none; }
 body.has-touchpad { touch-action: none; -webkit-user-select: none; user-select: none; }
 `;
   const s = document.createElement('style');

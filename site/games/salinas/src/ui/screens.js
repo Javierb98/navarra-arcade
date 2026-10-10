@@ -11,18 +11,23 @@ import { sfx } from './audio.js';
 import { settings, topScores, qualifies, addScore } from './store.js';
 import { langParam } from './arcade.js';
 import { keysOn, keyName } from './keys.js';
+import { device } from './device.js';
 
 const W = 960, H = 540, COURSE = 'verano';
 const seed = (app) => (app.time * 1000 + Date.now()) | 0;
 const fmt = (n) => String(Math.round(n));
 
+// "[A] rake" -> button glyph + text, so non-readers can match the button
+// (on the cabinet, and the phone's on-screen buttons look the same). At a
+// computer it's the key instead ("Z rake"). {p} picks whose keys; 'both' shows
+// both players' keys ("Z/E") for prompts either of them can answer.
 export function rich(text, p = 0) {
   const parts = [];
   let last = 0;
+  const key = (b) => (p === 'both' ? [h('kbd', {}, keyName(0, b)), '/', h('kbd', {}, keyName(1, b))] : [h('kbd', {}, keyName(p, b))]);
   for (const m of text.matchAll(/\[(A|B|C|START)\]/g)) {
     const b = m[1].toLowerCase();
-    parts.push(text.slice(last, m.index), h('span', { class: `btn btn-${b}` }, m[1]));
-    if (keysOn()) parts.push(h('kbd', {}, keyName(p, b)));
+    parts.push(text.slice(last, m.index), ...(keysOn() ? key(b) : [h('span', { class: `btn btn-${b}` }, m[1])]));
     last = m.index + m[0].length;
   }
   parts.push(text.slice(last));
@@ -83,8 +88,10 @@ export function attract(app) {
 
 export function menu(app) {
   const d = demo(app);
+  // A phone's on-screen controls are player 1's only, so there it's one player.
+  const phone = device === 'phone';
   const S = { players: 1, difficulty: settings.difficulty };
-  const rows = ['players', 'difficulty', 'lang', 'go'];
+  const rows = phone ? ['difficulty', 'lang', 'go'] : ['players', 'difficulty', 'lang', 'go'];
   let row = 0;
   const value = (r) => {
     if (r === 'go') return h('span', {}, rich(`[A] ${t('menu.go')}`));
@@ -109,7 +116,7 @@ export function menu(app) {
     update(dt) {
       d.update(dt);
       const inp = app.input;
-      if (inp.players[1].pressed.start && S.players !== 2) { S.players = 2; sfx.move(); show(); return; }
+      if (inp.players[1].pressed.start && S.players !== 2 && !phone) { S.players = 2; sfx.move(); show(); return; }
       if (inp.any('up')) { row = (row + rows.length - 1) % rows.length; sfx.move(); show(); }
       if (inp.any('down')) { row = (row + 1) % rows.length; sfx.move(); show(); }
       if (inp.any('left')) change(-1);
@@ -142,12 +149,28 @@ export function story(app) {
   };
 }
 
+// Arrows or W A S D (at a keyboard), in the order up, left, down, right.
+const walkKeys = (p) => ['up', 'left', 'down', 'right'].map((d) => h('kbd', {}, keyName(p, d)));
+const who = (p) => h('span', { class: `who ${p ? 'blue' : 'red'}` }, t(p ? 'who.p2' : 'who.p1'));
+
+// Who works with what: one column per player with their own stick and
+// buttons (and keys, at a keyboard), so two people sharing one keyboard
+// know which keys are theirs before the day starts.
+function controlsCard(players) {
+  const col = (p) => h('div', { class: `keys-col ${p ? 'blue' : 'red'}` },
+    players === 2 ? h('h3', {}, t(p ? 'who.p2' : 'who.p1'), device === 'cabinet' ? h('small', {}, ` · ${t(p ? 'keys.right' : 'keys.left')}`) : null) : null,
+    h('p', {}, keysOn() ? walkKeys(p) : null, keysOn() ? ' ' : '', t(keysOn() ? 'keys.walk' : 'howto.move')),
+    ['sluice', 'rake', 'carry'].map((k) => h('p', {}, rich(t(`keys.${k}`), p))));
+  return h('div', { class: `keys-card keys-${players}` }, players === 2 ? [col(0), col(1)] : col(0));
+}
+
 export function howto(app) {
   const s = app.session.season;
   let t0 = 0;
   app.ui.replaceChildren(h('div', { class: 'overlay howto' }, h('div', { class: 'parchment brief-card' },
     h('h2', {}, t('howto.title')),
-    h('ol', { class: 'howto-list' }, ['move', 'b', 'sun', 'a', 'flor', 'carry', 'extra', 'storm'].map((k) => h('li', {}, rich(t(`howto.${k}`))))),
+    controlsCard(s.players),
+    h('ol', { class: 'howto-list' }, ['sun', 'flor', 'extra', 'storm'].map((k) => h('li', {}, rich(t(`howto.${k}`))))),
     h('p', { class: 'hint' }, rich(`[A] ${t('menu.go')}`)))));
   return {
     update(dt) { t0 += dt; if ((t0 > 0.6 && (app.input.any('a') || app.input.any('start'))) || t0 > 30) { sfx.ok(); app.go('day'); } },
@@ -165,7 +188,7 @@ export function day(app) {
   let cardUntil = 0, toastUntil = 0, endT = 0;
   const el = {
     top: h('div', { class: 'topbar' }), toast: h('div', { class: 'toast hidden' }), card: h('div', { class: 'gloss parchment empty' }, h('p', { class: 'kicker' }, t('gl.title'))),
-    help: h('p', { class: 'play-help' }, rich(t('help.play'))), floats: h('div', { class: 'floats' }), streak: h('div', { class: 'streak' }),
+    help: h('div', { class: 'play-help' }), floats: h('div', { class: 'floats' }), streak: h('div', { class: 'streak' }),
   };
   app.ui.replaceChildren(h('div', { class: 'overlay play' }, el.top, el.streak, el.floats, el.toast, el.card, el.help));
   let topKey = '';
@@ -180,6 +203,16 @@ export function day(app) {
       ...s.workers.map((w) => h('div', { class: `tb-stat basket p${w.i}` }, h('b', {}, `${fmt(w.carry)}/${fmt(s.basket())}`), h('small', {}, t('hud.basket')))));
     el.streak.className = `streak ${s.streak >= 2 ? 'on' : ''} ${s.streak >= 5 ? 'hot' : ''}`;
     el.streak.replaceChildren(h('b', {}, `×${s.mult().toFixed(1).replace('.0', '')}`), h('small', {}, t('hud.streak', { n: s.streak })));
+  };
+  // The buttons, one line per player with their own keys at a keyboard.
+  let helpKey = '';
+  const renderHelp = () => {
+    const key = `${keysOn()}|${getLang()}`;
+    if (key === helpKey) return;
+    helpKey = key;
+    const line = (p) => h('p', {}, s.players === 2 ? who(p) : null,
+      ...(keysOn() ? [...walkKeys(p), ` ${t('keys.walk')} · `] : []), ...rich(t('help.play'), p));
+    el.help.replaceChildren(...(s.players === 2 ? [line(0), line(1)] : [line(0)]));
   };
   const toast = (text, secs = 2, bad = false) => { el.toast.replaceChildren(...rich(text)); el.toast.className = `toast ${bad ? 'bad' : ''}`; toastUntil = app.time + secs; };
   const teach = (id) => { if (!taught.has(id) && !S.taught?.has(id)) { taught.add(id); lessons.push(id); (S.taught ??= new Set()).add(id); } };
@@ -254,7 +287,7 @@ export function day(app) {
     return [{ x: a.x || b.x, y: a.y || b.y, a: a.a || b.a, aHeld: a.aHeld || b.aHeld, b: a.b || b.b }];
   };
 
-  renderTop();
+  renderTop(); renderHelp();
   return {
     update(dt) {
       if (toastUntil && app.time > toastUntil) { el.toast.className = 'toast hidden'; toastUntil = 0; }
@@ -265,7 +298,7 @@ export function day(app) {
       if (s.phase !== 'day') { if ((endT += dt) > 0.6) app.go(s.phase === 'over' ? 'final' : 'evening'); return; }
       s.step(inputs(), dt);
       handle();
-      renderTop();
+      renderTop(); renderHelp();
     },
     draw(g) {
       g.save();
@@ -291,6 +324,7 @@ export function evening(app) {
     burro: lv ? t('kg', { n: R.donkey.carry * lv }) : '—',
     toldo: `${Math.round(Math.min(0.9, lv * R.storm.coverPerLevel) * 100)}%`,
   })[u];
+  const both = s.players === 2 ? 'both' : 0; // either player can shop
   const levelOf = (u) => (u === 'era' ? s.levels.era : s.levels[u]);
   const show = () => !gone && app.ui.replaceChildren(h('div', { class: 'overlay evening' }, h('div', { class: 'parchment shop-card' },
     h('p', { class: 'kicker' }, t('hud.day', { n: s.day, total: s.days })),
@@ -308,7 +342,7 @@ export function evening(app) {
         h('span', { class: 'lvl' }, u === 'era' ? `${level}/${top}` : Array.from({ length: top }, (_, k) => h('i', { class: k < level ? `on ${popped === u && k === level - 1 ? 'new' : ''}` : '' }))),
         h('span', { class: 'price' }, c == null ? t('evening.max') : h('span', {}, h('span', { class: 'coin' }), fmt(c))));
     })),
-    h('p', { class: 'hint' }, rich(t('evening.hint')), '    ', rich(t('evening.next', { n: s.day + 1 }))))));
+    h('p', { class: 'hint' }, rich(t('evening.hint'), both), '    ', rich(t('evening.next', { n: s.day + 1 }), both)))));
   show();
   sfx.coin();
   return {
@@ -371,7 +405,7 @@ export function initials(app, { score }) {
   const show = () => app.ui.replaceChildren(h('div', { class: 'overlay results' }, saved ? scoreTable() : h('div', { class: 'parchment res-card' },
     h('h2', {}, t('scores.new')), h('p', { class: 'big-score' }, String(score)),
     h('div', { class: 'initials' }, letters.map((l, i) => h('span', { class: i === slot ? 'sel' : '' }, ALPHABET[l]))),
-    h('p', { class: 'hint' }, rich(t('scores.hint'))))));
+    h('p', { class: 'hint' }, rich(t('scores.hint'), app.session.season.players === 2 ? 'both' : 0)))));
   show();
   return {
     update(dt) {

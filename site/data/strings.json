@@ -19,7 +19,11 @@
     "min": "{n} min",
     "play": "Jugar",
     "hintTouch": "Toca un juego para verlo · toca Jugar para empezar",
-    "exitHintTouch": "Dentro del juego, toca ✕ para volver aquí"
+    "exitHintTouch": "Dentro del juego, toca ✕ para volver aquí",
+    "hintComputer": "← → elegir juego · [ENTER] jugar · ↑ idioma",
+    "hintLangComputer": "← → elegir idioma · [ENTER] o ↓ volver a los juegos",
+    "exitHintComputer": "Dentro del juego, pulsa [ESC] para volver aquí",
+    "keysTwo": "Teclado: jugador 1 flechas + Z X C, jugador 2 W A S D + E R Q"
   },
   "eu": {
     "title": "Nafarroako Arcadea",
@@ -41,7 +45,11 @@
     "min": "{n} min",
     "play": "Jokatu",
     "hintTouch": "Ukitu joko bat ikusteko · ukitu Jokatu hasteko",
-    "exitHintTouch": "Jokoaren barruan, ukitu ✕ hona itzultzeko"
+    "exitHintTouch": "Jokoaren barruan, ukitu ✕ hona itzultzeko",
+    "hintComputer": "← → jokoa aukeratu · [ENTER] jolastu · ↑ hizkuntza",
+    "hintLangComputer": "← → hizkuntza aukeratu · [ENTER] edo ↓ jokoetara itzuli",
+    "exitHintComputer": "Jokoan, sakatu [ESC] hona itzultzeko",
+    "keysTwo": "Teklatua: 1. jokalaria geziak + Z X C, 2. jokalaria W A S D + E R Q"
   },
   "en": {
     "title": "Navarra Arcade",
@@ -63,6 +71,10 @@
     "min": "{n} min",
     "play": "Play",
     "hintTouch": "Tap a game to see it · tap Play to start",
-    "exitHintTouch": "In a game, tap ✕ to come back here"
+    "exitHintTouch": "In a game, tap ✕ to come back here",
+    "hintComputer": "← → choose a game · [ENTER] play · ↑ language",
+    "hintLangComputer": "← → choose a language · [ENTER] or ↓ back to the games",
+    "exitHintComputer": "In a game, press [ESC] to come back here",
+    "keysTwo": "Keyboard: player 1 arrows + Z X C, player 2 W A S D + E R Q"
   }
 }

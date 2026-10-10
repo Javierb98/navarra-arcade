@@ -32,7 +32,11 @@
   "brief.p1": "1. jokalaria: Erronkariko artzaina (marka biribila)",
   "brief.p2": "2. jokalaria: Barétouseko artzaina (marka karratua)",
   "brief.cpu": "Barétous (marka karratua): ordenagailuak darama",
-  "brief.buttons": "Joystick-a: ibili · [A] txakurrari txistu · [B] joare jo · [C] atea, aska, sua, bildotsa… edo zure larreak ireki/itxi",
+  "brief.walk": "Joystick-a: ibili",
+  "keys.walk": "ibili",
+  "brief.a": "[A] txakurrari txistu",
+  "brief.b": "[B] joare jo",
+  "brief.c": "[C] atea, aska, sua, bildotsa… edo zure larreak ireki/itxi",
   "brief.health": "Mendiaren osasuna",
   "brief.trust": "Ibarren arteko bakea",
   "valley.roncal": "Erronkari",
@@ -169,5 +173,13 @@
   "fact.justice": "Amaieran, Izabako alkateak aurreko urteko itun-hausteak epaitzen ditu. Zaindariek eskua haren makilan jarrita zin egiten dute.",
   "fact.quarrels": "Itunaren aurretik iturriengatiko liskarrak egon ziren, eta bi ibarretako jendea hil zen. 1375eko bakeak amaiera eman zion horri.",
   "fact.selection": "Albaitari batek Frantziatik ekarritako behiak aztertzen ditu eta hiru aukeratzen ditu Erronkarirentzat.",
-  "tip.peace": "Bakea bere kabuz hozten da: ibarrek elkarri laguntzen jarraitzen badiote bakarrik irauten du."
+  "tip.peace": "Bakea bere kabuz hozten da: ibarrek elkarri laguntzen jarraitzen badiote bakarrik irauten du.",
+  "menu.hint@computer": "Geziak: aukeratu · [A] ados · [C] hizkuntza",
+  "menu.hint@phone": "Gurutzea: aukeratu · [A] ados · [C] hizkuntza",
+  "brief.walk@phone": "Gurutzea: ibili",
+  "admin.hint@computer": "Geziak: aukeratu eta aldatu · [A] ados",
+  "title.players@phone": "Jokalari 1: zu Erronkari zara, ordenagailua Baretous",
+  "keys.left": "ezkerraldea",
+  "keys.right": "eskuinaldea",
+  "touch.rotate": "Biratu mugikorra jokoa handiago ikusteko"
 }

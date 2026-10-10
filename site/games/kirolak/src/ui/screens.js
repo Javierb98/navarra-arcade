@@ -11,23 +11,48 @@ import { sfx } from './audio.js';
 import { settings } from './store.js';
 import { langParam } from './arcade.js';
 import { keysOn, keyName } from './keys.js';
+import { device } from './device.js';
 
 const W = 960, H = 540;
 const seed = (app) => (app.time * 1000 + Date.now()) | 0;
 const who = (i) => t(i ? 'who.blue' : 'who.red');
 
-// "[A] chop" -> button glyph + text; at a computer keyboard the key too.
+// "[A] chop" -> button glyph + text, so non-readers can match the button
+// (on the cabinet, and the phone's on-screen buttons look the same). At a
+// computer it's player p's key instead ("Z chop"); p = null when the text is
+// for both players, and then both keys show ("Z/E").
 export function rich(text, p = 0) {
   const parts = [];
   let last = 0;
   for (const m of text.matchAll(/\[(A|B|C|START)\]/g)) {
     const b = m[1].toLowerCase();
-    parts.push(text.slice(last, m.index), h('span', { class: `btn btn-${b}` }, m[1]));
-    if (keysOn()) parts.push(h('kbd', {}, keyName(p, b)));
+    parts.push(text.slice(last, m.index));
+    if (!keysOn()) parts.push(h('span', { class: `btn btn-${b}` }, m[1]));
+    else if (p != null) parts.push(h('kbd', {}, keyName(p, b)));
+    else parts.push(h('kbd', {}, keyName(0, b)), '/', h('kbd', {}, keyName(1, b)));
     last = m.index + m[0].length;
   }
   parts.push(text.slice(last));
   return parts;
+}
+
+// Each player's own controls for an event: one line per action, with the
+// keys of player p (arrows or A D for balance) at a keyboard.
+const STICK = { harri: true, txingak: true };
+function keyLines(ev, p) {
+  const lines = [h('p', {}, rich(t(`keys.${ev}`), p))];
+  if (STICK[ev]) {
+    const plain = { l: '←', r: '→' }, dirs = { l: 'left', r: 'right' };
+    lines.push(h('p', {}, t('keys.balance').split(/\{([lr])\}/).map((part, i) => (i % 2 ? (keysOn() ? h('kbd', {}, keyName(p, dirs[part])) : plain[part]) : part))));
+  }
+  return lines;
+}
+
+// Who plays with what: one column per player, so two people sharing one
+// keyboard know which keys are theirs before the event starts.
+function controlsCard(ev) {
+  const col = (p) => h('div', { class: `keys-col ${p ? 'blue' : 'red'}` }, h('h3', {}, t(p ? 'hud.blue' : 'hud.red'), device === 'cabinet' ? h('small', {}, ` · ${t(p ? 'keys.right' : 'keys.left')}`) : null), keyLines(ev, p));
+  return h('div', { class: 'keys-card' }, col(0), col(1));
 }
 
 // ---- effects: chips, sawdust, confetti, crowd mood ----------------------------------------------
@@ -83,8 +108,11 @@ export function attract(app) {
 // ---- menu -------------------------------------------------------------------------------------------
 
 export function menu(app) {
-  const S = { players: 2, difficulty: settings.difficulty };
-  const rows = ['players', 'difficulty', 'lang', 'go'];
+  // A phone's on-screen controls are player 1's only, so there it's always
+  // one player against the computer.
+  const phone = device === 'phone';
+  const S = { players: phone ? 1 : 2, difficulty: settings.difficulty };
+  const rows = phone ? ['difficulty', 'lang', 'go'] : ['players', 'difficulty', 'lang', 'go'];
   let row = 0;
   const value = (r) => {
     if (r === 'go') return h('span', {}, rich(`[A] ${t('menu.go')}`));
@@ -157,8 +185,8 @@ export function card(app) {
     h('p', { class: 'kicker' }, decider ? t('ev.decider') : t('ev.kicker', { n, total: 4 })),
     h('h2', {}, t(`ev.${ev.id}.name`)),
     h('p', { class: 'where' }, t(`ev.${ev.id}.what`)),
-    h('p', { class: 'tip' }, ...rich(t(`ev.${ev.id}.how`))),
-    two && keysOn() ? h('p', { class: 'small keys2' }, h('span', { class: 'who red' }, t('hud.red')), ` ${keyName(0, 'a')} · ${keyName(0, 'b')} · ${keyName(0, 'left')} ${keyName(0, 'right')}   `, h('span', { class: 'who blue' }, t('hud.blue')), ` ${keyName(1, 'a')} · ${keyName(1, 'b')} · ${keyName(1, 'left')} ${keyName(1, 'right')}`) : null,
+    h('p', { class: 'tip' }, ...rich(t(`ev.${ev.id}.how`), two ? null : 0)),
+    two ? controlsCard(ev.id) : null,
     h('p', { class: 'goal' }, t(`ev.${ev.id}.goal`)),
     word ? h('div', { class: 'word' }, h('b', {}, t(`gl.${word}.name`)), ' — ', t(`gl.${word}.text`)) : null,
     h('p', { class: 'hint' }, rich(`[A] ${t('menu.go')}`)))));
@@ -229,7 +257,10 @@ export function play(app) {
     h('div', { class: 'side red' }, h('span', { class: 'name' }, t('hud.red')), h('b', {}, fmt(day.points[0]))),
     h('div', { class: 'mid' }, t(`ev.${ev.id}.name`)),
     h('div', { class: 'side blue' }, h('b', {}, fmt(day.points[1])), h('span', { class: 'name' }, t('hud.blue'), day.players === 1 ? h('small', {}, ` ${t('hud.cpu')}`) : null)));
-  el.help.replaceChildren(...rich(t(`ev.${ev.id}.how`)));
+  // With two, each player's own keys on a line of their own.
+  const helpLine = (p) => h('p', {}, h('span', { class: `who ${p ? 'blue' : 'red'}` }, t(p ? 'hud.blue' : 'hud.red')), keyLines(ev.id, p).flatMap((l, i) => (i ? [' · ', ...l.childNodes] : [...l.childNodes])));
+  if (day.players === 2) el.help.replaceChildren(helpLine(0), helpLine(1));
+  else el.help.replaceChildren(...rich(t(`ev.${ev.id}.how`)));
   const stats = () => {
     const f = (i) => ev.id === 'aizkolaritza' ? `${Math.round(ev.measure(i) * 100)}%` : ev.id === 'harri' ? `${ev.p[i].lifts}` : ev.id === 'txingak' ? t('unit.m', { n: ev.p[i].dist.toFixed(1) }) : '';
     el.stat.querySelector('.s0').textContent = f(0); el.stat.querySelector('.s1').textContent = f(1);

@@ -130,5 +130,14 @@
   "fact.txapela": "Euskal kiroletan, txapelketa bateko irabazleari txapela jartzen zaio, kopa eman beharrean.",
   "help.hit": "[A] kolpea · [B] dejada",
   "help.aim": "Apuntatzeko, jo bitartean eutsi {l} txokoa, {r} zabalera edo {d} globoa",
-  "menu.duo.note": "Gorria urdinaren aurka, 7 tantora. Minutu gutxiko partida azkarra."
+  "menu.duo.note": "Gorria urdinaren aurka, 7 tantora. Minutu gutxiko partida azkarra.",
+  "keys.run": "korrika",
+  "menu.hint@computer": "Geziak: aukeratu · [A] ados · [C] hizkuntza",
+  "menu.hint@phone": "Gurutzea: aukeratu · [A] ados · [C] hizkuntza",
+  "howto.move@phone": "Gurutzea: kantxan korrika",
+  "admin.hint@computer": "Geziak: aukeratu eta aldatu · [A] ados",
+  "title.players@phone": "Jokalari 1 · hiru aurkari eta txapela",
+  "keys.left": "ezkerraldea",
+  "keys.right": "eskuinaldea",
+  "touch.rotate": "Biratu mugikorra jokoa handiago ikusteko"
 }

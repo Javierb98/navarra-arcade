@@ -185,3 +185,22 @@ h3 { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spa
 .res-col .res-total { display: flex; justify-content: space-between; }
 .res-col { min-width: 0; overflow: hidden; }
 .res-total s.lost { color: var(--muted); font-size: .8em; margin-right: 4px; }
+
+/* Briefing: each shepherd's own controls, side by side; and at a computer,
+   the keyboard key next to each button glyph. */
+.keys-card { display: flex; gap: 8px; margin: 4px 0; }
+.keys-col { flex: 1; padding: 4px 8px; border-radius: 4px; background: rgba(255, 240, 200, 0.07); border-left: 3px solid var(--line); font-size: 10px; }
+.keys-col.p1 { border-color: var(--p1); }
+.keys-card:not(.one) .keys-col.p2 { border-color: var(--p2); }
+.keys-card.one .keys-col { border-left: none; background: none; padding: 0; }
+.keys-col h4 { margin: 0 0 2px; font-size: 10px; }
+.keys-col h4 .ptag { vertical-align: -2px; }
+.briefing .controls .keys-col p { margin: 1px 0; font-size: 10px; }
+kbd {
+  display: inline-block; min-width: 11px; padding: 0 2px; margin: 0 2px 0 0; border-radius: 2px;
+  font: bold 8px/11px var(--font); text-align: center; vertical-align: 1px;
+  color: #1a1a1a; background: linear-gradient(#fdfdfd, #d9d9d9); border: 1px solid #8a8a8a; box-shadow: 0 1px 0 #6a6a6a;
+}
+.keypair { white-space: nowrap; }
+.keypair .ptag { width: 9px; height: 9px; margin: 0 1px 0 3px; vertical-align: -1px; }
+.keys-col h4 small { font-weight: normal; opacity: .75; }

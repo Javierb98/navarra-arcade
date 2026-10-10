@@ -455,3 +455,26 @@ kbd {
 .pick .moves small { display: block; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pick .hint { font-size: 12px; margin-top: 4px; }
 .select .hint.big { margin-top: 8px; font-size: 15px; }
+
+/* Before the fight: each player's own controls, side by side. */
+.keys-card { display: flex; gap: 14px; margin-top: 4px; width: 860px; }
+.keys-col { flex: 1; padding: 6px 14px; border-radius: 10px; background: rgba(40, 30, 20, .75); border-left: 5px solid #e69f00; color: #fbf6ea; font: 13px/1.55 var(--sans); }
+.keys-col.p1 { border-color: #56b4e9; }
+.keys-1 { width: 520px; }
+.keys-col h3 { margin: 0 0 2px; font: bold 15px var(--sans); }
+.keys-col p { margin: 0; }
+.keys-col .btn { height: 18px; min-width: 18px; line-height: 18px; font-size: 11px; }
+/* Smaller stage cards, so the controls fit underneath. */
+.stages { padding-top: 6px; }
+.stages .logo.small { font-size: 34px; }
+.stages .stage-grid { grid-template-columns: repeat(4, 168px); gap: 10px 12px; margin-top: 6px; }
+.stages .stage-card { height: 100px; }
+.stages .stage-card img, .stages .stage-card .random { height: 80px; }
+.stages .stage-card .random { font-size: 44px; }
+.stages .stage-fact { min-height: 0; margin: 8px 0 4px; font-size: 14px; }
+.stages .hint.big { margin-top: 6px; }
+.keys-col { text-align: left; }
+/* Two players: one help line each. */
+.match .match-help.two { border-radius: 10px; padding: 2px 12px; }
+.match .match-help.two p { margin: 0; }
+.keys-col h3 small { font-weight: normal; opacity: .75; }

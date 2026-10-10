@@ -25,24 +25,18 @@ export class Input {
     this.players = [blank(), blank()];
     this.admin = false;
     this.activity = false; // anything pressed or pushed this poll
-    const mapped = new Set([
-      ...Object.values(cfg.keyboard.p1).flat(),
-      ...Object.values(cfg.keyboard.p2).flat(),
-      ...cfg.keyboard.admin,
-      ...(cfg.keyboard.exit ?? []),
-    ]);
-    // Someone at a computer keyboard (letter keys), rather than a cabinet
-    // (whose encoders send Ctrl, Alt, Space, digits and arrows): screens
-    // then show the keys next to the button glyphs.
-    this.keyboard = false;
+    // The keys in use, from whichever profile this.cfg holds now (the
+    // settings menu can switch it).
+    const mapped = (code) => [this.cfg.keyboard.p1, this.cfg.keyboard.p2].some((m) => Object.values(m).some((c) => c.includes(code)))
+      || this.cfg.keyboard.admin.includes(code) || (this.cfg.keyboard.exit ?? []).includes(code);
     addEventListener('keydown', (e) => {
-      if (mapped.has(e.code)) e.preventDefault();
-      if (mapped.has(e.code) && e.code.startsWith('Key')) this.keyboard = true;
+      const ours = mapped(e.code);
+      if (ours) e.preventDefault();
       if (!e.repeat) this.hit.add(e.code);
       this.down.add(e.code);
     });
     addEventListener('keyup', (e) => {
-      if (mapped.has(e.code)) e.preventDefault();
+      if (mapped(e.code)) e.preventDefault();
       this.down.delete(e.code);
     });
     addEventListener('blur', () => this.down.clear());

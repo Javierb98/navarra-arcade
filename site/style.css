@@ -131,6 +131,7 @@ footer p { margin: 0; }
 .hint { color: var(--text); font-size: 8.5px; font-weight: normal; white-space: nowrap; overflow: hidden; }
 .hint.small { color: var(--muted); font-size: 7px; }
 .btn { display: inline-block; min-width: 12px; height: 12px; padding: 0 3px; border-radius: 6px; font-size: 7.5px; line-height: 12px; text-align: center; background: #eee; color: #111; margin: 0 1px; vertical-align: 1px; }
+kbd { display: inline-block; min-width: 10px; height: 11px; padding: 0 3px; border-radius: 2.5px; font: bold 7px/11px sans-serif; text-align: center; color: #111; background: linear-gradient(#fdfdfd, #d9d9d9); border: 0.5px solid #8a8a8a; box-shadow: 0 1px 0 #6a6a6a; margin: 0 1px; vertical-align: 1px; }
 .btn-a { background: #f0e442; }
 .btn-c { background: var(--rope); border-radius: 2px; }
 .btn-start { border-radius: 3px; }
