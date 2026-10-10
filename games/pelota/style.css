@@ -241,3 +241,15 @@ kbd {
 .play-help .who.red { background: #b3261e; }
 .play-help .who.blue { background: #245a8a; }
 .play-help .aim { opacity: .9; }
+/* How to play: each player's own controls, side by side. */
+.keys-card { display: flex; gap: 14px; margin: 10px 0 4px; text-align: left; }
+.keys-col { flex: 1; padding: 8px 14px; border-radius: 10px; background: rgba(255, 255, 255, .35); border-left: 5px solid #8a6a40; font-size: 17px; line-height: 1.5; }
+.keys-col.red { border-color: #b3261e; }
+.keys-2 .keys-col.blue { border-color: #245a8a; }
+.keys-col h3 { margin: 0 0 2px; font-size: 20px; }
+.keys-col.red h3 { color: #b3261e; }
+.keys-col.blue h3 { color: #245a8a; }
+.keys-col p { margin: 0; }
+.keys-col .aim { font-size: 14px; color: var(--ink-soft); margin-top: 2px; }
+.keys-1 .keys-col { border-left: none; }
+.keys-col h3 small { font-size: 14px; font-weight: normal; color: var(--ink-soft); }

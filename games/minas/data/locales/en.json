@@ -226,5 +226,17 @@
   "fact.betelu": "In the 16th and 17th centuries mines opened at Betelu, Imízcoz and Urrobi, mostly for iron.",
   "fact.gorramendi": "On Gorramendi, in Baztan, traces remain of how the Romans searched for gold.",
   "fact.arditurri": "The Roman galleries by the Peñas de Aia were worked from Roman times until the late 20th century.",
-  "fact.azurita": "At the Urbiola cave, malachite and azurite were dug out: green and blue copper minerals."
+  "fact.azurita": "At the Urbiola cave, malachite and azurite were dug out: green and blue copper minerals.",
+  "menu.hint@computer": "Arrows: choose · [A] OK · [C] language",
+  "menu.hint@phone": "Pad: choose · [A] OK · [C] language",
+  "admin.hint@computer": "Arrows: choose and change · [A] OK",
+  "howto.walk@computer": "← → or A D: walk. Push into rock to dig",
+  "howto.walk@phone": "Pad ← →: walk. Push into rock to dig",
+  "howto.dig@computer": "↓ or S: dig down. You leave ladders behind you",
+  "howto.dig@phone": "Pad ↓: dig down. You leave ladders behind you",
+  "howto.ladders@computer": "↑ ↓ or W S on a ladder: climb. [B] puts a ladder where you stand",
+  "howto.ladders@phone": "Pad ↑ ↓ on a ladder: climb. [B] puts a ladder where you stand",
+  "help.play@computer": "Arrows or W A S D: walk, dig and climb · [B] place a ladder · [A] workshop",
+  "shop.hint@computer": "↑ ↓ or W S choose · [A] buy the next one · [B] leave",
+  "touch.rotate": "Turn your phone sideways for a bigger game"
 }

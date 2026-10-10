@@ -130,5 +130,14 @@
   "fact.txapela": "In Basque sports, the winner of a championship is crowned with a txapela instead of given a cup.",
   "help.hit": "[A] drive · [B] dejada",
   "help.aim": "To aim, hold {l} txoko, {r} wide or {d} lob as you hit",
-  "menu.duo.note": "Red against blue, first to 7. A quick match of a few minutes."
+  "menu.duo.note": "Red against blue, first to 7. A quick match of a few minutes.",
+  "keys.run": "run",
+  "menu.hint@computer": "Arrows: choose · [A] OK · [C] language",
+  "menu.hint@phone": "Pad: choose · [A] OK · [C] language",
+  "howto.move@phone": "Pad: run around the court",
+  "admin.hint@computer": "Arrows: choose and change · [A] OK",
+  "title.players@phone": "1 player · three rivals and the txapela",
+  "keys.left": "left side",
+  "keys.right": "right side",
+  "touch.rotate": "Turn your phone sideways for a bigger game"
 }

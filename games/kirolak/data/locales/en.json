@@ -116,5 +116,17 @@
   "fact.stones": "The stones in harri-jasotzea can be cylinders, cubes, rectangles or spheres.",
   "fact.sokatira": "In sokatira, teams pull to the rhythm set by their leader, which matters as much as strength.",
   "fact.txapela": "In Basque sport, the winner of a championship is crowned with a txapela instead of given a cup.",
-  "fact.plaza": "The events are often held in the village plaza during the fiestas, with the whole village watching."
+  "fact.plaza": "The events are often held in the village plaza during the fiestas, with the whole village watching.",
+  "keys.aizkolaritza": "[A] and [B] in turn: chop",
+  "keys.harri": "[A] and [B] in turn: lift the stone",
+  "keys.txingak": "[A] and [B] in turn: take steps",
+  "keys.sokatira": "[A] on \"Aupa!\": pull",
+  "keys.balance": "{l} {r} keep your balance",
+  "menu.hint@computer": "Arrows: choose · [A] OK · [C] language",
+  "menu.hint@phone": "Pad: choose · [A] OK · [C] language",
+  "admin.hint@computer": "Arrows: choose and change · [A] OK",
+  "title.players@phone": "1 player · against the computer",
+  "keys.left": "left side",
+  "keys.right": "right side",
+  "touch.rotate": "Turn your phone sideways for a bigger game"
 }

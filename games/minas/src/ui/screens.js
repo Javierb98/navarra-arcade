@@ -19,13 +19,14 @@ const fmt = (n) => String(Math.round(n));
 const clock = (s) => { const v = Math.max(0, Math.ceil(s)); return `${Math.floor(v / 60)}:${String(v % 60).padStart(2, '0')}`; };
 const labels = () => ({ pozo: t('build.pozo'), taller: t('build.taller'), lampisteria: t('build.lampisteria'), bascula: t('build.bascula') });
 
+// "[A] workshop" -> button glyph + text (on the cabinet, and the phone's
+// on-screen buttons look the same); at a computer, the key instead.
 export function rich(text, p = 0) {
   const parts = [];
   let last = 0;
   for (const m of text.matchAll(/\[(A|B|C|START)\]/g)) {
     const b = m[1].toLowerCase();
-    parts.push(text.slice(last, m.index), h('span', { class: `btn btn-${b}` }, m[1]));
-    if (keysOn()) parts.push(h('kbd', {}, keyName(p, b)));
+    parts.push(text.slice(last, m.index), keysOn() ? h('kbd', {}, keyName(p, b)) : h('span', { class: `btn btn-${b}` }, m[1]));
     last = m.index + m[0].length;
   }
   parts.push(text.slice(last));

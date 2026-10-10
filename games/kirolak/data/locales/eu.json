@@ -116,5 +116,17 @@
   "fact.stones": "Harri-jasotzeko harriak zilindrikoak, kubikoak, laukizuzenak edo esferikoak izan daitezke.",
   "fact.sokatira": "Sokatiran, taldeek buruzagiak markatzen duen erritmora tiratzen dute.",
   "fact.txapela": "Euskal kiroletan, txapelketako irabazleari txapela jartzen zaio.",
-  "fact.plaza": "Probak herriko plazan egin ohi dira jaietan, herri osoa begira dagoela."
+  "fact.plaza": "Probak herriko plazan egin ohi dira jaietan, herri osoa begira dagoela.",
+  "keys.aizkolaritza": "[A] eta [B] txandaka: ebaki",
+  "keys.harri": "[A] eta [B] txandaka: harria altxatu",
+  "keys.txingak": "[A] eta [B] txandaka: urratsak eman",
+  "keys.sokatira": "[A] «Aupa!» entzutean: tira",
+  "keys.balance": "{l} {r} oreka mantendu",
+  "menu.hint@computer": "Geziak: aukeratu · [A] ados · [C] hizkuntza",
+  "menu.hint@phone": "Gurutzea: aukeratu · [A] ados · [C] hizkuntza",
+  "admin.hint@computer": "Geziak: aukeratu eta aldatu · [A] ados",
+  "title.players@phone": "Jokalari 1 · makinaren aurka",
+  "keys.left": "ezkerraldea",
+  "keys.right": "eskuinaldea",
+  "touch.rotate": "Biratu mugikorra jokoa handiago ikusteko"
 }

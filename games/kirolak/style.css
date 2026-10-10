@@ -168,7 +168,6 @@ h1, h2, h3, p { margin: 0; }
 .brief-card .tip { font-size: 18px; line-height: 1.45; }
 .brief-card .goal { font-weight: bold; margin: 8px 0; }
 .word { margin: 10px 0 4px; padding: 8px 14px; border-radius: 8px; background: rgba(255, 255, 255, .5); font-size: 15px; text-align: left; }
-.keys2 .who { font-weight: bold; padding: 0 6px; border-radius: 8px; color: #fff; }
 .who.red { background: #b3261e; } .who.blue { background: #245a8a; }
 .res-row { display: flex; gap: 12px; font-size: 18px; padding: 4px 0; border-bottom: 1px dotted var(--parch-edge); }
 .res-row span:first-child { flex: 1; text-align: left; }
@@ -257,7 +256,16 @@ kbd {
 }
 .play-help { display: block; }
 .play-help p { margin: 0; }
-.play-help .who { font-weight: bold; margin-right: 8px; padding: 0 6px; border-radius: 8px; }
+.play-help .who { color: #fff; font-weight: bold; margin-right: 8px; padding: 0 6px; border-radius: 8px; }
 .play-help .who.red { background: #b3261e; }
 .play-help .who.blue { background: #245a8a; }
 .play-help .aim { opacity: .9; }
+/* Before each event: each player's own controls, side by side. */
+.keys-card { display: flex; gap: 14px; margin: 4px 0 6px; text-align: left; }
+.keys-col.red, .keys-col.blue { color: var(--ink); }
+.keys-col { flex: 1; padding: 6px 14px; border-radius: 10px; background: rgba(255, 255, 255, .35); border-left: 5px solid #b3261e; font-size: 16px; line-height: 1.5; }
+.keys-col.blue { border-color: #245a8a; }
+.keys-col h3 { margin: 0 0 2px; font-size: 18px; color: #b3261e; }
+.keys-col.blue h3 { color: #245a8a; }
+.keys-col p { margin: 0; }
+.keys-col h3 small { font-size: 14px; font-weight: normal; color: var(--ink-soft); }

@@ -32,7 +32,11 @@
   "brief.p1": "Jugador 1: pastor de Roncal (marca redonda)",
   "brief.p2": "Jugador 2: pastor de Barétous (marca cuadrada)",
   "brief.cpu": "Barétous (marca cuadrada): lo lleva el ordenador",
-  "brief.buttons": "Joystick: andar · [A] silbar al perro · [B] tocar la esquila · [C] puerta, abrevadero, fuego, cordero… o abrir/cerrar tus pastos",
+  "brief.walk": "Joystick: andar",
+  "keys.walk": "andar",
+  "brief.a": "[A] silbar al perro",
+  "brief.b": "[B] tocar la esquila",
+  "brief.c": "[C] puerta, abrevadero, fuego, cordero… o abrir/cerrar tus pastos",
   "brief.health": "Salud del monte",
   "brief.trust": "La paz entre los valles",
   "valley.roncal": "Roncal",
@@ -169,5 +173,13 @@
   "fact.justice": "Al final, el alcalde de Isaba juzga las faltas al tratado del año anterior. Los guardas juran con la mano en su vara.",
   "fact.quarrels": "Antes del tratado hubo peleas por las fuentes en las que murió gente de los dos valles. La paz de 1375 puso fin a eso.",
   "fact.selection": "Un veterinario revisa las vacas que traen de Francia y elige tres para Roncal.",
-  "tip.peace": "La paz se va enfriando sola: solo aguanta si los valles se siguen ayudando."
+  "tip.peace": "La paz se va enfriando sola: solo aguanta si los valles se siguen ayudando.",
+  "menu.hint@computer": "Flechas: elegir · [A] aceptar · [C] idioma",
+  "menu.hint@phone": "Cruceta: elegir · [A] aceptar · [C] idioma",
+  "brief.walk@phone": "Cruceta: andar",
+  "admin.hint@computer": "Flechas: elegir y cambiar · [A] aceptar",
+  "title.players@phone": "1 jugador: tú eres Roncal, el ordenador es Barétous",
+  "keys.left": "izquierda",
+  "keys.right": "derecha",
+  "touch.rotate": "Gira el móvil para ver el juego más grande"
 }

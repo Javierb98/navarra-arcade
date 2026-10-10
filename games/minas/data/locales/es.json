@@ -226,5 +226,17 @@
   "fact.betelu": "En los siglos XVI y XVII se abrieron minas en Betelu, Imízcoz y Urrobi, sobre todo de hierro.",
   "fact.gorramendi": "En Gorramendi, en Baztan, quedan restos de cómo los romanos buscaban oro.",
   "fact.arditurri": "Las galerías romanas junto a las Peñas de Aia se trabajaron desde los romanos hasta finales del siglo XX.",
-  "fact.azurita": "En la cueva de Urbiola se sacaban malaquita y azurita: minerales de cobre, verdes y azules."
+  "fact.azurita": "En la cueva de Urbiola se sacaban malaquita y azurita: minerales de cobre, verdes y azules.",
+  "menu.hint@computer": "Flechas: elegir · [A] vale · [C] idioma",
+  "menu.hint@phone": "Cruceta: elegir · [A] vale · [C] idioma",
+  "admin.hint@computer": "Flechas: elegir y cambiar · [A] vale",
+  "howto.walk@computer": "← → o A D: andar. Empuja contra la roca para cavar",
+  "howto.walk@phone": "Cruceta ← →: andar. Empuja contra la roca para cavar",
+  "howto.dig@computer": "↓ o S: cavar hacia abajo. Vas dejando escaleras",
+  "howto.dig@phone": "Cruceta ↓: cavar hacia abajo. Vas dejando escaleras",
+  "howto.ladders@computer": "↑ ↓ o W S en una escalera: subir y bajar. [B] pone una escalera donde estás",
+  "howto.ladders@phone": "Cruceta ↑ ↓ en una escalera: subir y bajar. [B] pone una escalera donde estás",
+  "help.play@computer": "Flechas o W A S D: andar, cavar y subir · [B] poner escalera · [A] taller",
+  "shop.hint@computer": "↑ ↓ o W S elegir · [A] comprar el siguiente · [B] salir",
+  "touch.rotate": "Gira el móvil para ver el juego más grande"
 }

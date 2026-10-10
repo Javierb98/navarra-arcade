@@ -148,3 +148,29 @@ h3 { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spa
 
 .map-labels { position: absolute; inset: 0; }
 .map-labels span { position: absolute; font-size: 8px; line-height: 10px; color: #3a2410; text-shadow: 1px 0 #f7dcb0, -1px 0 #f7dcb0, 0 1px #f7dcb0, 0 -1px #f7dcb0; white-space: nowrap; }
+
+/* Keyboard keys next to the button glyphs, at a computer. k1/k2: whose. */
+kbd {
+  display: inline-block; min-width: 11px; height: 11px; padding: 0 2px; margin: 0 1px; border-radius: 2px;
+  font: bold 8px/10px var(--font); text-align: center; vertical-align: 1px;
+  color: #111; background: linear-gradient(#fdfdfd, #d4d4d4); border-bottom: 1.5px solid #777;
+}
+kbd.k1 { box-shadow: inset 0 -2px 0 var(--p1); }
+kbd.k2 { box-shadow: inset 0 -2px 0 var(--p2); }
+
+/* Briefing: each player's own controls, side by side. */
+.keys-card { display: flex; gap: 6px; margin-bottom: 4px; }
+.keys-col { flex: 1; padding: 3px 7px; border-radius: 4px; background: rgba(255, 255, 255, 0.06); border-left: 3px solid var(--p1); }
+.keys-col.k2 { border-left-color: var(--p2); }
+.keys-card.solo .keys-col { border-left: none; }
+.briefing .keys-col p { margin: 1px 0; font-size: 10px; }
+.keys-col h4 { margin: 0 0 2px; font-size: 11px; }
+
+/* Race, at a keyboard: each player's keys in a corner. */
+.key-strip { position: absolute; top: 24px; display: flex; align-items: center; gap: 1px; padding: 2px 4px; border-radius: 4px; background: rgba(0, 0, 0, 0.45); }
+.key-strip.s1 { left: 4px; }
+.key-strip.s2 { right: 22px; } /* clear of the progress bar */
+.key-strip .ptag { margin-right: 3px; }
+.key-strip kbd.kb-a { background: #f0e442; }
+.key-strip kbd.kb-c { background: var(--rope); }
+.keys-col h4 small { display: block; font-size: 9px; font-weight: normal; opacity: 0.75; }
