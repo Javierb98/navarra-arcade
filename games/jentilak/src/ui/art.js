@@ -885,20 +885,20 @@ const SPEC = {
   },
 
   gaueko: {
-    h: 110, leg: 30, torso: 34, shX: 2, shW: 9, arm: 25, armW: 9, armCol: '#3a3566', handR: 5, handCol: '#b8c4dc', headX: 4, headR: 22,
+    h: 110, leg: 30, torso: 34, shX: 2, shW: 9, arm: 25, armW: 9, armCol: '#47417a', handR: 5, handCol: '#b8c4dc', headX: 4, headR: 22,
     legs(g, u, P, hipY, t) {
       // No feet: a cloak that frays into night wind just above the ground.
-      cel(g, () => { g.beginPath(); g.moveTo(-12 * u, hipY); g.lineTo(12 * u, hipY); g.quadraticCurveTo(16 * u, hipY * 0.4, 14 * u, -8 * u); for (let k = 0; k < 5; k++) { const x = 14 * u - (k + 0.5) * 6.4 * u, w = Math.sin(t * 6 + k) * 3 * u; g.lineTo(x + w, (k % 2 ? -14 : -4) * u + w * 0.5); } g.lineTo(-18 * u, -6 * u); g.quadraticCurveTo(-16 * u, hipY * 0.5, -12 * u, hipY); g.closePath(); }, '#2e2a52', '#1c1936', 2.4);
+      cel(g, () => { g.beginPath(); g.moveTo(-12 * u, hipY); g.lineTo(12 * u, hipY); g.quadraticCurveTo(16 * u, hipY * 0.4, 14 * u, -8 * u); for (let k = 0; k < 5; k++) { const x = 14 * u - (k + 0.5) * 6.4 * u, w = Math.sin(t * 6 + k) * 3 * u; g.lineTo(x + w, (k % 2 ? -14 : -4) * u + w * 0.5); } g.lineTo(-18 * u, -6 * u); g.quadraticCurveTo(-16 * u, hipY * 0.5, -12 * u, hipY); g.closePath(); }, '#3a3568', '#252146', 2.4);
       for (let k = 0; k < 3; k++) { const q = (t * 0.8 + k / 3) % 1; g.strokeStyle = `rgba(160,190,255,${0.4 * (1 - q)})`; g.lineWidth = 2; g.beginPath(); g.arc(-16 * u - q * 20 * u, -6 * u - k * 6 * u, 6 * u, -1.2, 1.2); g.stroke(); }
     },
     body(g, u, P, T) {
-      cel(g, () => { g.beginPath(); g.moveTo(-13 * u, 0); g.quadraticCurveTo(-16 * u, -T * 0.6, -11 * u, -T); g.quadraticCurveTo(0, -T - 6 * u, 11 * u, -T); g.quadraticCurveTo(16 * u, -T * 0.6, 13 * u, 0); g.closePath(); }, '#2e2a52', '#1c1936', 2.6);
+      cel(g, () => { g.beginPath(); g.moveTo(-13 * u, 0); g.quadraticCurveTo(-16 * u, -T * 0.6, -11 * u, -T); g.quadraticCurveTo(0, -T - 6 * u, 11 * u, -T); g.quadraticCurveTo(16 * u, -T * 0.6, 13 * u, 0); g.closePath(); }, '#3a3568', '#252146', 2.6);
       g.strokeStyle = 'rgba(140,150,230,0.35)'; g.lineWidth = 1.6;
       for (const x of [-5, 2]) { g.beginPath(); g.moveTo(x * u, -T + 6 * u); g.quadraticCurveTo((x + 3) * u, -T / 2, x * u, -4 * u); g.stroke(); }
     },
     head(g, u, P, t) {
       // A deep hood with nothing in it but two pale eyes.
-      cel(g, () => { g.beginPath(); g.moveTo(-20 * u, 16 * u); g.quadraticCurveTo(-24 * u, -18 * u, 2 * u, -24 * u); g.quadraticCurveTo(26 * u, -16 * u, 22 * u, 14 * u); g.closePath(); }, '#353064', '#1c1936', 2.6);
+      cel(g, () => { g.beginPath(); g.moveTo(-20 * u, 16 * u); g.quadraticCurveTo(-24 * u, -18 * u, 2 * u, -24 * u); g.quadraticCurveTo(26 * u, -16 * u, 22 * u, 14 * u); g.closePath(); }, '#433d78', '#252146', 2.6);
       g.beginPath(); g.ellipse(8 * u, 2 * u, 12 * u, 14 * u, 0, 0, TAU); g.fillStyle = '#07060f'; g.fill(); stroke(g, 2);
       const glow = 0.8 + 0.2 * Math.sin(t * 5);
       for (const ex of [4, 13]) {
@@ -915,11 +915,11 @@ const SPEC = {
   },
 
   akerbeltz: {
-    h: 108, leg: 30, legW: 9, hipW: 5, foot: 5, legCol: '#3a342e', bootCol: '#5a5048', torso: 30, shX: 2, shW: 8, arm: 22, armW: 8, armCol: '#3e3832', handR: 5, handCol: '#5a5048', headX: 8, headR: 18,
+    h: 108, leg: 30, legW: 9, hipW: 5, foot: 5, legCol: '#463f37', bootCol: '#5a5048', torso: 30, shX: 2, shW: 8, arm: 22, armW: 8, armCol: '#4c443b', handR: 5, handCol: '#5a5048', headX: 8, headR: 18,
     foot_(g, x, y, u) { for (const d of [0, 4]) { g.beginPath(); g.moveTo(x + d * u - 1 * u, y - 5 * u); g.lineTo(x + d * u + 4 * u, y - 5 * u); g.lineTo(x + d * u + 4.5 * u, y); g.lineTo(x + d * u - 1.5 * u, y); g.closePath(); g.fillStyle = '#5a5048'; g.fill(); stroke(g, 1.6); } },
     body(g, u, P, T) {
       // A black shaggy goat standing tall, a leather collar and a brass bell.
-      cel(g, () => { g.beginPath(); g.moveTo(-14 * u, 4 * u); g.quadraticCurveTo(-18 * u, -T * 0.5, -12 * u, -T); g.lineTo(12 * u, -T); g.quadraticCurveTo(17 * u, -T * 0.5, 13 * u, 4 * u); ragged(g, 13 * u, 4 * u, -14 * u, 4 * u, 6, 3.5 * u, 4); g.closePath(); }, '#3e3832', '#1e1a17', 2.6);
+      cel(g, () => { g.beginPath(); g.moveTo(-14 * u, 4 * u); g.quadraticCurveTo(-18 * u, -T * 0.5, -12 * u, -T); g.lineTo(12 * u, -T); g.quadraticCurveTo(17 * u, -T * 0.5, 13 * u, 4 * u); ragged(g, 13 * u, 4 * u, -14 * u, 4 * u, 6, 3.5 * u, 4); g.closePath(); }, '#4c443b', '#2b2621', 2.6);
       g.strokeStyle = 'rgba(120,110,100,0.35)'; g.lineWidth = 1.6;
       for (let k = 0; k < 5; k++) { g.beginPath(); g.moveTo(-10 * u + k * 5 * u, -T + 8 * u); g.lineTo(-11 * u + k * 5 * u, -6 * u); g.stroke(); }
       g.beginPath(); g.moveTo(-10 * u, -T + 4 * u); g.quadraticCurveTo(2 * u, -T + 8 * u, 12 * u, -T + 3 * u); stroke(g, 3.4 * u, '#7a4a2a');
@@ -933,10 +933,10 @@ const SPEC = {
       }
       g.strokeStyle = 'rgba(80,60,40,0.5)'; g.lineWidth = 1.2;
       for (let k = 0; k < 4; k++) { g.beginPath(); g.arc((-12 - k * 4) * u, -16 * u + k * 1.5 * u, 4 * u, 0.5, 2.2); g.stroke(); }
-      cel(g, () => ell(0, 0, 15 * u, 14 * u)(g), '#3e3832', '#1e1a17', 2.6);
-      cel(g, () => { g.beginPath(); g.moveTo(4 * u, -8 * u); g.quadraticCurveTo(26 * u, -4 * u, 26 * u, 6 * u); g.quadraticCurveTo(22 * u, 12 * u, 6 * u, 10 * u); g.closePath(); }, '#3e3832', '#1e1a17', 2.4);
+      cel(g, () => ell(0, 0, 15 * u, 14 * u)(g), '#4c443b', '#2b2621', 2.6);
+      cel(g, () => { g.beginPath(); g.moveTo(4 * u, -8 * u); g.quadraticCurveTo(26 * u, -4 * u, 26 * u, 6 * u); g.quadraticCurveTo(22 * u, 12 * u, 6 * u, 10 * u); g.closePath(); }, '#4c443b', '#2b2621', 2.4);
       dot(g, 23 * u, 3 * u, 1.3 * u, '#5a5048');
-      g.beginPath(); g.moveTo(-8 * u, -4 * u); g.quadraticCurveTo(-20 * u, 0, -16 * u, 8 * u); g.quadraticCurveTo(-10 * u, 4 * u, -6 * u, 2 * u); g.closePath(); g.fillStyle = '#26221f'; g.fill(); stroke(g, 2);
+      g.beginPath(); g.moveTo(-8 * u, -4 * u); g.quadraticCurveTo(-20 * u, 0, -16 * u, 8 * u); g.quadraticCurveTo(-10 * u, 4 * u, -6 * u, 2 * u); g.closePath(); g.fillStyle = '#332d28'; g.fill(); stroke(g, 2);
       // A yellow eye with a sideways pupil.
       if (P.hurt) { g.beginPath(); g.moveTo(5 * u, -4 * u); g.lineTo(11 * u, -2 * u); stroke(g, 2, '#e8c84a'); }
       else { oval(g, 8 * u, -3 * u, 3.6 * u, 3 * u, '#e8c84a', '#c0a030', 1.6); g.fillStyle = INK; g.fillRect(6 * u, -3.8 * u, 4.4 * u, 1.6 * u); }
@@ -1106,7 +1106,20 @@ const SPEC = {
 function drawHerensuge(g, f, t, P) {
   const k = f.kind, u = 1.12, heads = k.specials.neutral.charges ? f.charges ?? 7 : 7;
   const col = '#4a7a42', dark = '#2f5229', belly = '#e8b878';
-  const tailSwing = f.state === 'attack' ? (P.align > 0.6 ? 1 : -0.5) : Math.sin(t * 2) * 0.15;
+  // A blow: the heads draw back over the windup, snap out at the strike and
+  // ease home; the whole body lunges with them. Forward blows strike ahead,
+  // up blows overhead, down blows at the ground.
+  const mv = f.move, atk = mv && ['attack', 'special', 'super'].includes(f.state) && mv.kind !== 'cone';
+  let strike = 0, aim = 'fwd';
+  if (atk) {
+    const a = mv.startup, b = a + mv.active, e = b + mv.recovery;
+    strike = f.t <= a ? -0.45 * easeOut(f.t / Math.max(1, a)) : f.t <= b ? 1 : 1 - easeIO(clamp01((f.t - b) / Math.max(1, e - b)));
+    const key = f.state === 'attack' ? moveKey(f) : '';
+    aim = ['up', 'usmash', 'airUp'].includes(key) ? 'up' : ['down', 'dsmash', 'airDown'].includes(key) ? 'down' : key === 'bair' ? 'back' : 'fwd';
+  }
+  const lunge = aim === 'back' ? -strike * 10 * u : strike * 9 * u;
+  g.translate(lunge, 0);
+  const tailSwing = aim === 'back' ? strike * 1.4 : f.state === 'attack' ? (P.align > 0.6 ? 1 : -0.5) : Math.sin(t * 2) * 0.15;
   const by = -30 * u + P.bob * 0.6 - P.crouch * 6;
   // The tail behind, swinging round in the tail sweep.
   g.beginPath(); g.moveTo(-22 * u, by); g.bezierCurveTo(-50 * u, by + 10 * u, -60 * u, by - 10 * u - tailSwing * 26 * u, -54 * u, by - 30 * u - tailSwing * 30 * u);
@@ -1134,17 +1147,25 @@ function drawHerensuge(g, f, t, P) {
   const breathing = (f.state === 'special' || f.state === 'super') && f.move?.kind === 'cone';
   const bx = 18 * u, byy = by - 14 * u;
   for (const n of [0, 6, 1, 5, 2, 4, 3]) {
-    const alive = n < heads, spread = (n - 3) / 3, reachK = breathing || P.align > 0.5 ? 1.2 : 1;
-    const hx = bx + (12 + spread * 22) * u * reachK + (breathing ? 14 * u : 0), hy = byy - (44 - Math.abs(spread) * 18) * u + Math.sin(t * 3 + n) * 3 * u + (breathing ? 14 * u : 0);
+    const alive = n < heads, spread = (n - 3) / 3, reachK = breathing ? 1.2 : 1;
+    let hx = bx + (12 + spread * 22) * u * reachK + (breathing ? 14 * u : 0), hy = byy - (44 - Math.abs(spread) * 18) * u + Math.sin(t * 3 + n) * 3 * u + (breathing ? 14 * u : 0);
+    if (strike && aim !== 'back') {
+      // The front heads lead; the outer ones follow a little behind.
+      const s2 = strike * (1 - Math.abs(spread) * 0.35);
+      if (aim === 'fwd') { hx += s2 * 30 * u; hy += s2 * 22 * u; }
+      else if (aim === 'up') { hx -= s2 * spread * 8 * u; hy -= s2 * 20 * u; }
+      else { hx += s2 * 20 * u; hy += s2 * 44 * u; }
+    }
     const len = alive ? 1 : 0.35;
     const ex = bx + (hx - bx) * len, ey = byy + (hy - byy) * len;
     g.beginPath(); g.moveTo(bx, byy); g.quadraticCurveTo(bx + spread * 6 * u, byy - 30 * u * len, ex, ey);
     g.lineCap = 'round'; g.lineWidth = 10 * u; g.strokeStyle = INK; g.stroke(); g.lineWidth = 6.5 * u; g.strokeStyle = n % 2 ? col : shade(col, -0.08); g.stroke();
     if (!alive) { oval(g, ex, ey, 4 * u, 4 * u, '#6a9a5a', dark, 2); continue; }
-    g.save(); g.translate(ex, ey); g.rotate(breathing ? 0.4 : spread * 0.3); g.scale(1.25, 1.25);
+    const bite = strike > 0.5 && aim !== 'back';
+    g.save(); g.translate(ex, ey); g.rotate(breathing ? 0.4 : bite ? (aim === 'up' ? -1.0 : aim === 'down' ? 1.1 : 0.45) : spread * 0.3); g.scale(1.25, 1.25);
     cel(g, () => ell(0, 0, 8 * u, 6.5 * u)(g), col, dark, 2.2);
     cel(g, () => { g.beginPath(); g.moveTo(2 * u, -4 * u); g.quadraticCurveTo(14 * u, -4 * u, 14 * u, 1 * u); g.lineTo(2 * u, 4 * u); g.closePath(); }, col, dark, 2);
-    if (breathing || P.open) { g.beginPath(); g.moveTo(4 * u, 2 * u); g.lineTo(14 * u, 1 * u); g.lineTo(12 * u, 6 * u); g.closePath(); g.fillStyle = '#7a1a10'; g.fill(); stroke(g, 1.6); }
+    if (breathing || P.open || bite) { const jaw = bite ? 4 * u : 0; g.beginPath(); g.moveTo(4 * u, 2 * u); g.lineTo(14 * u, 1 * u); g.lineTo(12 * u, 6 * u + jaw); g.closePath(); g.fillStyle = '#7a1a10'; g.fill(); stroke(g, 1.6); if (bite) for (let q = 0; q < 3; q++) dot(g, (7 + q * 2.5) * u, 2.5 * u, 0.9 * u, '#f4eee0'); }
     g.beginPath(); g.moveTo(-4 * u, -5 * u); g.lineTo(-8 * u, -11 * u); g.lineTo(-1 * u, -6 * u); g.fillStyle = '#e8e0d0'; g.fill(); stroke(g, 1.4);
     if (P.hurt) { g.beginPath(); g.moveTo(1 * u, -2.5 * u); g.lineTo(5 * u, -1.5 * u); stroke(g, 1.6); }
     else { dot(g, 3 * u, -2 * u, 2 * u, '#ffd65a'); dot(g, 3.6 * u, -2 * u, 0.9 * u); }
@@ -1162,40 +1183,49 @@ const drawnH = (k) => heightOf(k) * DRAW;
 // Where on the screen a fighter's middle is (for effects and shots).
 export const chestY = (f) => f.y * S - drawnH(f.kind) * 0.5;
 
-const WEAPON = { basajaun: 48, galtzagorri: 26, ziripot: 36, olentzero: 34 };
-
-// Where the front hand and the weapon tip are for a pose (in the fighter's own frame).
-function reachOf(f, P) {
-  const sp = SPEC[f.kind.id];
-  if (!sp) return null;
-  const u = sp.h / 100, L = sp.leg * u, T = sp.torso * u, Lt = L * 0.52, Ls = L * 0.5;
-  const foot = (h, k) => Math.cos(h) * Lt + Math.cos(h - k) * Ls;
-  const reach = Math.max(foot(P.lfH, P.lfK), foot(P.lbH, P.lbK));
-  const hipY = (f.grounded !== false ? -reach : -L * 0.95) + (P.ry ?? 0) * u;
-  const sx = sp.shX * u, shY = -T + 4 * u, Lu = sp.arm * u * 0.52, Lf = sp.arm * u * 0.5;
-  let hx = sx + Math.sin(P.afS) * Lu + Math.sin(P.afS + P.afE) * Lf, hy = shY + Math.cos(P.afS) * Lu + Math.cos(P.afS + P.afE) * Lf;
-  const b = P.afS + P.afE + (P.wpn ?? 1.6), wl = (WEAPON[f.kind.id] ?? 6) * u;
-  let tx = hx + Math.sin(b) * wl, ty = hy + Math.cos(b) * wl;
-  const rot = (x, y) => [x * Math.cos(P.lean) - y * Math.sin(P.lean) + (P.rx ?? 0) * u, x * Math.sin(P.lean) + y * Math.cos(P.lean) + hipY];
-  return [rot(hx, hy), rot(tx, ty)];
-}
-
 const FXCOL = { club: 'rgba(255,250,235,0.9)', water: 'rgba(150,220,250,0.9)', dust: 'rgba(236,220,190,0.9)', needle: 'rgba(240,244,250,0.9)', claw: 'rgba(170,150,255,0.9)', horn: 'rgba(255,250,235,0.9)', fire: 'rgba(255,170,70,0.9)', spark: 'rgba(255,236,120,0.95)', leaf: 'rgba(170,230,120,0.9)' };
 
-// A smear: the blow's path over the last few frames, as hand-drawn fighting games do.
-function drawSmear(g, f, t, R) {
-  const mv = f.move;
-  if (!mv || !['attack', 'special', 'super'].includes(f.state)) return;
-  const into = f.t - mv.startup;
-  if (into < 1 || into > mv.active + 2) return;
-  const pts = [];
-  for (let k = 0; k < 4; k++) { const P = poseOf({ ...f, t: f.t - k }, t, R); const r = reachOf(f, P); if (r) pts.push(r); }
-  if (pts.length < 2) return;
-  g.beginPath();
-  pts.forEach(([, tip], k) => (k ? g.lineTo(tip[0], tip[1]) : g.moveTo(tip[0], tip[1])));
-  for (let k = pts.length - 1; k >= 0; k--) g.lineTo(pts[k][0][0], pts[k][0][1]);
-  g.closePath();
-  g.fillStyle = FXCOL[styleOf(f.kind.id).fx] ?? FXCOL.club; g.fill();
+// A blow's swoosh, over the pixel layer (the camera is applied): an arc that
+// pivots at the striker's chest and sweeps through the hitbox, reaching its
+// far edge, so what you see is where it can land. Thin and see-through, in
+// the fighter's colour of blow with a bright leading edge; claws add slashes,
+// lightning a crackle, leaves a scatter.
+function drawSwooshes(g, m, t) {
+  for (const f of m.fighters) {
+    const mv = f.move;
+    if (!mv || f.state !== 'attack' || f.state === 'out' || (m.dark > 0 && m.darkOwner === f.i)) continue;
+    const into = f.t - mv.startup;
+    if (into < 1 || into > mv.active + 3) continue;
+    const d = f.fx < 0 ? -1 : 1, px = f.x, py = f.y - f.h * 0.6;
+    const hx = f.x + d * (mv.x ?? 0), hy = f.y - (mv.y ?? f.h / 2), hw = mv.w ?? f.w, hh = mv.h ?? f.h;
+    const style = styleOf(f.kind.id).fx, col = FXCOL[style] ?? FXCOL.club;
+    const k = clamp01(into / Math.max(1, mv.active)), fade = into > mv.active ? 1 - (into - mv.active) / 4 : 1;
+    g.save();
+    g.translate(px * S, py * S);
+    const dx = (hx - px) * d, dy = hy - py, dist = Math.hypot(dx, dy);
+    // Round the body (neutral air, spins): a ring all the way round.
+    if (dist < 6) {
+      const r = Math.max(hw, hh) / 2 * S;
+      g.globalAlpha = 0.5 * fade; g.lineWidth = 7; g.strokeStyle = col;
+      g.beginPath(); g.arc(0, 0, r * 0.85, 0, TAU); g.stroke();
+      g.globalAlpha = 0.9 * fade; g.lineWidth = 2; g.strokeStyle = '#fffbe8'; g.stroke();
+      g.restore(); continue;
+    }
+    g.scale(d, 1);
+    const mid = Math.atan2(dy, dx), half = Math.min(1.1, 0.55 + hh / Math.max(20, dist * 2));
+    const R1 = (dist + hw / 2) * S, R0 = Math.max(R1 * 0.72, R1 - 16);
+    // It sweeps from above to below the aim (down blows sweep the other way).
+    const dir = dy > hh ? -1 : 1, a0 = mid - dir * half, a1 = a0 + dir * 2 * half * Math.min(1, 0.35 + k * 0.9);
+    g.globalAlpha = 0.68 * fade;
+    g.beginPath(); g.arc(0, 0, R1, a0, a1, dir < 0); g.arc(0, 0, R0, a1, a0, dir > 0); g.closePath();
+    g.fillStyle = col; g.fill();
+    g.globalAlpha = 0.95 * fade;
+    g.beginPath(); g.arc(0, 0, R1, a0, a1, dir < 0); g.lineWidth = 2.5; g.lineCap = 'round'; g.strokeStyle = '#fffbe8'; g.stroke();
+    if (style === 'claw') for (let n = 1; n <= 2; n++) { g.beginPath(); g.arc(0, 0, R0 + (R1 - R0) * n / 3, a0, a1, dir < 0); g.lineWidth = 2; g.strokeStyle = 'rgba(150,130,255,0.9)'; g.stroke(); }
+    if (style === 'spark') { g.beginPath(); for (let n = 0; n <= 5; n++) { const a = a0 + (a1 - a0) * n / 5, r = n % 2 ? R0 : R1; g.lineTo(Math.cos(a) * r, Math.sin(a) * r); } g.lineWidth = 2.5; g.strokeStyle = '#fff070'; g.stroke(); }
+    if (style === 'leaf') for (let n = 0; n < 3; n++) { const a = a0 + (a1 - a0) * (n + 0.5) / 3; g.beginPath(); g.ellipse(Math.cos(a) * R1, Math.sin(a) * R1, 5, 2.5, a, 0, TAU); g.fillStyle = '#7ab04a'; g.fill(); }
+    g.restore();
+  }
 }
 
 export function drawCharacter(g, f, t, R, scale = 1) {
@@ -1208,7 +1238,7 @@ export function drawCharacter(g, f, t, R, scale = 1) {
     g.translate(0, cy); g.rotate(P.spin); g.scale(0.85, 0.85); g.translate(0, -cy);
   }
   if (f.kind.id === 'herensuge') { g.rotate((P.lean ?? 0) * 0.35); g.scale(1 + (1 - (P.sq ?? 1)) * 0.7, P.sq ?? 1); drawHerensuge(g, f, t, P); }
-  else { const sp = SPEC[f.kind.id] ?? SPEC.basajaun; person(g, f, t, P, { ...sp, u: sp.h / 100 }); if (!P.spin) drawSmear(g, f, t, R); }
+  else { const sp = SPEC[f.kind.id] ?? SPEC.basajaun; person(g, f, t, P, { ...sp, u: sp.h / 100 }); }
   g.restore();
   return P;
 }
@@ -1244,6 +1274,9 @@ function drawBodyAt(g, m, f, t) {
 // smoothing, through the camera. That's what gives the sprite look.
 
 const OUTLINE = [26, 18, 12];
+// Round very dark shapes (Akerbeltz, Gaueko, the night) the outline is a
+// lighter rim instead, or they'd vanish into it.
+const RIM = [128, 116, 104];
 // Screen pixels per art pixel: 1.5 (three pixels of the 1920 canvas), fine enough for faces and hands.
 const PX = 1.5;
 const canvasOf = (name, w, h) => cached(`cv.${name}`, () => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; });
@@ -1271,11 +1304,19 @@ function pixelPass(name, view, paint, outline = true) {
     d[di] = Math.min(255, Math.round(d[di] / a / 12) * 12); d[di + 1] = Math.min(255, Math.round(d[di + 1] / a / 12) * 12); d[di + 2] = Math.min(255, Math.round(d[di + 2] / a / 12) * 12);
     d[di + 3] = 255; solid[p] = 1;
   }
-  if (outline) for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-    const p = y * w + x;
-    if (solid[p]) continue;
-    if ((x > 0 && solid[p - 1]) || (x < w - 1 && solid[p + 1]) || (y > 0 && solid[p - w]) || (y < h - 1 && solid[p + w])) {
-      const i = p * 4; d[i] = OUTLINE[0]; d[i + 1] = OUTLINE[1]; d[i + 2] = OUTLINE[2]; d[i + 3] = 255;
+  if (outline) {
+    const edge = new Uint8Array(w * h); // 1: dark outline, 2: light rim
+    const dark = (q) => { const i = q * 4; return d[i] + d[i + 1] + d[i + 2] < 150; };
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+      const p = y * w + x;
+      if (solid[p]) continue;
+      const n = [x > 0 && solid[p - 1] ? p - 1 : -1, x < w - 1 && solid[p + 1] ? p + 1 : -1, y > 0 && solid[p - w] ? p - w : -1, y < h - 1 && solid[p + w] ? p + w : -1].filter((q) => q >= 0);
+      if (n.length) edge[p] = n.every(dark) ? 2 : 1;
+    }
+    for (let p = 0; p < w * h; p++) {
+      if (!edge[p]) continue;
+      const c = edge[p] === 2 ? RIM : OUTLINE, i = p * 4;
+      d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; d[i + 3] = 255;
     }
   }
   sg.putImageData(img, 0, 0);
@@ -1354,24 +1395,7 @@ function drawMoveFx(g, m, f, t) {
   if (!mv || f.state === 'out') return;
   const into = f.t - mv.startup, active = into > 0 && into <= mv.active;
   const d = f.fx < 0 ? -1 : 1, x = f.x * S, y = f.y * S;
-  if (f.state === 'attack' && active) {
-    // A swoosh: a white crescent through where the blow lands.
-    const k = into / mv.active, style = styleOf(f.kind.id).fx, water = style === 'water';
-    const cx = x + d * (mv.x ?? 0) * S * 0.4, cy = y - (mv.y ?? f.h / 2) * S;
-    const reach = Math.max(14, ((mv.w ?? 10) / 2 + Math.abs(mv.x ?? 0) * 0.6) * S);
-    const up = mv === f.kind.up || mv === f.kind.airUp, down = mv === f.kind.airDown || mv === f.kind.down;
-    const a0 = up ? -2.6 : down ? 0.2 : -1.2, sweep = up ? 2.2 : down ? 2.0 : 2.3;
-    g.save(); g.translate(cx, cy); g.scale(d, 1);
-    g.globalAlpha = 0.9 * (1 - k * 0.6);
-    const a1 = a0 + sweep * Math.min(1, k + 0.35);
-    g.beginPath(); g.arc(0, 0, reach, a0, a1); g.arc(0, 0, reach * 0.55, a1, a0, true); g.closePath();
-    g.fillStyle = FXCOL[style] ?? FXCOL.club; g.fill(); stroke(g, 2, water ? '#2a7a9a' : 'rgba(34,26,20,0.55)');
-    // Claws leave three slashes; lightning crackles; leaves scatter.
-    if (style === 'claw') for (let n = 1; n <= 2; n++) { g.beginPath(); g.arc(0, 0, reach * (0.55 + n * 0.16), a0 + 0.2, a1 - 0.1); stroke(g, 3, 'rgba(120,100,220,0.9)'); }
-    if (style === 'spark') { g.beginPath(); let px = 0, py = 0; for (let n = 0; n < 5; n++) { px += reach * 0.25; py = (n % 2 ? -1 : 1) * reach * 0.18; g.lineTo(px, py); } stroke(g, 3, '#fff070'); }
-    if (style === 'leaf') for (let n = 0; n < 3; n++) { const a = a0 + (a1 - a0) * (n / 3); g.beginPath(); g.ellipse(Math.cos(a) * reach, Math.sin(a) * reach, 5, 2.5, a, 0, TAU); g.fillStyle = '#7ab04a'; g.fill(); stroke(g, 1.2); }
-    g.restore(); g.globalAlpha = 1;
-  } else if ((f.state === 'special' || f.state === 'super') && active && mv.kind === 'ring') {
+  if ((f.state === 'special' || f.state === 'super') && active && mv.kind === 'ring') {
     // Stomp: a shockwave running along the ground both ways.
     const k = into / mv.active, r = mv.radius * S * (0.3 + 0.7 * k);
     g.strokeStyle = `rgba(240,225,190,${1 - k})`; g.lineWidth = 7; g.beginPath(); g.ellipse(x, y, r, 8, 0, Math.PI, TAU); g.stroke();
@@ -1671,9 +1695,49 @@ export function drawMatch(g, m, t, fx = [], view = (m.__view ??= makeView())) {
     });
     g.globalAlpha = 0.55; g.drawImage(ghost, 0, 0, W, H); g.globalAlpha = 1;
   }
-  g.save(); applyCamera(g, view); drawOverlays(g, m, t, view); drawNight(g, m); g.restore();
+  g.save(); applyCamera(g, view); drawSwooshes(g, m, t); drawImpacts(g, m, t); drawOverlays(g, m, t, view); drawNight(g, m); if (m.debugBoxes) drawBoxes(g, m); g.restore();
   g.restore();
   for (const f of m.fighters) offscreen(g, f, view);
+}
+
+// The moment a blow lands: a star burst where it struck, in the striker's
+// element colour, bigger the harder the hit (it lasts the first frames of
+// the hitstun), and a white ring that opens out from it.
+function drawImpacts(g, m, t) {
+  for (const d of m.fighters) {
+    if (d.state !== 'hitstun' || d.t > 7) continue;
+    const a = m.fighters[1 - d.i], k = d.t / 7;
+    const side = Math.sign(a.x - d.x) || -d.fx;
+    const x = (d.x + side * d.w * 0.35) * S, y = (d.y - d.h * 0.6) * S;
+    const power = Math.min(1.6, 0.7 + Math.hypot(d.vx ?? 0, d.vy ?? 0) / 6);
+    const col = ELCOL[a.kind.element] ?? '#fff4c0';
+    g.save();
+    g.globalAlpha = 1 - k;
+    g.translate(x, y); g.rotate(d.i * 0.4 + Math.floor(d.t / 2) * 0.25);
+    const n = 8, r1 = (10 + 26 * k) * power, r0 = r1 * 0.35;
+    g.beginPath();
+    for (let q = 0; q < n * 2; q++) { const r = q % 2 ? r0 : r1 * (q % 4 ? 0.75 : 1), ang = (q / (n * 2)) * TAU; g.lineTo(Math.cos(ang) * r, Math.sin(ang) * r); }
+    g.closePath(); g.fillStyle = col; g.fill();
+    g.lineWidth = 2.5; g.strokeStyle = '#fffbe8'; g.stroke();
+    g.beginPath(); g.arc(0, 0, r1 * 1.25, 0, TAU); g.lineWidth = 3 * (1 - k); g.strokeStyle = 'rgba(255,255,250,0.9)'; g.stroke();
+    g.restore();
+  }
+}
+
+// Developer view (?debug&boxes): each body in green, a blow's reach in red
+// while it can hit, in yellow before and after.
+function drawBoxes(g, m) {
+  g.lineWidth = 2;
+  for (const f of m.fighters) {
+    if (f.state === 'out') continue;
+    g.strokeStyle = 'rgba(80,255,120,0.9)';
+    g.strokeRect((f.x - f.w / 2) * S, (f.y - f.h) * S, f.w * S, f.h * S);
+    if (!f.move || !['attack', 'special', 'super'].includes(f.state)) continue;
+    const sh = m.hitShape(f);
+    if (!sh.box) continue;
+    g.strokeStyle = m.active(f) ? 'rgba(255,60,60,0.95)' : 'rgba(255,220,60,0.6)';
+    g.strokeRect((sh.x - sh.w / 2) * S, (sh.y - sh.h / 2) * S, sh.w * S, sh.h * S);
+  }
 }
 
 // Shadows on whatever is below each fighter, smaller the higher they are.

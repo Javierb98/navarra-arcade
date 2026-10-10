@@ -107,13 +107,13 @@
     "window": 14
   },
   "physics": {
-    "_note": "Snappy movement in the manner of Super Smash Flash. Run speed comes from stats; `traction` is how fast you stop. Tap up for a short hop (`shortHop` x jump), hold up for a full hop; down in the air while falling is a fast fall. `jumpsquat` frames pass before leaving the ground: pressing A in them gives the up attack instead.",
-    "gravity": 0.56,
-    "fallMax": 5.6,
-    "fastFall": 8.4,
-    "jump": 8.0,
-    "shortHop": 0.62,
-    "airJump": 7.4,
+    "_note": "Snappy movement in the manner of Super Smash Flash. Run speed comes from stats; `traction` is how fast you stop. Tap up for a short hop (`shortHop` x jump), hold up for a full hop; down in the air while falling is a fast fall. `jumpsquat` frames pass before leaving the ground: pressing A in them gives the up attack instead. A full hop rises about 2.5 body heights (Smash Flash), enough to reach the low platforms in one jump. Smashes: a direction pushed within `smashWindow` frames of A.",
+    "gravity": 0.62,
+    "fallMax": 6.2,
+    "fastFall": 9.4,
+    "jump": 10.6,
+    "shortHop": 0.58,
+    "airJump": 9.4,
     "jumpsquat": 4,
     "traction": 0.9,
     "airAccel": 0.55,
@@ -126,10 +126,11 @@
     "dropFrames": 12,
     "landLag": 2,
     "push": 1.0,
-    "smashWindow": 4,
+    "smashWindow": 8,
     "chargeMax": 60,
     "chargeBonus": 0.4,
-    "stepUp": 24
+    "stepUp": 24,
+    "launchGravity": 0.9
   },
   "match": {
     "_note": "Super Smash Flash style: stocks (lives) and a time limit. After a ring-out a fighter comes back after `respawn` frames on a floating stone, invincible for `invincible` frames.",
@@ -162,5 +163,13 @@
     "invincible": 40,
     "max": 240,
     "climb": 20
+  },
+  "special": {
+    "buffer": 12,
+    "_note": "A special pressed while it's still on cooldown fires as soon as it's ready, if that's within `buffer` frames."
+  },
+  "hurt": {
+    "_note": "Bodies are hit a few pixels wider and taller than they are, so blows that look like they connect do.",
+    "pad": 3
   }
 }

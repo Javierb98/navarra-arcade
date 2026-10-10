@@ -280,7 +280,12 @@ export class Match {
     }
     if (!helpless) {
       if (wantsSuper && f.meter >= R.meter.max) { this.startSuper(f); return; }
-      if (inp.b && !inp.a) {
+      // A special pressed a moment before it was ready goes off now, aimed
+      // as it was pressed.
+      const sb = f.spBuf, buffered = !inp.b && !inp.a && sb?.n > 0, sx0 = sx, sy0 = sy;
+      if (buffered) sb.n--;
+      if ((inp.b || buffered) && !inp.a) {
+        const sx = buffered ? sb.sx : sx0, sy = buffered ? sb.sy : sy0;
         // Special by direction, as in Super Smash Flash: up is the recovery
         // leap, side and down their own moves, neutral the signature one.
         if (sy < -0.5) {
@@ -291,10 +296,13 @@ export class Match {
           if (dir === 'side') f.fx = sign(sx);
           if (this.specialReady(f, mv, dir)) {
             f.aim = [sx, sy];
+            f.spBuf = null;
             if (dir === 'neutral' && mv.charges) f.charges--;
             this.startMove(f, 'special', mv, dir === 'side' ? sx : 0);
             return;
           }
+          // Not ready yet: remember it for a moment.
+          if (inp.b) f.spBuf = { n: this.R.special?.buffer ?? 0, sx, sy };
         }
       }
       if (f.grounded) {
@@ -540,6 +548,12 @@ export class Match {
     }
     const into = f.t - mv.startup, active = into > 0 && into <= mv.active;
     let float = false;
+    // A lunging blow carries the fighter forward through its windup and swing
+    // (a charger's horns, a pounce), stopping at the edge of what's underfoot.
+    if (f.state === 'attack' && mv.lunge && f.t <= mv.startup + mv.active) {
+      const v = f.fx * mv.lunge / (mv.startup + mv.active);
+      if (!f.grounded || this.surfaceBelow(f.x + v * 2, f.y - 0.5) === f.y) f.vx = v;
+    }
     // Moves that keep hitting (spins, rolls, waterspouts) start over every `rehit` frames.
     if (mv.rehit && active && into % mv.rehit === 0) f.hitDone.clear();
     if (f.state === 'special' || f.state === 'super') {
@@ -580,11 +594,11 @@ export class Match {
       }
     }
     // In the air, steer a little during any move.
-    if (!f.grounded && !float) {
+    if (!f.grounded && !float && !(mv.lunge && f.t <= mv.startup + mv.active)) {
       const max = f.speed * PH.airMax;
       f.vx = clamp(f.vx + sx * PH.airAccel * 0.6, -max, max);
       if (inp.dn && f.vy > -1) f.fastFall = true;
-    } else if (f.grounded && mv.kind !== 'dash') f.vx *= 0.7;
+    } else if (f.grounded && mv.kind !== 'dash' && !(mv.lunge && f.t <= mv.startup + mv.active)) f.vx *= 0.7;
     const landed = this.physics(f, sx, float);
     // Landing cuts an aerial short, with its landing lag.
     if (landed && f.state === 'attack' && mv.lag) { f.move = null; f.lag = into <= mv.active ? mv.lag : this.R.physics.landLag; this.setState(f, 'landing'); return; }
@@ -608,7 +622,9 @@ export class Match {
       const cap = f.state === 'hitstun' ? PH.fallMax * 2 : f.fastFall ? PH.fastFall : PH.fallMax;
       // Storm-born: Eate falls slower.
       const slow = f.move?.kind === 'leap' && f.move.slow && f.vy < 0 ? f.move.slow : 1;
-      const grav = PH.gravity * f.weight.grav * (this.passive(f).grav ?? 1) * slow;
+      // Launched fighters fly as before; the snappier gravity is for jumping.
+      const launched = f.state === 'hitstun' ? (PH.launchGravity ?? 1) : 1;
+      const grav = PH.gravity * f.weight.grav * (this.passive(f).grav ?? 1) * slow * launched;
       f.vy = f.fastFall && f.state !== 'hitstun' ? Math.max(f.vy, PH.fastFall) : Math.min(f.vy + grav, cap);
     }
     const px = f.x, py = f.y;
@@ -942,13 +958,15 @@ export class Match {
       const ang = Math.acos(clamp((tx * shape.fx) / (Math.hypot(tx, ty) || 1), -1, 1));
       return ang <= shape.half + Math.atan2(d.h / 2, Math.hypot(tx, ty));
     }
-    return Math.abs(d.x - shape.x) <= (shape.w + d.w) / 2 && Math.abs(d.y - d.h / 2 - shape.y) <= (shape.h + d.h) / 2;
+    // Bodies count a few pixels bigger (rules.hurt.pad), so a blow that looks like it lands, lands.
+    const pad = this.R.hurt?.pad ?? 0;
+    return Math.abs(d.x - shape.x) <= (shape.w + d.w) / 2 + pad && Math.abs(d.y - d.h / 2 - shape.y) <= (shape.h + d.h) / 2 + pad;
   }
 
   // Does a circle touch a fighter's body?
   touchesBody(d, x, y, r) {
     const cx = clamp(x, d.x - d.w / 2, d.x + d.w / 2), cy = clamp(y, d.y - d.h, d.y);
-    return Math.hypot(x - cx, y - cy) <= r;
+    return Math.hypot(x - cx, y - cy) <= r + (this.R.hurt?.pad ?? 0);
   }
   canBeHit(d) { return !['out', 'bow', 'respawn'].includes(d.state); }
 
@@ -983,7 +1001,9 @@ export class Match {
       a.hitDone.add(0);
       if (this.invulnerable(d)) { this.perfectCheck(d); this.emit('miss', { f: a.i }); continue; }
       const dir = a.move.both ? sign(d.x - a.x) : a.move.back ? -a.fx : a.fx;
-      this.hit(a, d, a.move, 1, { x: a.x, y: a.y, dir });
+      // A flurry (an attack with `rehit`) shares its damage among its hits.
+      const hits = a.state === 'attack' && a.move.rehit ? Math.ceil(a.move.active / a.move.rehit) : 1;
+      this.hit(a, d, a.move, hits, { x: a.x, y: a.y, dir });
       // Tartalo's grab: the first blow holds the rival right in front of him.
       if (a.move?.grab && d.state === 'hitstun') { d.x = a.x + a.fx * (a.w + d.w) / 2; d.vx = 0; d.vy = 0; d.hitstun = Math.max(d.hitstun, 24); }
     }

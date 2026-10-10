@@ -231,7 +231,12 @@ async function boot() {
     initKeys(cfg);
     document.title = t('title.name');
     // From the arcade menu, skip the attract demo and go straight to setup.
-    app.go(menuUrl ? 'menu' : 'attract');
+    // Developers: ?debug&fight=basajaun,lamia&arena=olite starts that match (two players).
+    if (dev.has('debug') && dev.get('fight')) {
+      const ids = dev.get('fight').split(',');
+      app.session = { fighters: [ids[0], ids[1] ?? ids[0]], cpu: null, arena: dev.get('arena') ?? app.data.arenas[0].id };
+      app.go('fight');
+    } else app.go(menuUrl ? 'menu' : 'attract');
     requestAnimationFrame(frame);
   } catch (err) {
     console.error(err);

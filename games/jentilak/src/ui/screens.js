@@ -284,7 +284,7 @@ export function fight(app) {
   const m = new Match(app.data, { fighters: app.session.fighters, arena: app.session.arena, seed: seed(app) });
   // Mirror match: the second fighter is recoloured.
   if (m.kinds[0].id === m.kinds[1].id) m.fighters[1].mirror = true;
-  if (new URLSearchParams(location.search).has('debug')) window.match = m;
+  if (new URLSearchParams(location.search).has('debug')) { window.match = m; m.debugBoxes = new URLSearchParams(location.search).has('boxes'); }
   // Playing alone: the computer takes player 2's side.
   const cpu = app.session.cpu ? new Cpu(m, app.session.cpu.i, app.session.cpu.level, seed(app)) : null;
   const fx = [], view = makeView();
