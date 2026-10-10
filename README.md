@@ -39,6 +39,7 @@ Online, the menu opens the games from `games/<id>/` on the same site; on your Ma
 - **Language:** press ↑ to reach the language picker (Castellano / Euskara / English), ← → to choose, then A or ↓ to go back to the games. C cycles languages from anywhere, and the mouse works too. The chosen language carries into the game.
 - **Leaving a game:** hold START for 2 seconds (or press Esc), then A to confirm. You're back at the menu.
 - **Espadas de Hispania** is played with a mouse. Esc means "cancel" inside it, so to leave, hold Esc (or START) for 2 seconds or click "← Menú de juegos" in the corner. It has no Basque yet, so Euskara opens it in Castellano. Left alone for 4 minutes, it goes back to the menu.
+- **Cabinet, phone or computer:** every instruction names the controls in front of the player. On the cabinet (the kiosk opens the menu with `?device=cabinet`), the stick and the A/B/C/START buttons; on a phone or tablet, the on-screen pad and buttons, and one player only, since the touch controls are player 1's; on a computer (anything else, the website included), the keys: player 1 arrows + Z X C, player 2 W A S D + E R Q, Enter to start, Esc to leave. The menu passes `device=` to each game; a game opened on its own decides for itself (touch screen means phone, otherwise computer). Without `?device=cabinet` the cabinet would show keyboard keys, so keep it in the kiosk address.
 - **Nobody playing:** after 60 seconds idle plus a 10-second "Still playing?", a game returns to the menu by itself. After 30 seconds, the menu starts showing the games off one by one.
 
 ## Adding or changing games
@@ -85,7 +86,7 @@ After=network.target
 [Service]
 User=arcade
 WorkingDirectory=/home/arcade/navarra-arcade
-ExecStart=/bin/sh -c 'python3 start.py & exec cage -- chromium-browser --kiosk --noerrdialogs --disable-infobars --autoplay-policy=no-user-gesture-required http://localhost:8700'
+ExecStart=/bin/sh -c 'python3 start.py & exec cage -- chromium-browser --kiosk --noerrdialogs --disable-infobars --autoplay-policy=no-user-gesture-required "http://localhost:8700/?device=cabinet"'
 Restart=always
 
 [Install]

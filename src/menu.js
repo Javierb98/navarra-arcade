@@ -46,11 +46,22 @@ const SHOWCASE_STEP = 7; // seconds per game in the idle showcase
 
 const t = (key, vars = {}) => (strings[lang]?.[key] ?? strings.es?.[key] ?? key).replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m);
 
+// Where the arcade is played: the cabinet (its kiosk opens the menu with
+// ?device=cabinet), a phone or tablet (a touch screen), or a computer
+// (anything else, the website included). Every game gets it too, so their
+// instructions name the stick and buttons, the on-screen pad, or the keys.
+const DEVICES = ['cabinet', 'phone', 'computer'];
+const askedDevice = new URLSearchParams(location.search).get('device');
+const touchScreen = matchMedia('(pointer: coarse)').matches || (navigator.maxTouchPoints > 0 && 'ontouchstart' in window);
+const device = DEVICES.includes(askedDevice) ? askedDevice : touchScreen ? 'phone' : 'computer';
+
+// "[A] play" -> the A button glyph; [ENTER] and [ESC] are computer keys.
 function rich(text) {
   const out = [];
   let last = 0;
-  for (const m of text.matchAll(/\[(A|B|C|START)\]/g)) {
-    out.push(text.slice(last, m.index), h('span', { class: `btn btn-${m[1].toLowerCase()}` }, m[1]));
+  for (const m of text.matchAll(/\[(A|B|C|START|ENTER|ESC)\]/g)) {
+    const key = { ENTER: 'Enter', ESC: 'Esc' }[m[1]];
+    out.push(text.slice(last, m.index), key ? h('kbd', {}, key) : h('span', { class: `btn btn-${m[1].toLowerCase()}` }, m[1]));
     last = m.index + m[0].length;
   }
   out.push(text.slice(last));
@@ -107,9 +118,9 @@ for (const ev of ['pointerdown', 'wheel', 'touchmove']) addEventListener(ev, () 
 const ONLINE = !!document.querySelector('meta[name="arcade-online"]');
 
 function gameUrl(g) {
-  const menu = `${location.origin}${location.pathname}`;
+  const menu = `${location.origin}${location.pathname}${askedDevice ? `?device=${askedDevice}` : ''}`;
   const base = ONLINE ? new URL(g.url, location.href).href : `${location.protocol}//${location.hostname}:${g.port}/`;
-  return `${base}?menu=${encodeURIComponent(menu)}&lang=${lang}`;
+  return `${base}?menu=${encodeURIComponent(menu)}&lang=${lang}&device=${device}`;
 }
 
 // Built once; later updates only swap classes and the featured panel, so the
@@ -216,7 +227,12 @@ function renderStrip() {
 function renderFeature(dir = 0) {
   // The featured game: big moving preview on the left, its story on the right.
   const g = games[sel], L = (o) => (o ? o[lang] ?? o.es : '');
-  const players = g.players === '1' ? t('player1') : t('players', { n: g.players.replace('-', '–') });
+  // A phone's touch controls are one player's: every game has a one-player
+  // mode, so on a phone that's what it offers.
+  const players = g.players === '1' || device === 'phone' ? t('player1') : t('players', { n: g.players.replace('-', '–') });
+  // How it's played here: on a computer, which keys are whose; on a touch
+  // screen the on-screen controls speak for themselves.
+  const how = isTouch ? null : device === 'computer' && g.players !== '1' ? t('keysTwo') : L(g.controls);
   const panel = h('div', { class: `feature-inner ${dir > 0 ? 'from-right' : dir < 0 ? 'from-left' : 'fade'}` },
     h('div', { class: `preview ${g.status}` },
       // Real gameplay when there's a clip; otherwise a slow pan over the picture.
@@ -231,7 +247,7 @@ function renderFeature(dir = 0) {
       h('p', { class: 'lesson' }, L(g.lesson)),
       h('div', { class: 'chips' },
         h('span', { class: 'chip' }, h('b', {}, t('when')), ' ', L(g.era), ' · ', h('b', {}, t('where')), ' ', L(g.place)),
-        h('span', { class: 'chip' }, players, ...(isTouch || document.body.classList.contains('tall') ? [] : [' · ', L(g.controls)]))))));
+        h('span', { class: 'chip' }, players, ...(!how || document.body.classList.contains('tall') ? [] : [' · ', how]))))));
   el.feature.replaceChildren(panel);
   fitText();
   // Once the layout has settled (fonts, the new panel sliding in), fit again.
@@ -269,8 +285,10 @@ function render(dir = 0) {
       credits.logo ? h('span', { class: 'medal' }, h('img', { src: credits.logo, alt: '' })) : null,
       h('span', { class: 'credit-name' }, h('b', {}, maker), rest.length ? h('small', {}, `.${rest.join('.')}`) : null))] : []));
   // On a touch screen there's no stick to describe: say what to tap instead.
-  el.hint.replaceChildren(...rich(t(isTouch ? 'hintTouch' : focus === 'lang' ? 'hintLang' : 'hint')));
-  el.exit.replaceChildren(...rich(t(isTouch ? 'exitHintTouch' : 'exitHint')));
+  // At a computer, the keys to press.
+  const pc = device === 'computer' && !isTouch ? 'Computer' : '';
+  el.hint.replaceChildren(...rich(t(isTouch ? 'hintTouch' : (focus === 'lang' ? 'hintLang' : 'hint') + pc)));
+  el.exit.replaceChildren(...rich(t(isTouch ? 'exitHintTouch' : `exitHint${pc}`)));
   fitText();
 }
 
