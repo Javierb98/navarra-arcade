@@ -35,7 +35,7 @@
   "menu.players": "Players",
   "menu.players.1": "1 player against the computer",
   "menu.players.2": "2 players, red against blue",
-  "menu.duo.note": "Four events of about 40 seconds. Whoever wins most takes the txapela.",
+  "menu.duo.note": "Four events of about 25 seconds. Whoever wins most takes the txapela.",
   "menu.easy.note": "A calmer rival, to start with.",
   "menu.normal.note": "A real rival. Rhythm, not brute force.",
   "menu.go": "To the plaza!",
@@ -128,5 +128,6 @@
   "title.players@phone": "1 player · against the computer",
   "keys.left": "left side",
   "keys.right": "right side",
-  "touch.rotate": "Turn your phone sideways for a bigger game"
+  "touch.rotate": "Turn your phone sideways for a bigger game",
+  "res.close": "By a whisker!"
 }

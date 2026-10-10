@@ -392,22 +392,47 @@ function balance(g, x, y, w, bal) {
   g.fillRect(nx - 1.5, y, 3, 16);
 }
 
+// Each competitor's meter sits on them: the power ring over the
+// aizkolari's head, the heave bar beside the lifter, the balance needle just
+// above the stone or the weights.
 export function drawMeters(g, ev, t) {
   if (!ev || ev.id === 'sokatira') return;
   for (const i of [0, 1]) {
-    const x = LANE[i], st = ev.p[i], col = TEAM[i].sash;
-    const mx = x + (i ? 1 : -1) * 150;
+    const x = LANE[i], st = ev.p[i], col = TEAM[i].sash, dir = i ? -1 : 1;
     if (ev.id === 'aizkolaritza') {
-      const pw = st.doneAt != null ? 0 : Math.min(1, st.since / ev.R.windup);
-      ring(g, mx, 250, 26, pw, col, pw >= ev.R.perfect);
-      bar(g, x - 70, 500, 140, 14, ev.measure(i), col);
+      if (st.doneAt != null || st.turning > 0) continue;
+      const pw = Math.min(1, st.since / ev.R.windup), full = pw >= ev.R.perfect;
+      ring(g, x, 150, full ? 26 + Math.sin(t * 18) * 2 : 24, pw, col, full);
     } else if (ev.id === 'harri') {
-      if (st.phase === 'raise') bar(g, mx - 8, 180, 16, 120, 0, col), (() => { g.fillStyle = col; g.beginPath(); g.roundRect(mx - 6, 298 - 116 * st.h, 12, 116 * st.h, 6); g.fill(); })();
-      if (st.phase === 'shoulder') { balance(g, x, 150, 160, st.bal); bar(g, x - 60, 176, 120, 8, st.hold / ev.R.hold, '#fff'); }
+      if (st.phase === 'raise') {
+        const bx = x - dir * 95;
+        bar(g, bx - 9, 200, 18, 130, 0, col);
+        g.fillStyle = col; g.beginPath(); g.roundRect(bx - 7, 328 - 126 * st.h, 14, 126 * st.h, 7); g.fill();
+      }
+      if (st.phase === 'shoulder') { balance(g, x, 178, 170, st.bal); bar(g, x - 60, 204, 120, 9, st.hold / ev.R.hold, '#fff'); }
     } else if (ev.id === 'txingak') {
-      if (st.down <= 0) balance(g, x, 150, 160, st.bal);
+      if (st.down <= 0) balance(g, x, 236, 160, st.bal);
     }
   }
+}
+
+// Who's ahead, at a glance: red fills from the left, blue from the right,
+// in proportion to how far each has got (cut, lifts, metres).
+export function drawRace(g, ev, t) {
+  if (!ev || ev.id === 'sokatira') return;
+  const m = [0, 1].map((i) => (ev.id === 'harri' ? ev.p[i].lifts + (ev.p[i].phase === 'shoulder' ? 0.5 + 0.5 * ev.p[i].hold / ev.R.hold : 0.5 * ev.p[i].h) : ev.measure(i)));
+  const total = m[0] + m[1];
+  const share = total > 0 ? m[0] / total : 0.5;
+  const x0 = 300, w = 360, y = 108, hh = 16, mid = x0 + w * share;
+  g.fillStyle = 'rgba(30,20,10,0.55)'; g.beginPath(); g.roundRect(x0 - 3, y - 3, w + 6, hh + 6, (hh + 6) / 2); g.fill();
+  g.save(); g.beginPath(); g.roundRect(x0, y, w, hh, hh / 2); g.clip();
+  g.fillStyle = TEAM[0].sash; g.fillRect(x0, y, mid - x0, hh);
+  g.fillStyle = TEAM[1].sash; g.fillRect(mid, y, x0 + w - mid, hh);
+  g.fillStyle = 'rgba(255,255,255,0.18)'; g.fillRect(x0, y, w, hh / 2);
+  g.restore();
+  // The centre line, and a bright notch where the two colours meet.
+  g.fillStyle = 'rgba(255,255,255,0.5)'; g.fillRect(x0 + w / 2 - 1, y - 4, 2, hh + 8);
+  g.fillStyle = '#fff4d6'; g.beginPath(); g.arc(mid, y + hh / 2, 6 + (Math.abs(share - 0.5) > 0.15 ? Math.sin(t * 8) : 0), 0, Math.PI * 2); g.fill();
 }
 
 // The tug of war's beat: a drum at the centre that thumps on each call.

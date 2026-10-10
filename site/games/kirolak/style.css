@@ -139,8 +139,11 @@ h1, h2, h3, p { margin: 0; }
 .board small { font-weight: normal; opacity: .8; text-transform: none; letter-spacing: 0; }
 .board .mid { background: #f1e2c0; color: var(--ink); display: flex; align-items: center; padding: 0 16px; font: bold italic 18px var(--serif); }
 .timer { position: absolute; top: 66px; left: 50%; transform: translateX(-50%); font: bold 26px var(--sans); color: #fff; text-shadow: 0 2px 6px #000; }
-.stats { position: absolute; top: 96px; left: 0; right: 0; display: flex; justify-content: space-around; font: bold 28px var(--serif); color: #fff; text-shadow: 0 2px 6px rgba(0, 0, 0, .7); }
-.stats span { min-width: 100px; text-align: center; }
+.stats { position: absolute; top: 101px; left: 170px; right: 170px; display: flex; justify-content: space-between; font: bold 24px var(--serif); color: #fff; text-shadow: 0 2px 6px rgba(0, 0, 0, .7); pointer-events: none; }
+.stats span { min-width: 110px; text-align: center; }
+.timer.hurry { color: #ffb0a0; animation: hurry .5s ease-in-out infinite alternate; }
+@keyframes hurry { to { transform: translateX(-50%) scale(1.18); } }
+.big .close { display: block; margin-top: 10px; font: bold 34px var(--serif); color: #ffd65a; text-shadow: 0 3px 0 #6b3a1a, 0 6px 16px rgba(0, 0, 0, .6); }
 .calls { position: absolute; top: 190px; left: 0; right: 0; }
 .calls .c { position: absolute; width: 300px; text-align: center; opacity: 0; }
 .calls .c0 { left: 105px; } .calls .c1 { left: 555px; }

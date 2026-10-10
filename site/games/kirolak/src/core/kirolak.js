@@ -178,7 +178,8 @@ class Carry extends Event {
         if (pr.repeat) { st.v += (this.r.chance(0.5) ? 1 : -1) * R.stumble; this.emit('stumble', { p: i }); }
         else {
           // Best at a steady pace; a rushed step is short and swings the weights.
-          const q = clamp(1 - Math.abs(gap - R.pace) / R.pace, 0.1, 1);
+          // (Mashing is far too fast: those steps barely move you.)
+          const q = clamp(1 - Math.abs(gap - R.pace) / R.pace * (gap < R.pace ? R.rush : 1), 0.05, 1);
           const rushed = gap < R.pace * 0.6;
           // Turning round at the end of the course: short, shuffling steps that swing the weights.
           const turning = st.turning > 0;

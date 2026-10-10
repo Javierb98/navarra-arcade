@@ -6,7 +6,7 @@
 import { h } from './dom.js';
 import { t, getLang, setLang, nextLang, LANGS } from './i18n.js';
 import { Day } from '../core/kirolak.js';
-import { drawEvent, drawMeters, drawBeat, finish, newAnim, drawFigure, drawTxapela, POSES, GROUND, U, LANE } from './art.js';
+import { drawEvent, drawMeters, drawRace, drawBeat, finish, newAnim, drawFigure, drawTxapela, POSES, GROUND, U, LANE } from './art.js';
 import { sfx } from './audio.js';
 import { settings } from './store.js';
 import { langParam } from './arcade.js';
@@ -16,6 +16,8 @@ import { device } from './device.js';
 const W = 960, H = 540;
 const seed = (app) => (app.time * 1000 + Date.now()) | 0;
 const who = (i) => t(i ? 'who.blue' : 'who.red');
+// "red wins!" -> "Red wins!" (and "¡gana…" -> "¡Gana…") where a name starts the line.
+const cap = (s) => s.replace(/^([¡¿]?)(\p{L})/u, (m, a, b) => a + b.toUpperCase());
 
 // "[A] chop" -> button glyph + text, so non-readers can match the button
 // (on the cabinet, and the phone's on-screen buttons look the same). At a
@@ -203,7 +205,7 @@ function react(ev, anim, fx, dt, app, quiet = false) {
     const x = LANE[e.p ?? 0], dir = e.p ? -1 : 1;
     if (e.type === 'stroke') {
       s.chop(e.power); burst(fx, x + dir * 12, GROUND - 44, e.perfect ? 12 : 5, 'chip', '#f0d49c', e.perfect ? 260 : 150, 0.9, 4);
-      if (e.perfect) { fx.shake = 0.25; if (!quiet) call(app, e.p, t('call.perfect')); }
+      if (e.perfect) { fx.shake = 0.2 + Math.min(0.25, e.streak * 0.05); fx.cheer[e.p] = Math.max(fx.cheer[e.p], Math.min(1.2, e.streak * 0.25)); if (!quiet) call(app, e.p, e.streak >= 2 ? `${t('call.perfect')} ×${e.streak}` : t('call.perfect')); }
     } else if (e.type === 'glance') { s.glance(); if (!quiet) call(app, e.p, t('call.glance'), true); }
     else if (e.type === 'through') { s.crack(); burst(fx, x + dir * 12, GROUND - 40, 30, 'chip', '#f0d49c', 300, 1.2, 5); fx.cheer[e.p] = 1.5; if (!quiet) call(app, e.p, t('call.through')); }
     else if (e.type === 'shoulder') s.heave();
@@ -264,7 +266,13 @@ export function play(app) {
   const stats = () => {
     const f = (i) => ev.id === 'aizkolaritza' ? `${Math.round(ev.measure(i) * 100)}%` : ev.id === 'harri' ? `${ev.p[i].lifts}` : ev.id === 'txingak' ? t('unit.m', { n: ev.p[i].dist.toFixed(1) }) : '';
     el.stat.querySelector('.s0').textContent = f(0); el.stat.querySelector('.s1').textContent = f(1);
-    el.timer.textContent = Math.ceil(Math.max(0, ev.time - ev.t));
+    const left = Math.ceil(Math.max(0, ev.time - ev.t));
+    if (el.timer.textContent !== String(left)) {
+      el.timer.textContent = left;
+      // The last five seconds: the clock goes red and ticks.
+      el.timer.classList.toggle('hurry', left <= 5 && !ev.finished);
+      if (left <= 5 && left > 0 && countdown <= 0 && !ev.finished) sfx.tick();
+    }
   };
   const inputs = () => app.input.players.map((p) => ({ a: p.pressed.a, b: p.pressed.b, left: p.left, right: p.right }));
   let shown = -1;
@@ -287,7 +295,13 @@ export function play(app) {
         day.step(ins, dt);
         react(ev, anim, fx, dt, app);
         stats();
-        if (ev.finished) { el.big.replaceChildren(h('b', {}, ev.winner == null ? t('res.event.tie') : t('res.event.winner', { who: who(ev.winner) }))); el.big.className = 'big pop'; }
+        // The crowd gets behind whoever is ahead.
+        const lead = ev.leader();
+        if (lead != null) fx.cheer[lead] = Math.max(fx.cheer[lead], 0.35);
+        if (ev.finished) {
+          el.big.replaceChildren(h('b', {}, ev.winner == null ? t('res.event.tie') : cap(t('res.event.winner', { who: who(ev.winner) }))), ...(close(ev) ? [h('span', { class: 'close' }, t('res.close'))] : []));
+          el.big.className = 'big pop';
+        }
       } else if ((endT += dt) > 2.5) app.go('result');
     },
     draw(g) {
@@ -295,6 +309,7 @@ export function play(app) {
       if (fx.shake > 0) g.translate((Math.random() - 0.5) * fx.shake * 10, (Math.random() - 0.5) * fx.shake * 6);
       drawEvent(g, ev, app.time, anim, fx);
       drawMeters(g, ev, app.time);
+      drawRace(g, ev, app.time);
       drawBeat(g, ev, app.time);
       g.restore();
       finish(g);
@@ -303,6 +318,16 @@ export function play(app) {
 }
 
 const fmt = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
+
+// A finish worth shouting about: decided by a whisker.
+function close(ev) {
+  if (ev.winner == null) return false;
+  const m = [ev.measure(0), ev.measure(1)], gap = Math.abs(m[0] - m[1]);
+  if (ev.id === 'aizkolaritza') return ev.p[1 - ev.winner].doneAt == null && m[1 - ev.winner] >= 0.9;
+  if (ev.id === 'harri') return gap <= 1;
+  if (ev.id === 'txingak') return gap < 1.5;
+  return Math.min(...ev.pulls) === 1;
+}
 
 // ---- after each event -------------------------------------------------------------------------------------
 
@@ -314,7 +339,7 @@ export function result(app) {
   let t0 = 0;
   app.ui.replaceChildren(h('div', { class: 'overlay results' }, h('div', { class: 'parchment res-card' },
     h('p', { class: 'kicker' }, t(`ev.${ev.id}.name`)),
-    h('h2', {}, R.winner == null ? t('res.event.tie') : t('res.event.winner', { who: who(R.winner) })),
+    h('h2', {}, R.winner == null ? t('res.event.tie') : cap(t('res.event.winner', { who: who(R.winner) }))),
     ev.id !== 'sokatira' ? h('div', { class: 'res-row' }, h('span', {}, t(label)), h('span', { class: 'red' }, m(0)), h('span', { class: 'blue' }, m(1))) : null,
     h('div', { class: 'res-total' }, h('span', {}, t('res.day')), h('b', {}, h('span', { class: 'red' }, fmt(day.points[0])), ' – ', h('span', { class: 'blue' }, fmt(day.points[1])))),
     h('div', { class: 'fact-inline' }, h('h3', {}, t('fact.title')), h('p', {}, t(fact.text_key))),
@@ -342,7 +367,7 @@ export function champion(app) {
   const title = w == null ? t('final.draw') : solo && w === 1 ? t('final.youLost') : t('final.champion');
   app.ui.replaceChildren(h('div', { class: 'overlay champion' }, h('div', { class: 'parchment champ-card' },
     h('h2', { class: w == null ? '' : w ? 'blue' : 'red' }, title),
-    w != null ? h('p', {}, t('final.text', { who: who(w) })) : null,
+    w != null ? h('p', {}, cap(t('final.text', { who: who(w) }))) : null,
     h('p', { class: 'final' }, h('span', { class: 'red' }, `${t('hud.red')} ${fmt(day.points[0])}`), ' – ', h('span', { class: 'blue' }, `${fmt(day.points[1])} ${t('hud.blue')}`)),
     h('div', { class: 'word' }, h('b', {}, t('gl.txapela.name')), ' — ', t('gl.txapela.text')),
     h('p', { class: 'hint' }, rich(t('ui.next'))))));
