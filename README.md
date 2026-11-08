@@ -19,6 +19,8 @@ This starts the menu and every game, and opens the menu in your browser. `~/Docu
 | Olite (coming soon) | http://localhost:8730 |
 | Espadas de Hispania | http://localhost:8740 |
 
+**Paid arcade:** `~/fire-up-arcade --paid` (or `--paid --price=1.00`) makes every game cost a coin (0.50 € by default). The menu shows the credits and asks for a coin; starting a game spends one, and when the game ends it goes back to the menu. The coin mechanism must send the key **5**. Credits survive a restart (`credits.json`) and every coin is logged with its time in `coins.log` (both stay off git). Off the Pi it runs in dev mode: **5** on the keyboard adds a coin.
+
 Ports 8000–8010 are never used; `start.py` refuses them. If a port is already taken (say you left `npm start` running in a game folder), it says so and carries on.
 
 ## Putting it online

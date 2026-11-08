@@ -3,3 +3,7 @@ node_modules/
 __pycache__/
 # The website is built here by build-site.py and published as the gh-pages branch.
 site/
+# Paid arcade: the machine's credits and coin log (start.py --paid).
+credits.json
+credits.json.tmp
+coins.log
