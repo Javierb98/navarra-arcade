@@ -1,5 +1,5 @@
 {
-  "_note": "The arcade menu. Each game is a folder (a git submodule under games/, its own repository) served on its own port; the menu lists them in this order. status: ready (playable), soon (shown greyed out), hidden (not shown or served). Ports 8000-8010 are off limits on the dev machine. lesson/era/place/controls fill the info panel; history text is a draft for a historian to check. url is the game's address inside the online site (built by build-site.py); run locally with fire-up-arcade, the menu uses the port instead. minutes/pace/bestFor tell players how long a game takes (quick games suit a queue; long ones someone with time).",
+  "_note": "The arcade menu. Each game is a folder (a git submodule under games/, its own repository) served on its own port; the menu lists them in this order. status: ready (playable), soon (shown greyed out), hidden (not shown or served). Ports 8000-8010 are off limits on the dev machine. lesson/era/place/controls fill the info panel; history text is a draft for a historian to check. url is the game's address inside the online site (built by build-site.py); run locally with fire-up-arcade, the menu uses the port instead. minutes/pace/bestFor tell players how long a game takes (quick games suit a queue; long ones someone with time). kind: arcade (a short game, made for the arcade machine and its queue) or desktop (a longer game to play at a computer, like the old Flash games). Desktop games are listed in the free arcade and online, but the paid arcade (start.py --paid) neither lists nor serves them.",
   "menuPort": 8700,
   "games": [
     {
@@ -8,6 +8,7 @@
       "port": 8710,
       "url": "games/almadia/",
       "status": "ready",
+      "kind": "arcade",
       "thumb": "assets/thumbs/almadia.png",
       "players": "1-2",
       "minutes": "3–5",
@@ -56,14 +57,15 @@
       "port": 8720,
       "url": "games/pax-avant/",
       "status": "ready",
+      "kind": "arcade",
       "thumb": "assets/thumbs/pax-avant.png",
       "players": "1-2",
-      "minutes": "6-7",
-      "pace": "long",
+      "minutes": "3–4",
+      "pace": "quick",
       "bestFor": {
-        "es": "Para dos: cada uno por su valle, pero la paz es de los dos",
-        "eu": "Birentzat: bakoitza bere ibarraren alde, baina bakea biona da",
-        "en": "For two: each for their own valley, but the peace belongs to both"
+        "es": "Cara a cara entre dos (o contra el ordenador): trampas, lobos y un oso, sin romper la paz",
+        "eu": "Biren arteko norgehiagoka (edo ordenagailuaren aurka): tranpak, otsoak eta hartza, bakea hautsi gabe",
+        "en": "Head to head for two (or against the computer): tricks, wolves and a bear, without breaking the peace"
       },
       "title": {
         "es": "Pax Avant",
@@ -71,9 +73,9 @@
         "en": "Pax Avant"
       },
       "blurb": {
-        "es": "Pastores de Roncal y Barétous compiten por su valle en los pastos de la frontera… sin romper la paz de 1375.",
-        "eu": "Erronkari eta Baretouseko artzainak beren ibarraren alde lehiatzen dira mugako larreetan… 1375eko bakea hautsi gabe.",
-        "en": "Shepherds of Roncal and Barétous compete for their valleys on the border pastures… without breaking the peace of 1375."
+        "es": "Pastores de Roncal y Barétous compiten por hacer más queso: róbale ovejas al vecino y pasta en su hierba… pero si rompes la paz de 1375, perdéis los dos.",
+        "eu": "Erronkari eta Baretouseko artzainak gazta gehien egiteko lehiatzen dira: lapurtu bizilagunari ardiak eta bazkatu haren belarra… baina 1375eko bakea hausten baduzu, biek galtzen duzue.",
+        "en": "Shepherds of Roncal and Barétous race to make the most cheese: steal the neighbours' sheep and graze their grass… but break the peace of 1375 and you both lose."
       },
       "lesson": {
         "es": "Cómo dos valles enfrentados por la hierba y el agua firmaron en 1375 turnos y un tributo de tres vacas, y por qué esa paz aún se celebra cada 13 de julio.",
@@ -91,9 +93,9 @@
         "en": "San Martín stone, Roncal valley"
       },
       "controls": {
-        "es": "Joystick y botones",
-        "eu": "Joystick-a eta botoiak",
-        "en": "Stick and buttons"
+        "es": "Joystick, A perro, B esquila, C coger oveja",
+        "eu": "Joystick-a, A txakurra, B joarea, C ardia hartu",
+        "en": "Stick, A dog, B bell, C grab a sheep"
       },
       "preview": "assets/previews/pax-avant.webm",
       "poster": "assets/previews/pax-avant.jpg"
@@ -104,6 +106,7 @@
       "port": 8750,
       "url": "games/pelota/",
       "status": "ready",
+      "kind": "arcade",
       "thumb": "assets/previews/pelota.jpg",
       "preview": "assets/previews/pelota.webm",
       "poster": "assets/previews/pelota.jpg",
@@ -152,6 +155,7 @@
       "port": 8760,
       "url": "games/kirolak/",
       "status": "ready",
+      "kind": "arcade",
       "thumb": "assets/previews/kirolak.jpg",
       "preview": "assets/previews/kirolak.webm",
       "poster": "assets/previews/kirolak.jpg",
@@ -200,6 +204,7 @@
       "port": 8790,
       "url": "games/jentilak/",
       "status": "ready",
+      "kind": "arcade",
       "thumb": "assets/previews/jentilak.jpg",
       "players": "1-2",
       "minutes": "3–5",
@@ -248,6 +253,7 @@
       "port": 8770,
       "url": "games/salinas/",
       "status": "ready",
+      "kind": "desktop",
       "thumb": "assets/previews/salinas.jpg",
       "preview": "assets/previews/salinas.webm",
       "poster": "assets/previews/salinas.jpg",
@@ -296,16 +302,17 @@
       "port": 8780,
       "url": "games/minas/",
       "status": "ready",
+      "kind": "desktop",
       "thumb": "assets/previews/minas.jpg",
       "preview": "assets/previews/minas.webm",
       "poster": "assets/previews/minas.jpg",
       "players": "1",
-      "minutes": "20-30",
+      "minutes": "30-45",
       "pace": "long",
       "bestFor": {
-        "es": "Para quien tenga tiempo: una partida larga, sin reloj, para un jugador",
-        "eu": "Denbora duenarentzat: partida luzea, erlojurik gabe, jokalari batentzat",
-        "en": "For someone with time: a long game with no clock, for one player"
+        "es": "Para quien tenga tiempo: una carrera larga de minero, sin reloj, para un jugador",
+        "eu": "Denbora duenarentzat: meatzari-ibilbide luzea, erlojurik gabe, jokalari batentzat",
+        "en": "For someone with time: a long mining career with no clock, for one player"
       },
       "title": {
         "es": "Los Hombres Verdes",
@@ -313,9 +320,9 @@
         "en": "The Green Men"
       },
       "blurb": {
-        "es": "Cava hacia abajo y viaja atrás en el tiempo: de la mina de potasa a las galerías romanas, hasta la cueva de los mineros más antiguos.",
-        "eu": "Zulatu behera eta bidaiatu atzera denboran: potasa-meategitik galeria erromatarretara, meatzaririk zaharrenen haitzuloraino.",
-        "en": "Dig down and travel back in time: from the potash mine to the Roman galleries, all the way to the cave of the oldest miners."
+        "es": "Cava hacia atrás en el tiempo, de la mina de potasa a la cueva de los mineros más antiguos. Encuentra piezas antiguas para el museo del pueblo, construye estaciones de jaula y vuelve con el saco lleno antes de que se apague tu luz.",
+        "eu": "Zulatu atzera denboran, potasa-meategitik meatzaririk zaharrenen haitzuloraino. Aurkitu pieza zaharrak herriko museorako, eraiki kaiola-geltokiak eta itzuli zakua beteta argia itzali aurretik.",
+        "en": "Dig back through time, from the potash mine to the cave of the oldest miners. Find old things for the village museum, build cage stations, and get back with a full sack before your light runs out."
       },
       "lesson": {
         "es": "Las minas de Navarra y su gente: Potasas en Beriáin, el hierro de Eugi y Orbaizeta, el cobre de Arce, los romanos y los Hombres Verdes de Urbiola.",
@@ -333,9 +340,9 @@
         "en": "Under all of Navarre"
       },
       "controls": {
-        "es": "Joystick y botones",
-        "eu": "Joystick-a eta botoiak",
-        "en": "Stick and buttons"
+        "es": "Teclado (flechas o WASD y tres teclas) o mando",
+        "eu": "Teklatua (geziak edo WASD eta hiru tekla) edo kontrolagailua",
+        "en": "Keyboard (arrows or WASD and three keys) or gamepad"
       }
     },
     {
@@ -344,6 +351,7 @@
       "port": 8740,
       "url": "games/espadas/",
       "status": "ready",
+      "kind": "desktop",
       "thumb": "assets/thumbs/espadas.png",
       "players": "1",
       "minutes": "10–15",

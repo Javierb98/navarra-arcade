@@ -19,7 +19,9 @@ This starts the menu and every game, and opens the menu in your browser. `~/Docu
 | Olite (coming soon) | http://localhost:8730 |
 | Espadas de Hispania | http://localhost:8740 |
 
-**Paid arcade:** `~/fire-up-arcade --paid` (or `--paid --price=1.00`) makes every game cost a coin (0.50 € by default). The menu shows the credits and asks for a coin; starting a game spends one, and when the game ends it goes back to the menu. The coin mechanism must send the key **5**. Credits survive a restart (`credits.json`) and every coin is logged with its time in `coins.log` (both stay off git). Off the Pi it runs in dev mode: **5** on the keyboard adds a coin.
+**Modes:** the running arcade is in one of three modes. **Desktop** shows keys and offers every game for free. **Arcade** shows the cabinet's stick and buttons and offers every game for free. **Paid arcade** shows the cabinet, charges a coin a game and offers arcade games only. It starts in paid with `--paid`, in arcade on the Pi (or with `--cabinet`), and in desktop otherwise. Off the Pi (or with `--dev`) the menu has a small **DEV** chip in the top-left corner: hover it and click a mode, or press **F8** to step through them. The switch changes the running arcade without a restart, and the menu and every game pick it up on their next load (the server's `/mode`).
+
+**Paid arcade:** `~/fire-up-arcade --paid` (or `--paid --price=1.00`) makes every game cost a coin (0.50 € by default). It only offers the arcade games: the longer desktop games (`"kind": "desktop"` in `games.json`) are left out. The menu shows the credits and asks for a coin; starting a game spends one, and when the game ends it goes back to the menu. The coin mechanism must send the key **5**. Credits survive a restart (`credits.json`) and every coin is logged with its time in `coins.log` (both stay off git). Off the Pi it runs in dev mode: **5** on the keyboard adds a coin.
 
 Ports 8000–8010 are never used; `start.py` refuses them. If a port is already taken (say you left `npm start` running in a game folder), it says so and carries on.
 
@@ -80,6 +82,7 @@ Everything is in `games.json`. No code changes needed:
   "folder": "games/olite",
   "port": 8730,
   "status": "soon",
+  "kind": "arcade",
   "thumb": null,
   "players": "1-2",
   "title": { "es": "Olite", "eu": "Erriberri", "en": "Olite" },
@@ -88,6 +91,7 @@ Everything is in `games.json`. No code changes needed:
 ```
 
 - `status`: `ready` (playable), `soon` (shown greyed out), `hidden` (not listed or served).
+- `kind`: `arcade` (a short game, made for the arcade machine) or `desktop` (a longer game to play at a computer, Flash-style: Salinas de Oro, The Green Men, Espadas de Hispania). The free arcade lists both; the paid arcade (`--paid`) neither lists nor serves desktop games.
 - `thumb`: a 480×270 picture in `menu/assets/thumbs/`, `art:<name>` for a picture the menu paints itself (see `menu/src/art.js`, used for Olite), or `null` for a plain card.
 - `lesson`, `era`, `place`, `controls`: the info panel, each in `es`, `eu` and `en`. The history text is a draft for a historian to check.
 - For a game to come back to the menu, it needs the small exit hook that Almadía and Pax Avant have in `src/ui/arcade.js`. The menu opens games as `?menu=<menu address>&lang=<es|eu|en>`.

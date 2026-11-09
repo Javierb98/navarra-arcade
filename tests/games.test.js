@@ -26,6 +26,10 @@ test('every listed game has a folder, a title and blurb in all three languages, 
   }
 });
 
+test('every game says whether it is an arcade game or a desktop one', () => {
+  for (const g of config.games) assert.ok(['arcade', 'desktop'].includes(g.kind), `${g.id}: kind should be arcade or desktop`);
+});
+
 test('every game has an online address', () => {
   for (const g of config.games.filter((x) => x.status !== 'hidden')) assert.equal(g.url, `games/${g.id}/`, `${g.id}: url should be games/<id>/`);
 });
