@@ -1,0 +1,613 @@
+// The arcade menu: pick a game with the stick, press A or START to play.
+// Games are listed in games.json; each runs on its own port, and gets the
+// menu's address and the chosen language so it can come back here.
+
+import { h } from './dom.js';
+import { Input } from './input.js';
+import { createScenery } from './scenery.js';
+import { paintedThumb } from './art.js';
+
+const LANGS = ['es', 'eu', 'en'];
+const LANG_NAMES = { es: 'Castellano', eu: 'Euskara', en: 'English' };
+const IDLE_SHOWCASE = 30; // seconds without input before the menu shows games off by itself
+const FIXED = 1 / 60;
+
+const stage = document.getElementById('stage');
+const root = document.getElementById('menu');
+const store = {
+  get: (k, d) => { try { return JSON.parse(localStorage.getItem(`arcade.${k}`)) ?? d; } catch { return d; } },
+  set: (k, v) => { try { localStorage.setItem(`arcade.${k}`, JSON.stringify(v)); } catch { /* storage blocked */ } },
+};
+
+let games = [];
+let strings = {};
+// The language someone picked here before; otherwise the browser's own, when
+// it's Spanish, Basque or English; otherwise Spanish.
+function browserLang() {
+  const list = navigator.languages?.length ? navigator.languages : [navigator.language ?? ''];
+  for (const l of list) { const code = String(l).toLowerCase().split('-')[0]; if (LANGS.includes(code)) return code; }
+  return 'es';
+}
+let lang = store.get('lang', null) ?? browserLang();
+let sel = 0;
+let input = null;
+let idle = 0;
+let launching = false;
+let drawScenery = null;
+let sponsors = null;
+let credits = null;
+let sponsorAt = 0;
+let showcaseStep = 0;
+let sponsorsAreTest = false;
+let showingThanks = false;
+let sponsorClock = 0;
+let showcaseT = 0;
+const SHOWCASE_STEP = 7; // seconds per game in the idle showcase
+
+const t = (key, vars = {}) => (strings[lang]?.[key] ?? strings.es?.[key] ?? key).replace(/\{(\w+)\}/g, (m, k) => vars[k] ?? m);
+
+// Where the arcade is being played, so every hint names the controls in
+// front of the player: the cabinet (the Raspberry Pi arcade machine:
+// start.py stamps its pages with <meta name="arcade-device"
+// content="cabinet">, or a browser on ARM Linux that isn't Android), a
+// phone or tablet (a touch screen), or a computer (anything else, local or
+// online). Every game is told which. ?device=cabinet|phone|computer
+// overrides it, for testing. (ONLINE only says where the games are.)
+const ONLINE = !!document.querySelector('meta[name="arcade-online"]');
+
+// ---- paid arcade -------------------------------------------------------------
+// start.py --paid stamps <meta name="arcade-mode" content="paid"> with the
+// price. Starting a game spends a credit, kept by the menu's server
+// (/credits); coins come in as the key 5 (the coin mechanism's wiring, as in
+// MAME), here or during a game. In dev mode (paid, off the cabinet) the menu
+// says that 5 adds a coin.
+const paidMeta = document.querySelector('meta[name="arcade-mode"]');
+const PAID = !ONLINE && paidMeta?.content === 'paid';
+const PRICE = Number(paidMeta?.dataset.price ?? 0.5);
+const DEV = paidMeta?.dataset.dev === '1';
+const COIN_KEYS = ['Digit5'];
+let coins = 0;
+async function creditsCall(action) {
+  try {
+    const r = await fetch(action ? `/credits/${action}` : '/credits', { method: action ? 'POST' : 'GET', cache: 'no-store' });
+    return r.ok ? await r.json() : null;
+  } catch { return null; }
+}
+const priceText = () => new Intl.NumberFormat({ es: 'es-ES', eu: 'eu-ES', en: 'en-IE' }[lang] ?? 'es-ES', { style: 'currency', currency: 'EUR' }).format(PRICE);
+const DEVICES = ['cabinet', 'phone', 'computer'];
+const askedDevice = new URLSearchParams(location.search).get('device');
+const touchScreen = matchMedia('(pointer: coarse)').matches || (navigator.maxTouchPoints > 0 && 'ontouchstart' in window);
+const onPi = document.querySelector('meta[name="arcade-device"]')?.content === 'cabinet'
+  || (/Linux/.test(navigator.userAgent) && /aarch64|armv7l|armv8l|arm64/i.test(navigator.userAgent) && !/Android/.test(navigator.userAgent));
+const device = DEVICES.includes(askedDevice) ? askedDevice : onPi ? 'cabinet' : touchScreen ? 'phone' : 'computer';
+
+// ---- dev mode switcher ---------------------------------------------------------
+// Off the Pi (or with start.py --dev) the server stamps <meta name="arcade-dev"
+// content="<mode>">. A small bar in the corner then switches the running
+// arcade between desktop (keys, every game free), arcade (the cabinet's
+// buttons, every game free) and paid (the cabinet, a coin a game, arcade games
+// only). Click a mode, or press F8 to step through them; the page reloads in
+// the new mode, and so does every game started from it.
+const devMeta = ONLINE ? null : document.querySelector('meta[name="arcade-dev"]');
+if (devMeta) {
+  const MODES = ['desktop', 'arcade', 'paid'];
+  const LABELS = { desktop: 'Desktop', arcade: 'Arcade', paid: 'Paid arcade' };
+  const current = devMeta.content;
+  const switchTo = async (m) => {
+    if (m === current) return;
+    try { await fetch(`/mode/${m}`, { method: 'POST', cache: 'no-store' }); } catch { return; }
+    location.reload();
+  };
+  const bar = h('div', { class: 'devbar' }, h('b', {}, 'DEV'),
+    MODES.map((m) => h('button', { class: m === current ? 'on' : '', onclick: () => switchTo(m) }, LABELS[m])),
+    h('small', {}, 'F8'));
+  document.body.append(bar);
+  addEventListener('keydown', (e) => {
+    if (e.code === 'F8' && !e.repeat) { e.preventDefault(); switchTo(MODES[(MODES.indexOf(current) + 1) % MODES.length]); }
+  });
+}
+
+// "[A] play" -> the A button glyph; [ENTER] and [ESC] are computer keys.
+function rich(text) {
+  const out = [];
+  let last = 0;
+  for (const m of text.matchAll(/\[(A|B|C|START|ENTER|ESC)\]/g)) {
+    const key = { ENTER: 'Enter', ESC: 'Esc' }[m[1]];
+    out.push(text.slice(last, m.index), key ? h('kbd', {}, key) : h('span', { class: `btn btn-${m[1].toLowerCase()}` }, m[1]));
+    last = m.index + m[0].length;
+  }
+  out.push(text.slice(last));
+  return out;
+}
+
+// CSS zoom (not a transform) so the browser lays the menu out at full screen
+// size: text is drawn sharp at the real resolution instead of being drawn
+// small and stretched. The pixel-art backdrop canvas stays crisp on its own.
+//
+// Upright screens (phones, iPads held tall) get their own layout instead of a
+// tiny letterboxed 16:9 strip: the stage keeps the screen's shape, a narrow
+// width (so text reads at a comfortable size) and stacks everything in a column.
+const coarse = matchMedia('(pointer: coarse)');
+function fit() {
+  // clientWidth, not innerWidth: a phone widens innerWidth to fit whatever
+  // overflowed last time, so sizing from it would feed on itself.
+  const W = document.documentElement.clientWidth, H = document.documentElement.clientHeight;
+  const tall = H > W * 0.9;
+  const touch = coarse.matches || navigator.maxTouchPoints > 0;
+  document.body.classList.toggle('tall', tall);
+  document.body.classList.toggle('touch', touch);
+  if (tall) {
+    const w = Math.round(Math.max(240, Math.min(420, W / 1.6)));
+    const k = W / w;
+    stage.style.zoom = k;
+    stage.style.width = `${w}px`;
+    stage.style.height = `${H / k}px`;
+    stage.style.left = stage.style.top = '0px';
+    // The preview may not eat more than a quarter (a phone) to a third (a tablet) of the screen's height.
+    stage.style.setProperty('--preview-w', `${Math.min(w - 30, (H / k) * (w > 300 ? 0.36 : 0.25) * 16 / 9)}px`);
+  } else {
+    const k = Math.min(W / 480, H / 270);
+    stage.style.zoom = k;
+    stage.style.width = '480px';
+    stage.style.height = '270px';
+    // With zoom, left/top are in zoomed units too.
+    stage.style.left = `${(W - 480 * k) / 2 / k}px`;
+    stage.style.top = `${(H - 270 * k) / 2 / k}px`;
+  }
+  const shape = `${tall}/${touch}`;
+  isTouch = touch;
+  if (el && shape !== lastShape) render();
+  lastShape = shape;
+}
+let isTouch = false, lastShape = '';
+addEventListener('resize', fit);
+coarse.addEventListener?.('change', fit);
+// A tap or a swipe counts as someone being here, like a button press.
+for (const ev of ['pointerdown', 'wheel', 'touchmove']) addEventListener(ev, () => { idle = 0; }, { passive: true });
+
+// Run locally (fire-up-arcade), every game has its own port on this machine.
+// In the online site (build-site.py marks it) the games sit under games/<id>/.
+
+function gameUrl(g) {
+  const menu = `${location.origin}${location.pathname}${askedDevice ? `?device=${askedDevice}` : ''}`;
+  const base = ONLINE ? new URL(g.url, location.href).href : `${location.protocol}//${location.hostname}:${g.port}/`;
+  return `${base}?menu=${encodeURIComponent(menu)}&lang=${lang}&device=${device}`;
+}
+
+// Built once; later updates only swap classes and the featured panel, so the
+// CSS transitions can run.
+let el = null;
+let focus = 'games'; // or 'lang'
+
+function build() {
+  el = {
+    title: h('h1', {}),
+    langs: h('div', { class: 'langs' }),
+    coins: h('div', { class: 'coins' }),
+    feature: h('div', { class: 'feature' }),
+    cards: h('div', { class: 'cards' }),
+    play: h('button', { class: 'play', onClick: () => launch() }),
+    hint: h('p', { class: 'hint' }),
+    exit: h('p', { class: 'hint small' }),
+    sponsor: h('div', { class: 'sponsor-plate' }),
+    credit: h('div', { class: 'credit' }),
+  };
+  root.replaceChildren(
+    h('header', {}, el.title, PAID ? el.coins : null, el.langs),
+    el.feature,
+    el.play,
+    el.cards,
+    h('footer', {}, el.sponsor, h('div', { class: 'hints' }, el.hint, el.exit), el.credit),
+  );
+  el.cardEls = games.map((g, i) => {
+    const card = h('div', { class: `card ${g.status} ${g.pace}`, onClick: () => (i === sel ? launch() : pick(i)) },
+      // How long it takes sits above the picture, never over it.
+      h('span', { class: `pace ${g.pace}` }),
+      g.poster || g.thumb ? h('div', { class: 'thumb', style: { backgroundImage: `url(${g.poster ?? g.thumb})` } }) : h('div', { class: 'thumb blank' }),
+      h('span', { class: 'name' }));
+    el.cards.append(card);
+    return card;
+  });
+}
+
+function pick(i) {
+  if (i === sel) return;
+  const dir = i > sel ? 1 : -1;
+  sel = i;
+  store.set('last', games[sel].id);
+  beep(520, 0.04);
+  // Scrolling only slides the strip (cheap, so the beep and the move are
+  // instant); the big preview follows once the player stops for a moment,
+  // so racing past games doesn't load a video for each one.
+  later(() => renderStrip());
+  clearTimeout(featureTimer);
+  featureTimer = setTimeout(() => renderFeature(dir), 140);
+}
+let featureTimer = 0;
+
+// One redraw per frame at most, after the sound has gone out.
+let pending = null;
+function later(fn) {
+  pending = fn;
+  requestAnimationFrame(() => { const f = pending; pending = null; f?.(); });
+}
+
+function move(dir) {
+  pick((sel + dir + games.length) % games.length);
+}
+
+
+// The revolving strip: each card sits at its distance from the chosen one,
+// counted round the circle, so the row wraps and runs off both edges. A card
+// that wraps from one end to the other jumps without sliding across.
+const STEP = 112;
+function placeCards() {
+  if (document.body.classList.contains('tall')) { for (const c of el.cardEls) { c.style.transform = ''; c.style.opacity = ''; } return; }
+  const n = games.length;
+  el.cardEls.forEach((c, i) => {
+    let d = (i - sel + n) % n;
+    if (d > n / 2) d -= n;
+    const prev = Number(c.dataset.d ?? d);
+    c.classList.toggle('jump', Math.abs(d - prev) > 1);
+    c.dataset.d = d;
+    c.style.transform = `translateX(${d * STEP}px) scale(${d === 0 ? 1.06 : 1})`;
+    c.style.opacity = Math.abs(d) > 3 ? '0' : '1';
+  });
+}
+
+// The card strip: which game is picked, names and times.
+function renderStrip() {
+  placeCards();
+  el.cardEls.forEach((c, i) => {
+    c.classList.toggle('sel', i === sel);
+    c.querySelector('.name').textContent = games[i].title[lang] ?? games[i].title.es;
+    c.querySelector('.pace').textContent = `${t(games[i].pace)} · ${t('min', { n: games[i].minutes })}`;
+    const blank = c.querySelector('.thumb.blank');
+    if (blank) blank.textContent = games[i].title[lang] ?? games[i].title.es;
+  });
+  el.cards.classList.toggle('dim', focus === 'lang');
+
+  // Keep the chosen card in view in the swipeable strip.
+  // (Scrolling the strip itself, so the page doesn't jump down to it.)
+  if (document.body.classList.contains('tall')) {
+    const c = el.cardEls[sel];
+    el.cards.scrollTo({ left: c.offsetLeft - el.cards.offsetLeft - (el.cards.clientWidth - c.offsetWidth) / 2, behavior: 'smooth' });
+  }
+}
+
+// The big panel for the picked game: its moving preview and its story.
+function renderFeature(dir = 0) {
+  // The featured game: big moving preview on the left, its story on the right.
+  const g = games[sel], L = (o) => (o ? o[lang] ?? o.es : '');
+  // A phone's touch controls are one player's: every game has a one-player
+  // mode, so on a phone that's what it offers.
+  const players = g.players === '1' || device === 'phone' ? t('player1') : t('players', { n: g.players.replace('-', '–') });
+  // How it's played here: on a computer, which keys are whose; on a touch
+  // screen the on-screen controls speak for themselves.
+  const how = isTouch ? null : device === 'computer' && g.players !== '1' ? t('keysTwo') : L(g.controls);
+  const panel = h('div', { class: `feature-inner ${dir > 0 ? 'from-right' : dir < 0 ? 'from-left' : 'fade'}` },
+    h('div', { class: `preview ${g.status}` },
+      // Real gameplay when there's a clip; otherwise a slow pan over the picture.
+      g.preview ? h('video', { class: 'clip', src: g.preview, poster: g.poster ?? '', muted: true, autoplay: true, loop: true, playsinline: true, preload: 'auto' })
+        : g.thumb ? h('div', { class: 'pan', style: { backgroundImage: `url(${g.thumb})` } }) : h('div', { class: 'pan blank' }, L(g.title)),
+      g.status === 'soon' ? h('span', { class: 'badge' }, t('soon')) : null),
+    h('div', { class: 'info' }, h('div', { class: 'info-body' },
+      h('div', { class: 'title-row' }, h('h2', {}, L(g.title)), h('span', { class: `pace-tag ${g.pace}` }, `${t(g.pace)} · ${t('min', { n: g.minutes })}`)),
+      h('p', { class: 'blurb' }, L(g.blurb)),
+      h('p', { class: `best ${g.pace}` }, L(g.bestFor)),
+      h('h3', {}, t('learn')),
+      h('p', { class: 'lesson' }, L(g.lesson)),
+      h('div', { class: 'chips' },
+        h('span', { class: 'chip' }, h('b', {}, t('when')), ' ', L(g.era), ' · ', h('b', {}, t('where')), ' ', L(g.place)),
+        h('span', { class: 'chip' }, players, ...(!how || document.body.classList.contains('tall') ? [] : [' · ', how]))))));
+  el.feature.replaceChildren(panel);
+  fitText();
+  // Once the layout has settled (fonts, the new panel sliding in), fit again.
+  requestAnimationFrame(() => requestAnimationFrame(fitText));
+  setTimeout(fitText, 400);
+  const clip = panel.querySelector('video');
+  if (clip) { clip.muted = true; clip.play().catch(() => {}); } // muted, so browsers let it autoplay
+
+  el.play.textContent = g.status !== 'ready' ? t('soon') : PAID && coins < 1 ? t('insertCoin', { price: priceText() }) : `▶ ${t('play')}`;
+  el.play.disabled = g.status !== 'ready';
+  // Upright, the button gets its own row; on a wide screen it sits on the
+  // preview's corner so the 16:9 layout keeps its room.
+  if (document.body.classList.contains('tall')) el.feature.after(el.play);
+  else panel.querySelector('.preview').append(el.play);
+}
+
+// The credit badge: how many games are paid for, or (none) the price.
+function renderCoins() {
+  if (!PAID || !el) return;
+  el.coins.classList.toggle('empty', coins < 1);
+  el.coins.replaceChildren(
+    coins < 1 ? h('b', {}, t('insertCoin', { price: priceText() })) : h('b', {}, t('credits', { n: coins })));
+  const g = games[sel];
+  if (g?.status === 'ready') el.play.textContent = coins < 1 ? t('insertCoin', { price: priceText() }) : `▶ ${t('play')}`;
+}
+
+// A big "insert coin" card over the menu for a few seconds: back from a game
+// with no credit left, or trying to play without one.
+let insertTimer = null;
+function showInsertCoin() {
+  if (!PAID) return;
+  root.querySelector('.insert-coin')?.remove();
+  root.append(h('div', { class: 'insert-coin' }, h('div', {},
+    h('b', {}, t('insertCoin', { price: priceText() })),
+    h('p', {}, t('insertCoinWhy', { price: priceText() })),
+    DEV ? h('small', {}, t('devCoin')) : null)));
+  clearTimeout(insertTimer);
+  insertTimer = setTimeout(() => root.querySelector('.insert-coin')?.remove(), 4000);
+}
+
+async function addCoin() {
+  const r = await creditsCall('coin');
+  if (!r) return;
+  coins = r.credits;
+  root.querySelector('.insert-coin')?.remove();
+  beep(1320, 0.05); beep(1760, 0.09, 0.05); // the coin's ding
+  renderCoins();
+}
+if (PAID) {
+  addEventListener('keydown', (e) => { if (COIN_KEYS.includes(e.code) && !e.repeat) { idle = 0; addCoin(); } });
+}
+
+function render(dir = 0) {
+  document.documentElement.lang = lang;
+  document.title = t('title');
+  el.title.textContent = t('title');
+  el.langs.replaceChildren(
+    h('span', { class: 'lang-label' }, t('lang')),
+    ...LANGS.map((l) => h('button', { class: `lang ${l === lang ? 'on' : ''}`, onClick: () => setLanguage(l) },
+      h('span', { class: 'long' }, LANG_NAMES[l]), h('span', { class: 'short' }, l.toUpperCase()))));
+  el.langs.classList.toggle('focus', focus === 'lang');
+  renderStrip();
+  renderFeature(dir);
+
+  renderSponsor();
+  // The maker's mark: the logo in a gold-rimmed medallion, the name in
+  // Basque lettering.
+  const [maker, ...rest] = (credits?.name ?? '').split('.');
+  el.credit.replaceChildren(...(credits ? [h('span', { class: 'sponsor-label' }, S(credits.label)),
+    h('span', { class: 'credit-mark' },
+      credits.logo ? h('span', { class: 'medal' }, h('img', { src: credits.logo, alt: '' })) : null,
+      h('span', { class: 'credit-name' }, h('b', {}, maker), rest.length ? h('small', {}, `.${rest.join('.')}`) : null))] : []));
+  // On a touch screen there's no stick to describe: say what to tap instead.
+  // At a computer, the keys to press.
+  const pc = device === 'computer' ? 'Computer' : '';
+  el.hint.replaceChildren(...rich(t(isTouch && device !== 'cabinet' ? 'hintTouch' : (focus === 'lang' ? 'hintLang' : 'hint') + pc)));
+  el.exit.replaceChildren(...rich(t(isTouch && device !== 'cabinet' ? 'exitHintTouch' : `exitHint${pc}`)));
+  // Paid arcade in dev mode: how to add a coin, under the other hints.
+  if (PAID && DEV) el.exit.append(' · ', t('devCoin'));
+  renderCoins();
+  fitText();
+}
+
+// ---- keeping text inside its box, in every language ---------------------------
+
+// The featured game's text shrinks a little when a description runs long,
+// and long names on the cards shrink to fit their card, so nothing ever
+// spills out, whatever the language.
+function fitText() {
+  const info = el.feature.querySelector('.info'), body = info?.querySelector('.info-body');
+  if (body) {
+    body.style.zoom = '';
+    const room = info.getBoundingClientRect().height;
+    for (let z = 1; z >= 0.62 && body.getBoundingClientRect().height > room + 0.5; z -= 0.04) body.style.zoom = String(z);
+  }
+  // Cards match each other: every name, and every time tag, gets the one
+  // size at which all of them fit.
+  for (const sel of ['.name', '.pace']) {
+    const all = el.cardEls.map((c) => c.querySelector(sel));
+    for (const n of all) shrink(n, sel === '.name');
+    const sizes = all.filter((n) => n.clientWidth).map((n) => parseFloat(getComputedStyle(n).fontSize));
+    if (sizes.length) { const min = Math.min(...sizes); for (const n of all) n.style.fontSize = `${min}px`; }
+  }
+  for (const n of [el.hint, el.exit, ...el.feature.querySelectorAll('.pace-tag')]) shrink(n);
+}
+// One line of text, made smaller until it fits its box.
+// (Names may take two lines, so for them height counts too.)
+function shrink(n, twoLines = false) {
+  n.style.fontSize = '';
+  if (!n.clientWidth) return;
+  let size = parseFloat(getComputedStyle(n).fontSize);
+  const over = () => n.scrollWidth > n.clientWidth + 0.5 || (twoLines && n.scrollHeight > n.clientHeight + 0.5);
+  while (over() && size > 4.5) { size -= 0.25; n.style.fontSize = `${size}px`; }
+}
+addEventListener('resize', () => { if (el) { fitText(); placeCards(); } });
+document.fonts?.ready.then(() => el && fitText());
+
+// ---- sponsors -----------------------------------------------------------------
+
+const S = (o) => (typeof o === 'string' ? o : o ? o[lang] ?? o.es : '');
+
+function sponsorBadge(sp, big = false) {
+  const logo = (big && sp.logoBig) || sp.logo;
+  return h('div', { class: `sponsor ${sp.placeholder ? 'placeholder' : ''} ${big ? 'big' : ''} ${sp.plate === 'dark' ? 'dark' : ''} ${big && sp.logoBig ? 'tall' : ''}` },
+    logo ? h('img', { src: logo, alt: S(sp.name) }) : h('span', { class: 'sponsor-name' }, S(sp.name)),
+    big && sp.tagline ? h('span', { class: 'sponsor-tag' }, S(sp.tagline)) : null);
+}
+
+// The corner plate: one sponsor at a time in the same spot. When there are
+// several, the plate flips over to show the next, like a turning sign.
+let shownSponsor = null;
+function renderSponsor() {
+  if (!sponsors?.sponsors?.length) { el.sponsor.replaceChildren(); shownSponsor = null; return; }
+  const sp = sponsors.sponsors[sponsorAt % sponsors.sponsors.length];
+  let slot = el.sponsor.querySelector('.sponsor-slot');
+  if (!slot) {
+    slot = h('div', { class: 'sponsor-slot' });
+    el.sponsor.replaceChildren(h('span', { class: 'sponsor-label' }, S(sponsors.label)), slot);
+    shownSponsor = null;
+  } else el.sponsor.querySelector('.sponsor-label').textContent = S(sponsors.label);
+  if (shownSponsor === sp) {
+    // Same sponsor (a language change): just refresh it in place.
+    slot.replaceChildren(h('div', { class: 'face' }, sponsorBadge(sp)));
+    return;
+  }
+  const incoming = h('div', { class: `face ${shownSponsor ? 'flip-in' : ''}` }, sponsorBadge(sp));
+  const outgoing = slot.querySelector('.face');
+  if (outgoing && shownSponsor) {
+    outgoing.className = 'face flip-out';
+    outgoing.addEventListener('animationend', () => outgoing.remove(), { once: true });
+    slot.append(incoming);
+  } else slot.replaceChildren(incoming);
+  shownSponsor = sp;
+}
+
+// The showcase's big sponsor screen, shown after the last game in the rotation.
+function renderThanks() {
+  el.cardEls.forEach((c) => c.classList.remove('sel'));
+  const list = sponsors.sponsors;
+  el.feature.replaceChildren(h('div', { class: `feature-inner thanks from-right ${list.length === 1 ? 'solo' : ''}` },
+    h('h2', {}, S(sponsors.label)),
+    h('div', { class: 'sponsor-grid' }, list.map((sp) => sponsorBadge(sp, true)))));
+}
+
+function setLanguage(l) {
+  if (l === lang) return;
+  lang = l;
+  store.set('lang', lang);
+  beep(520, 0.04);
+  later(() => render());
+}
+
+async function launch() {
+  const g = games[sel];
+  if (g.status !== 'ready' || launching) { beep(160, 0.12); return; }
+  // Paid arcade: no credit, no game.
+  if (PAID && coins < 1) { beep(160, 0.12); showInsertCoin(); return; }
+  launching = true;
+  beep(660, 0.06); beep(990, 0.08, 0.06);
+  root.classList.add('leaving');
+  const url = gameUrl(g);
+  // Make sure the game's server is up before leaving the menu (and before
+  // taking the credit).
+  try {
+    await fetch(url, { mode: 'no-cors', cache: 'no-store' });
+    if (PAID) {
+      const r = await creditsCall('spend');
+      if (!r?.ok) { coins = r?.credits ?? 0; renderCoins(); launching = false; root.classList.remove('leaving'); beep(160, 0.12); showInsertCoin(); return; }
+      coins = r.credits;
+    }
+    location.href = url;
+  } catch {
+    launching = false;
+    root.classList.remove('leaving');
+    root.append(h('div', { class: 'toast' }, t('offline')));
+    setTimeout(() => root.querySelector('.toast')?.remove(), 3000);
+  }
+}
+
+// Tiny synthesised beeps; no audio files needed. The audio is woken on the
+// first key or touch, so the first beep isn't late either.
+let actx = null;
+function wakeAudio() {
+  try { actx ??= new AudioContext({ latencyHint: 'interactive' }); if (actx.state === 'suspended') actx.resume(); } catch { /* no audio */ }
+}
+addEventListener('keydown', wakeAudio, { once: true });
+addEventListener('pointerdown', wakeAudio, { once: true });
+function beep(freq, dur, delay = 0) {
+  try {
+    wakeAudio();
+    const o = actx.createOscillator(), g = actx.createGain(), t0 = actx.currentTime + delay;
+    o.type = 'square'; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.08, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+    o.connect(g).connect(actx.destination); o.start(t0); o.stop(t0 + dur + 0.02);
+  } catch { /* no audio */ }
+}
+
+function update(dt) {
+  input.poll(dt);
+  if (input.activity) idle = 0;
+  else idle += dt;
+  const cycle = (d) => setLanguage(LANGS[(LANGS.indexOf(lang) + d + LANGS.length) % LANGS.length]);
+  if (focus === 'lang') {
+    if (input.any('left')) cycle(-1);
+    if (input.any('right')) cycle(1);
+    if (input.any('down') || input.any('a') || input.any('b')) { focus = 'games'; beep(440, 0.04); later(() => render()); }
+    else if (input.any('start')) { focus = 'games'; launch(); }
+  } else {
+    if (input.any('left')) move(-1);
+    if (input.any('right')) move(1);
+    if (input.any('up')) { focus = 'lang'; beep(440, 0.04); later(() => render()); }
+    if (input.any('a') || input.any('start')) launch();
+  }
+  if (input.any('c')) cycle(1);
+  // Nobody here: show the games off one by one.
+  // After each round of games, the showcase thanks the sponsors.
+  // Each game is shown for 7 s; the sponsors' screen stays 50% longer.
+  showcaseT = idle > IDLE_SHOWCASE ? showcaseT + dt : 0;
+  if (idle > IDLE_SHOWCASE && showcaseT >= (showingThanks ? SHOWCASE_STEP * 1.5 : SHOWCASE_STEP)) {
+    showcaseT = 0;
+    focus = 'games';
+    showcaseStep++;
+    // Round the games in order; after the last one, the sponsors (if any).
+    if (sel === games.length - 1 && sponsors?.sponsors?.length && !showingThanks) { showingThanks = true; renderThanks(); }
+    else { showingThanks = false; sel = (sel + 1) % games.length; render(1); }
+  }
+  // The corner plate moves on to the next sponsor every few seconds.
+  sponsorClock += dt;
+  if (sponsorClock > 5 && sponsors?.sponsors?.length > 1) { sponsorClock = 0; sponsorAt++; renderSponsor(); }
+}
+
+let last = performance.now(), acc = 0;
+function frame(now) {
+  acc += Math.min(0.1, (now - last) / 1000);
+  last = now;
+  while (acc >= FIXED) { acc -= FIXED; update(FIXED); }
+  drawScenery?.(now / 1000);
+  requestAnimationFrame(frame);
+}
+
+// A local test list (data/sponsors.local.json, never published) wins over the
+// public one when it exists.
+async function loadSponsors() {
+  const get = async (p) => { try { const r = await fetch(p, { cache: 'no-store' }); return r.ok ? await r.json() : null; } catch { return null; } };
+  // Test mode: a private sponsors file on this Mac. Never used online.
+  if (!ONLINE) {
+    const test = await get('data/sponsors.local.json');
+    if (test) { sponsorsAreTest = true; return test; }
+  }
+  return get('data/sponsors.json');
+}
+
+async function boot() {
+  fit();
+  try {
+    const get = (p) => fetch(p, { cache: 'no-store' }).then((r) => { if (!r.ok) throw new Error(p); return r.json(); });
+    const [config, controls, table, sponsorList] = await Promise.all([get('games.json'), get('data/controls.json'), get('data/strings.json'), loadSponsors()]);
+    sponsors = sponsorList;
+    credits = await fetch('data/credits.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    // The paid arcade only offers arcade games: the longer desktop ones
+    // (kind "desktop") stay in the free arcade. start.py --paid already
+    // leaves them out of games.json; this keeps it so if the menu is served
+    // some other way.
+    games = config.games.filter((g) => g.status !== 'hidden' && !(PAID && g.kind === 'desktop'));
+    // "art:<name>" thumbnails are painted by the menu itself.
+    for (const g of games) g.thumb = paintedThumb(g.thumb) ?? g.thumb;
+    strings = table;
+    if (!LANGS.includes(lang)) lang = 'es';
+    sel = Math.max(0, games.findIndex((g) => g.id === store.get('last', null)));
+    input = new Input(controls);
+    drawScenery = createScenery(document.getElementById('bg'));
+    if (PAID) coins = (await creditsCall())?.credits ?? 0;
+    build();
+    render();
+    if (PAID) {
+      // Back from a game (or just switched on) with nothing paid for: ask.
+      if (coins < 1) showInsertCoin();
+      // Coins dropped during a game land on the server: keep the badge true.
+      setInterval(async () => { const r = await creditsCall(); if (r && r.credits !== coins) { coins = r.credits; renderCoins(); } }, 2000);
+    }
+    requestAnimationFrame(frame);
+  } catch (err) {
+    console.error(err);
+    root.textContent = `No se pudo cargar el menú / Could not load the menu (${err.message})`;
+  }
+}
+
+// Coming back from a game via the browser's back cache: allow launching again.
+addEventListener('pageshow', () => { launching = false; root.classList.remove('leaving'); });
+
+boot();

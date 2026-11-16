@@ -1,0 +1,497 @@
+{
+  "_note": "Tiles, seconds, coins. One tile is about a metre. Run npm test and node tools/sim.js after changing anything (the helper should reach the cave in roughly 20-35 minutes and find most of the museum within about 45).",
+  "world": {
+    "w": 24,
+    "h": 96,
+    "start": [
+      12
+    ]
+  },
+  "shaft": {
+    "_note": "The old shaft at the left of the village: ladders down to a short gallery. Each cage station extends it.",
+    "x": 4,
+    "to": 10,
+    "gallery": 7
+  },
+  "stations": {
+    "_note": "One cage station per old mine, bought at the workshop once you have been that deep. speed: tiles a second in the cage. sell: share of the weighbridge price paid at a station.",
+    "speed": 16,
+    "sell": 0.85,
+    "landing": 3,
+    "list": [
+      {
+        "y": 21,
+        "card": "hierro"
+      },
+      {
+        "y": 39,
+        "card": "cobre"
+      },
+      {
+        "y": 57,
+        "card": "romanos"
+      },
+      {
+        "y": 75,
+        "card": "bronce"
+      }
+    ]
+  },
+  "cave": {
+    "x0": 7,
+    "x1": 16,
+    "y0": 90,
+    "y1": 93
+  },
+  "start": {
+    "money": 20
+  },
+  "layers": [
+    {
+      "from": 4,
+      "to": 20,
+      "rock": 1,
+      "harder": 0.07,
+      "card": "potasas"
+    },
+    {
+      "from": 20,
+      "to": 38,
+      "rock": 2,
+      "harder": 0.112,
+      "card": "hierro"
+    },
+    {
+      "from": 38,
+      "to": 56,
+      "rock": 3,
+      "harder": 0.14,
+      "card": "cobre"
+    },
+    {
+      "from": 56,
+      "to": 74,
+      "rock": 4,
+      "harder": 0.14,
+      "card": "romanos"
+    },
+    {
+      "from": 74,
+      "to": 96,
+      "rock": 5,
+      "harder": 0.112,
+      "card": "bronce"
+    }
+  ],
+  "rocks": [
+    {
+      "hard": 0.0
+    },
+    {
+      "hard": 1.01,
+      "needs": 0
+    },
+    {
+      "hard": 1.68,
+      "needs": 0
+    },
+    {
+      "hard": 2.52,
+      "needs": 1
+    },
+    {
+      "hard": 3.36,
+      "needs": 2
+    },
+    {
+      "hard": 4.37,
+      "needs": 3
+    },
+    {
+      "hard": 5.71,
+      "needs": 3
+    }
+  ],
+  "ores": {
+    "sal": {
+      "from": 5,
+      "to": 20,
+      "chance": 0.062,
+      "value": 4
+    },
+    "potasa": {
+      "from": 6,
+      "to": 22,
+      "chance": 0.091,
+      "value": 9
+    },
+    "hierro": {
+      "from": 20,
+      "to": 40,
+      "chance": 0.081,
+      "value": 18
+    },
+    "magnesita": {
+      "from": 22,
+      "to": 40,
+      "chance": 0.052,
+      "value": 26
+    },
+    "cobre": {
+      "from": 38,
+      "to": 58,
+      "chance": 0.081,
+      "value": 38
+    },
+    "plata": {
+      "from": 42,
+      "to": 74,
+      "chance": 0.039,
+      "value": 62
+    },
+    "galena": {
+      "from": 56,
+      "to": 76,
+      "chance": 0.072,
+      "value": 52
+    },
+    "malaquita": {
+      "from": 72,
+      "to": 95,
+      "chance": 0.081,
+      "value": 80
+    },
+    "silvinita": {
+      "layer": "potasas",
+      "count": 2,
+      "value": 120,
+      "jackpot": true
+    },
+    "dolomita": {
+      "layer": "hierro",
+      "count": 2,
+      "value": 220,
+      "jackpot": true
+    },
+    "veta": {
+      "layer": "cobre",
+      "count": 2,
+      "value": 340,
+      "jackpot": true
+    },
+    "oro": {
+      "layer": "romanos",
+      "count": 2,
+      "value": 500,
+      "jackpot": true
+    },
+    "azurita": {
+      "layer": "bronce",
+      "count": 2,
+      "value": 700,
+      "jackpot": true
+    }
+  },
+  "vein": 0.5,
+  "_jackpots": "Ores with a count (not a chance) are jackpots: that many single tiles in their layer.",
+  "finds": {
+    "_note": "Museum pieces, three per old mine, each hidden in a small old chamber or timbered gallery off the straight-down lines. glint: tiles at which the lamp catches it. fee: the finder's fee per layer, top to bottom. away: pockets keep at least this many tiles from the start column and the old shaft.",
+    "glint": 3.2,
+    "away": 3,
+    "fee": [
+      40,
+      60,
+      90,
+      130,
+      180
+    ],
+    "list": [
+      {
+        "id": "casco",
+        "layer": "potasas"
+      },
+      {
+        "id": "ficha",
+        "layer": "potasas"
+      },
+      {
+        "id": "carburo",
+        "layer": "potasas"
+      },
+      {
+        "id": "bala",
+        "layer": "hierro"
+      },
+      {
+        "id": "herradura",
+        "layer": "hierro"
+      },
+      {
+        "id": "coraza",
+        "layer": "hierro"
+      },
+      {
+        "id": "dinero",
+        "layer": "cobre"
+      },
+      {
+        "id": "candil",
+        "layer": "cobre"
+      },
+      {
+        "id": "crisol",
+        "layer": "cobre"
+      },
+      {
+        "id": "moneda",
+        "layer": "romanos"
+      },
+      {
+        "id": "lucerna",
+        "layer": "romanos"
+      },
+      {
+        "id": "pico",
+        "layer": "romanos"
+      },
+      {
+        "id": "hacha",
+        "layer": "bronce"
+      },
+      {
+        "id": "ceramica",
+        "layer": "bronce"
+      },
+      {
+        "id": "martillo",
+        "layer": "bronce"
+      }
+    ]
+  },
+  "badAir": {
+    "_note": "Gas pockets: clusters of size[0]-size[1] tiles in the rock, seeded at seed per tile. warn: tiles at which the lamp gutters and it hisses (each lamp level adds warnPerLamp: a better lamp warns earlier). Dug into, the whole pocket lets go: the gas drifts through open tiles (drift: seconds per tile) up to reach + reachPer per extra pocket tile, and lingers secs + secsPer per extra tile. Where air can move (two separate ways out to the surface or the old shaft), it drains vent times faster. Standing in it drains dps strength a second and burns the lamp light times faster. Dynamite will not light within fizzle tiles of bad air.",
+    "from": 24,
+    "seed": 0.008,
+    "size": [
+      3,
+      7
+    ],
+    "warn": 2.3,
+    "warnPerLamp": 0.8,
+    "reach": 6,
+    "reachPer": 1.5,
+    "drift": 0.3,
+    "secs": 16,
+    "secsPer": 1.5,
+    "vent": 6,
+    "dps": 9,
+    "light": 2.5,
+    "fizzle": 3
+  },
+  "loose": {
+    "_note": "Loose rock: with nothing under it, it trickles dust and creaks for warn seconds, then falls.",
+    "from": 8,
+    "chance": 0.07,
+    "warn": 2,
+    "damage": 20
+  },
+  "water": {
+    "_note": "Water pockets: clusters of size[0]-size[1] tiles, seeded at seed per tile, from the copper layer down. warn: tiles at which you hear dripping. Dug into, the whole pocket lets go volume tiles of water per pocket tile, at rate a second, running downhill through open tiles and seeping away slowly. Water deeper than slowAt slows you; deeper than deep, the light burns drain times faster. Over drown (half the tile) your head is under: breath (seconds) runs down, then strength drains at dps a second (a helmet doesn't help you breathe, so gear doesn't soften it); out of it, breath comes back at once.",
+    "from": 44,
+    "seed": 0.009,
+    "size": [
+      3,
+      6
+    ],
+    "warn": 2.3,
+    "volume": 9,
+    "rate": 4,
+    "seep": 0.02,
+    "slowAt": 0.25,
+    "slow": 0.55,
+    "deep": 0.7,
+    "drain": 2.5,
+    "drown": 0.5,
+    "breath": 5,
+    "dps": 15
+  },
+  "miner": {
+    "size": 0.8,
+    "speed": 4.5,
+    "accel": 14,
+    "airAccel": 6,
+    "gravity": 20,
+    "maxFall": 14,
+    "safeFall": 9.5,
+    "fallDamage": 4,
+    "climb": 5.5,
+    "loadSlow": 0.015,
+    "hp": 60,
+    "regen": 8,
+    "drain": 1
+  },
+  "upgrades": {
+    "pick": {
+      "base": 1,
+      "per": 0.3,
+      "cost": [
+        180,
+        550,
+        1200
+      ]
+    },
+    "lamp": {
+      "base": 40,
+      "per": 22,
+      "cost": [
+        70,
+        205,
+        510
+      ]
+    },
+    "bag": {
+      "base": 6,
+      "per": 4,
+      "cost": [
+        70,
+        185,
+        440
+      ]
+    },
+    "gear": {
+      "base": 0,
+      "per": 0.2,
+      "cost": [
+        85,
+        240,
+        545
+      ]
+    },
+    "ladders": {
+      "base": 30,
+      "per": 20,
+      "cost": [
+        70,
+        205
+      ]
+    },
+    "stations": {
+      "base": 0,
+      "per": 1,
+      "cost": [
+        250,
+        550,
+        950,
+        1400
+      ]
+    }
+  },
+  "items": {
+    "_note": "Things for the belt, bought at the workshop. max: how many the belt holds.",
+    "dynamite": {
+      "cost": 45,
+      "max": 3,
+      "fuse": 2.2,
+      "hurtRadius": 1.7,
+      "damage": 24
+    },
+    "kit": {
+      "cost": 35,
+      "max": 2,
+      "heal": 0.6
+    },
+    "oil": {
+      "cost": 25,
+      "max": 2,
+      "fill": 0.5
+    },
+    "rope": {
+      "cost": 70,
+      "max": 1,
+      "secs": 3.5
+    },
+    "bellows": {
+      "cost": 20,
+      "max": 2,
+      "reach": 7
+    }
+  },
+  "prices": {
+    "oil": 0.5,
+    "oilRate": 30,
+    "rescue": 60,
+    "freeOil": 0.6
+  },
+  "buildings": [
+    {
+      "id": "pozo",
+      "x": 4.5,
+      "w": 2
+    },
+    {
+      "id": "taller",
+      "x": 9,
+      "w": 3
+    },
+    {
+      "id": "lampisteria",
+      "x": 13,
+      "w": 2
+    },
+    {
+      "id": "bascula",
+      "x": 16.8,
+      "w": 3
+    },
+    {
+      "id": "museo",
+      "x": 20.7,
+      "w": 2.6
+    }
+  ],
+  "helper": {
+    "lightPerTile": 0.42,
+    "lightSpare": 7,
+    "finaleAt": 2400
+  },
+  "difficulty": {
+    "easy": {
+      "damage": 0.5
+    },
+    "normal": {
+      "damage": 1
+    }
+  },
+  "score": {
+    "_note": "Score = all the money earned over the career (ore and finder's fees, the cave piece too) + museum per piece on the shelves + cave for reaching the cave + escape for climbing out ahead of the water.",
+    "museum": 150,
+    "cave": 1000,
+    "escape": 1500
+  },
+  "eras": {
+    "_note": "When each tool level was used, shown in the workshop. Only where the record is clear; others stay out.",
+    "pick": [
+      "bronce",
+      "romanos",
+      "s17",
+      "s20"
+    ],
+    "lamp": [
+      "bronce",
+      "romanos",
+      "y1900",
+      "s20"
+    ]
+  },
+  "escape": {
+    "_note": "The finale. Taking the piece in the cave wakes the old workings: after grace seconds of rumbling, water rises from the cave floor at rise tiles a second, quickening by accel each second up to max, and stops at row top. You are safe once your feet are above top. haul: seconds the cage takes to bring you up at the end. fee: the finder's fee for the piece. Caught by the water (breath then strength gone), the cage lifts you out: nothing is lost, but there is no escape bonus.",
+    "x": 15,
+    "grace": 2.5,
+    "rise": 1.8,
+    "accel": 0.3,
+    "max": 4.0,
+    "top": 58,
+    "haul": 4,
+    "fee": 300
+  }
+}

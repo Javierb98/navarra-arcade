@@ -1,0 +1,80 @@
+{
+  "_note": "One player; either set works: arrows or W A S D to walk, dig and climb; A (O / Left Ctrl / R) for the workshop, the museum and buying, and underground to pick the next belt item; B (P / Left Alt / T) to place a ladder or leave a screen; C (L / Space / F) to use the belt item. Change keys here, not in code.",
+  "keyboard": {
+    "p1": {
+      "left": [
+        "ArrowLeft"
+      ],
+      "right": [
+        "ArrowRight"
+      ],
+      "up": [
+        "ArrowUp"
+      ],
+      "down": [
+        "ArrowDown"
+      ],
+      "a": [
+        "ControlLeft",
+        "KeyO"
+      ],
+      "b": [
+        "AltLeft",
+        "KeyP"
+      ],
+      "c": [
+        "Space",
+        "KeyL"
+      ],
+      "start": [
+        "Digit1",
+        "Enter"
+      ]
+    },
+    "p2": {
+      "left": [
+        "KeyA"
+      ],
+      "right": [
+        "KeyD"
+      ],
+      "up": [
+        "KeyW"
+      ],
+      "down": [
+        "KeyS"
+      ],
+      "a": [
+        "KeyR"
+      ],
+      "b": [
+        "KeyT"
+      ],
+      "c": [
+        "KeyF"
+      ],
+      "start": [
+        "Digit2"
+      ]
+    },
+    "admin": [
+      "F2",
+      "Digit9"
+    ],
+    "exit": [
+      "Escape"
+    ]
+  },
+  "gamepad": {
+    "p1": 0,
+    "p2": 1,
+    "buttons": {
+      "a": 0,
+      "b": 1,
+      "c": 2,
+      "start": 9,
+      "admin": 8
+    },
+    "deadzone": 0.35
+  }
+}

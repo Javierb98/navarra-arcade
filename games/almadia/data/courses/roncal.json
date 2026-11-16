@@ -1,0 +1,319 @@
+{
+  "id": "roncal",
+  "name_key": "course.roncal.name",
+  "blurb_key": "course.roncal.blurb",
+  "length": 5400,
+  "startY": 60,
+  "targetTime": 140,
+  "intensity": 0.55,
+  "river": [
+    {
+      "y": -300,
+      "cx": 240,
+      "hw": 110
+    },
+    {
+      "y": 0,
+      "cx": 240,
+      "hw": 110
+    },
+    {
+      "y": 600,
+      "cx": 228,
+      "hw": 104
+    },
+    {
+      "y": 1200,
+      "cx": 258,
+      "hw": 96
+    },
+    {
+      "y": 1800,
+      "cx": 276,
+      "hw": 92
+    },
+    {
+      "y": 2400,
+      "cx": 248,
+      "hw": 100
+    },
+    {
+      "y": 3000,
+      "cx": 222,
+      "hw": 88
+    },
+    {
+      "y": 3600,
+      "cx": 240,
+      "hw": 96
+    },
+    {
+      "y": 4200,
+      "cx": 258,
+      "hw": 100
+    },
+    {
+      "y": 4800,
+      "cx": 240,
+      "hw": 100
+    },
+    {
+      "y": 6200,
+      "cx": 240,
+      "hw": 110
+    }
+  ],
+  "current": [
+    {
+      "y": 0,
+      "speed": 30
+    },
+    {
+      "y": 900,
+      "speed": 38
+    },
+    {
+      "y": 2400,
+      "speed": 42
+    },
+    {
+      "y": 3150,
+      "speed": 54
+    },
+    {
+      "y": 3550,
+      "speed": 44
+    },
+    {
+      "y": 4300,
+      "speed": 50
+    },
+    {
+      "y": 6000,
+      "speed": 42
+    }
+  ],
+  "features": [
+    {
+      "type": "village",
+      "place": "roncal",
+      "y": -260,
+      "y2": 330,
+      "roof": "slate",
+      "church": "right"
+    },
+    {
+      "type": "prompt",
+      "y": 120,
+      "key": "tip.oars",
+      "solo": "tip.steer"
+    },
+    {
+      "type": "prompt",
+      "y": 420,
+      "key": "tip.turn",
+      "solo": "tip.straight"
+    },
+    {
+      "type": "rock",
+      "dx": -34,
+      "y": 720,
+      "r": 10
+    },
+    {
+      "type": "prompt",
+      "y": 820,
+      "key": "tip.order"
+    },
+    {
+      "type": "dock",
+      "side": "right",
+      "y": 1000,
+      "town": "sawmill"
+    },
+    {
+      "type": "prompt",
+      "y": 1120,
+      "key": "tip.stroke"
+    },
+    {
+      "type": "rock",
+      "dx": -62,
+      "y": 1340,
+      "r": 10
+    },
+    {
+      "type": "rock",
+      "dx": 18,
+      "y": 1360,
+      "r": 9
+    },
+    {
+      "type": "rock",
+      "dx": 70,
+      "y": 1440,
+      "r": 8
+    },
+    {
+      "type": "prompt",
+      "y": 1560,
+      "key": "tip.row"
+    },
+    {
+      "type": "sandbar",
+      "dx": -88,
+      "dx2": -30,
+      "y": 1640,
+      "y2": 1660,
+      "r": 12
+    },
+    {
+      "type": "duck",
+      "dx": 30,
+      "y": 1900,
+      "range": 36
+    },
+    {
+      "type": "tree",
+      "side": "right",
+      "y": 2100,
+      "y2": 2130,
+      "reach": 80,
+      "r": 5
+    },
+    {
+      "type": "prompt",
+      "y": 2240,
+      "key": "tip.eddy"
+    },
+    {
+      "type": "eddy",
+      "side": "left",
+      "y": 2460,
+      "r": 32
+    },
+    {
+      "type": "duck",
+      "dx": -30,
+      "y": 2700,
+      "range": 40,
+      "speed": 1
+    },
+    {
+      "type": "duck",
+      "dx": 20,
+      "y": 2740,
+      "range": 30,
+      "speed": 0.7
+    },
+    {
+      "type": "dock",
+      "side": "left",
+      "y": 3000,
+      "town": "mill"
+    },
+    {
+      "type": "rapids",
+      "y1": 3150,
+      "y2": 3550
+    },
+    {
+      "type": "rock",
+      "dx": 22,
+      "y": 3240,
+      "r": 10
+    },
+    {
+      "type": "rock",
+      "dx": -46,
+      "y": 3320,
+      "r": 10
+    },
+    {
+      "type": "rock",
+      "dx": 52,
+      "y": 3400,
+      "r": 9
+    },
+    {
+      "type": "rock",
+      "dx": -8,
+      "y": 3480,
+      "r": 10
+    },
+    {
+      "type": "whirlpool",
+      "dx": 38,
+      "y": 3720,
+      "r": 30,
+      "spin": 1
+    },
+    {
+      "type": "washer",
+      "side": "right",
+      "y": 3900
+    },
+    {
+      "type": "eddy",
+      "side": "right",
+      "y": 4080,
+      "r": 32
+    },
+    {
+      "type": "prompt",
+      "y": 4180,
+      "key": "tip.weir"
+    },
+    {
+      "type": "weir",
+      "y": 4420,
+      "dx": 0,
+      "half": 20
+    },
+    {
+      "type": "dock",
+      "side": "right",
+      "y": 4620,
+      "town": "burgui"
+    },
+    {
+      "type": "village",
+      "place": "burgui",
+      "y": 4780,
+      "y2": 5500,
+      "roof": "slate",
+      "church": "left"
+    },
+    {
+      "type": "prompt",
+      "y": 4860,
+      "key": "tip.bridge"
+    },
+    {
+      "type": "bridge",
+      "y": 5020,
+      "pillars": [
+        -38,
+        38
+      ],
+      "r": 9,
+      "crowd": true
+    }
+  ],
+  "route": [
+    [
+      246,
+      50
+    ],
+    [
+      240,
+      72
+    ]
+  ],
+  "themes": [
+    {
+      "y": -1000,
+      "style": "forest"
+    }
+  ]
+}

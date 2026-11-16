@@ -1,0 +1,143 @@
+{
+  "_note": "Every fact stays review_status draft until a qualified reviewer checks it. source is a real citation or null; never invent one.",
+  "facts": [
+    {
+      "id": "minas.beriain",
+      "text_key": "fact.beriain",
+      "source": "https://www.noticiasdenavarra.com/navarra/2017/09/02/beriain-pueblo-paso-cereal-mina-2613318.html",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.encierro",
+      "text_key": "fact.encierro",
+      "source": "https://www.noticiasdenavarra.com/economia/2025/01/26/encierro-47-mineros-potasas-cumple-9193164.html",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.arga",
+      "text_key": "fact.arga",
+      "source": "https://es.wikipedia.org/wiki/Minas_de_Eugui",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.dolomita",
+      "text_key": "fact.dolomita",
+      "source": "https://es.wikipedia.org/wiki/Minas_de_Eugui",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.milan",
+      "text_key": "fact.milan",
+      "source": "https://ondarelagunak.eus/fabrica-eugi/",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.orbaizeta",
+      "text_key": "fact.orbaizeta",
+      "source": "https://listaroja.hispanianostra.org/ficha/real-fabrica-de-armas-de-orbaizeta/",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.braccio",
+      "text_key": "fact.braccio",
+      "source": "https://dialnet.unirioja.es/descarga/articulo/1248445.pdf",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.aia",
+      "text_key": "fact.aia",
+      "source": "https://viatorimperi.es/arditurri/",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.urbiola",
+      "text_key": "fact.urbiola",
+      "source": "https://turismotierraestella.com/patrimonio-cultural/covacha-de-los-hombres-verdes",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.ninos",
+      "text_key": "fact.ninos",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.lampisteria",
+      "text_key": "fact.lampisteria",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.plantilla",
+      "text_key": "fact.plantilla",
+      "source": "https://www.noticiasdenavarra.com/navarra/2017/09/02/beriain-pueblo-paso-cereal-mina-2613318.html",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.sellado",
+      "text_key": "fact.sellado",
+      "source": "https://www.noticiasdenavarra.com/navarra/2017/09/02/beriain-pueblo-paso-cereal-mina-2613318.html",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.europa",
+      "text_key": "fact.europa",
+      "source": "https://es.wikipedia.org/wiki/Minas_de_Eugui",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.eugipueblo",
+      "text_key": "fact.eugipueblo",
+      "source": "https://ondarelagunak.eus/fabrica-eugi/",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.convencion",
+      "text_key": "fact.convencion",
+      "source": "https://ondarelagunak.eus/fabrica-eugi/",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.ruinas",
+      "text_key": "fact.ruinas",
+      "source": "https://listaroja.hispanianostra.org/ficha/real-fabrica-de-armas-de-orbaizeta/",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.blanca",
+      "text_key": "fact.blanca",
+      "source": "https://listaroja.hispanianostra.org/ficha/real-fabrica-de-armas-de-orbaizeta/",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.girardi",
+      "text_key": "fact.girardi",
+      "source": "https://dialnet.unirioja.es/descarga/articulo/1248445.pdf",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.betelu",
+      "text_key": "fact.betelu",
+      "source": "https://www.geoalcali.com/historia-de-la-mineria-en-navarra/",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.gorramendi",
+      "text_key": "fact.gorramendi",
+      "source": "https://www.geoalcali.com/historia-de-la-mineria-en-navarra/",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.arditurri",
+      "text_key": "fact.arditurri",
+      "source": "https://viatorimperi.es/arditurri/",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.azurita",
+      "text_key": "fact.azurita",
+      "source": "https://www.geoalcali.com/historia-de-la-mineria-en-navarra/",
+      "review_status": "draft"
+    }
+  ]
+}

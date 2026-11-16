@@ -1,0 +1,139 @@
+{
+  "_note": "Seconds, metres, kilos. Run npm test and node tools/sim.js after changing anything.",
+  "season": {
+    "days": 10,
+    "dayLength": 40
+  },
+  "start": {
+    "coins": 0,
+    "beds": 3,
+    "water": [
+      0.35,
+      0.55,
+      0.75
+    ]
+  },
+  "walk": 4.6,
+  "flow": {
+    "base": 0.3,
+    "perLevel": 0.45
+  },
+  "evap": 0.15,
+  "sun": {
+    "perDay": 0.03
+  },
+  "saltPerFill": 20,
+  "quality": {
+    "window": 5,
+    "fade": 8,
+    "floor": 0.35,
+    "white": 0.9,
+    "flor": 2.5,
+    "florBonus": 2
+  },
+  "rake": {
+    "base": 0.85,
+    "perLevel": 0.55
+  },
+  "basket": {
+    "base": 15,
+    "perLevel": 12,
+    "slow": 0.25
+  },
+  "price": {
+    "base": 1.0,
+    "whiteBonus": 1.6
+  },
+  "storm": {
+    "chance": 0.45,
+    "earliest": 14,
+    "warning": 7,
+    "length": 8,
+    "dissolve": 0.12,
+    "coverPerLevel": 0.3
+  },
+  "donkey": {
+    "speed": 1.5,
+    "carry": 15
+  },
+  "costs": {
+    "era": {
+      "base": 60,
+      "growth": 1.4
+    },
+    "rasero": [
+      50,
+      110,
+      220,
+      380
+    ],
+    "cesto": [
+      40,
+      100,
+      200,
+      340
+    ],
+    "canal": [
+      60,
+      130,
+      260,
+      420
+    ],
+    "burro": [
+      160,
+      340
+    ],
+    "toldo": [
+      70,
+      150,
+      300
+    ]
+  },
+  "difficulty": {
+    "easy": {
+      "evap": 1.25,
+      "storm": 0.6,
+      "goats": 0.6
+    },
+    "normal": {
+      "evap": 1,
+      "storm": 1,
+      "goats": 1
+    }
+  },
+  "score": {
+    "whiteKg": 1,
+    "streak": 20
+  },
+  "streak": {
+    "step": 0.5,
+    "max": 3
+  },
+  "cart": {
+    "first": 6,
+    "every": [
+      14,
+      22
+    ],
+    "time": 24,
+    "want": [
+      10,
+      20
+    ],
+    "grow": 0.12,
+    "bonus": 1.5,
+    "tip": 5
+  },
+  "goat": {
+    "first": 12,
+    "every": [
+      12,
+      20
+    ],
+    "max": 2,
+    "walk": 1.1,
+    "run": 4,
+    "scare": 1.1,
+    "trample": 2.5
+  }
+}

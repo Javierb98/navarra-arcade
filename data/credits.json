@@ -1,0 +1,11 @@
+{
+  "_note": "Who made the arcade, shown in the bottom-right corner (public, unlike sponsors.local.json).",
+  "label": {
+    "es": "Hecho por",
+    "eu": "Egilea",
+    "en": "Made by"
+  },
+  "name": "Boina Games",
+  "logo": "assets/credits/boina-badge.png",
+  "url": "https://boinagames.com"
+}

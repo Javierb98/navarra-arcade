@@ -1,0 +1,22 @@
+{
+  "_note": "One summer. `length` in seconds. Event `t` is seconds into the summer. Wolves come from the forest at the top; `target` is 'leader' (the valley with more cheese), 'trailer', 'both', or 0/1. The bear comes down to the pasture with the most grass. Prompts are tips shown at time `t`.",
+  "length": 210,
+  "prompts": [
+    { "t": 0.5, "key": "tip.cheese" },
+    { "t": 12, "key": "tip.bell" },
+    { "t": 26, "key": "tip.steal" },
+    { "t": 48, "key": "tip.peace" },
+    { "t": 70, "key": "tip.dog" },
+    { "t": 128, "key": "tip.help" },
+    { "t": 180, "key": "tip.last" }
+  ],
+  "events": [
+    { "t": 34, "type": "wolves", "target": "leader", "count": 1 },
+    { "t": 64, "type": "wolves", "target": "both", "count": 1 },
+    { "t": 92, "type": "bear" },
+    { "t": 118, "type": "wolves", "target": "leader", "count": 2 },
+    { "t": 145, "type": "wolves", "target": "trailer", "count": 2 },
+    { "t": 160, "type": "bear" },
+    { "t": 178, "type": "wolves", "target": "both", "count": 2 }
+  ]
+}

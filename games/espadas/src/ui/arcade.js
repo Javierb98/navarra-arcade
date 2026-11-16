@@ -1,0 +1,95 @@
+// Links Espadas de Hispania to the arcade menu (the navarra-arcade launcher).
+// The menu opens this game as ?menu=<menu url>&lang=<es|eu|en>. Opened on its
+// own, the game ignores all of this.
+//
+// Esc already means "cancel" inside the game, so leaving takes a deliberate
+// act: hold Esc (or 1, the cabinet's START) for two seconds (then A to
+// leave, B to stay), or click the
+// "back to the menu" button in the corner. A game left alone for a few
+// minutes also goes back to the menu, ready for the next player.
+
+import { setLang, getLang } from './i18n.js';
+
+const params = new URLSearchParams(location.search);
+export const menuUrl = params.get('menu');
+const HOLD = 2000;
+const IDLE = 4 * 60 * 1000; // turn-based: give people time to think
+
+const TEXT = {
+  es: { back: '← Menú de juegos', ask: '¿Salir al menú de juegos?', yes: 'Salir', no: 'Seguir jugando' },
+  eu: { back: '← Joko-menua', ask: 'Joko-menura irten?', yes: 'Irten', no: 'Jolasten jarraitu' },
+  en: { back: '← Game menu', ask: 'Exit to the game menu?', yes: 'Exit', no: 'Keep playing' },
+};
+const tr = () => TEXT[getLang()] ?? TEXT.es;
+
+export function installArcadeLink() {
+  if (!menuUrl) return;
+  // The menu's language.
+  const lang = params.get('lang');
+  setLang(['es', 'eu', 'en'].includes(lang) ? lang : 'es');
+
+  const back = () => { location.href = menuUrl; };
+
+  const button = document.createElement('button');
+  button.className = 'arcade-exit';
+  button.addEventListener('click', ask);
+  document.body.append(button);
+  const label = () => { button.textContent = tr().back; };
+  label();
+  new MutationObserver(label).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+
+  let dialog = null;
+  function ask() {
+    if (dialog) return;
+    dialog = document.createElement('div');
+    dialog.className = 'arcade-dialog';
+    const yes = Object.assign(document.createElement('button'), { textContent: tr().yes, onclick: back });
+    const no = Object.assign(document.createElement('button'), { textContent: tr().no, onclick: close });
+    const card = document.createElement('div');
+    card.append(Object.assign(document.createElement('p'), { textContent: tr().ask }), yes, no);
+    dialog.append(card);
+    document.body.append(dialog);
+    yes.focus();
+  }
+  function close() { dialog?.remove(); dialog = null; }
+
+  // Hold Esc or 1 for two seconds.
+  let holdTimer = null;
+  addEventListener('keydown', (e) => {
+    if (dialog) {
+      // A or START: leave; B or Esc: keep playing (the cabinet's buttons).
+      if (e.key === 'Enter' || ['ControlLeft', 'KeyZ', 'KeyO', 'KeyR', 'Digit1'].includes(e.code)) back();
+      else if (e.key === 'Escape' || ['AltLeft', 'KeyX', 'KeyP', 'KeyT'].includes(e.code)) close();
+      e.stopPropagation();
+      return;
+    }
+    if ((e.key === 'Escape' || e.code === 'Digit1') && !e.repeat) holdTimer = setTimeout(ask, HOLD);
+  }, true);
+  addEventListener('keyup', (e) => {
+    if (e.key === 'Escape' || e.code === 'Digit1') clearTimeout(holdTimer);
+  });
+
+  // Idle: back to the menu.
+  let idleTimer = setTimeout(back, IDLE);
+  for (const ev of ['keydown', 'pointerdown', 'pointermove', 'wheel']) {
+    addEventListener(ev, () => { clearTimeout(idleTimer); idleTimer = setTimeout(back, IDLE); }, { passive: true, capture: true });
+  }
+}
+
+// ---- paid arcade --------------------------------------------------------------
+// start.py --paid stamps <meta name="arcade-mode" content="paid"> into every
+// page. A coin buys one battle: at the results, "again" and "title" both go
+// back to the arcade menu, which asks for the next coin. A coin dropped
+// during the battle (the coin mechanism sends 5) still counts.
+export const paid = !!menuUrl && document.querySelector('meta[name="arcade-mode"]')?.content === 'paid';
+if (paid) {
+  addEventListener('keydown', (e) => {
+    if (e.code === 'Digit5' && !e.repeat) fetch(new URL('/credits/coin', menuUrl), { method: 'POST', mode: 'no-cors' }).catch(() => {});
+  });
+}
+// The results screen's ways on: in the paid arcade, both lead back to the menu.
+export function afterBattle(handlers) {
+  if (!paid) return handlers;
+  const leave = () => { location.href = menuUrl; };
+  return { ...handlers, onAgain: leave, onTitle: leave };
+}

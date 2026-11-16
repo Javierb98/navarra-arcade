@@ -1,0 +1,51 @@
+{
+  "_note": "What each passive does, read by the engine. Empty means it switches on with a later system (noted).",
+  "passives": {
+    "stormSense": {
+      "_note": "Shouts one second before any arena hazard: with the hazards (Milestone 3)."
+    },
+    "riverBorn": {
+      "waterSpeed": 1.3,
+      "_note": "Faster in a stage's shallow water zones (the first come with the Milestone 3 stages)."
+    },
+    "oneEye": {
+      "rearTaken": 1.25
+    },
+    "tiny": {
+      "_note": "The smallest hitbox: Galtzagorri's size in fighters.json."
+    },
+    "nightBorn": {
+      "darkDamage": 1.2,
+      "darkFade": 0.45
+    },
+    "stableGuardian": {
+      "regen": 2.5,
+      "regenAfter": 30,
+      "_note": "Damage % taken off per second while standing still, after `regenAfter` frames."
+    },
+    "manyHeads": {
+      "rearImmune": true,
+      "_note": "Cannot be hit for extra damage from behind. No move gains a rear bonus against him; see the open question in BALANCE.md."
+    },
+    "lastGiant": {
+      "knock": 0.8,
+      "_note": "Takes 20% less knockback (DESIGN.md: barely moved by blows)."
+    },
+    "thickHide": {
+      "knock": 0.9,
+      "_note": "Takes 10% less knockback."
+    },
+    "padded": {
+      "damageTaken": 0.85,
+      "_note": "Takes 15% less damage."
+    },
+    "stormBorn": {
+      "grav": 0.8,
+      "_note": "Falls slower: 80% gravity."
+    },
+    "forestPaths": {
+      "speedMul": 1.12,
+      "_note": "Runs 12% faster."
+    }
+  }
+}

@@ -1,0 +1,306 @@
+{
+  "id": "aragon",
+  "name_key": "course.aragon.name",
+  "blurb_key": "course.aragon.blurb",
+  "length": 7000,
+  "startY": 60,
+  "targetTime": 155,
+  "intensity": 1.1,
+  "route": [
+    [
+      236,
+      118
+    ],
+    [
+      200,
+      124
+    ],
+    [
+      162,
+      150
+    ],
+    [
+      140,
+      178
+    ],
+    [
+      122,
+      198
+    ]
+  ],
+  "themes": [
+    {
+      "y": -1000,
+      "style": "fields"
+    }
+  ],
+  "river": [
+    {
+      "y": -300,
+      "cx": 240,
+      "hw": 140
+    },
+    {
+      "y": 0,
+      "cx": 240,
+      "hw": 140
+    },
+    {
+      "y": 800,
+      "cx": 230,
+      "hw": 150
+    },
+    {
+      "y": 1600,
+      "cx": 250,
+      "hw": 158
+    },
+    {
+      "y": 2400,
+      "cx": 236,
+      "hw": 150
+    },
+    {
+      "y": 3200,
+      "cx": 246,
+      "hw": 140
+    },
+    {
+      "y": 4000,
+      "cx": 236,
+      "hw": 158
+    },
+    {
+      "y": 4800,
+      "cx": 248,
+      "hw": 162
+    },
+    {
+      "y": 5600,
+      "cx": 238,
+      "hw": 150
+    },
+    {
+      "y": 6400,
+      "cx": 244,
+      "hw": 158
+    },
+    {
+      "y": 8200,
+      "cx": 240,
+      "hw": 158
+    }
+  ],
+  "current": [
+    {
+      "y": 0,
+      "speed": 46
+    },
+    {
+      "y": 1500,
+      "speed": 52
+    },
+    {
+      "y": 3000,
+      "speed": 55
+    },
+    {
+      "y": 4500,
+      "speed": 58
+    },
+    {
+      "y": 6000,
+      "speed": 53
+    },
+    {
+      "y": 8200,
+      "speed": 52
+    }
+  ],
+  "features": [
+    {
+      "type": "village",
+      "place": "sanguesa",
+      "y": -260,
+      "y2": 460,
+      "roof": "tile",
+      "church": "left"
+    },
+    {
+      "type": "bridge",
+      "y": 250,
+      "pillars": [
+        -70,
+        0,
+        70
+      ],
+      "r": 9,
+      "crowd": true
+    },
+    {
+      "type": "prompt",
+      "y": 560,
+      "key": "tip.wide"
+    },
+    {
+      "type": "dock",
+      "side": "right",
+      "y": 900,
+      "town": "carpenter"
+    },
+    {
+      "type": "whirlpool",
+      "dx": -60,
+      "y": 1200,
+      "r": 32,
+      "spin": 1
+    },
+    {
+      "type": "whirlpool",
+      "dx": 70,
+      "y": 1320,
+      "r": 28,
+      "spin": -1
+    },
+    {
+      "type": "prompt",
+      "y": 1600,
+      "key": "tip.weir"
+    },
+    {
+      "type": "weir",
+      "y": 1820,
+      "dx": 40,
+      "half": 20
+    },
+    {
+      "type": "eddy",
+      "side": "left",
+      "y": 2040,
+      "r": 34
+    },
+    {
+      "type": "rock",
+      "dx": -40,
+      "y": 2400,
+      "r": 9
+    },
+    {
+      "type": "rock",
+      "dx": 60,
+      "y": 2460,
+      "r": 9
+    },
+    {
+      "type": "sandbar",
+      "dx": -120,
+      "dx2": -54,
+      "y": 2700,
+      "y2": 2730,
+      "r": 14
+    },
+    {
+      "type": "duck",
+      "dx": 30,
+      "y": 2900,
+      "range": 50
+    },
+    {
+      "type": "village",
+      "place": "carcastillo",
+      "y": 3080,
+      "y2": 3520,
+      "roof": "tile",
+      "church": "right"
+    },
+    {
+      "type": "bridge",
+      "y": 3300,
+      "pillars": [
+        -60,
+        60
+      ],
+      "r": 9,
+      "crowd": true
+    },
+    {
+      "type": "dock",
+      "side": "left",
+      "y": 3720,
+      "town": "mill"
+    },
+    {
+      "type": "weir",
+      "y": 4220,
+      "dx": -50,
+      "half": 20
+    },
+    {
+      "type": "eddy",
+      "side": "right",
+      "y": 4460,
+      "r": 34
+    },
+    {
+      "type": "whirlpool",
+      "dx": 30,
+      "y": 4700,
+      "r": 32,
+      "spin": 1
+    },
+    {
+      "type": "washer",
+      "side": "left",
+      "y": 5100
+    },
+    {
+      "type": "eddy",
+      "side": "left",
+      "y": 5380,
+      "r": 34
+    },
+    {
+      "type": "weir",
+      "y": 5600,
+      "dx": 20,
+      "half": 20
+    },
+    {
+      "type": "rapids",
+      "y1": 5700,
+      "y2": 6150
+    },
+    {
+      "type": "rock",
+      "dx": -30,
+      "y": 5820,
+      "r": 9
+    },
+    {
+      "type": "rock",
+      "dx": 50,
+      "y": 5920,
+      "r": 9
+    },
+    {
+      "type": "rock",
+      "dx": -70,
+      "y": 6030,
+      "r": 9
+    },
+    {
+      "type": "dock",
+      "side": "right",
+      "y": 6300,
+      "town": "milagro"
+    },
+    {
+      "type": "village",
+      "place": "milagro",
+      "y": 6500,
+      "y2": 7300,
+      "roof": "tile",
+      "church": "left"
+    }
+  ]
+}

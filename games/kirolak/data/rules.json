@@ -1,0 +1,108 @@
+{
+  "_note": "Seconds and 0..1 meters unless said. Run npm test and node tools/sim.js after changing anything: they check that clean rhythm beats mashing and that the rivals are beatable.",
+  "aizkolaritza": {
+    "time": 25,
+    "windup": 0.42,
+    "perfect": 0.85,
+    "bite": 0.034,
+    "perfectBonus": 1.3,
+    "glance": 0.001,
+    "stagger": 0.4,
+    "turn": 0.9,
+    "streak": 0.1,
+    "streakMax": 0.4
+  },
+  "harri": {
+    "time": 25,
+    "push": 0.11,
+    "sag": 0.32,
+    "driftStart": 0.45,
+    "tip": 1.6,
+    "harder": 0.18,
+    "wobble": 2.4,
+    "correct": 4.2,
+    "damp": 1.4,
+    "hold": 1.0,
+    "dropTime": 1.0,
+    "downTime": 0.5,
+    "stones": {
+      "cilindro": {
+        "push": 1,
+        "tip": 1,
+        "wobble": 1
+      },
+      "cubo": {
+        "push": 0.9,
+        "tip": 0.8,
+        "wobble": 0.8
+      },
+      "bola": {
+        "push": 0.85,
+        "tip": 1.35,
+        "wobble": 1.3
+      }
+    }
+  },
+  "txingak": {
+    "time": 25,
+    "pace": 0.34,
+    "stride": 0.55,
+    "wobble": 1.8,
+    "tip": 0.5,
+    "correct": 3.2,
+    "damp": 1.6,
+    "kick": 0.4,
+    "stumble": 0.6,
+    "dropTime": 2.2,
+    "course": 10,
+    "turnSteps": 4,
+    "turnStride": 0.45,
+    "turnKick": 2.5,
+    "rush": 1.6
+  },
+  "sokatira": {
+    "time": 45,
+    "lead": 1.2,
+    "beat": [
+      0.7,
+      0.46
+    ],
+    "window": 0.16,
+    "pull": 0.55,
+    "slip": 0.35,
+    "friction": 2.2,
+    "win": 1.2,
+    "roundTime": 11,
+    "between": 2.2
+  },
+  "rivals": {
+    "easy": {
+      "patience": 0.7,
+      "jitter": 0.24,
+      "slip": 0.12,
+      "mash": 0.16,
+      "react": 0.34,
+      "anticipate": 0.02,
+      "dead": 0.12,
+      "pace": 1.3,
+      "timing": 0.13
+    },
+    "normal": {
+      "patience": 0.865,
+      "jitter": 0.16,
+      "slip": 0.07,
+      "mash": 0.1215,
+      "react": 0.235,
+      "anticipate": 0.12,
+      "dead": 0.07,
+      "pace": 1.145,
+      "timing": 0.1
+    }
+  },
+  "score": {
+    "event": 300,
+    "perfect": 10,
+    "lift": 50,
+    "metre": 5
+  }
+}

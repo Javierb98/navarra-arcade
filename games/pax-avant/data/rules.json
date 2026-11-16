@@ -1,0 +1,107 @@
+{
+  "_note": "Tuning for one summer. Distances in map pixels, times in seconds, rates per second. After changing anything here run `npm test` (the balance sweep) and `node tools/sim.js`.",
+  "startBreak": 3,
+  "flock": { "normal": 12, "easy": 12 },
+  "shepherd": {
+    "speed": 62,
+    "radius": 4,
+    "reach": 14,
+    "carryPace": 0.72,
+    "bellTime": 2.2,
+    "bellRadius": 110,
+    "bellRadiusOther": 40,
+    "bellPullOther": 0.35,
+    "ringPace": 0.6,
+    "ringEvery": 0.8
+  },
+  "dog": {
+    "heelSpeed": 80,
+    "runSpeed": 130,
+    "driveSpeed": 34,
+    "driveTime": 3,
+    "reach": 150,
+    "cooldown": 0.8,
+    "fear": 34,
+    "link": 22
+  },
+  "sheep": {
+    "radius": 3,
+    "maxSpeed": 40,
+    "bellSpeed": 30,
+    "cruise": 12,
+    "damping": 3,
+    "separation": 8,
+    "sepForce": 90,
+    "cohesionRadius": 45,
+    "cohesion": 5,
+    "align": 0.8,
+    "fleeDog": 150,
+    "fleeWolf": 240,
+    "wolfFear": 70,
+    "bellPull": 60,
+    "wander": 7,
+    "strayDistance": 60
+  },
+  "needs": {
+    "_note": "food runs down by `hunger` per second; grazing adds `eat` and takes `eat * grassPerFood` from the grass cell.",
+    "start": 0.8,
+    "hunger": 0.012,
+    "eat": 0.2,
+    "grassPerFood": 2,
+    "grazeSpeed": 14
+  },
+  "grass": {
+    "regrow": 0.02,
+    "floor": 0.0005
+  },
+  "cheese": {
+    "_note": "Each well-fed sheep makes milk: `rate` wheels of cheese per sheep per second at full food, nothing below `above`.",
+    "rate": 0.012,
+    "above": 0.45
+  },
+  "pens": {
+    "_note": "A sheep that spends `time` seconds in the other valley's pen takes that valley's mark (at once if carried in and put down).",
+    "time": 1.5
+  },
+  "peace": {
+    "_note": "The Peace both valleys share, 0..100. Fixed costs: `steal` per sheep that takes your mark from the neighbours (taking back your own is free), `trespass` per unit of grass your sheep eat on the neighbours' land (a hungry flock arriving there costs about 20 at once, then about 0.5 a second while it stays). It heals `heal` a second on its own, `wolfHelp` when you see off a wolf that went for the neighbours, `bearTogether` when both shepherds drive the bear off at once. At 0: war, the summer ends and both valleys score 0. Below `tenseAt` the valleys are tense, below `brinkAt` on the brink.",
+    "start": 70,
+    "steal": 14,
+    "trespass": 3,
+    "heal": 0.12,
+    "wolfHelp": 8,
+    "bearTogether": 12,
+    "tenseAt": 45,
+    "brinkAt": 22
+  },
+  "wolf": {
+    "speed": 34,
+    "fleeSpeed": 75,
+    "prowlRadius": 38,
+    "lungeEvery": 4,
+    "lungeTime": 1.1,
+    "lungeSpeed": 70,
+    "dogScare": 30,
+    "bellScare": 60,
+    "shepherdScare": 22
+  },
+  "bear": {
+    "_note": "The Pyrenean brown bear. Sheep keep `fear` away from it. A bell within `bellScare` (or a working dog within `dogScare`) shoves it; both valleys at once (within `pushMemory` seconds of each other) drive it off.",
+    "speed": 22,
+    "shoveSpeed": 26,
+    "leaveSpeed": 40,
+    "fear": 80,
+    "bellScare": 55,
+    "dogScare": 30,
+    "pushMemory": 1.2
+  },
+  "difficulty": {
+    "easy": { "grassUse": 0.75, "cohesion": 1.5, "wolfPatience": 9, "bearPatience": 20, "aiGreed": 0.25 },
+    "normal": { "grassUse": 1, "cohesion": 1, "wolfPatience": 15, "bearPatience": 32, "aiGreed": 0.65 }
+  },
+  "score": {
+    "_note": "Points per wheel of cheese. The ceremony gets bigger with the Peace left at the end: one step for each of `tiers` reached.",
+    "cheese": 10,
+    "tiers": [45, 75]
+  }
+}

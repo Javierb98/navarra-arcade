@@ -1,0 +1,149 @@
+{
+  "_note": "Museum pieces: one card each, shown when the piece is found and on its museum shelf. Only well-established, generic objects; no specific historical claims beyond the cited facts. Every card stays review_status draft until a qualified reviewer checks it. source is a real citation or null; never invent one.",
+  "finds": [
+    {
+      "id": "minas.find.casco",
+      "find": "casco",
+      "layer": "potasas",
+      "name_key": "find.casco.name",
+      "text_key": "find.casco.text",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.ficha",
+      "find": "ficha",
+      "layer": "potasas",
+      "name_key": "find.ficha.name",
+      "text_key": "find.ficha.text",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.carburo",
+      "find": "carburo",
+      "layer": "potasas",
+      "name_key": "find.carburo.name",
+      "text_key": "find.carburo.text",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.bala",
+      "find": "bala",
+      "layer": "hierro",
+      "name_key": "find.bala.name",
+      "text_key": "find.bala.text",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.herradura",
+      "find": "herradura",
+      "layer": "hierro",
+      "name_key": "find.herradura.name",
+      "text_key": "find.herradura.text",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.coraza",
+      "find": "coraza",
+      "layer": "hierro",
+      "name_key": "find.coraza.name",
+      "text_key": "find.coraza.text",
+      "source": "https://ondarelagunak.eus/fabrica-eugi/",
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.dinero",
+      "find": "dinero",
+      "layer": "cobre",
+      "name_key": "find.dinero.name",
+      "text_key": "find.dinero.text",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.candil",
+      "find": "candil",
+      "layer": "cobre",
+      "name_key": "find.candil.name",
+      "text_key": "find.candil.text",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.crisol",
+      "find": "crisol",
+      "layer": "cobre",
+      "name_key": "find.crisol.name",
+      "text_key": "find.crisol.text",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.moneda",
+      "find": "moneda",
+      "layer": "romanos",
+      "name_key": "find.moneda.name",
+      "text_key": "find.moneda.text",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.lucerna",
+      "find": "lucerna",
+      "layer": "romanos",
+      "name_key": "find.lucerna.name",
+      "text_key": "find.lucerna.text",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.pico",
+      "find": "pico",
+      "layer": "romanos",
+      "name_key": "find.pico.name",
+      "text_key": "find.pico.text",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.hacha",
+      "find": "hacha",
+      "layer": "bronce",
+      "name_key": "find.hacha.name",
+      "text_key": "find.hacha.text",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.ceramica",
+      "find": "ceramica",
+      "layer": "bronce",
+      "name_key": "find.ceramica.name",
+      "text_key": "find.ceramica.text",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "minas.find.martillo",
+      "find": "martillo",
+      "layer": "bronce",
+      "name_key": "find.martillo.name",
+      "text_key": "find.martillo.text",
+      "source": null,
+      "review_status": "draft"
+    }
+  ],
+  "cave": {
+    "_note": "The cave's piece: the one the museum waits for all career, taken at the very end (rules.escape). Generic, well-established object; no claim that one was found at Urbiola.",
+    "id": "minas.find.collar",
+    "find": "collar",
+    "name_key": "find.collar.name",
+    "text_key": "find.collar.text",
+    "source": null,
+    "review_status": "draft"
+  }
+}

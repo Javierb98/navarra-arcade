@@ -1,0 +1,351 @@
+/* The menu shares the games' look: a 480x270 stage scaled up whole, pixel
+   art kept crisp, Okabe-Ito colours. Everything moves slowly (pans, slides,
+   glows): nothing flashes. */
+/* Basque lettering for the arcade's name: BilboINC by Hélène Marian
+   Srodogora (Velvetyne), CC BY-NC-SA; see assets/fonts/BilboINC-licence.txt. */
+@font-face { font-family: "BilboINC"; src: url("assets/fonts/BilboINC.woff2") format("woff2"); font-display: block; }
+:root {
+  --display: "BilboINC", "Trebuchet MS", sans-serif;
+  --ground: #0f1424;
+  --panel: rgba(14, 12, 20, 0.94);
+  --line: rgba(255, 240, 200, 0.22);
+  --text: #fbf6ea;
+  --muted: #c9bea6;
+  --rope: #f1e2a6;
+  --sel: #e69f00;
+  --font: "Trebuchet MS", "Verdana", "DejaVu Sans", sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; cursor: default; background: var(--ground); }
+
+#stage { position: absolute; width: 480px; height: 270px; font: bold 10px/1.3 var(--font); color: var(--text); overflow: hidden; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+#bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
+#menu { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 5px 10px 10px; gap: 4px; transition: opacity 0.4s; }
+#menu.leaving { opacity: 0.25; }
+
+/* ---- header: title and language picker ---- */
+header { display: flex; align-items: center; justify-content: space-between; }
+h1 {
+  margin: 0; font-size: 19px; letter-spacing: 1px;
+  background: linear-gradient(100deg, var(--rope) 40%, #fff8dc 50%, var(--rope) 60%) 0 0 / 300% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: shine 9s linear infinite;
+}
+@keyframes shine { from { background-position: 100% 0; } to { background-position: -200% 0; } }
+
+.langs { display: flex; align-items: center; gap: 3px; padding: 2px 4px; border-radius: 5px; border: 1.5px solid transparent; transition: border-color 0.25s, background 0.25s; }
+.langs.focus { border-color: var(--sel); background: var(--panel); }
+.lang-label { color: var(--muted); font-size: 8px; margin-right: 2px; }
+.lang { font: inherit; font-size: 9px; color: var(--muted); background: rgba(0, 0, 0, 0.35); border: 1px solid var(--line); border-radius: 3px; padding: 1px 5px; cursor: pointer; transition: background 0.2s, color 0.2s; }
+.lang.on { color: #111; background: var(--rope); border-color: var(--rope); }
+
+/* ---- featured game ---- */
+.feature { flex: none; height: 124px; position: relative; }
+.feature-inner { position: absolute; inset: 0; display: flex; gap: 10px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px; }
+/* Gold corner details, like the fittings on an old chest. */
+.feature-inner::before, .card::before {
+  content: ''; position: absolute; inset: 2px; pointer-events: none; border-radius: 4px;
+  --c: rgba(241, 226, 166, 0.75);
+  background:
+    linear-gradient(var(--c), var(--c)) top left / 7px 1px no-repeat, linear-gradient(var(--c), var(--c)) top left / 1px 7px no-repeat,
+    linear-gradient(var(--c), var(--c)) top right / 7px 1px no-repeat, linear-gradient(var(--c), var(--c)) top right / 1px 7px no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom left / 7px 1px no-repeat, linear-gradient(var(--c), var(--c)) bottom left / 1px 7px no-repeat,
+    linear-gradient(var(--c), var(--c)) bottom right / 7px 1px no-repeat, linear-gradient(var(--c), var(--c)) bottom right / 1px 7px no-repeat;
+}
+.feature-inner.from-right { animation: inRight 0.35s ease-out; }
+.feature-inner.from-left { animation: inLeft 0.35s ease-out; }
+.feature-inner.fade { animation: fadeIn 0.3s ease-out; }
+@keyframes inRight { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+@keyframes inLeft { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: none; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.preview { flex: 0 0 190px; height: 107px; align-self: center; border-radius: 4px; overflow: hidden; position: relative; border: 1px solid var(--line); }
+/* Gameplay footage in the preview. */
+.clip { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; background: #000; }
+.preview.soon .clip { filter: grayscale(0.5) brightness(0.85); }
+/* A slow pan across the game's picture, like a camera drifting over it. */
+.pan { position: absolute; inset: 0; background-size: 135% auto; background-repeat: no-repeat; image-rendering: pixelated; animation: pan 16s ease-in-out infinite alternate; }
+@keyframes pan { 0% { background-position: 0% 20%; } 50% { background-position: 60% 80%; } 100% { background-position: 100% 30%; } }
+.pan.blank { background: repeating-linear-gradient(45deg, #3a3342 0 6px, #2f2937 6px 12px); background-size: auto; display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--muted); animation: none; }
+.preview.soon .pan { filter: grayscale(0.5) brightness(0.85); }
+.preview .badge { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); }
+
+.info { flex: 1; min-width: 0; display: flex; flex-direction: column; font-weight: normal; overflow: hidden; }
+.info-body { display: flex; flex-direction: column; }
+.info h2 { margin: 0; font-size: 13px; font-weight: bold; color: var(--rope); }
+.info .blurb { margin: 1px 0 1px; font-size: 8px; color: var(--muted); }
+.info h3 { margin: 0; font-size: 7.5px; text-transform: uppercase; letter-spacing: 1px; color: var(--sel); }
+.info .lesson { margin: 1px 0 0; font-size: 8px; line-height: 1.25; }
+.chips { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 2px 3px; }
+.chip { font-size: 7px; font-weight: normal; background: rgba(255, 255, 255, 0.07); border: 1px solid var(--line); border-radius: 3px; padding: 1px 4px; color: var(--muted); }
+.chip b { color: var(--text); }
+
+.badge { display: inline-block; background: #d55e00; color: #fff; border-radius: 3px; padding: 1px 6px; font-size: 9px; }
+
+/* ---- the game strip ---- */
+.cards { flex: none; display: flex; gap: 6px; justify-content: center; transition: opacity 0.25s; }
+.cards.dim { opacity: 0.55; }
+.card { position: relative; overflow: hidden; flex: 0 1 108px; min-width: 0; background: var(--panel); border: 1.5px solid var(--line); border-radius: 5px; padding: 3px; text-align: center; cursor: pointer; transition: transform 0.2s ease-out, border-color 0.2s; }
+.card .thumb { height: 20px; border-radius: 3px; background-size: cover; background-position: center; image-rendering: pixelated; }
+.card .thumb.blank { background: repeating-linear-gradient(45deg, #3a3342 0 4px, #2f2937 4px 8px); color: var(--muted); font-size: 10px; display: flex; align-items: center; justify-content: center; }
+.card.soon .thumb { filter: grayscale(0.5) brightness(0.8); }
+.card .name { display: block; margin-top: 2px; padding: 0 5px; font-size: 8px; white-space: nowrap; overflow: hidden; }
+.card.sel { border-color: var(--sel); transform: translateY(-3px); animation: glow 2.4s ease-in-out infinite; }
+@keyframes glow { 50% { box-shadow: 0 0 10px 1px rgba(230, 159, 0, 0.55); } }
+/* A slow band of light passing over the selected card. */
+.card.sel::after { content: ''; position: absolute; top: 0; bottom: 0; width: 30px; left: -40px; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255, 248, 220, 0.18), transparent); animation: sweep 3.5s ease-in-out infinite; }
+@keyframes sweep { 0%, 40% { left: -40px; } 100% { left: 120%; } }
+.preview { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 4px 10px rgba(0, 0, 0, 0.45); }
+
+/* ---- footer ---- */
+/* One calm band: sponsor left, controls centred, maker right. The two side
+   columns are the same width so the controls sit truly in the middle. */
+footer {
+  margin-top: auto; display: flex; align-items: center; gap: 10px; min-height: 36px;
+  padding: 4px 8px; border-radius: 6px; background: rgba(14, 12, 20, 0.82); border: 1px solid var(--line);
+}
+.hints { flex: 1; text-align: center; display: flex; flex-direction: column; gap: 2px; }
+
+/* ---- sponsors ---- */
+.sponsor-plate { flex: 0 0 118px; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.sponsor-label { font-size: 6px; text-transform: uppercase; letter-spacing: 0.9px; color: var(--muted); font-weight: bold; }
+.sponsor-slot { position: relative; height: 20px; min-width: 104px; perspective: 300px; }
+.sponsor-slot .face { position: absolute; left: 0; top: 0; backface-visibility: hidden; transform-origin: 50% 50%; }
+.sponsor-slot .face.flip-out { animation: plateOut 0.45s ease-in forwards; }
+.sponsor-slot .face.flip-in { animation: plateIn 0.55s 0.3s ease-out both; }
+@keyframes plateOut { to { transform: rotateX(90deg); opacity: 0.4; } }
+@keyframes plateIn { from { transform: rotateX(-90deg); opacity: 0.4; } 70% { transform: rotateX(12deg); opacity: 1; } to { transform: rotateX(0); opacity: 1; } }
+.sponsor { display: inline-flex; align-items: center; justify-content: center; height: 20px; min-width: 104px; padding: 0 8px; border-radius: 3px; background: rgba(251, 246, 234, 0.92); color: #1d2233; }
+.sponsor img { max-height: 16px; max-width: 96px; }
+.sponsor-name { font-size: 10px; white-space: nowrap; }
+.sponsor.placeholder { background: rgba(255, 255, 255, 0.06); color: var(--rope); border: 1px dashed rgba(241, 226, 166, 0.6); }
+.sponsor.big { flex-direction: column; height: 46px; min-width: 132px; gap: 2px; }
+.sponsor.big img { max-height: 24px; max-width: 120px; }
+.sponsor.big .sponsor-name { font-size: 11px; }
+.sponsor-tag { font-size: 7px; font-weight: normal; opacity: 0.85; }
+.thanks { flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+.thanks h2 { margin: 0; font-size: 13px; color: var(--rope); }
+.sponsor-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+footer p { margin: 0; }
+.hint { color: var(--text); font-size: 8.5px; font-weight: normal; white-space: nowrap; overflow: hidden; }
+.hint.small { color: var(--muted); font-size: 7px; }
+.btn { display: inline-block; min-width: 12px; height: 12px; padding: 0 3px; border-radius: 6px; font-size: 7.5px; line-height: 12px; text-align: center; background: #eee; color: #111; margin: 0 1px; vertical-align: 1px; }
+kbd { display: inline-block; min-width: 10px; height: 11px; padding: 0 3px; border-radius: 2.5px; font: bold 7px/11px sans-serif; text-align: center; color: #111; background: linear-gradient(#fdfdfd, #d9d9d9); border: 0.5px solid #8a8a8a; box-shadow: 0 1px 0 #6a6a6a; margin: 0 1px; vertical-align: 1px; }
+.btn-a { background: #f0e442; }
+.btn-c { background: var(--rope); border-radius: 2px; }
+.btn-start { border-radius: 3px; }
+
+.toast { position: absolute; top: 110px; left: 50%; transform: translateX(-50%); background: #d55e00; color: #fff; padding: 6px 12px; border-radius: 5px; font-size: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* How long a game takes: green and round for quick, blue and square for long
+   (shape as well as colour, for colour-blind players). */
+.card .pace { display: block; width: fit-content; max-width: 100%; margin: 0 auto 2px; font-size: 6.5px; padding: 0 5px; line-height: 10px; color: #fff; white-space: nowrap; overflow: hidden; }
+.pace.quick, .pace-tag.quick { background: #009e73; border-radius: 6px; }
+.pace.long { background: #0072b2; border-radius: 1px; }
+.title-row { display: flex; align-items: center; gap: 6px; }
+.best { margin: 0 0 3px; font-size: 7.5px; color: var(--rope); }
+.pace-tag { display: inline-block; flex: none; max-width: 100%; font-size: 7px; padding: 0 4px; line-height: 11px; color: #fff; white-space: nowrap; overflow: hidden; }
+.pace-tag.long { background: #0072b2; border-radius: 1px; }
+.sponsor.dark { background: #0f3d2e; color: #fff; }
+.sponsor.big.tall { height: 72px; }
+.sponsor.big.tall img { max-height: 54px; }
+
+/* The maker's credit, bottom right. */
+.credit { flex: 0 0 118px; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.credit-mark { display: inline-flex; align-items: center; gap: 4px; height: 20px; font-size: 9px; color: var(--text); }
+.credit-mark img { height: 14px; width: 14px; object-fit: contain; }
+.thanks.solo .sponsor.big { height: 70px; min-width: 220px; }
+.thanks.solo .sponsor.big img { max-height: 46px; max-width: 200px; }
+.thanks h2 { font-size: 15px; }
+
+/* Calm, solid backing behind text so it never sits on the dithered sky. */
+header h1 { padding: 0 6px; border-radius: 4px; background-color: rgba(14, 12, 20, 0.55); }
+.info .blurb, .info .lesson { font-weight: normal; letter-spacing: 0.1px; }
+
+/* ---- the Play button: only on touch screens, where there's no [A] ---- */
+.play { display: none; }
+body.touch .play {
+  display: block; flex: none; align-self: center; font: inherit; font-size: 11px; letter-spacing: 1px;
+  color: #111; background: linear-gradient(#f6e9b8, var(--rope)); border: 1px solid #fff8dc; border-radius: 6px;
+  padding: 4px 22px; cursor: pointer; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45); touch-action: manipulation;
+}
+body.touch .play:active { transform: translateY(1px); }
+body.touch .play:disabled { color: var(--muted); background: var(--panel); border-color: var(--line); }
+body.touch:not(.tall) .play { position: absolute; z-index: 2; right: 5px; bottom: 5px; padding: 2px 12px; font-size: 9px; }
+/* No room for the chips on a phone on its side, and "joystick" means nothing there. */
+body.touch:not(.tall) .chips { display: none; }
+body.touch:not(.tall) .info { overflow: hidden; }
+body.touch .card, body.touch .lang { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+/* ---- upright screens: one compact column that fits without scrolling ---- */
+body.tall #menu { padding: 6px 7px 7px; gap: 5px; overflow: hidden; }
+body.tall #menu > * { flex-shrink: 0; }
+/* The games come first, right under the title, like tabs. */
+body.tall .cards { order: 1; }
+body.tall .feature { order: 2; }
+body.tall .play { order: 3; }
+body.tall footer { order: 4; }
+
+/* Title and languages share one row; languages go to two-letter codes. */
+body.tall header { gap: 6px; }
+body.tall h1 { letter-spacing: 0.5px; white-space: nowrap; }
+body.tall .lang-label, body.tall .lang .long { display: none; }
+body.tall .lang .short { display: inline; }
+body.tall .lang { padding: 2px 5px; }
+.lang .short { display: none; }
+
+/* The strip: small cards, swiped sideways, snapping into place. */
+body.tall .cards { justify-content: flex-start; gap: 5px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 2px 2px; scrollbar-width: none; }
+body.tall .cards::-webkit-scrollbar { display: none; }
+body.tall .card { flex: 0 0 78px; padding: 2px; scroll-snap-align: center; }
+body.tall .card.sel { transform: none; }
+body.tall .card .thumb { height: 28px; }
+body.tall .card .name { margin-top: 1px; }
+
+/* The featured game takes what's left; its text scrolls inside if it must. */
+body.tall #menu > .feature { flex: 0 1 auto; height: auto; min-height: 0; display: flex; }
+body.tall .feature-inner { position: relative; inset: auto; flex: 1 1 auto; min-height: 0; }
+body.tall .feature-inner { flex-direction: column; gap: 4px; padding: 5px; }
+body.tall .preview { flex: none; width: var(--preview-w, 100%); height: auto; aspect-ratio: 16 / 9; align-self: center; }
+body.tall .info { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 0 2px; }
+body.tall .info::-webkit-scrollbar { display: none; }
+body.tall .title-row { gap: 5px; }
+body.tall .pace-tag { line-height: 10px; }
+body.tall .info .blurb, body.tall .info .lesson { line-height: 1.25; }
+body.tall .best { margin-bottom: 2px; }
+body.tall .chips { margin-top: 3px; }
+
+/* Play is always there upright, touch or not (a mouse can click it too). */
+body.tall .play {
+  display: block; align-self: center; width: 64%; padding: 4px 0; font: inherit; font-size: 11px; letter-spacing: 1px;
+  color: #111; background: linear-gradient(#f6e9b8, var(--rope)); border: 1px solid #fff8dc; border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45); cursor: pointer; touch-action: manipulation;
+}
+body.tall .play:disabled { color: var(--muted); background: var(--panel); border-color: var(--line); }
+
+/* Footer: one line of help, then sponsor and maker side by side. */
+body.tall footer { flex-wrap: wrap; justify-content: space-between; gap: 2px 6px; min-height: 0; padding: 4px 6px; }
+body.tall .hints { order: -1; flex: 1 0 100%; gap: 0; }
+body.tall .hint.small { display: none; }
+body.tall .sponsor-plate, body.tall .credit { flex: 0 1 auto; gap: 1px; }
+body.tall .sponsor-slot { height: 16px; min-width: 84px; }
+body.tall .sponsor { height: 16px; min-width: 84px; padding: 0 6px; }
+body.tall .sponsor img { max-height: 13px; max-width: 76px; }
+body.tall .credit-mark { height: 16px; }
+body.tall .credit-mark img { height: 11px; width: 11px; }
+
+body.tall .thanks.solo .sponsor.big { min-width: 0; width: 90%; }
+
+/* ---- the maker's mark ---- */
+.credit-mark { gap: 5px; height: 20px; }
+.medal {
+  position: relative; flex: none; width: 18px; height: 18px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 40% 35%, #2c3b2a, #0c120c 70%);
+  box-shadow: 0 0 0 1.2px #d9b45a, 0 0 0 2.2px rgba(60, 40, 10, .9), 0 0 8px 1px rgba(230, 180, 80, .35);
+  animation: medal 5s ease-in-out infinite;
+}
+@keyframes medal { 50% { box-shadow: 0 0 0 1.2px #f1d488, 0 0 0 2.2px rgba(60, 40, 10, .9), 0 0 12px 2px rgba(240, 200, 100, .55); } }
+.medal img { width: 13px; height: 13px; object-fit: contain; }
+.credit-name { display: inline-flex; align-items: baseline; }
+.credit-name b {
+  font-family: var(--font); font-weight: bold; font-size: 11px; letter-spacing: .2px; line-height: 1;
+  background: linear-gradient(100deg, #e6c36a 35%, #fff4cf 50%, #e6c36a 65%) 0 0 / 300% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: shine 7s linear infinite;
+}
+.credit-name small { font-size: 8px; color: var(--muted); margin-left: 1px; }
+body.tall .medal { width: 18px; height: 18px; }
+body.tall .medal img { width: 12px; height: 12px; }
+
+/* ---- one type scale ----
+   Five sizes, each with one job. Basque lettering (BilboINC) only for the
+   arcade's name, gently spaced; game names and everything people read are
+   the plain face, bright and with room between lines. Phones and tablets keep the same scale. */
+#stage {
+  --t-hero: 20px;   /* the arcade's name */
+  --t-title: 13px;  /* the featured game's name */
+  --t-name: 8.5px;  /* names on the cards */
+  --t-body: 8.5px;  /* sentences: blurb, lesson, help */
+  --t-small: 7px;   /* labels, tags, chips */
+}
+body.tall #stage { --t-hero: 17px; --t-title: 12.5px; --t-name: 8px; --t-body: 8.5px; --t-small: 7px; }
+
+h1 { font-family: var(--display); font-weight: normal; font-size: var(--t-hero); line-height: 1.05; letter-spacing: .5px; }
+.info h2, .thanks h2 { font-family: var(--font); font-weight: bold; font-size: var(--t-title); letter-spacing: 0; line-height: 1.15; }
+.card .name { font-family: var(--font); font-weight: bold; font-size: var(--t-name); letter-spacing: 0; }
+.play { font-family: var(--font) !important; font-weight: bold !important; letter-spacing: .5px !important; }
+
+.info .blurb, .info .lesson, .hint { font-size: var(--t-body); line-height: 1.35; font-weight: normal; }
+.info .blurb { color: #e2d9c4; margin: 2px 0 1px; }
+.info .lesson { color: var(--text); }
+.lang { font-size: var(--t-body); }
+
+.info h3, .sponsor-label, .lang-label, .best, .chip, .pace-tag, .card .pace, .hint.small, .credit-name small {
+  font-family: var(--font); font-size: var(--t-small); line-height: 1.3;
+}
+.info h3, .sponsor-label { font-weight: bold; text-transform: uppercase; letter-spacing: 1.1px; }
+.info h3 { margin-top: 3px; }
+.best { color: var(--rope); font-weight: normal; }
+.chip { line-height: 1.35; }
+.pace-tag, .card .pace { line-height: 1.5; font-weight: bold; }
+.hint.small { color: var(--muted); }
+.credit-name small { font-weight: bold; }
+
+/* Card names: one size for all, up to two lines, centred. */
+.card .name { white-space: normal; overflow: hidden; line-height: 1.05; height: 2.1em; display: flex; align-items: center; justify-content: center; text-align: center; overflow-wrap: normal; word-break: keep-all; }
+
+.hints { min-width: 0; }
+
+/* The games as a revolving strip: one row of cards, the chosen one in the
+   middle, the rest running off both edges and wrapping round. JS places
+   each card (render() in src/menu.js); the edges fade out. */
+body:not(.tall) .cards { position: relative; display: block; height: 62px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%); }
+body:not(.tall) .card { position: absolute; top: 4px; left: 50%; width: 104px; margin-left: -52px;
+  transition: transform .35s cubic-bezier(.2, .8, .3, 1), opacity .35s, border-color .2s; }
+body:not(.tall) .card.jump { transition: none; }
+body:not(.tall) .card.sel { z-index: 2; }
+body:not(.tall) .feature { height: 111px; } /* leaves the card row its full height above the footer */
+body:not(.tall) .preview { flex-basis: 178px; height: 100px; }
+body:not(.tall) .cards { height: 70px; }
+body:not(.tall) .card { top: 5px; }
+
+/* ---- paid arcade: the credit badge and the "insert coin" card ---- */
+/* One line, no taller than the title, so the header (and the cards below it)
+   keep their height; the title never wraps to make room for it. */
+header h1 { white-space: nowrap; }
+.coins { flex: none; display: flex; align-items: baseline; gap: 5px; white-space: nowrap; padding: 1px 8px; border-radius: 5px; background: var(--panel); border: 1.5px solid var(--line); line-height: 1.15; }
+.coins b { font-size: 10px; letter-spacing: 1px; color: var(--rope); text-transform: uppercase; }
+/* No credit: a slow glow, never a flash. */
+.coins.empty { border-color: var(--sel); animation: coinGlow 2.4s ease-in-out infinite; }
+.coins.empty b { color: #ffd27a; }
+@keyframes coinGlow { 0%, 100% { box-shadow: 0 0 0 rgba(230, 159, 0, 0); } 50% { box-shadow: 0 0 10px rgba(230, 159, 0, 0.75); } }
+.insert-coin { position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; background: rgba(8, 6, 12, 0.55); animation: fadeIn 0.3s ease-out; }
+.insert-coin > div { text-align: center; padding: 12px 22px; border-radius: 8px; background: var(--panel); border: 2px solid var(--sel); box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6); max-width: 300px; }
+.insert-coin b { display: block; font-family: var(--display); font-size: 26px; letter-spacing: 1px; color: #ffd27a; text-transform: uppercase; }
+.insert-coin p { margin: 6px 0 0; font-weight: normal; font-size: 10px; color: var(--text); }
+.insert-coin small { display: block; margin-top: 6px; font-weight: normal; font-size: 8px; color: var(--muted); }
+
+/* Dev mode switcher (start.py off the Pi, or --dev): a small faded chip in
+   the top-left corner showing the current mode; hover to pick another. */
+.devbar { position: fixed; top: 4px; left: 4px; z-index: 1000; display: flex; align-items: center; gap: 3px; padding: 2px 4px; background: rgba(20, 18, 26, 0.9); border: 1px solid #f0e442; border-radius: 5px; font: 10px/1 system-ui, sans-serif; color: #f4efe4; opacity: 0.55; transition: opacity 0.15s; }
+.devbar:hover { opacity: 1; }
+.devbar b { color: #f0e442; letter-spacing: 1px; }
+.devbar button { font: inherit; color: inherit; background: transparent; border: 1px solid #6b6578; border-radius: 3px; padding: 2px 5px; cursor: pointer; }
+.devbar button:not(.on), .devbar small { display: none; }
+.devbar:hover button, .devbar:hover small { display: inline-block; }
+.devbar button.on { background: #f0e442; color: #14121a; border-color: #f0e442; }
+.devbar small { opacity: 0.6; }
+
+/* The Boina Games bull badge is round already: it is the medal. */
+.medal { width: 24px; height: 24px; background: none; }
+.medal img { width: 24px; height: 24px; border-radius: 50%; }
+.credit-mark { height: 26px; }
+body.tall .medal, body.tall .medal img { width: 18px; height: 18px; }

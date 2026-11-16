@@ -1,0 +1,47 @@
+{
+  "_note": "Every fact stays review_status draft until a qualified reviewer checks it and adds a source. A null source means nobody has cited one yet; do not invent one.",
+  "facts": [
+    {
+      "id": "salinas.centuries",
+      "text_key": "fact.centuries",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "salinas.saltier",
+      "text_key": "fact.saltier",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "salinas.preserve",
+      "text_key": "fact.preserve",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "salinas.salary",
+      "text_key": "fact.salary",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "salinas.anana",
+      "text_key": "fact.anana",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "salinas.sun",
+      "text_key": "fact.sun",
+      "source": null,
+      "review_status": "draft"
+    },
+    {
+      "id": "salinas.summer",
+      "text_key": "fact.summer",
+      "source": null,
+      "review_status": "draft"
+    }
+  ]
+}

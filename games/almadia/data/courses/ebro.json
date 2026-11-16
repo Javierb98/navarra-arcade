@@ -1,0 +1,322 @@
+{
+  "id": "ebro",
+  "name_key": "course.ebro.name",
+  "blurb_key": "course.ebro.blurb",
+  "length": 9500,
+  "startY": 60,
+  "targetTime": 195,
+  "intensity": 1.2,
+  "route": [
+    [
+      122,
+      198
+    ],
+    [
+      180,
+      214
+    ],
+    [
+      270,
+      226
+    ],
+    [
+      360,
+      240
+    ],
+    [
+      420,
+      252
+    ]
+  ],
+  "themes": [
+    {
+      "y": -1000,
+      "style": "fields"
+    },
+    {
+      "y": 5300,
+      "style": "plain"
+    },
+    {
+      "y": 8500,
+      "style": "fields"
+    }
+  ],
+  "river": [
+    {
+      "y": -300,
+      "cx": 240,
+      "hw": 168
+    },
+    {
+      "y": 0,
+      "cx": 240,
+      "hw": 168
+    },
+    {
+      "y": 1000,
+      "cx": 232,
+      "hw": 172
+    },
+    {
+      "y": 2000,
+      "cx": 248,
+      "hw": 176
+    },
+    {
+      "y": 3000,
+      "cx": 238,
+      "hw": 168
+    },
+    {
+      "y": 4000,
+      "cx": 246,
+      "hw": 176
+    },
+    {
+      "y": 5000,
+      "cx": 236,
+      "hw": 172
+    },
+    {
+      "y": 6000,
+      "cx": 246,
+      "hw": 176
+    },
+    {
+      "y": 7000,
+      "cx": 236,
+      "hw": 168
+    },
+    {
+      "y": 8000,
+      "cx": 246,
+      "hw": 176
+    },
+    {
+      "y": 9000,
+      "cx": 240,
+      "hw": 172
+    },
+    {
+      "y": 10800,
+      "cx": 240,
+      "hw": 172
+    }
+  ],
+  "current": [
+    {
+      "y": 0,
+      "speed": 54
+    },
+    {
+      "y": 2000,
+      "speed": 58
+    },
+    {
+      "y": 4000,
+      "speed": 62
+    },
+    {
+      "y": 6000,
+      "speed": 62
+    },
+    {
+      "y": 8000,
+      "speed": 58
+    },
+    {
+      "y": 10800,
+      "speed": 56
+    }
+  ],
+  "features": [
+    {
+      "type": "village",
+      "place": "tudela",
+      "y": 160,
+      "y2": 900,
+      "roof": "tile",
+      "church": "right"
+    },
+    {
+      "type": "prompt",
+      "y": 260,
+      "key": "tip.bridge"
+    },
+    {
+      "type": "bridge",
+      "y": 560,
+      "pillars": [
+        -110,
+        -55,
+        0,
+        55,
+        110
+      ],
+      "r": 9,
+      "crowd": true
+    },
+    {
+      "type": "dock",
+      "side": "left",
+      "y": 1020,
+      "town": "tudela"
+    },
+    {
+      "type": "prompt",
+      "y": 1150,
+      "key": "tip.ebro"
+    },
+    {
+      "type": "weir",
+      "y": 2200,
+      "dx": 0,
+      "half": 22
+    },
+    {
+      "type": "eddy",
+      "side": "right",
+      "y": 2480,
+      "r": 36
+    },
+    {
+      "type": "whirlpool",
+      "dx": -70,
+      "y": 2900,
+      "r": 34,
+      "spin": 1
+    },
+    {
+      "type": "rock",
+      "dx": 40,
+      "y": 3200,
+      "r": 9
+    },
+    {
+      "type": "rock",
+      "dx": -60,
+      "y": 3300,
+      "r": 9
+    },
+    {
+      "type": "duck",
+      "dx": 10,
+      "y": 3500,
+      "range": 50
+    },
+    {
+      "type": "duck",
+      "dx": -40,
+      "y": 3560,
+      "range": 40,
+      "speed": 1.1
+    },
+    {
+      "type": "sandbar",
+      "dx": 60,
+      "dx2": 136,
+      "y": 3900,
+      "y2": 3930,
+      "r": 14
+    },
+    {
+      "type": "village",
+      "place": "zaragoza",
+      "y": 4300,
+      "y2": 5120,
+      "roof": "tile",
+      "church": "left"
+    },
+    {
+      "type": "bridge",
+      "y": 4700,
+      "pillars": [
+        -100,
+        -35,
+        35,
+        100
+      ],
+      "r": 9,
+      "crowd": true
+    },
+    {
+      "type": "dock",
+      "side": "right",
+      "y": 5220,
+      "town": "zaragoza"
+    },
+    {
+      "type": "weir",
+      "y": 6000,
+      "dx": 60,
+      "half": 20
+    },
+    {
+      "type": "eddy",
+      "side": "left",
+      "y": 6280,
+      "r": 36
+    },
+    {
+      "type": "whirlpool",
+      "dx": 50,
+      "y": 6700,
+      "r": 34,
+      "spin": -1
+    },
+    {
+      "type": "washer",
+      "side": "right",
+      "y": 7000
+    },
+    {
+      "type": "rapids",
+      "y1": 7300,
+      "y2": 7820
+    },
+    {
+      "type": "rock",
+      "dx": -30,
+      "y": 7400,
+      "r": 9
+    },
+    {
+      "type": "rock",
+      "dx": 70,
+      "y": 7550,
+      "r": 9
+    },
+    {
+      "type": "rock",
+      "dx": -90,
+      "y": 7700,
+      "r": 9
+    },
+    {
+      "type": "dock",
+      "side": "left",
+      "y": 8250,
+      "town": "tortosa"
+    },
+    {
+      "type": "village",
+      "place": "tortosa",
+      "y": 8700,
+      "y2": 9800,
+      "roof": "tile",
+      "church": "right"
+    },
+    {
+      "type": "bridge",
+      "y": 9020,
+      "pillars": [
+        -80,
+        0,
+        80
+      ],
+      "r": 9,
+      "crowd": true
+    }
+  ]
+}

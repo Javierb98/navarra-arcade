@@ -1,0 +1,170 @@
+{
+ "_note": "The stretches in play order, and the route map (480x270, north up). Villages and river courses are simplified; every place and route here is a draft for a local historian to check.",
+ "courses": [
+  "roncal",
+  "foz",
+  "salazar",
+  "aragon",
+  "ebro"
+ ],
+ "rivers": {
+  "esca": [
+   [
+    250,
+    26
+   ],
+   [
+    246,
+    50
+   ],
+   [
+    240,
+    72
+   ],
+   [
+    244,
+    96
+   ],
+   [
+    236,
+    118
+   ]
+  ],
+  "salazar": [
+   [
+    170,
+    30
+   ],
+   [
+    166,
+    56
+   ],
+   [
+    174,
+    82
+   ],
+   [
+    190,
+    108
+   ],
+   [
+    200,
+    124
+   ]
+  ],
+  "aragon": [
+   [
+    290,
+    110
+   ],
+   [
+    236,
+    118
+   ],
+   [
+    200,
+    124
+   ],
+   [
+    162,
+    150
+   ],
+   [
+    140,
+    178
+   ],
+   [
+    122,
+    198
+   ]
+  ],
+  "ebro": [
+   [
+    26,
+    150
+   ],
+   [
+    80,
+    180
+   ],
+   [
+    122,
+    198
+   ],
+   [
+    180,
+    214
+   ],
+   [
+    270,
+    226
+   ],
+   [
+    360,
+    240
+   ],
+   [
+    420,
+    252
+   ]
+  ]
+ },
+ "places": {
+  "roncal": [
+   246,
+   50
+  ],
+  "burgui": [
+   240,
+   72
+  ],
+  "salvatierra": [
+   243,
+   90
+  ],
+  "sigues": [
+   238,
+   110
+  ],
+  "ochagavia": [
+   170,
+   32
+  ],
+  "ezcaroz": [
+   166,
+   56
+  ],
+  "navascues": [
+   176,
+   84
+  ],
+  "lumbier": [
+   192,
+   110
+  ],
+  "sanguesa": [
+   206,
+   124
+  ],
+  "carcastillo": [
+   158,
+   154
+  ],
+  "milagro": [
+   124,
+   196
+  ],
+  "tudela": [
+   160,
+   208
+  ],
+  "zaragoza": [
+   270,
+   226
+  ],
+  "tortosa": [
+   418,
+   251
+  ]
+ }
+}

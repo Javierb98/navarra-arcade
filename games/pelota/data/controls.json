@@ -1,0 +1,80 @@
+{
+  "_note": "Key names are KeyboardEvent.code values. Player 1 (red): arrows to run, A (O / Left Ctrl) hard drive, B (P / Left Alt) soft dejada. Player 2 (blue): W A S D to run, R drive, T dejada. With one player, either set works. Change keys here, not in code.",
+  "keyboard": {
+    "p1": {
+      "left": [
+        "ArrowLeft"
+      ],
+      "right": [
+        "ArrowRight"
+      ],
+      "up": [
+        "ArrowUp"
+      ],
+      "down": [
+        "ArrowDown"
+      ],
+      "a": [
+        "ControlLeft",
+        "KeyO"
+      ],
+      "b": [
+        "AltLeft",
+        "KeyP"
+      ],
+      "c": [
+        "Space",
+        "KeyL"
+      ],
+      "start": [
+        "Digit1",
+        "Enter"
+      ]
+    },
+    "p2": {
+      "left": [
+        "KeyA"
+      ],
+      "right": [
+        "KeyD"
+      ],
+      "up": [
+        "KeyW"
+      ],
+      "down": [
+        "KeyS"
+      ],
+      "a": [
+        "KeyR"
+      ],
+      "b": [
+        "KeyT"
+      ],
+      "c": [
+        "KeyF"
+      ],
+      "start": [
+        "Digit2"
+      ]
+    },
+    "admin": [
+      "F2",
+      "Digit9"
+    ],
+    "exit": [
+      "Escape"
+    ]
+  },
+  "gamepad": {
+    "p1": 0,
+    "p2": 1,
+    "buttons": {
+      "a": 0,
+      "b": 1,
+      "c": 2,
+      "start": 9,
+      "admin": 8
+    },
+    "deadzone": 0.35
+  }
+}

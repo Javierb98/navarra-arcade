@@ -1,0 +1,80 @@
+{
+  "_note": "Key names are KeyboardEvent.code values. Player 1 (red): arrows, A = O, B = P, C = L, START = Enter. Player 2 (blue): W A S D, A = R, B = T, C = F, START = 2. The cabinet's encoder sends Left Ctrl, Left Alt, Space and 1 for player 1's buttons; its player 2 buttons must send R, T and F. With one player, either set works. Change keys here, not in code.",
+  "keyboard": {
+    "p1": {
+      "left": [
+        "ArrowLeft"
+      ],
+      "right": [
+        "ArrowRight"
+      ],
+      "up": [
+        "ArrowUp"
+      ],
+      "down": [
+        "ArrowDown"
+      ],
+      "a": [
+        "ControlLeft",
+        "KeyO"
+      ],
+      "b": [
+        "AltLeft",
+        "KeyP"
+      ],
+      "c": [
+        "Space",
+        "KeyL"
+      ],
+      "start": [
+        "Digit1",
+        "Enter"
+      ]
+    },
+    "p2": {
+      "left": [
+        "KeyA"
+      ],
+      "right": [
+        "KeyD"
+      ],
+      "up": [
+        "KeyW"
+      ],
+      "down": [
+        "KeyS"
+      ],
+      "a": [
+        "KeyR"
+      ],
+      "b": [
+        "KeyT"
+      ],
+      "c": [
+        "KeyF"
+      ],
+      "start": [
+        "Digit2"
+      ]
+    },
+    "admin": [
+      "F2",
+      "Digit9"
+    ],
+    "exit": [
+      "Escape"
+    ]
+  },
+  "gamepad": {
+    "p1": 0,
+    "p2": 1,
+    "buttons": {
+      "a": 0,
+      "b": 1,
+      "c": 2,
+      "start": 9,
+      "admin": 8
+    },
+    "deadzone": 0.35
+  }
+}

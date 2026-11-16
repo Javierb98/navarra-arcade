@@ -1,0 +1,9 @@
+{
+  "_note": "CONFIRMED sponsors only: everything here appears on the public website and on every cabinet. Keep it empty until a sponsor has agreed. To try out logos on your own Mac, use data/sponsors.local.json (test mode: never published). Each sponsor: name (string or per language), logo, optional logoBig, plate \"dark\" for white logos, optional tagline.",
+  "label": {
+    "es": "Con el apoyo de",
+    "eu": "Laguntzaileak",
+    "en": "Brought to you by"
+  },
+  "sponsors": []
+}
