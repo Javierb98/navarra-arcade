@@ -98,7 +98,7 @@ Everything is in `games.json`. No code changes needed:
 
 ### Credits and sponsors
 
-`menu/data/credits.json` is the maker's credit in the bottom-right corner ("Hecho por" Evocultiva). It is public.
+`menu/data/credits.json` is the maker's credit in the bottom-right corner ("Hecho por" Boina Games, with the bull badge). It is public.
 
 
 `menu/data/sponsors.json` lists **confirmed** sponsors only (empty for now): they appear in the corner plate and on a big "Con el apoyo de" screen after the last game of the idle showcase, both on the website and on every cabinet. It takes (name, `logo`, optional `logoBig` for the panel, `plate: "dark"` for white logos, and a `tagline`). **Test mode:** to try out a sponsor before they've agreed, put them in `menu/data/sponsors.local.json` (logos in `menu/assets/sponsors/local/`). The menu on this Mac then shows them, marked TEST. That file is ignored by git, `build-site.py` refuses to publish it, and a cabinet set up from GitHub never has it.
